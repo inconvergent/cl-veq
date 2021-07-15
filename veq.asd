@@ -1,26 +1,38 @@
 
 (asdf:defsystem #:veq
   :description "reasonably fast operations for 1d, 2d, 3d vectors"
-  :version "0.1.2"
+  :version "0.1.3"
   :author "anders hoff/inconvergent"
   :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))
   :pathname "src/"
-  :serial t
+  :serial nil
   :depends-on (#:alexandria #:sb-cltl2)
   :components ((:file "packages")
-               (:file "utils")
-               (:file "vprint")
-               (:file "veq")
-               (:file "ops")
-               (:file "ops-1")
-               (:file "ops-2")
-               (:file "ops-3")
-               (:file "vset")
-               (:file "lerp")
-               (:file "mima")
-               (:file "rows")
-               (:file "macros")))
+               (:file "utils"
+                      :depends-on ("packages"))
+               (:file "vprint"
+                      :depends-on ("packages" "utils"))
+               (:file "veq"
+                      :depends-on ("packages" "utils"))
+               (:file "ops"
+                      :depends-on ("packages" "utils"))
+               (:file "ops-1"
+                      :depends-on ("packages" "utils" "veq"))
+               (:file "ops-2"
+                      :depends-on ("packages" "utils" "veq"))
+               (:file "ops-3"
+                      :depends-on ("packages" "utils" "veq"))
+               (:file "vset"
+                      :depends-on ("packages" "utils" "veq"))
+               (:file "lerp"
+                      :depends-on ("packages" "utils" "veq"))
+               (:file "mima"
+                      :depends-on ("packages" "utils" "veq"))
+               (:file "rows"
+                      :depends-on ("packages" "utils" "veq"))
+               (:file "macros"
+                      :depends-on ("packages" "utils" "veq"))))
 
 (asdf:defsystem #:veq/tests
   :depends-on (#:veq #:prove)
