@@ -2,6 +2,7 @@
 (in-package :veq)
 
 ; TODO: end
+; TODO: arr is a leaky abstraction.
 (defun fxlspace (n a b expr &key dim type (end t))
   (declare (fixnum dim) (symbol type) (boolean end))
   "
@@ -11,7 +12,7 @@
   (let ((declare-arr))
     (awg (i n* stp s fx expr*)
     `(let* ((,n* ,n)
-            (,stp (coerce (/ ,n*) ',type))
+            (,stp (coerce ,(if end `(/ (1- ,n*)) `(/ ,n*)) ',type))
             (arr ,(cond ((not expr) (setf declare-arr t)
                                     `(,(veqsymb dim type "$ZERO") ,n*))
                          ((butlast expr) (setf declare-arr t)

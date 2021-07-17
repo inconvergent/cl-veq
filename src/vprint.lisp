@@ -24,3 +24,20 @@
                                         :width width)))))
     (format t " dim: ~a n: ~a~%~%" dim n))
   a)
+(defun 2vprint (a &key n (width 10)) (vprint a :n n :dim 2 :width width))
+(defun 3vprint (a &key n (width 10)) (vprint a :n n :dim 3 :width width))
+
+
+(vdef to-list (arr &key (dim 1))
+  (declare (simple-array arr) (pos-int dim))
+  (let ((n (ceiling (/ (length arr) dim))))
+    (declare (pos-int n))
+    (let ((res (list)))
+      (labels ((acc (&rest rest) (push (cdr rest) res)))
+        (case dim (3 (3for-all-rows (n arr) #'acc))
+                  (2 (2for-all-rows (n arr) #'acc))
+                  (t (for-all-rows (n arr) #'acc)))
+        (reverse res)))))
+(defun 2to-list (arr) (to-list arr :dim 2))
+(defun 3to-list (arr) (to-list arr :dim 3))
+

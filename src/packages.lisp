@@ -9,7 +9,10 @@
     #:fpi
     #:fpi5
     #:fpii
+
     #:vprint
+    #:2vprint
+    #:3vprint
 
     #:dcopy
     #:df
@@ -44,6 +47,10 @@
     #:$
     #:_
     #:$_
+
+    #:to-list
+    #:2to-list
+    #:3to-list
 
     #:d2with
     #:d3with

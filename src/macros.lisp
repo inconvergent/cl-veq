@@ -178,12 +178,12 @@
                                (declare (ff ,e)) (values ,e ,e ,e))))
 
     ; linear interpolation
-    (flspace ((n a b) &body body) (fxlspace n a b body :dim 1 :type 'ff))
-    (dlspace ((n a b) &body body) (fxlspace n a b body :dim 1 :type 'df))
-    (f2lspace ((n a b) &body body) (fxlspace n a b body :dim 2 :type 'ff))
-    (d2lspace ((n a b) &body body) (fxlspace n a b body :dim 2 :type 'df))
-    (f3lspace ((n a b) &body body) (fxlspace n a b body :dim 3 :type 'ff))
-    (d3lspace ((n a b) &body body) (fxlspace n a b body :dim 3 :type 'df))
+    (flspace ((n a b &key (end t)) &body body) (fxlspace n a b body :end end :dim 1 :type 'ff))
+    (dlspace ((n a b &key (end t)) &body body) (fxlspace n a b body :end end :dim 1 :type 'df))
+    (f2lspace ((n a b &key (end t)) &body body) (fxlspace n a b body :end end :dim 2 :type 'ff))
+    (d2lspace ((n a b &key (end t)) &body body) (fxlspace n a b body :end end :dim 2 :type 'df))
+    (f3lspace ((n a b &key (end t)) &body body) (fxlspace n a b body :end end :dim 3 :type 'ff))
+    (d3lspace ((n a b &key (end t)) &body body) (fxlspace n a b body :end end :dim 3 :type 'df))
 
     (dmima (n a) (minmax a n :type 'df))
     (fmima (n a) (minmax a n :type 'ff))
