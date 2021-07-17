@@ -84,7 +84,6 @@
 
 
 (ops
-  ;;;;;;;;;;;;;;;;; vec -> scalar
 
   (d+ (a b)) (+ a b)
   (d- (a b)) (- a b)
@@ -102,27 +101,23 @@
   (fi- (a b)) (- b a)
   (fi/ (a b)) (/ b a)
 
-  ;;;;;;;;;;;;;;;;;; scalar -> scalar
 
   (dabs (a)) (abs a)
   (dneg (a)) (- a)
   (dsquare (a)) (* a a)
-  (dsqrt (a)) (the pos-df (sqrt (pos-df a)))
+  (dsqrt (a)) (the pos-df (sqrt (the pos-df a)))
 
   (fabs (a)) (abs a)
   (fneg (a)) (- a)
   (fsquare (a)) (* a a)
-  (fsqrt (a)) (the pos-ff (sqrt (pos-ff a)))
+  (fsqrt (a)) (the pos-ff (sqrt (the pos-ff a)))
 
-  ;;;;;;;;;;;;;;;;;; scalar scalar -> scalar
 
   (d^ (a s)) (expt a s)
   (dmod (a s)) (mod a s)
 
   (f^ (a s)) (expt a s)
   (fmod (a s)) (mod a s)
-
-  ;;;;;;;;;;;;;;;;;; scalar -> 2vec
 
   (dcos-sin (a)) (values (cos a) (sin a))
   (fcos-sin (a)) (values (cos a) (sin a))

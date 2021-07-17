@@ -2,7 +2,7 @@
 (in-package :veq)
 
 (defun minmax (a n &key type)
-  (awg (i minx maxx miny maxy)
+  (awg (i minx maxx)
     `(loop for ,i of-type pos-int from 0 below ,n
            minimizing (aref ,a ,i) into ,minx of-type ,type
            maximizing (aref ,a ,i) into ,maxx of-type ,type

@@ -7,13 +7,12 @@
 (defmacro $ (&key (dim 1) (n 1) type v)
   (declare (cons type))
   " create array with size (n dim), and initial value v"
-  (awg (size)
-    `(values (make-array (the pos-int (* ,dim ,n))
-                :initial-element ,(if v `(the ,(cadr type) ,v)
-                                        `(typezero ,type))
-                :element-type ,type
-                :adjustable nil)
-              ,dim ,n)))
+  `(values (make-array (the pos-int (* ,dim ,n))
+             :initial-element ,(if v `(the ,(cadr type) ,v)
+                                     `(typezero ,type))
+             :element-type ,type
+             :adjustable nil)
+           ,dim ,n))
 
 
 (defmacro $_ (&body body)

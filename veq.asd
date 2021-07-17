@@ -1,7 +1,7 @@
 
 (asdf:defsystem #:veq
   :description "reasonably fast operations for 1d, 2d, 3d vectors"
-  :version "0.1.4"
+  :version "0.2.0"
   :author "anders hoff/inconvergent"
   :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))
@@ -11,10 +11,10 @@
   :components ((:file "packages")
                (:file "utils" :depends-on ("packages"))
                (:file "veq" :depends-on ("utils"))
-               (:file "ops" :depends-on ("utils"))
-               (:file "ops-1" :depends-on ("utils" "veq"))
-               (:file "ops-2" :depends-on ("utils" "veq"))
-               (:file "ops-3" :depends-on ("utils" "veq"))
+               (:file "ops" :depends-on ("utils" "macros"))
+               (:file "ops-1" :depends-on ("utils" "veq" "macros"))
+               (:file "ops-2" :depends-on ("utils" "veq" "macros"))
+               (:file "ops-3" :depends-on ("utils" "veq" "macros"))
                (:file "vset" :depends-on ("utils" "veq"))
                (:file "lerp" :depends-on ("utils" "veq"))
                (:file "mima" :depends-on ("utils" "veq"))
