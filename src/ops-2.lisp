@@ -4,32 +4,32 @@
 (declaim (inline d2$zero))
 (defun d2$zero (&optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 2 :n n :type 'df))
+  (d$ :dim 2 :n n))
 
 (declaim (inline d2$one))
 (defun d2$one (&optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 2 :n n :v 1d0 :type 'df))
+  (d$ :dim 2 :n n :v 1d0))
 
 (declaim (inline d2$val))
 (defun d2$val (v &optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 2 :n n :v v :type 'df))
+  (d$ :dim 2 :n n :v v))
 
 (declaim (inline f2$zero))
 (defun f2$zero (&optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 2 :n n :type 'ff))
+  (f$ :dim 2 :n n))
 
 (declaim (inline f2$one))
 (defun f2$one (&optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 2 :n n :v 1f0 :type 'ff))
+  (f$ :dim 2 :n n :v 1f0))
 
 (declaim (inline f2$val))
 (defun f2$val (v &optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 2 :n n :v v :type 'ff))
+  (f$ :dim 2 :n n :v v))
 
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
@@ -52,16 +52,16 @@
 (defmacro d2with ((v i) &body body)
   (declare (symbol v))
   "
-  access v[i] as x y, body must return (values x y),
-  containing new values for v[i]
+  execute (funcall body x y) for v[i]. body must be a function that returns
+  (values x y), the new value for v[i]
   "
   (2with v i 'df body))
 
 (defmacro f2with ((v i) &body body)
   (declare (symbol v))
   "
-  access v[i] as x y, body must return (values x y),
-  containing new values for v[i]
+  execute (funcall body x y) for v[i]. body must be a function that returns
+  (values x y), the new value for v[i]
   "
   (2with v i 'ff body))
 
@@ -185,6 +185,9 @@
   (f2mid (ax ay bx by)) (values (* 0.5f0 (+ ax bx)) (* 0.5f0 (+ ay by)))
 
   ; OTHER
+
+  (d2on-circ (a rad)) (mvc #'-d2scale (-dcos-sin (* a dpii)) rad)
+  (f2on-circ (a rad)) (mvc #'-f2scale (-fcos-sin (* a fpii)) rad)
 
   (d2rot (x y a)) (let ((cosa (cos a)) (sina (sin a)))
                     (declare (veq:df cosa sina))

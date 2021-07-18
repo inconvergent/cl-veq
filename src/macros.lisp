@@ -4,18 +4,24 @@
 
 ;;;;;;;;;;;;;;;;;; INIT ARRAY OF VEC
 
-(defmacro $ (&key (dim 1) (n 1) type v)
-  (declare (cons type))
+(defmacro f$ (&key (dim 1) (n 1) (v 0f0))
   " create array with size (n dim), and initial value v"
   `(values (make-array (the pos-int (* ,dim ,n))
-             :initial-element ,(if v `(the ,(cadr type) ,v)
-                                     `(typezero ,type))
-             :element-type ,type
+             :initial-element ,v
+             :element-type 'ff
+             :adjustable nil)
+           ,dim ,n))
+
+(defmacro d$ (&key (dim 1) (n 1) (v 0d0))
+  " create array with size (n dim), and initial value v"
+  `(values (make-array (the pos-int (* ,dim ,n))
+             :initial-element ,v
+             :element-type 'df
              :adjustable nil)
            ,dim ,n))
 
 
-(defmacro $_ (&body body)
+(defmacro f$_ (&body body)
   " create array from body. use either
 
   ($_ (loop repeat 2 collect `(1d0 2d0)))
@@ -28,12 +34,30 @@
             (,dim (length (car ,body*))))
        (declare (pos-int ,n ,dim) (list ,body*))
        (values (make-array (* ,n ,dim) :initial-contents (awf ,body*)
-                                       :element-type (type-of (caar ,body*))
+                                       :element-type 'ff
                                        :adjustable nil)
                ,dim ,n))))
 
-(defmacro _ (&body body)
+(defmacro d$_ (&body body)
+  " create array from body. use either
+
+  ($_ (loop repeat 2 collect `(1d0 2d0)))
+  or
+  ($_ '((1d0 2d0) (1d0 2d0)))
   "
+  (awg (body* n dim)
+    `(let* ((,body* ,@body)
+            (,n (length ,body*))
+            (,dim (length (car ,body*))))
+       (declare (pos-int ,n ,dim) (list ,body*))
+       (values (make-array (* ,n ,dim) :initial-contents (awf ,body*)
+                                       :element-type 'df
+                                       :adjustable nil)
+               ,dim ,n))))
+
+(defmacro f_ (&body body)
+  "
+  corresponds to ($_ '(body)), that is a single row of (length body).
   "
 
   (awg (body* dim)
@@ -41,7 +65,21 @@
             (,dim (length ,body*)))
        (declare (pos-int ,dim) (list ,body*))
        (values (make-array ,dim :initial-contents (awf ,body*)
-                                       :element-type (type-of (car ,body*))
+                                       :element-type 'ff
+                                       :adjustable nil)
+               ,dim 1))))
+
+(defmacro d_ (&body body)
+  "
+  corresponds to ($_ '(body)), that is a single row of (length body).
+  "
+
+  (awg (body* dim)
+    `(let* ((,body* ,@body)   ; TODO: mvc list?
+            (,dim (length ,body*)))
+       (declare (pos-int ,dim) (list ,body*))
+       (values (make-array ,dim :initial-contents (awf ,body*)
+                                       :element-type 'df
                                        :adjustable nil)
                ,dim 1))))
 
@@ -75,6 +113,7 @@
                              (nth i (cdr (assoc ref rmap)))))
      (-walk (root &optional (rmap (list)))
        (cond ((atom root) root)
+             ; TODO: handle dotted pairs
 
              ((and (listp root) (eq (car root) 'vref))
                (-vref root rmap))
@@ -227,8 +266,7 @@
       `(-with-arrays (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
                             :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
                             :exs ,exs)
-                     ,@body))
-    ))
+                     ,@body))))
 
 (defmacro vdef (fname &body body)
   `(macrolet ,*symbols-map* (defun ,fname ,@(replace-varg body))))

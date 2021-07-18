@@ -10,7 +10,7 @@
   number of arguments depend on dimension.
   "
   (let ((declare-arr))
-    (awg (i n* stp s fx expr*)
+    (awg (i n* stp s fx)
     `(let* ((,n* ,n)
             (,stp (coerce ,(if end `(/ (1- ,n*)) `(/ ,n*)) ',type))
             (arr ,(cond ((not expr) (setf declare-arr t)

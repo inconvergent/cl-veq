@@ -103,22 +103,22 @@
     (is (veq:d2$zero) #(0d0 0d0) :test #'equalp)
     (is (veq:f2$one 2) #(1f0 1f0 1f0 1f0) :test #'equalp)
 
-    (let ((a (veq:$_ '((100.2d0 2d0)))))
+    (let ((a (veq:d$_ '((100.2d0 2d0)))))
       (is a '#(100.2d0 2d0) :test #'equalp)
       (is (veq:lst (veq:d2+ (veq:d2> a) 2d0 3d0)) '(102.2d0 5d0)))
 
-    (let ((a (veq:$_ '((100.2f0 2f0)))))
+    (let ((a (veq:f$_ '((100.2f0 2f0)))))
       (is a '#(100.2f0 2f0) :test #'equalp)
       (is (veq:lst (veq:f2+ (veq:f2> a) 2f0 3f0)) '(102.2f0 5f0)))
 
-    (is (veq:$_ (loop for i from 0 below 3
+    (is (veq:d$_ (loop for i from 0 below 3
                       collect (list (veq:df i)
                                     (veq:df (1+ i)))))
         #(0d0 1d0 1d0 2d0 2d0 3d0)
         :test #'equalp)
 
 
-    (let ((a (veq:$_ '((100.2d0 2d0) (33d0 78d0))))
+    (let ((a (veq:d$_ '((100.2d0 2d0) (33d0 78d0))))
           (b (veq:f3$one 3))
           (c (veq:f$zero 3)))
       (is (veq:lst (veq:d2> a 1)) '(33d0 78d0) :test #'equalp)
@@ -173,19 +173,19 @@
         :test #'equalp)
 
     (is (veq:f3lspace (5 (veq:f3< 1f0 5f0 7f0) (veq:f3rep 2f0) )
-                      (veq:$ :dim 3 :n 5 :type 'veq:ff :v 0f0)
+                      (veq:f$ :dim 3 :n 5 :v 0f0)
                       (lambda (i x y z) (veq:3vaset (veq::arr i) (values x y (* z z)))))
          #(1.0 5.0 49.0 1.25 4.25 33.0625 1.5 3.5 20.25 1.75 2.75 10.5625 2.0
            2.0 4.0)
         :test #'equalp)
 
-    (let ((a (veq:$ :dim 3 :n 5 :type 'veq:ff :v 0f0)))
+    (let ((a (veq:f$ :dim 3 :n 5 :v 0f0)))
       (veq:f3lspace (5 (veq:f3< 2f0 -4f0 8f0) (veq:f3rep 2f0))
                     (lambda (i x y z) (veq:3vaset (a i) (values x y z))))
       (is a #(2.0 -4.0 8.0 2.0 -2.5 6.5 2.0 -1.0 5.0 2.0 0.5 3.5 2.0 2.0 2.0)
           :test #'equalp))
 
-    (let ((a (veq:$ :dim 3 :n 5 :type 'veq:ff :v 0f0)))
+    (let ((a (veq:f$ :dim 3 :n 5 :v 0f0)))
       (veq:f3lspace (5 (veq:f3< 2f0 -4f0 8f0) (veq:f3rep 2f0) :end nil)
                     (lambda (i x y z) (veq:3vaset (a i) (values x y z))))
       (is a #(2.0 -4.0 8.0 2.0 -2.8 6.8 2.0 -1.5999999 5.6 2.0 -0.39999986

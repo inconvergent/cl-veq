@@ -4,32 +4,32 @@
 (declaim (inline d3$zero))
 (defun d3$zero (&optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 3 :n n :type 'df))
+  (d$ :dim 3 :n n))
 
 (declaim (inline d3$one))
 (defun d3$one (&optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 3 :n n :v 1d0 :type 'df))
+  (d$ :dim 3 :n n :v 1d0))
 
 (declaim (inline d3$val))
 (defun d3$val (v &optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 3 :n n :v v :type 'df))
+  (d$ :dim 3 :n n :v v))
 
 (declaim (inline f3$zero))
 (defun f3$zero (&optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 3 :n n :type 'ff))
+  (f$ :dim 3 :n n))
 
 (declaim (inline f3$one))
 (defun f3$one (&optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 3 :n n :v 1f0 :type 'ff))
+  (f$ :dim 3 :n n :v 1f0))
 
 (declaim (inline f3$val))
 (defun f3$val (v &optional (n 1))
   (declare #.*opt* (pos-int n))
-  ($ :dim 3 :n n :v v :type 'ff))
+  (f$ :dim 3 :n n :v v))
 
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
@@ -52,16 +52,16 @@
 (defmacro d3with ((v i) &body body)
   (declare (symbol v))
   "
-  access v[i] as x y, body must return (values x y),
-  containing new values for v[i]
+  execute (funcall body x y) for v[i]. body must be a function that returns
+  (values x y), the new value for v[i]
   "
   (3with v i 'df body))
 
 (defmacro f3with ((v i) &body body)
   (declare (symbol v))
   "
-  access v[i] as x y, body must return (values x y),
-  containing new values for v[i]
+  execute (funcall body x y) for v[i]. body must be a function that returns
+  (values x y), the new value for v[i]
   "
   (3with v i 'ff body))
 

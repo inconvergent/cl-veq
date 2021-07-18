@@ -44,9 +44,12 @@
     #:f2let
     #:f3let
 
-    #:$
-    #:_
-    #:$_
+    #:d$
+    #:d$_
+    #:d_
+    #:f$
+    #:f$_
+    #:f_
 
     #:to-list
     #:2to-list
@@ -78,5 +81,12 @@
     #:d3$zero
     #:f3$one
     #:f3$val
-    #:f3$zero))
+    #:f3$zero
+
+    #:f2segx
+    #:f2lsegx
+
+    #:f2$rect
+    #:f2$square
+    #:f2$polygon))
 

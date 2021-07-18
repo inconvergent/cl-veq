@@ -18,7 +18,7 @@
           (error "for-all-rows error. ~% malformed expr: ~a" expr))
   (when (remove-if #'symbolp arr)
         (error "for-all-rows error. ~% arr must be one or more symbols.~% got: ~a" arr))
-  (awg (i ii n* expr*)
+  (awg (i ii n*)
     `(let ((,n* ,n))
        (declare (pos-int ,n*))
        (loop for ,i of-type pos-int from 0 below ,n*
@@ -34,7 +34,7 @@
 (defmacro -with-arrays ((&key type n (inds nil inds?) itr cnt arr fxs exs)
                          &body body)
   (declare (list arr fxs exs))
-  ; TODO: handle case where inds is longer than actual number of inds
+  ; TODO: handle case where largest inds >= n
   (awg (n* inds* ii*)
     (let ((itr (if itr itr (gensym "ITR")))
           (cnt (if cnt cnt (gensym "CNT"))))
@@ -42,7 +42,8 @@
       (labels ((init-let (arr* dim &rest rest)
                  (declare (symbol arr*) (pos-int dim))
                  (if rest `(,arr* (progn ,@rest))
-                          `(,arr* ($ :dim ,dim :n ,n* :type ,type))))
+                          `(,arr* (,(veqsymb 1 (cadr type) "$")
+                                    :dim ,dim :n ,n*))))
                (get-dim (arr*)
                  (declare (symbol arr*))
                  (cadr (find-if (lambda (v) (eq (car v) arr*)) arr)))
