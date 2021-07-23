@@ -34,25 +34,25 @@
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
-(defun with (v i type body)
-  (declare (symbol v type))
+(defun with (arr i type body)
+  (declare (symbol arr type))
   (awg (ii xx)
     `(let ((,ii ,i))
       (declare (pos-int ,ii))
       (mvb (,xx) (mvc ,@body
                       (funcall #',(veqsymb 1 type ">>" :pref "-")
-                               ,v ,ii))
+                               ,arr ,ii))
         (declare (,type ,xx))
-        (setf (aref ,v ,ii) ,xx)
+        (setf (aref ,arr ,ii) ,xx)
         ,xx))))
 
-(defmacro dwith ((v i) &body body)
-  (declare (symbol v))
+(defmacro dwith ((arr i) &body body)
+  (declare (symbol arr))
   "
-  execute (funcall body x y) for v[i]. body must be a function that returns
-  (values x y), the new value for v[i]
+  execute (funcall body x y) for arr[i]. body must be a function that returns
+  (values x y), the new value for arr[i]
   "
-  (with v i 'df body))
+  (with arr i 'df body))
 
 (defmacro fwith ((v i) &body body)
   (declare (symbol v))

@@ -22,3 +22,17 @@
              for i of-type fixnum from 0 below n
              collect (lst (f2scale (fcos-sin (+ rot (ff (* i pin)))) rad)))))
 
+(defun f2$circ (rad &key (rs 0.5f0))
+  (f2$polygon (ceiling (* fpii rad rs)) rad))
+
+
+(declaim (inline f2$lvs))
+(veq:vdef f2$lvs (a &optional (i 0) (j 1))
+  (declare (fvec a) (pos-int i j))
+  (mvc #'values (f2> a i) (f2> a j)))
+
+(declaim (inline f3$lvs))
+(veq:vdef f3$lvs (a &optional (i 0) (j 1))
+  (declare (fvec a) (pos-int i j))
+  (mvc #'values (f2> a i) (f2> a j)))
+

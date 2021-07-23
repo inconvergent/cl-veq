@@ -34,36 +34,36 @@
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
-(defun 3with (v i type body)
-  (declare (symbol v type))
+(defun 3with (arr i type body)
+  (declare (symbol arr type))
   (awg (i* ii xx yy zz)
     `(let* ((,i* (the pos-int ,i))
             (,ii (* 3 ,i*)))
       (declare (pos-int ,i* ,ii))
       (mvb (,xx ,yy ,zz) (mvc ,@body
                               (funcall #',(veqsymb 3 type ">>" :pref "-")
-                                       ,v ,i*))
+                                       ,arr ,i*))
         (declare (,type ,xx ,yy ,zz))
-        (setf (aref ,v ,ii) ,xx
-              (aref ,v (the pos-int (1+ ,ii))) ,yy
-              (aref ,v (the pos-int (+ 2 ,ii))) ,zz)
+        (setf (aref ,arr ,ii) ,xx
+              (aref ,arr (the pos-int (1+ ,ii))) ,yy
+              (aref ,arr (the pos-int (+ 2 ,ii))) ,zz)
         (values ,xx ,yy ,zz)))))
 
-(defmacro d3with ((v i) &body body)
-  (declare (symbol v))
+(defmacro d3with ((arr i) &body body)
+  (declare (symbol arr))
   "
-  execute (funcall body x y) for v[i]. body must be a function that returns
-  (values x y), the new value for v[i]
+  execute (funcall body x y) for arr[i]. body must be a function that returns
+  (values x y), the new value for arr[i]
   "
-  (3with v i 'df body))
+  (3with arr i 'df body))
 
-(defmacro f3with ((v i) &body body)
-  (declare (symbol v))
+(defmacro f3with ((arr i) &body body)
+  (declare (symbol arr))
   "
-  execute (funcall body x y) for v[i]. body must be a function that returns
-  (values x y), the new value for v[i]
+  execute (funcall body x y) for arr[i]. body must be a function that returns
+  (values x y), the new value for arr[i]
   "
-  (3with v i 'ff body))
+  (3with arr i 'ff body))
 
 (declaim (inline -d3>))
 (defun -d3> (v)

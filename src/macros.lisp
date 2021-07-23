@@ -84,6 +84,9 @@
                ,dim 1))))
 
 
+; using this makes thing much slower because of the consing.
+; avoid when possible
+; TODO: find a different solution.
 (defmacro lst (&body body)
   " (values ...) to (list ...) "
   `(mvc #'list ,@body))
@@ -110,7 +113,9 @@
                finally (return (values res rmap)))
          (values root rmap)))
      (-vref (root rmap) (dsb (ref i) (cdr root)
-                             (nth i (cdr (assoc ref rmap)))))
+                             (let ((as (assoc ref rmap)))
+                               (if as (nth i (cdr as))
+                                      (error "vref error: no match for: ~a~%" root)))))
      (-walk (root &optional (rmap (list)))
        (cond ((atom root) root)
              ; TODO: handle dotted pairs

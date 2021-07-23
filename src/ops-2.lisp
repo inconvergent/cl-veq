@@ -35,35 +35,35 @@
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
 
-(defun 2with (v i type body)
-  (declare (symbol v type))
+(defun 2with (arr i type body)
+  (declare (symbol arr type))
   (awg (i* ii xx yy)
     `(let* ((,i* ,i)
             (,ii (* 2 ,i*)))
       (declare (pos-int ,i* ,ii))
       (mvb (,xx ,yy) (mvc ,@body
                           (funcall #',(veqsymb 2 type ">>" :pref "-")
-                                   ,v ,i*))
+                                   ,arr ,i*))
         (declare (,type ,xx ,yy))
-        (setf (aref ,v ,ii) ,xx
-              (aref ,v (the pos-int (1+ ,ii))) ,yy)
+        (setf (aref ,arr ,ii) ,xx
+              (aref ,arr (the pos-int (1+ ,ii))) ,yy)
         (values ,xx ,yy)))))
 
-(defmacro d2with ((v i) &body body)
-  (declare (symbol v))
+(defmacro d2with ((arr i) &body body)
+  (declare (symbol arr))
   "
-  execute (funcall body x y) for v[i]. body must be a function that returns
-  (values x y), the new value for v[i]
+  execute (funcall body x y) for arr[i]. body must be a function that returns
+  (values x y), the new value for arr[i]
   "
-  (2with v i 'df body))
+  (2with arr i 'df body))
 
-(defmacro f2with ((v i) &body body)
-  (declare (symbol v))
+(defmacro f2with ((arr i) &body body)
+  (declare (symbol arr))
   "
-  execute (funcall body x y) for v[i]. body must be a function that returns
-  (values x y), the new value for v[i]
+  execute (funcall body x y) for arr[i]. body must be a function that returns
+  (values x y), the new value for arr[i]
   "
-  (2with v i 'ff body))
+  (2with arr i 'ff body))
 
 
 (declaim (inline -d2>))
@@ -109,8 +109,8 @@
 
   (d2abs (a b)) (values (abs a) (abs b))
   (d2neg (a b)) (values (- a) (- b))
-  (d2perp (a b)) (values (- b) a)
-  (d2perp* (a b)) (values b (- a))
+  (d2perp (a b)) (values b (- a))
+  (d2perp* (a b)) (values (- b) a)
   (d2flip (a b)) (values b a)
   (d2square (a b)) (values (* a a) (* b b))
   (d2sqrt (a b)) (values (the pos-df (sqrt (the pos-df a)))
@@ -118,8 +118,8 @@
 
   (f2abs (a b)) (values (abs a) (abs b))
   (f2neg (a b)) (values (- a) (- b))
-  (f2perp (a b)) (values (- b) a)
-  (f2perp* (a b)) (values b (- a))
+  (f2perp (a b)) (values b (- a))
+  (f2perp* (a b)) (values (- b) a)
   (f2flip (a b)) (values b a)
   (f2square (a b)) (values (* a a) (* b b))
   (f2sqrt (a b)) (values (the pos-ff (sqrt (values (the pos-ff a))))
@@ -188,6 +188,9 @@
 
   (d2on-circ (a rad)) (mvc #'-d2scale (-dcos-sin (* a dpii)) rad)
   (f2on-circ (a rad)) (mvc #'-f2scale (-fcos-sin (* a fpii)) rad)
+
+  (d2on-circ* (a rad)) (mvc #'-d2scale (-dcos-sin a) rad)
+  (f2on-circ* (a rad)) (mvc #'-f2scale (-fcos-sin a) rad)
 
   (d2rot (x y a)) (let ((cosa (cos a)) (sina (sin a)))
                     (declare (veq:df cosa sina))

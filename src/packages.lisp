@@ -86,7 +86,12 @@
     #:f2segx
     #:f2lsegx
 
+    #:f2$polygon
+    #:f2$circ
     #:f2$rect
     #:f2$square
-    #:f2$polygon))
+    #:f2$lvs
+    #:f3$lvs
+    #:f2$lls
+    #:f3$lls))
 
