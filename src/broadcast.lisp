@@ -1,28 +1,51 @@
 
 (in-package :veq)
 
-; TODO: implement for double
-; this will work for now, but should make a more general version
-; maybe just include it in the macrolet/vprogn/vdef?
+; TODO: handle various numberof arguments. so that it is possible to eg. do
+; (veq:f2$^ arr 4.0) to take raise all elements to the power of 4
 
-(defmacro make-broadcast-fx (macro-name fxname)
+(defmacro broadcast-op (dim type op)
+  "
+  fxname: name of the internal array function.
+  opname: name of the internal function for the operation
+          (defined in ops-dim.lisp)
+  arrmacro: with-arrays macro (from rows.lisp)
+  exportname: name of macrolet definition for broadcast op
+  "
+  (let ((fxname (veqsymb dim type (mkstr "$" op) :pref "-")) ; -f2$+
+        (opname (veqsymb dim type (mkstr op) :pref "-")) ; -f2+
+        (arrmacro (veqsymb 1 type "WITH-ARRAYS")) ; fwith-arrays
+        (exportname (veqsymb dim type (mkstr "$" op)))) ; f2$+
+    `(progn (map-symbol `(,',exportname (a &rest rest)
+                          `(mvc #',',',fxname (values ,a) ,@rest)))
+            (export ',exportname)
+            (declaim (inline ,fxname))
+            (vdef ,fxname (a (varg ,dim x))
+              (declare #.*opt* (,(arrtype type) a) (,type x))
+              (,arrmacro (:itr k :n (/ (length a) ,dim)
+                          :arr ((a ,dim a))
+                          :fxs ((fx ((varg ,dim vx))
+                                    (,opname x vx)))
+                          :exs ((a k (fx a)))))
+              a))))
 
-  (let ((vdef-name (intern (mkstr "-" macro-name))))
-    `(progn
-       (declaim (inline ,vdef-name))
-       (veq:vdef ,vdef-name (a (veq:varg 2 x))
-         (declare #.*opt* (fvec a) (ff x))
-         (veq:fwith-arrays (:itr k :n (/ (length a) 2)
-           :arr ((a 2 a))
-           :fxs ((fx ((veq:varg 2 vx)) (,fxname x vx)))
-           :exs ((a k (fx a)))))
-         a)
-       (export ',macro-name)
-       (defmacro ,macro-name (arr b)
-         `(mvc #',',vdef-name (values ,arr) ,b)))))
 
-(make-broadcast-fx f2$+ -f2+)
-(make-broadcast-fx f2$- -f2-)
-(make-broadcast-fx f2$* -f2*)
-(make-broadcast-fx f2$/ -f2/)
+(defmacro make-broadcast-fx (op)
+  "
+  makes function (veq:f2$+ arr x y) from operation +.
+  so that x y is added to every row of arr.
+  "
+  `(progn
+    ,@(loop for (dim type) in (group `(1 ff 2 ff 3 ff 1 df 2 df 3 df) 2)
+            collect `(broadcast-op ,dim ,type ,op))))
+
+(make-broadcast-fx +)
+(make-broadcast-fx -)
+(make-broadcast-fx /)
+(make-broadcast-fx *)
+
+
+; redefine vdef/vprogn macros with new elements in symbols map (added via
+; broadcast-op)
+(define-env-macros *symbols-map*)
 

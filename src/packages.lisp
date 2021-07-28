@@ -83,15 +83,19 @@
     #:f3$val
     #:f3$zero
 
-    #:f2segx
     #:f2lsegx
+    #:f2segx
 
-    #:f2$polygon
+    #:f2$center
     #:f2$circ
+    #:f2$polygon
     #:f2$rect
     #:f2$square
-    #:f2$lvs
-    #:f3$lvs
-    #:f2$lls
-    #:f3$lls))
+
+    #:f$last
+    #:d$last
+    #:f2$last
+    #:d2$last
+    #:f3$last
+    #:d3$last))
 

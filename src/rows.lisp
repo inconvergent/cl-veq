@@ -9,7 +9,6 @@
 
 
 ; TODO: for all inds
-; TODO: limit by n
 (defun for-all-rows (n arr expr &key dim)
   (declare (pos-int dim) (list arr))
   "
@@ -51,8 +50,7 @@
                (symb-or-aref (e ii)
                  (declare (symbol ii))
                  (let ((s (find-if (lambda (v) (eq (car v) e)) arr)))
-                   ; arr ii dim
-                   (when s (dimaref (car s) ii (cadr s)))))
+                   (when s (dimaref (car s) ii (cadr s))))) ; arr ii dim
 
                (transform-expr (expr ii)
                  (declare (cons expr) (symbol ii))
@@ -66,8 +64,7 @@
                (vaset-loop-body (arr* i expr &aux (dim (get-dim arr*)))
                  (declare (cons expr) (symbol arr*) (pos-int dim))
                  `(loop for ,itr of-type pos-int
-                        ,@(if inds? `(in ,inds*)
-                                    `(from 0 below ,n*))
+                        ,@(if inds? `(in ,inds*) `(from 0 below ,n*))
                         for ,cnt of-type pos-int from 0
                         do (let ((,ii* (* ,dim ,itr)))
                              (declare (pos-int ,ii*) (ignorable ,ii*))
@@ -75,19 +72,42 @@
                                      ,(transform-expr expr ii*))))))
 
       `(let ((,n* ,n) ,@(when inds? `((,inds* ,inds))))
-         (declare (pos-int ,n*)
+         (declare (pos-int ,n*) (ignorable ,n*)
                   ,@(when inds? `((list ,inds*))))
          (let ,(mapcar #'(lambda (v) (apply #'init-let v)) arr)
-           (declare (,(arrtype (cadr type))
-                     ,@(mapcar #'car arr)))
-           (labels ,fxs ,@(loop for ex in exs
-                                collect
-                                  (progn
-                                    (unless (= (length ex) 3)
-                                      (error "with arrays error. incorrect exs: ~a "
-                                             ex))
-                                    (dsb (arr* i expr) ex
-                                      (vaset-loop-body arr* i expr)))))
+           (declare (,(arrtype (cadr type)) ,@(mapcar #'car arr)))
+           (labels ,fxs
+             ,@(loop for ex in exs
+                     collect
+                       (progn (unless (= (length ex) 3)
+                                (error "with arrays error. incorrect exs: ~a "
+                                       ex))
+                              (dsb (arr* i expr) ex
+                                   (vaset-loop-body arr* i expr)))))
            ,@body))))))
 
+
+(defun -ind-to-val (type dim a rest)
+  "
+  return (values a[i] a[j] ...) for rest = (i j ...)
+
+  rest can be on the form (i j k) or ((i j k))
+  "
+  ; if rest is not set, assume it is (0 1)
+  (unless rest (setf rest `(0 1)))
+  ; if rest is on the form ((i j k))
+  (when (and (= (length rest) 1) (consp (car rest)))
+        (setf rest (car rest)))
+  `(mvc #'values ,@(loop for ind in rest
+                         collect `(,(veqsymb dim type ">>" :pref "-")
+                                    ,a ,ind))))
+
+
+(declaim (inline f$last d$last f2$last d2$last f3$last d3$last))
+(defun f$last (a) (declare #.*opt* (fvec a)) (-f>> a (1- (the pos-int (length a)))))
+(defun d$last (a) (declare #.*opt* (dvec a)) (-d>> a (1- (the pos-int (length a)))))
+(defun f2$last (a) (declare #.*opt* (fvec a)) (-f2>> a (1- (the pos-int (/ (length a) 2)))))
+(defun d2$last (a) (declare #.*opt* (dvec a)) (-d2>> a (1- (the pos-int (/ (length a) 2)))))
+(defun f3$last (a) (declare #.*opt* (fvec a)) (-f3>> a (1- (the pos-int (/ (length a) 3)))))
+(defun d3$last (a) (declare #.*opt* (dvec a)) (-d3>> a (1- (the pos-int (/ (length a) 3)))))
 

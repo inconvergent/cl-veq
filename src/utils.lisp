@@ -1,13 +1,7 @@
 
 (in-package :veq)
 
-(defparameter *opt*
-  '(optimize (safety 1) (speed 3) (debug 2) (space 2)))
-
-; from on lisp by pg
-(defmacro mac (expr) `(pprint (macroexpand-1 ',expr)))
-#+sbcl (defmacro mac* (expr) `(pprint (sb-cltl2:macroexpand-all ',expr)))
-
+(defparameter *opt* '(optimize (safety 1) (speed 3) (debug 2) (space 2)))
 
 (deftype df () `double-float)
 (deftype dvec () `(simple-array df))
@@ -18,6 +12,28 @@
 (deftype pos-df () `(double-float 0d0 *))
 (deftype pos-ff () `(single-float 0f0 *))
 (deftype pos-int (&optional (bits 31)) `(unsigned-byte ,bits))
+
+(defmacro df (&body body) `(coerce ,@body 'df))
+(defmacro ff (&body body) `(coerce ,@body 'ff))
+(defmacro in (&body body) `(coerce ,@body 'in))
+(defmacro df* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'df)) body)))
+(defmacro ff* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'ff)) body)))
+(defmacro in* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'in)) body)))
+
+(declaim (df dpi dpii dpi5))
+(defconstant dpi #.(coerce pi 'df))
+(defconstant dpii #.(coerce (* pi 2d0) 'df))
+(defconstant dpi5 #.(coerce (* pi 0.5d0) 'df))
+
+(declaim (ff fpi fpii fpi5))
+(defconstant fpi #.(coerce pi 'ff))
+(defconstant fpii #.(coerce (* pi 2f0) 'ff))
+(defconstant fpi5 #.(coerce (* pi 0.5f0) 'ff))
+
+
+; from on lisp by pg
+(defmacro mac (expr) `(pprint (macroexpand-1 ',expr)))
+#+sbcl (defmacro mac* (expr) `(pprint (sb-cltl2:macroexpand-all ',expr)))
 
 
 ; from on lisp by pg
@@ -72,20 +88,9 @@
 (defun last* (a) (first (last a)))
 
 
-(defmacro df (&body body) `(coerce ,@body 'df))
-(defmacro ff (&body body) `(coerce ,@body 'ff))
-(defmacro in (&body body) `(coerce ,@body 'in))
-(defmacro df* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'df)) body)))
-(defmacro ff* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'ff)) body)))
-(defmacro in* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'in)) body)))
-
-(declaim (df dpi dpii dpi5))
-(defconstant dpi #.(coerce pi 'df))
-(defconstant dpii #.(coerce (* pi 2d0) 'df))
-(defconstant dpi5 #.(coerce (* pi 0.5d0) 'df))
-
-(declaim (ff fpi fpii fpi5))
-(defconstant fpi #.(coerce pi 'ff))
-(defconstant fpii #.(coerce (* pi 2f0) 'ff))
-(defconstant fpi5 #.(coerce (* pi 0.5f0) 'ff))
+(defun dupes (lst)
+  (cond ((null lst) '())
+        ((member (car lst) (cdr lst) :test #'equal) (cons (car lst)
+                                                      (dupes (cdr lst))))
+        (t (dupes (cdr lst)))))
 

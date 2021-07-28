@@ -6,8 +6,7 @@
 (declaim (inline f2$rect))
 (vdef f2$rect (w h)
   (declare #.*opt* (ff w h))
-  (f$_ (list (list w (- h)) (list w h)
-             (list (- w) h) (list (- w) (- h)))))
+  (f$_ `((,w ,(- h)) (,w ,h) (,(- w) ,h) (,(- w) ,(- h)))))
 
 (declaim (inline f2$square))
 (vdef f2$square (s)
@@ -23,16 +22,13 @@
              collect (lst (f2scale (fcos-sin (+ rot (ff (* i pin)))) rad)))))
 
 (defun f2$circ (rad &key (rs 0.5f0))
+  (declare #.*opt* (ff rad rs))
   (f2$polygon (ceiling (* fpii rad rs)) rad))
 
 
-(declaim (inline f2$lvs))
-(veq:vdef f2$lvs (a &optional (i 0) (j 1))
-  (declare (fvec a) (pos-int i j))
-  (mvc #'values (f2> a i) (f2> a j)))
-
-(declaim (inline f3$lvs))
-(veq:vdef f3$lvs (a &optional (i 0) (j 1))
-  (declare (fvec a) (pos-int i j))
-  (mvc #'values (f2> a i) (f2> a j)))
+(veq:vdef f2$center (arr &aux (n (/ (length arr) 2)))
+  (declare #.*opt* (fvec arr) (pos-int n))
+  (mvb (minx maxx miny maxy) (f2mima n arr)
+       (f2$+ arr (f2< (- (* 0.5 (+ minx maxx)))
+                              (- (* 0.5 (+ miny maxy)))))))
 

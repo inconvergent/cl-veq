@@ -2,87 +2,29 @@
 (in-package :veq)
 
 
-;;;;;;;;;;;;;;;;;; INIT ARRAY OF VEC
-
-(defmacro f$ (&key (dim 1) (n 1) (v 0f0))
-  " create array with size (n dim), and initial value v"
-  `(values (make-array (the pos-int (* ,dim ,n))
-             :initial-element ,v
-             :element-type 'ff
-             :adjustable nil)
-           ,dim ,n))
-
-(defmacro d$ (&key (dim 1) (n 1) (v 0d0))
-  " create array with size (n dim), and initial value v"
-  `(values (make-array (the pos-int (* ,dim ,n))
-             :initial-element ,v
-             :element-type 'df
-             :adjustable nil)
-           ,dim ,n))
-
-
-(defmacro f$_ (&body body)
-  " create array from body. use either
-
-  ($_ (loop repeat 2 collect `(1d0 2d0)))
-  or
-  ($_ '((1d0 2d0) (1d0 2d0)))
+(defun define-env-macros (symbols-map)
   "
-  (awg (body* n dim)
-    `(let* ((,body* ,@body)
-            (,n (length ,body*))
-            (,dim (length (car ,body*))))
-       (declare (pos-int ,n ,dim) (list ,body*))
-       (values (make-array (* ,n ,dim) :initial-contents (awf ,body*)
-                                       :element-type 'ff
-                                       :adjustable nil)
-               ,dim ,n))))
+  make macros vdef/vprogn with all definitions in symbols-map.  this can be
+  called multiple times if new items are added to symbols map.
 
-(defmacro d$_ (&body body)
-  " create array from body. use either
-
-  ($_ (loop repeat 2 collect `(1d0 2d0)))
-  or
-  ($_ '((1d0 2d0) (1d0 2d0)))
+  NOTE: for internal use only. this will not work as expected when called after
+  veq has been loaded
   "
-  (awg (body* n dim)
-    `(let* ((,body* ,@body)
-            (,n (length ,body*))
-            (,dim (length (car ,body*))))
-       (declare (pos-int ,n ,dim) (list ,body*))
-       (values (make-array (* ,n ,dim) :initial-contents (awf ,body*)
-                                       :element-type 'df
-                                       :adjustable nil)
-               ,dim ,n))))
+  (let* ((names (sort (mapcar (lambda (v) (mkstr (first v))) symbols-map)
+                   #'string-lessp))
+         (dupes (dupes names)))
+  (when dupes (error "duplicate definitions in *symbols-map*: ~a~%
+                      dupes: ~a~%
+                      did you load :veq multiple times?~%" names dupes))
 
-(defmacro f_ (&body body)
-  "
-  corresponds to ($_ '(body)), that is a single row of (length body).
-  "
+  (defmacro vdef (fname &body body)
+    `(macrolet ,symbols-map (defun ,fname ,@(replace-varg body))))
 
-  (awg (body* dim)
-    `(let* ((,body* ,@body)   ; TODO: mvc list?
-            (,dim (length ,body*)))
-       (declare (pos-int ,dim) (list ,body*))
-       (values (make-array ,dim :initial-contents (awf ,body*)
-                                       :element-type 'ff
-                                       :adjustable nil)
-               ,dim 1))))
+  (defmacro vprogn (&body body)
+    `(macrolet ,symbols-map (progn ,@(replace-varg body))))))
 
-(defmacro d_ (&body body)
-  "
-  corresponds to ($_ '(body)), that is a single row of (length body).
-  "
 
-  (awg (body* dim)
-    `(let* ((,body* ,@body)   ; TODO: mvc list?
-            (,dim (length ,body*)))
-       (declare (pos-int ,dim) (list ,body*))
-       (values (make-array ,dim :initial-contents (awf ,body*)
-                                       :element-type 'df
-                                       :adjustable nil)
-               ,dim 1))))
-
+;;;;;;;;;;;;;;;;; VARIOUS
 
 ; using this makes thing much slower because of the consing.
 ; avoid when possible
@@ -90,6 +32,7 @@
 (defmacro lst (&body body)
   " (values ...) to (list ...) "
   `(mvc #'list ,@body))
+
 
 ;;;;;;;;;;;;;;;;;; MACRO UTILS
 
@@ -271,11 +214,16 @@
       `(-with-arrays (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
                             :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
                             :exs ,exs)
-                     ,@body))))
+                     ,@body))
 
-(defmacro vdef (fname &body body)
-  `(macrolet ,*symbols-map* (defun ,fname ,@(replace-varg body))))
+    (f$ind-to-val (a &rest rest) (-ind-to-val 'ff 1 a rest))
+    (d$ind-to-val (a &rest rest) (-ind-to-val 'df 1 a rest))
+    (f2$ind-to-val (a &rest rest) (-ind-to-val 'ff 2 a rest))
+    (d2$ind-to-val (a &rest rest) (-ind-to-val 'df 2 a rest))
+    (f3$ind-to-val (a &rest rest) (-ind-to-val 'ff 3 a rest))
+    (d3$ind-to-val (a &rest rest) (-ind-to-val 'df 3 a rest))))
 
-(defmacro vprogn (&body body)
-  `(macrolet ,*symbols-map* (progn ,@(replace-varg body))))
+
+; define vlet/vprogn with current symbols-map
+(define-env-macros *symbols-map*)
 

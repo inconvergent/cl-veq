@@ -6,14 +6,9 @@
 (declaim (list *symbols-map*))
 (defvar *symbols-map* '())
 
-; TODO
-; - lerp end/nonend
-; - broadcasts
-; - reader macros?
-
 
 (defun veqsymb (dim type fx &key pref)
-  (declare (fixnum dim) (symbol type) (string fx))
+  (declare (string fx))
 
   (let ((elem (list (cdr (assoc type `((veq:df . "D")
                                        (veq:ff . "F")
@@ -28,9 +23,6 @@
                                     (veq:ff . "FVEC")
                                     (veq:in . "IVEC")))))
           "VEQ"))
-
-(defun typezero (type)
-  (cdr (assoc type `((veq:df . 0d0) (veq:ff . 0f0) (veq:in . 0)))))
 
 (defun optype (mname)
   (declare (symbol mname))
