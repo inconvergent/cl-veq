@@ -1,69 +1,36 @@
 
 (in-package :veq)
 
-(declaim (inline d2$zero))
-(defun d2$zero (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (d$ :dim 2 :n n))
-
-(declaim (inline d2$one))
-(defun d2$one (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (d$ :dim 2 :n n :v 1d0))
-
-(declaim (inline d2$val))
-(defun d2$val (v &optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (d$ :dim 2 :n n :v v))
-
-(declaim (inline f2$zero))
-(defun f2$zero (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (f$ :dim 2 :n n))
-
-(declaim (inline f2$one))
-(defun f2$one (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (f$ :dim 2 :n n :v 1f0))
-
-(declaim (inline f2$val))
-(defun f2$val (v &optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (f$ :dim 2 :n n :v v))
-
+(declaim (inline d2$zero d2$one d2$val f2$one f2$val f2$zero))
+(defun d2$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 2 :n n :v 1d0))
+(defun d2$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 2 :n n :v v))
+(defun d2$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 2 :n n))
+(defun f2$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 2 :n n :v 1f0))
+(defun f2$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 2 :n n :v v))
+(defun f2$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 2 :n n))
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
 
 (defun 2with (arr i type body)
   (declare (symbol arr type))
+  "
+  execute (funcall body x y) for arr[i]. body must be a function that returns
+  (values x y), the new value for arr[i]
+  "
   (awg (i* ii xx yy)
     `(let* ((,i* ,i)
             (,ii (* 2 ,i*)))
       (declare (pos-int ,i* ,ii))
-      (mvb (,xx ,yy) (mvc ,@body
-                          (funcall #',(veqsymb 2 type ">>" :pref "-")
-                                   ,arr ,i*))
+      (mvb (,xx ,yy) (mvc ,@body (funcall #',(veqsymb 2 type ">>" :pref "-")
+                                          ,arr ,i*))
         (declare (,type ,xx ,yy))
         (setf (aref ,arr ,ii) ,xx
               (aref ,arr (the pos-int (1+ ,ii))) ,yy)
         (values ,xx ,yy)))))
 
-(defmacro d2with ((arr i) &body body)
-  (declare (symbol arr))
-  "
-  execute (funcall body x y) for arr[i]. body must be a function that returns
-  (values x y), the new value for arr[i]
-  "
-  (2with arr i 'df body))
-
-(defmacro f2with ((arr i) &body body)
-  (declare (symbol arr))
-  "
-  execute (funcall body x y) for arr[i]. body must be a function that returns
-  (values x y), the new value for arr[i]
-  "
-  (2with arr i 'ff body))
+(defmacro d2with ((arr i) &body body) (declare (symbol arr)) (2with arr i 'df body))
+(defmacro f2with ((arr i) &body body) (declare (symbol arr)) (2with arr i 'ff body))
 
 
 (declaim (inline -d2>))
@@ -81,16 +48,14 @@
   (declare #.*opt* (dvec v) (pos-int i))
   (let ((ii (* 2 i)))
     (declare (pos-int ii))
-    (values (the df (aref v ii))
-            (the df (aref v (the pos-int (1+ ii)))))))
+    (values (the df (aref v ii)) (the df (aref v (the pos-int (1+ ii)))))))
 
 (declaim (inline -f2>>))
 (defun -f2>> (v i)
   (declare #.*opt* (fvec v) (pos-int i))
   (let ((ii (* 2 i)))
     (declare (pos-int ii))
-    (values (the ff (aref v ii))
-            (the ff (aref v (the pos-int (1+ ii)))))))
+    (values (the ff (aref v ii)) (the ff (aref v (the pos-int (1+ ii)))))))
 
 
 (ops
@@ -125,7 +90,6 @@
   (f2sqrt (a b)) (values (the pos-ff (sqrt (values (the pos-ff a))))
                          (the pos-ff (sqrt (values (the pos-ff b)))))
 
-
   (d2len2 (a b)) (the pos-df (mvc #'+ (-d2square a b)))
   (d2len (a b)) (the pos-df (sqrt (the pos-df (mvc #'+ (-d2square a b)))))
 
@@ -143,7 +107,6 @@
 
   (d2angle (a b)) (mvc #'atan (-d2norm b a))
   (f2angle (a b)) (mvc #'atan (-f2norm b a))
-
 
   (d2+ (ax ay bx by)) (values (+ ax bx) (+ ay by))
   (d2- (ax ay bx by)) (values (- ax bx) (- ay by))
@@ -164,7 +127,6 @@
   (d2cross (ax ay bx by)) (- (* ax by) (* ay bx))
   (f2cross (ax ay bx by)) (- (* ax by) (* ay bx))
 
-
   (d2. (ax ay bx by)) (+ (* ax bx) (* ay by))
 
   (d2dst2 (ax ay bx by)) (mvc #'+ (-d2square (- bx ax) (- by ay)))
@@ -174,7 +136,6 @@
 
   (f2dst2 (ax ay bx by)) (mvc #'+ (-f2square (- bx ax) (- by ay)))
   (f2dst (ax ay bx by)) (sqrt (the pos-ff (mvc #'+ (-f2square (- bx ax) (- by ay)))))
-
 
   (d2lerp (ax ay bx by s)) (-d2+ ax ay (* (- bx ax) s) (* (- by ay) s))
   (d2from (ax ay bx by s)) (-d2+ ax ay (* bx s) (* by s))

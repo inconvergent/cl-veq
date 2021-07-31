@@ -1,7 +1,26 @@
 
 (in-package :veq)
 
-(defparameter *opt* '(optimize (safety 1) (speed 3) (debug 2) (space 2)))
+; from: http://cl-cookbook.sourceforge.net/os.html
+(defun vgetenv (name &optional default)
+  #+CMU (let ((x (assoc name ext:*environment-list* :test #'string=)))
+          (if x (cdr x) default))
+  #-CMU (or #+Allegro (sys:getenv name)
+            #+CLISP (ext:getenv name)
+            #+ECL (si:getenv name)
+            #+SBCL (sb-unix::posix-getenv name)
+            #+LISPWORKS (lispworks:environment-variable name)
+            default))
+
+
+(let ((devmode (string-downcase (vgetenv "DEV" ""))))
+  (if (> (length devmode) 0)
+    (progn
+      (defparameter *opt* '(optimize (safety 2) (speed 1) debug (space 1)
+                                     compilation-speed))
+      (format t "~%!!!!! VEQ DEVMODE !!!!!~%~%"))
+    (defparameter *opt* '(optimize (safety 1) speed (debug 2) space))))
+
 
 (deftype df () `double-float)
 (deftype dvec () `(simple-array df))
@@ -13,12 +32,16 @@
 (deftype pos-ff () `(single-float 0f0 *))
 (deftype pos-int (&optional (bits 31)) `(unsigned-byte ,bits))
 
+(declaim (ff *eps*))
+(defvar *eps* (* 3f0 single-float-epsilon))
+
 (defmacro df (&body body) `(coerce ,@body 'df))
 (defmacro ff (&body body) `(coerce ,@body 'ff))
 (defmacro in (&body body) `(coerce ,@body 'in))
 (defmacro df* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'df)) body)))
 (defmacro ff* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'ff)) body)))
 (defmacro in* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'in)) body)))
+
 
 (declaim (df dpi dpii dpi5))
 (defconstant dpi #.(coerce pi 'df))

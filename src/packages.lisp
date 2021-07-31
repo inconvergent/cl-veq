@@ -2,6 +2,7 @@
 (defpackage #:veq
   (:use #:common-lisp)
   (:export
+    #:*eps*
     #:arr
     #:dpi
     #:dpi5
@@ -83,6 +84,8 @@
     #:f3$val
     #:f3$zero
 
+    #:f2inside-bbox
+    #:f2inside-concave
     #:f2lsegx
     #:f2segx
 

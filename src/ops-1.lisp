@@ -1,86 +1,40 @@
 
 (in-package :veq)
 
-(declaim (inline d$zero))
-(defun d$zero (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (d$ :dim 1 :n n))
-
-(declaim (inline d$one))
-(defun d$one (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (d$ :dim 1 :n n :v 1d0))
-
-(declaim (inline d$val))
-(defun d$val (v &optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (d$ :dim 1 :n n :v v))
-
-(declaim (inline f$zero))
-(defun f$zero (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (f$ :dim 1 :n n))
-
-(declaim (inline f$one))
-(defun f$one (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (f$ :dim 1 :n n :v 1f0))
-
-(declaim (inline f$val))
-(defun f$val (v &optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (f$ :dim 1 :n n :v v))
+(declaim (inline d$zero d$one d$val f$one f$val f$zero))
+(defun d$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 1 :n n :v 1d0))
+(defun d$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 1 :n n :v v))
+(defun d$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 1 :n n))
+(defun f$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 1 :n n :v 1f0))
+(defun f$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 1 :n n :v v))
+(defun f$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 1 :n n))
 
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
 (defun with (arr i type body)
   (declare (symbol arr type))
-  (awg (ii xx)
-    `(let ((,ii ,i))
-      (declare (pos-int ,ii))
-      (mvb (,xx) (mvc ,@body
-                      (funcall #',(veqsymb 1 type ">>" :pref "-")
-                               ,arr ,ii))
-        (declare (,type ,xx))
-        (setf (aref ,arr ,ii) ,xx)
-        ,xx))))
-
-(defmacro dwith ((arr i) &body body)
-  (declare (symbol arr))
   "
   execute (funcall body x y) for arr[i]. body must be a function that returns
   (values x y), the new value for arr[i]
   "
-  (with arr i 'df body))
+  (awg (ii xx)
+    `(let ((,ii ,i))
+      (declare (pos-int ,ii))
+      (mvb (,xx) (mvc ,@body (funcall #',(veqsymb 1 type ">>" :pref "-")
+                                      ,arr ,ii))
+        (declare (,type ,xx))
+        (setf (aref ,arr ,ii) ,xx)
+        ,xx))))
 
-(defmacro fwith ((v i) &body body)
-  (declare (symbol v))
-  "
-  execute (funcall body x y) for v[i]. body must be a function that returns
-  (values x y), the new value for v[i]
-  "
-  (with v i 'ff body))
+(defmacro dwith ((arr i) &body body) (declare (symbol arr)) (with arr i 'df body))
+(defmacro fwith ((v i) &body body) (declare (symbol v)) (with v i 'ff body))
 
-(declaim (inline -d>))
-(defun -d> (v)
-  (declare #.*opt* (dvec v))
-  (the df (aref v 0)))
-
-(declaim (inline -f>))
-(defun -f> (v)
-  (declare #.*opt* (fvec v))
-  (the ff (aref v 0)))
-
-(declaim (inline -d>>))
-(defun -d>> (v i)
-  (declare #.*opt* (dvec v) (pos-int i))
-  (the df (aref v i)))
-
-(declaim (inline -f>>))
-(defun -f>> (v i)
-  (declare #.*opt* (fvec v) (pos-int i))
-  (the ff (aref v i)))
+(declaim (inline -d> -f> -d>> -f>>))
+(defun -d> (v) (declare #.*opt* (dvec v)) (the df (aref v 0)))
+(defun -f> (v) (declare #.*opt* (fvec v)) (the ff (aref v 0)))
+(defun -d>> (v i) (declare #.*opt* (dvec v) (pos-int i)) (the df (aref v i)))
+(defun -f>> (v i) (declare #.*opt* (fvec v) (pos-int i)) (the ff (aref v i)))
 
 
 (ops

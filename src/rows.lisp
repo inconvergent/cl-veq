@@ -77,13 +77,10 @@
          (let ,(mapcar #'(lambda (v) (apply #'init-let v)) arr)
            (declare (,(arrtype (cadr type)) ,@(mapcar #'car arr)))
            (labels ,fxs
-             ,@(loop for ex in exs
-                     collect
-                       (progn (unless (= (length ex) 3)
-                                (error "with arrays error. incorrect exs: ~a "
-                                       ex))
-                              (dsb (arr* i expr) ex
-                                   (vaset-loop-body arr* i expr)))))
+             ,@(loop for ex in exs collect
+                 (progn (unless (= (length ex) 3)
+                          (error "with arrays error. incorrect exs: ~a " ex))
+                        (dsb (arr* i expr) ex (vaset-loop-body arr* i expr)))))
            ,@body))))))
 
 

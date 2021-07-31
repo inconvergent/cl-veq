@@ -1,83 +1,47 @@
 
 (in-package :veq)
 
-(declaim (inline d3$zero))
-(defun d3$zero (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (d$ :dim 3 :n n))
-
-(declaim (inline d3$one))
-(defun d3$one (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (d$ :dim 3 :n n :v 1d0))
-
-(declaim (inline d3$val))
-(defun d3$val (v &optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (d$ :dim 3 :n n :v v))
-
-(declaim (inline f3$zero))
-(defun f3$zero (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (f$ :dim 3 :n n))
-
-(declaim (inline f3$one))
-(defun f3$one (&optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (f$ :dim 3 :n n :v 1f0))
-
-(declaim (inline f3$val))
-(defun f3$val (v &optional (n 1))
-  (declare #.*opt* (pos-int n))
-  (f$ :dim 3 :n n :v v))
+(declaim (inline d3$zero d3$one d3$val f3$one f3$val f3$zero))
+(defun d3$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 3 :n n :v 1d0))
+(defun d3$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 3 :n n :v v))
+(defun d3$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 3 :n n))
+(defun f3$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 3 :n n :v 1f0))
+(defun f3$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 3 :n n :v v))
+(defun f3$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 3 :n n))
 
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
 (defun 3with (arr i type body)
   (declare (symbol arr type))
+  "
+  execute (funcall body x y) for arr[i]. body must be a function that returns
+  (values x y), the new value for arr[i]
+  "
   (awg (i* ii xx yy zz)
     `(let* ((,i* (the pos-int ,i))
             (,ii (* 3 ,i*)))
       (declare (pos-int ,i* ,ii))
-      (mvb (,xx ,yy ,zz) (mvc ,@body
-                              (funcall #',(veqsymb 3 type ">>" :pref "-")
-                                       ,arr ,i*))
+      (mvb (,xx ,yy ,zz) (mvc ,@body (funcall #',(veqsymb 3 type ">>" :pref "-")
+                                              ,arr ,i*))
         (declare (,type ,xx ,yy ,zz))
         (setf (aref ,arr ,ii) ,xx
               (aref ,arr (the pos-int (1+ ,ii))) ,yy
               (aref ,arr (the pos-int (+ 2 ,ii))) ,zz)
         (values ,xx ,yy ,zz)))))
 
-(defmacro d3with ((arr i) &body body)
-  (declare (symbol arr))
-  "
-  execute (funcall body x y) for arr[i]. body must be a function that returns
-  (values x y), the new value for arr[i]
-  "
-  (3with arr i 'df body))
-
-(defmacro f3with ((arr i) &body body)
-  (declare (symbol arr))
-  "
-  execute (funcall body x y) for arr[i]. body must be a function that returns
-  (values x y), the new value for arr[i]
-  "
-  (3with arr i 'ff body))
+(defmacro d3with ((arr i) &body body) (declare (symbol arr)) (3with arr i 'df body))
+(defmacro f3with ((arr i) &body body) (declare (symbol arr)) (3with arr i 'ff body))
 
 (declaim (inline -d3>))
 (defun -d3> (v)
   (declare #.*opt* (dvec v))
-  (values (the df (aref v 0))
-          (the df (aref v 1))
-          (the df (aref v 2))))
+  (values (the df (aref v 0)) (the df (aref v 1)) (the df (aref v 2))))
 
 (declaim (inline -f3>))
 (defun -f3> (v)
   (declare #.*opt* (fvec v))
-  (values (the ff (aref v 0))
-          (the ff (aref v 1))
-          (the ff (aref v 2))))
+  (values (the ff (aref v 0)) (the ff (aref v 1)) (the ff (aref v 2))))
 
 (declaim (inline -d3>>))
 (defun -d3>> (v i)
@@ -126,7 +90,6 @@
   (f3max (a b c)) (max (max a b) c)
   (f3min (a b c)) (min (min a b) c)
 
-
   (d3+ (ax ay az bx by bz)) (values (+ ax bx) (+ ay by) (+ az bz))
   (d3- (ax ay az bx by bz)) (values (- ax bx) (- ay by) (- az bz))
   (d3* (ax ay az bx by bz)) (values (* ax bx) (* ay by) (* az bz))
@@ -146,7 +109,6 @@
   (d3cross (ax ay az bx by bz)) (values (- (* ay bz) (* az by)) (- (* az bx) (* ax bz)) (- (* ax by) (* ay bx)))
   (f3cross (ax ay az bx by bz)) (values (- (* ay bz) (* az by)) (- (* az bx) (* ax bz)) (- (* ax by) (* ay bx)))
 
-
   (d3.(ax ay az bx by bz)) (+ (* ax bx) (* ay by) (* az bz))
 
   (d3dst2 (ax ay az bx by bz)) (mvc #'+ (-d3square (- bx ax) (- by ay) (- bz az)))
@@ -157,7 +119,6 @@
   (f3dst2 (ax ay az bx by bz)) (mvc #'+ (-f3square (- bx ax) (- by ay) (- bz az)))
   (f3dst (ax ay az bx by bz)) (sqrt (the pos-ff (mvc #'+ (-f3square (- bx ax) (- by ay) (- bz az)))))
 
-
   (d3lerp (ax ay az bx by bz s)) (-d3+ ax ay az (* (- bx ax) s) (* (- by ay) s) (* (- bz az) s))
   (d3from (ax ay az bx by bz s)) (-d3+ ax ay az (* bx s) (* by s) (* bz s))
   (d3mid (ax ay az bx by bz)) (values (* (+ bx ax) 0.5d0) (* (+ by ay) 0.5d0) (* (+ bz az) 0.5d0))
@@ -165,7 +126,6 @@
   (f3lerp (ax ay az bx by bz s)) (-f3+ ax ay az (* (- bx ax) s) (* (- by ay) s) (* (- bz az) s))
   (f3from (ax ay az bx by bz s)) (-f3+ ax ay az (* bx s) (* by s) (* bz s))
   (f3mid (ax ay az bx by bz)) (values (* (+ bx ax) 0.5f0) (* (+ by ay) 0.5f0) (* (+ bz az) 0.5f0))
-
 
   (d3scale (a b c s)) (values (* a s) (* b s) (* c s))
   (d3iscale (a b c s)) (values (/ a s) (/ b s) (/ c s))

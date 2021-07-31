@@ -23,12 +23,12 @@
 
 (defun f2$circ (rad &key (rs 0.5f0))
   (declare #.*opt* (ff rad rs))
-  (f2$polygon (ceiling (* fpii rad rs)) rad))
+  (f2$polygon (the fixnum (ceiling (the ff (* fpii (the ff (* rad rs)))))) rad))
 
 
 (veq:vdef f2$center (arr &aux (n (/ (length arr) 2)))
   (declare #.*opt* (fvec arr) (pos-int n))
   (mvb (minx maxx miny maxy) (f2mima n arr)
        (f2$+ arr (f2< (- (* 0.5 (+ minx maxx)))
-                              (- (* 0.5 (+ miny maxy)))))))
+                      (- (* 0.5 (+ miny maxy)))))))
 
