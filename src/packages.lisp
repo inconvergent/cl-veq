@@ -15,11 +15,9 @@
     #:2vprint
     #:3vprint
 
-    #:dcopy
     #:df
     #:df*
     #:dvec
-    #:fcopy
     #:ff
     #:ff*
     #:fvec
@@ -45,13 +43,6 @@
     #:f2let
     #:f3let
 
-    #:d$
-    #:d$_
-    #:d_
-    #:f$
-    #:f$_
-    #:f_
-
     #:to-list
     #:2to-list
     #:3to-list
@@ -63,42 +54,48 @@
     #:f3with
     #:fwith
 
+    #:d$_
+    #:d$copy
+    #:d$last
+    #:d$make
     #:d$one
     #:d$val
     #:d$zero
-    #:f$one
-    #:f$val
-    #:f$zero
-
+    #:d2$last
     #:d2$one
     #:d2$val
     #:d2$zero
-    #:f2$one
-    #:f2$val
-    #:f2$zero
-
+    #:d3$last
     #:d3$one
     #:d3$val
     #:d3$zero
+    #:d_ ; TODO: rename
+    #:f$_
+    #:f$copy
+    #:f$last
+    #:f$make
+    #:f$one
+    #:f$val
+    #:f$zero
+    #:f2$center
+    #:f2$circ
+    #:f2$last
+    #:f2$one
+    #:f2$polygon
+    #:f2$rect
+    #:f2$square
+    #:f2$val
+    #:f2$zero
+    #:f3$last
     #:f3$one
     #:f3$val
     #:f3$zero
+    #:f_ ; TODO: rename
 
     #:f2inside-bbox
     #:f2inside-concave
     #:f2lsegx
+    #:f2segdst
     #:f2segx
-
-    #:f2$center
-    #:f2$circ
-    #:f2$polygon
-    #:f2$rect
-    #:f2$square
-
-    #:f$last
-    #:d$last
-    #:f2$last
-    #:d2$last
-    #:f3$last
-    #:d3$last))
+    ))
 

@@ -2,12 +2,12 @@
 (in-package :veq)
 
 (declaim (inline d$zero d$one d$val f$one f$val f$zero))
-(defun d$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 1 :n n :v 1d0))
-(defun d$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 1 :n n :v v))
-(defun d$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$ :dim 1 :n n))
-(defun f$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 1 :n n :v 1f0))
-(defun f$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 1 :n n :v v))
-(defun f$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$ :dim 1 :n n))
+(defun d$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 1 :n n :v 1d0))
+(defun d$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 1 :n n :v v))
+(defun d$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 1 :n n))
+(defun f$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 1 :n n :v 1f0))
+(defun f$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 1 :n n :v v))
+(defun f$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 1 :n n))
 
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
@@ -21,7 +21,7 @@
   (awg (ii xx)
     `(let ((,ii ,i))
       (declare (pos-int ,ii))
-      (mvb (,xx) (mvc ,@body (funcall #',(veqsymb 1 type ">>" :pref "-")
+      (mvb (,xx) (mvc ,@body (funcall #',(veqsymb 1 type "$" :pref "-")
                                       ,arr ,ii))
         (declare (,type ,xx))
         (setf (aref ,arr ,ii) ,xx)
@@ -30,11 +30,15 @@
 (defmacro dwith ((arr i) &body body) (declare (symbol arr)) (with arr i 'df body))
 (defmacro fwith ((v i) &body body) (declare (symbol v)) (with v i 'ff body))
 
-(declaim (inline -d> -f> -d>> -f>>))
-(defun -d> (v) (declare #.*opt* (dvec v)) (the df (aref v 0)))
-(defun -f> (v) (declare #.*opt* (fvec v)) (the ff (aref v 0)))
-(defun -d>> (v i) (declare #.*opt* (dvec v) (pos-int i)) (the df (aref v i)))
-(defun -f>> (v i) (declare #.*opt* (fvec v) (pos-int i)) (the ff (aref v i)))
+(declaim (inline -d$))
+(defun -d$ (v &optional (i 0))
+  (declare #.*opt* (dvec v) (pos-int i))
+  (the df (aref v i)))
+
+(declaim (inline -f$))
+(defun -f$ (v &optional (i 0))
+  (declare #.*opt* (fvec v) (pos-int i))
+  (the ff (aref v i)))
 
 
 (ops

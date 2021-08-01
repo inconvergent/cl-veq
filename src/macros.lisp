@@ -129,12 +129,12 @@
     (d3<* (&body body) `(mvc #'values (df* ,@(dim? body 3))))
     (f3<* (&body body) `(mvc #'values (ff* ,@(dim? body 3))))
 
-    (d3> (&body body) `(,(if (lst>n body 1) '-d3>> '-d3>) ,@body))
-    (f3> (&body body) `(,(if (lst>n body 1) '-f3>> '-f3>) ,@body))
-    (d2> (&body body) `(,(if (lst>n body 1) '-d2>> '-d2>) ,@body))
-    (f2> (&body body) `(,(if (lst>n body 1) '-f2>> '-f2>) ,@body))
-    (d> (&body body) `(,(if (lst>n body 1) '-d1>> '-d1>) ,@body))
-    (f> (&body body) `(,(if (lst>n body 1) '-f1>> '-f1>) ,@body))
+    (f$ (a &rest rest) (-ind-to-val 'ff 1 a rest))
+    (d$ (a &rest rest) (-ind-to-val 'df 1 a rest))
+    (f2$ (a &rest rest) (-ind-to-val 'ff 2 a rest))
+    (d2$ (a &rest rest) (-ind-to-val 'df 2 a rest))
+    (f3$ (a &rest rest) (-ind-to-val 'ff 3 a rest))
+    (d3$ (a &rest rest) (-ind-to-val 'df 3 a rest))
 
     (d2mvb (arg expr &body body) (-vmvb 'df 2 arg expr body))
     (d3mvb (arg expr &body body) (-vmvb 'df 3 arg expr body))
@@ -150,18 +150,14 @@
     (d3let (all-args &body body) (-vlet 'df 3 all-args body))
 
     (d2rep (expr) `(values ,@(loop repeat 2 collect expr of-type df)))
-    (d2rep* (expr) (awg (e) `(let ((,e ,expr))
-                               (declare (df ,e)) (values ,e ,e))))
+    (d2rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (df ,e)) (values ,e ,e))))
     (f2rep (expr) `(values ,@(loop repeat 2 collect expr of-type ff)))
-    (f2rep* (expr) (awg (e) `(let ((,e ,expr))
-                               (declare (ff ,e)) (values ,e ,e))))
+    (f2rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (ff ,e)) (values ,e ,e))))
 
     (d3rep (expr) `(values ,@(loop repeat 3 collect expr of-type df)))
-    (d3rep* (expr) (awg (e) `(let ((,e ,expr))
-                               (declare (df ,e)) (values ,e ,e ,e))))
+    (d3rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (df ,e)) (values ,e ,e ,e))))
     (f3rep (expr) `(values ,@(loop repeat 3 collect expr of-type ff)))
-    (f3rep* (expr) (awg (e) `(let ((,e ,expr))
-                               (declare (ff ,e)) (values ,e ,e ,e))))
+    (f3rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (ff ,e)) (values ,e ,e ,e))))
 
     ; linear interpolation
     (flspace ((n a b &key (end t)) &body body) (fxlspace n a b body :end end :dim 1 :type 'ff))
@@ -214,14 +210,7 @@
       `(-with-arrays (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
                             :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
                             :exs ,exs)
-                     ,@body))
-
-    (f$ind-to-val (a &rest rest) (-ind-to-val 'ff 1 a rest))
-    (d$ind-to-val (a &rest rest) (-ind-to-val 'df 1 a rest))
-    (f2$ind-to-val (a &rest rest) (-ind-to-val 'ff 2 a rest))
-    (d2$ind-to-val (a &rest rest) (-ind-to-val 'df 2 a rest))
-    (f3$ind-to-val (a &rest rest) (-ind-to-val 'ff 3 a rest))
-    (d3$ind-to-val (a &rest rest) (-ind-to-val 'df 3 a rest))))
+                     ,@body))))
 
 
 ; define vlet/vprogn with current symbols-map

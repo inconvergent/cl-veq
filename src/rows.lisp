@@ -41,7 +41,7 @@
       (labels ((init-let (arr* dim &rest rest)
                  (declare (symbol arr*) (pos-int dim))
                  (if rest `(,arr* (progn ,@rest))
-                          `(,arr* (,(veqsymb 1 (cadr type) "$")
+                          `(,arr* (,(veqsymb 1 (cadr type) "$MAKE")
                                     :dim ,dim :n ,n*))))
                (get-dim (arr*)
                  (declare (symbol arr*))
@@ -90,21 +90,20 @@
 
   rest can be on the form (i j k) or ((i j k))
   "
-  ; if rest is not set, assume it is (0 1)
-  (unless rest (setf rest `(0 1)))
-  ; if rest is on the form ((i j k))
-  (when (and (= (length rest) 1) (consp (car rest)))
-        (setf rest (car rest)))
-  `(mvc #'values ,@(loop for ind in rest
-                         collect `(,(veqsymb dim type ">>" :pref "-")
-                                    ,a ,ind))))
+  (unless rest (setf rest `(0))) ; defaults to (0)
+  (awg (a*)
+    `(let ((,a* ,a))
+       (declare (,(arrtype type) ,a*))
+       (mvc #'values ,@(loop for ind in rest
+                             collect `(,(veqsymb dim type "$" :pref "-")
+                                        ,a* ,ind))))))
 
 
 (declaim (inline f$last d$last f2$last d2$last f3$last d3$last))
-(defun f$last (a) (declare #.*opt* (fvec a)) (-f>> a (1- (the pos-int (length a)))))
-(defun d$last (a) (declare #.*opt* (dvec a)) (-d>> a (1- (the pos-int (length a)))))
-(defun f2$last (a) (declare #.*opt* (fvec a)) (-f2>> a (1- (the pos-int (/ (length a) 2)))))
-(defun d2$last (a) (declare #.*opt* (dvec a)) (-d2>> a (1- (the pos-int (/ (length a) 2)))))
-(defun f3$last (a) (declare #.*opt* (fvec a)) (-f3>> a (1- (the pos-int (/ (length a) 3)))))
-(defun d3$last (a) (declare #.*opt* (dvec a)) (-d3>> a (1- (the pos-int (/ (length a) 3)))))
+(defun f$last (a) (declare #.*opt* (fvec a)) (-f$ a (1- (the pos-int (length a)))))
+(defun d$last (a) (declare #.*opt* (dvec a)) (-d$ a (1- (the pos-int (length a)))))
+(defun f2$last (a) (declare #.*opt* (fvec a)) (-f2$ a (1- (the pos-int (/ (length a) 2)))))
+(defun d2$last (a) (declare #.*opt* (dvec a)) (-d2$ a (1- (the pos-int (/ (length a) 2)))))
+(defun f3$last (a) (declare #.*opt* (fvec a)) (-f3$ a (1- (the pos-int (/ (length a) 3)))))
+(defun d3$last (a) (declare #.*opt* (dvec a)) (-d3$ a (1- (the pos-int (/ (length a) 3)))))
 

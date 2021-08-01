@@ -3,28 +3,26 @@
 
 
 ; TODO: port this
-; (declaim (inline segdst))
-; (defun segdst (line v)
-;   "
-;   find distance between line and v.
-;   returns values (distance s) where is is the interpolation value that will
-;   yield the closest point on line.
-;   "
-;   (declare #.*opt* (list line) (vec v))
-;   (destructuring-bind (va vb) line
-;     (declare (vec va vb))
-;     (let ((l2 (dst2 va vb)))
-;       (declare (ff l2))
-;       (if (<= l2 0d0)
-;         ; line is a point
-;         (values (dst va v) 0d0)
-;         ; else
-;         (let ((tt (/ (+ (* (- (vec-x v) (vec-x va)) (- (vec-x vb) (vec-x va)))
-;                         (* (- (vec-y v) (vec-y va)) (- (vec-y vb) (vec-y va))))
-;                      l2)))
-;           (if (> tt 1d0) (setf tt 1d0))
-;           (if (< tt 0d0) (setf tt 0d0))
-;           (values (dst v (on-line tt va vb)) tt))))))
+(declaim (inline f2segdst))
+(vdef f2segdst ((varg 2 va vb v))
+  "
+  find distance between line, (va vb), and v.
+  returns (values distance s) where is is the interpolation value that will
+  yield the closest point on line.
+  "
+  (declare #.*opt* (ff va vb v))
+  (let ((l2 (f2dst2 va vb)))
+    (declare (ff l2))
+    (if (< l2 *eps*)
+      ; line is a point
+      (values (f2dst va v) 0d0)
+      ; else
+      (let ((s (max 0f0 (min 1f0 (/ (+ (* (- (vref v 0) (vref va 0))
+                                          (- (vref vb 0) (vref va 0)))
+                                       (* (- (vref v 1) (vref va 1))
+                                          (- (vref vb 1) (vref va 1))))
+                                    l2)))))
+        (values (f2dst v (f2lerp va vb s)) s)))))
 
 
 
@@ -87,8 +85,8 @@
          "intersection test"
          (loop with line of-type fvec = (aref lines i)
                for c of-type pos-int in cands
-               do (vprogn (mvb (x p q) (mvc #'f2segx (f2$ind-to-val line)
-                                                     (f2$ind-to-val (aref lines c)))
+               do (vprogn (mvb (x p q) (mvc #'f2segx (f2$ line 0 1)
+                                                     (f2$ (aref lines c) 0 1))
                             (declare (boolean x) (ff p q))
                             (when x (-append i c p) (-append c i q))))))
        (-remove (i)
@@ -152,7 +150,7 @@
           (lambda (i (varg 2 a))
             (declare (optimize speed) (ff a))
             (when (mvc #'f2segx pt shift (vref pt 1)
-                              a (-f2>> shape (mod (1+ i) n)))
+                              a (f2$ shape (mod (1+ i) n)))
                   (incf c))))
         ; odd number of isects means pt is inside shape
         (oddp c)))))
