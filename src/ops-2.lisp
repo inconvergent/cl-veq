@@ -1,7 +1,6 @@
 
 (in-package :veq)
 
-(declaim (inline d2$zero d2$one d2$val f2$one f2$val f2$zero))
 (defun d2$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n :v 1d0))
 (defun d2$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n :v v))
 (defun d2$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n))

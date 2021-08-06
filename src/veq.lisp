@@ -41,7 +41,7 @@
          (fname (symb "-" mname)))
     `(progn (map-symbol `(,',mname (&body body) `(mvc #',',',fname ,@body)))
             (export ',mname)
-            (declaim (inline ,fname))
+            ,@(unless #.*dev* `((declaim (inline ,fname))))
             (defun ,fname ,args (declare ,*opt* ,declares)
                                 (progn ,@body)))))
 

@@ -50,8 +50,7 @@
                           collect (let ((syms (-syms n name)))
                                     (push `(,name . ,syms) rmap)
                                     syms) into new
-                          finally (setf res `(,@(awf new)
-                                               ,@res))))
+                          finally (setf res `(,@(awf new) ,@res))))
                else do (push v res)
                finally (return (values res rmap)))
          (values root rmap)))

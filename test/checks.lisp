@@ -63,7 +63,11 @@
         '(4 NIL 4 7 9 NIL 4 3 2 4 4 NIL NIL NIL NIL NIL NIL))
     (is (map 'list #'cdar res)
         '(0.64732474 NIL 0.17538664 0.5416054 0.049416218 NIL 0.7013191
-          0.1310799 0.13511844 0.55909103 0.5372815 NIL NIL NIL NIL NIL NIL)))))
+          0.1310799 0.13511844 0.55909103 0.5372815 NIL NIL NIL NIL NIL NIL))
+
+    (is (veq:lst (veq:f3planex 0f0 0f0 1f0 0f0 0f0 0f0
+                               1f0 1f0 -1f0 1f0 1f0 1f0))
+        '(t 0.5 1f0 1f0 0f0)))))
 
 (unless (finalize) (error "error in checks"))
 

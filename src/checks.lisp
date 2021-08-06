@@ -3,7 +3,6 @@
 
 
 ; TODO: port this
-(declaim (inline f2segdst))
 (vdef f2segdst ((varg 2 va vb v))
   "
   find distance between line, (va vb), and v.
@@ -26,7 +25,6 @@
 
 
 
-(declaim (inline f2segx))
 (vdef f2segx ((varg 2 a1 a2 b1 b2))
   (declare #.*opt* (ff a1 a2 b1 b2))
   "
@@ -156,4 +154,19 @@
         (oddp c)))))
 
 
+(vdef f3planex ((varg 3 n p a b))
+  (declare #.*opt* (ff n p a b))
+  "intersection of plane (n:normal, p:point) and line (a b)"
+  (veq:f3let ((ln (f3- b a)))
+    (let ((ldotn (f3. ln n)))
+      (declare (ff ldotn))
+
+      ; avoid div0.
+      (when (< (abs ldotn) *eps*)
+            (return-from f3planex (values nil 0f0 0f0 0f0 0f0)))
+
+      ; else
+      (let ((d (/ (f3. (f3- p a) n) ldotn)))
+        (declare (ff d))
+        (mvc #'values t d (f3from a ln d))))))
 

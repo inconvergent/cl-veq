@@ -1,7 +1,7 @@
 
 (asdf:defsystem #:veq
   :description "reasonably fast operations for 1d, 2d, 3d vectors"
-  :version "0.3.2"
+  :version "0.3.3"
   :author "anders hoff/inconvergent"
   :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))
@@ -12,20 +12,19 @@
                (:file "utils" :depends-on ("packages"))
                (:file "array-utils" :depends-on ("utils"))
                (:file "veq" :depends-on ("utils" "array-utils"))
-               (:file "ops" :depends-on ("utils" "macros"))
-               (:file "ops-1" :depends-on ("utils" "veq"))
-               (:file "ops-2" :depends-on ("utils" "veq"))
-               (:file "ops-3" :depends-on ("utils" "veq"))
-               (:file "vset" :depends-on ("utils" "veq"))
-               (:file "lerp" :depends-on ("utils" "veq"))
-               (:file "mima" :depends-on ("utils" "veq"))
-               (:file "rows" :depends-on ("utils" "veq"))
-               (:file "macros" :depends-on ("utils" "veq"
-                                            "ops-1" "ops-2" "ops-3"))
-               (:file "vprint" :depends-on ("utils" "macros"))
-               (:file "checks" :depends-on ("utils" "macros" "rows"))
-               (:file "broadcast" :depends-on ("utils" "macros" "rows"))
-               (:file "shapes" :depends-on ("utils" "macros"))))
+               (:file "ops" :depends-on ("veq" "macros"))
+               (:file "ops-1" :depends-on ("veq"))
+               (:file "ops-2" :depends-on ("veq"))
+               (:file "ops-3" :depends-on ("veq"))
+               (:file "vset" :depends-on ("veq"))
+               (:file "lerp" :depends-on ("veq"))
+               (:file "mima" :depends-on ("veq"))
+               (:file "rows" :depends-on ("veq"))
+               (:file "macros" :depends-on ("veq" "ops-1" "ops-2" "ops-3"))
+               (:file "vprint" :depends-on ("macros"))
+               (:file "checks" :depends-on ("macros" "rows"))
+               (:file "broadcast" :depends-on ("macros" "rows"))
+               (:file "shapes" :depends-on ("macros"))))
 
 (asdf:defsystem #:veq/tests
   :depends-on (#:veq #:prove)

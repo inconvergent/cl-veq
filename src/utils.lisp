@@ -16,10 +16,13 @@
 (let ((devmode (string-downcase (vgetenv "DEV" ""))))
   (if (> (length devmode) 0)
     (progn
+      (defparameter *dev* t)
       (defparameter *opt* '(optimize (safety 2) (speed 1) debug (space 1)
                                      compilation-speed))
       (format t "~%!!!!! VEQ DEVMODE !!!!!~%~%"))
-    (defparameter *opt* '(optimize (safety 1) speed (debug 2) space))))
+    (progn
+      (defparameter *dev* nil)
+      (defparameter *opt* '(optimize (safety 1) speed (debug 2) space)))))
 
 
 (deftype df () `double-float)
