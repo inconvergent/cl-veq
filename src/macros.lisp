@@ -37,28 +37,30 @@
 ;;;;;;;;;;;;;;;;;; MACRO UTILS
 
 
-(defun replace-varg (body)
+(defun replace-varg (body &optional (root-rmap (list)))
   (labels
-    ((-syms (n name) (-gensyms name n))
-     (car-vargp (root rmap)
+    ((car-vargp (root rmap)
        (if (listp root)
          (loop with res = (list)
                for v in (reverse root)
                if (and (listp v) (eq (car v) 'varg))
                do (dsb (n &rest rest) (cdr v)
                     (loop for name in rest
-                          collect (let ((syms (-syms n name)))
+                          collect (let ((syms (-gensyms name n)))
                                     (push `(,name . ,syms) rmap)
                                     syms) into new
                           finally (setf res `(,@(awf new) ,@res))))
                else do (push v res)
                finally (return (values res rmap)))
          (values root rmap)))
-     (-vref (root rmap) (dsb (ref i) (cdr root)
-                             (let ((as (assoc ref rmap)))
-                               (if as (nth i (cdr as))
-                                      (error "vref error: no match for: ~a~%" root)))))
-     (-walk (root &optional (rmap (list)))
+     (-vref (root rmap)
+            (dsb (ref i) (cdr root)
+              ; replace-varg can encounter vrefs that have no match in rmap (eg
+              ; in -vmvb). so we need to ignore missing matches for vref.
+              ; these vrefs will be replaced at a later time (eg. in the call
+              ; to replace-varg in -vlet)
+              (aif (assoc ref rmap) (nth i (cdr it)) root)))
+     (-walk (root rmap)
        (cond ((atom root) root)
              ; TODO: handle dotted pairs
 
@@ -72,41 +74,38 @@
              (t (mvb (car* rmap) (car-vargp (car root) rmap)
                   (cons (-walk car* rmap)
                         (-walk (cdr root) rmap)))))))
-    (-walk body)))
+    (-walk body root-rmap)))
 
 ;;;;;;;;;;;;;;;;;; VMVB
 
-(defun -vmvb (type dim arg expr body)
+(defun -vmvb (type dim arg expr body &key (repvarg t))
   (declare (symbol arg) (list expr) (fixnum dim))
-  (replace-varg `(mvb ((varg ,dim ,arg)) ,expr
-                  (declare (,type ,arg))
-                  ,@body)))
+  (let ((body `(mvb ((varg ,dim ,arg)) ,expr
+                    (declare (,type ,arg))
+                    ,@body)))
+    (if repvarg (replace-varg body) body)))
 
 
 ;;;;;;;;;;;;;;;;;; VLET
 
 (defun -vlet (type dim all-args body)
   (let ((sme (find-if (lambda (a) (not (= (length a) 2))) all-args)))
-    (when sme (error "vlet error. expected (var expr)~% got: ~a"
-                     sme)))
+    (when sme (error "vlet error. expected (var expr)~% got: ~a" sme)))
   (loop for (arg expr) in (reverse all-args)
-        do (setf body (list (-vmvb type dim arg expr body)))
-        finally (return `(progn ,@body))))
+        do (setf body (list (-vmvb type dim arg expr body :repvarg nil)))
+        finally (return (replace-varg `(progn ,@body)))))
 
 (defun -vlet* (type all-args body)
   (let ((sme (find-if (lambda (a) (not (= (length a) 3))) all-args)))
-    (when sme (error "vlet* error. expected (var dim expr)~% got: ~a"
-                     sme)))
+    (when sme (error "vlet* error. expected (var dim expr)~% got: ~a" sme)))
   (loop for (arg dim expr) in (reverse all-args)
-        do (setf body (list (-vmvb type dim arg expr body)))
-        finally (return `(progn ,@body))))
+        do (setf body (list (-vmvb type dim arg expr body :repvarg nil)))
+        finally (return (replace-varg `(progn ,@body)))))
 
-(defun dim? (a dim &key type)
-  (unless (= (length a) dim)
-    (error "incorrect dim. got: ~a expected: ~a. ~% expr: ~% ~a"
-           (length a) dim a))
-  (if type (mapcar (lambda (v) (if (numberp v) (coerce v type) v)) a)
-           a))
+(defun dim? (a dim &key type &aux (l (length a)))
+  (unless (= l dim)
+          (error "incorrect dim. got: ~a expected: ~a. ~% expr: ~% ~a" l dim a))
+  (if type (mapcar (lambda (v) (if (numberp v) (coerce v type) v)) a) a))
 (defun ddim? (a dim) (dim? a dim :type 'df))
 (defun fdim? (a dim) (dim? a dim :type 'ff))
 

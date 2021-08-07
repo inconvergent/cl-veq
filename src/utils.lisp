@@ -61,6 +61,10 @@
 (defmacro mac (expr) `(pprint (macroexpand-1 ',expr)))
 #+sbcl (defmacro mac* (expr) `(pprint (sb-cltl2:macroexpand-all ',expr)))
 
+;from on lisp by pg
+(defmacro aif (test-form then-form &optional else-form)
+  `(let ((it ,test-form))
+     (if it ,then-form ,else-form)))
 
 ; from on lisp by pg
 (defmacro abbrev (short long)

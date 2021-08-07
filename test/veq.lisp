@@ -154,7 +154,8 @@
           '(3f0 1f0 2f0)))
 
     (veq:f3let ((a (veq:f3< 1f0 2f0 3f0)))
-      (is (veq:lst a) '(1f0 2f0 3f0)))
+      (is (veq:lst a) '(1f0 2f0 3f0))
+      (is (veq:vref a 2) 3f0))
 
     (veq:fvlet ((a 3 (veq:f3< 1f0 2f0 3f0))
                 (b 2 (veq:f2< 5f0 -1f0)))
