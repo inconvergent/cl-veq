@@ -29,47 +29,53 @@
                              finally (return res)))))))
 
 
-
-(defmacro -with-arrays ((&key type n (inds nil inds?) itr cnt arr fxs exs)
+(defmacro -with-arrays ((&key type n (inds nil inds?) itr cnt arr fxs exs
+                              start)
                          &body body)
   (declare (list arr fxs exs))
   ; TODO: handle case where largest inds >= n
-  (awg (n* inds* ii*)
+  (awg (n* inds* i*)
     (let ((itr (if itr itr (gensym "ITR")))
           (cnt (if cnt cnt (gensym "CNT"))))
       (declare (symbol itr cnt))
-      (labels ((init-let (arr* dim &rest rest)
-                 (declare (symbol arr*) (pos-int dim))
-                 (if rest `(,arr* (progn ,@rest))
-                          `(,arr* (,(veqsymb 1 (cadr type) "$MAKE")
+      (labels ((init-let (a dim &rest rest)
+                 (declare (symbol a) (pos-int dim))
+                 (if rest `(,a (progn ,@rest))
+                          `(,a (,(veqsymb 1 (cadr type) "$MAKE")
                                     :dim ,dim :n ,n*))))
-               (get-dim (arr*)
-                 (declare (symbol arr*))
-                 (cadr (find-if (lambda (v) (eq (car v) arr*)) arr)))
+               (arr-info (a)
+                 (declare (symbol a))
+                 (find-if (lambda (v) (eq (car v) a)) arr))
 
-               (symb-or-aref (e ii)
-                 (declare (symbol ii))
-                 (let ((s (find-if (lambda (v) (eq (car v) e)) arr)))
-                   (when s (dimaref (car s) ii (cadr s))))) ; arr ii dim
+               (get-dim (a)
+                 (declare (symbol a))
+                 (the pos-int (cadr (arr-info a))))
 
-               (transform-expr (expr ii)
-                 (declare (cons expr) (symbol ii))
+               (symb-to-aref (e i)
+                 (declare (symbol e))
+                 (loop with hit of-type list = (arr-info e)
+                       with dim of-type pos-int = (cadr hit)
+                       with a of-type symbol = (car hit)
+                       for j of-type pos-int from 0 below dim
+                       collect `(aref ,a (+ ,j (* ,i ,dim)))))
+
+               (transform-expr (expr i)
+                 (declare (cons expr))
                  (loop with res of-type list = (list)
                        for e in expr
-                       do (let ((ref (symb-or-aref e ii)))
-                            (if ref (setf res `(,@res ,@ref))
-                                    (setf res `(,@res ,e))))
+                       if (arr-info e)
+                       do (setf res `(,@res ,@(symb-to-aref e i)))
+                       else do (setf res `(,@res ,e))
                        finally (return res)))
 
-               (vaset-loop-body (arr* i expr &aux (dim (get-dim arr*)))
-                 (declare (cons expr) (symbol arr*) (pos-int dim))
+               (vaset-loop-body (a i expr)
+                 (declare (cons expr) (symbol a))
                  `(loop for ,itr of-type pos-int
-                        ,@(if inds? `(in ,inds*) `(from 0 below ,n*))
+                        ,@(if inds? `(in ,inds*) `(from ,start below (+ ,start ,n*)))
                         for ,cnt of-type pos-int from 0
-                        do (let ((,ii* (* ,dim ,itr)))
-                             (declare (pos-int ,ii*) (ignorable ,ii*))
-                             (-vaset (,arr* ,dim ,i)
-                                     ,(transform-expr expr ii*))))))
+                        ; TODO: fix inefficient indexing calc
+                        do (-vaset (,a ,(get-dim a) ,i)
+                                     ,(transform-expr expr itr)))))
 
       `(let ((,n* ,n) ,@(when inds? `((,inds* ,inds))))
          (declare (pos-int ,n*) (ignorable ,n*)
@@ -80,7 +86,7 @@
              ,@(loop for ex in exs collect
                  (progn (unless (= (length ex) 3)
                           (error "with arrays error. incorrect exs: ~a " ex))
-                        (dsb (arr* i expr) ex (vaset-loop-body arr* i expr)))))
+                        (dsb (a i expr) ex (vaset-loop-body a i expr)))))
            ,@body))))))
 
 

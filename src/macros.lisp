@@ -199,15 +199,15 @@
     (2vaset ((arr i) &rest expr) `(-vaset (,arr 2 ,i) ,@expr))
     (3vaset ((arr i) &rest expr) `(-vaset (,arr 3 ,i) ,@expr))
 
-    (dwith-arrays ((&key (n 0) (inds nil inds?) itr cnt arr fxs exs) &body body)
+    (dwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs) &body body)
       `(-with-arrays (:type 'df :n ,n ,@(when inds? `(:inds ,inds))
                             :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
-                            :exs ,exs)
+                            :exs ,exs :start ,start)
                      ,@body))
-    (fwith-arrays ((&key (n 0) (inds nil inds?) itr cnt arr fxs exs) &body body)
+    (fwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs) &body body)
       `(-with-arrays (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
                             :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
-                            :exs ,exs)
+                            :exs ,exs :start ,start)
                      ,@body))))
 
 

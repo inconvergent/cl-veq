@@ -236,6 +236,28 @@
             (c k (cross a b))))
       (is c #(-2.0 4.0 1.0 -2.0 5.0 -2.0 4.0 4.0 -7.0 16.0 1.0 -14.0 34.0 -4.0
               -23.0 58.0 -11.0 -34.0 88.0 -20.0 -47.0)
+          :test #'equalp))
+
+    (veq:fwith-arrays (:n 7 :itr k
+      :arr ((two 2) (three 3))
+      :fxs ((init-three (i) (veq:f3<* (+ 2 i) (1+ i) (+ 100 (* 2 i))))
+            (three-to-two ((veq:varg 3 v))
+                            (declare (ignore (veq:vref v 1)))
+                            (veq:f2< (veq:vref v 0)
+                                     (veq:vref v 2))))
+      :exs ((three k (init-three k))
+            (two k (three-to-two three))))
+      (is two
+          #(2.0 100.0 3.0 102.0 4.0 104.0 5.0 106.0 6.0 108.0 7.0 110.0 8.0
+            112.0)
+          :test #'equalp))
+
+    (veq:fwith-arrays (:n 2 :itr k :cnt c :start 2
+      :arr ((aa 3 (veq:f3$zero 4)))
+      :fxs ((init (i j) (veq:f3<* (+ 2 i) (+ 1000 j) (+ 100 (* 2 i)))))
+      :exs ((aa k (init c k))))
+      (is aa
+          #(0.0 0.0 0.0 0.0 0.0 0.0 2.0 1002.0 100.0 3.0 1003.0 102.0)
           :test #'equalp))))
 
 (unless (finalize) (error "error in veq"))
