@@ -115,24 +115,7 @@
                       collect (list (veq:df i)
                                     (veq:df (1+ i)))))
         #(0d0 1d0 1d0 2d0 2d0 3d0)
-        :test #'equalp)
-
-
-    (let ((a (veq:d$_ '((100.2d0 2d0) (33d0 78d0))))
-          (b (veq:f3$one 3))
-          (c (veq:f$zero 3)))
-      (is (veq:lst (veq:d2$ a 1)) '(33d0 78d0) :test #'equalp)
-
-      (is (veq:lst (veq:d2with (a 1)
-                     (lambda (x y) (values (1+ x) (1+ y)))))
-          '(34d0 79d0))
-
-      (is (veq:lst (veq:f3with (b 1)
-                     (lambda (x y z) (values (1+ x) (1+ y) z))))
-          '(2f0 2f0 1f0))
-
-      (is (veq:fwith (c 2) (lambda (x) (1+ x))) 1f0)
-      (is (veq:lst (veq:d2$ a 1)) '(34d0 79d0) :test #'equalp))))
+        :test #'equalp)))
 
 
 (subtest "macro"

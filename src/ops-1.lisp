@@ -8,26 +8,10 @@
 (defun f$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 1 :n n :v v))
 (defun f$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 1 :n n))
 
+(defun $len (a) (declare #.*opt* (simple-array a)) (the pos-int (length a)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
-
-(defun with (arr i type body)
-  (declare (symbol arr type))
-  "
-  execute (funcall body x y) for arr[i]. body must be a function that returns
-  (values x y), the new value for arr[i]
-  "
-  (awg (ii xx)
-    `(let ((,ii ,i))
-      (declare (pos-int ,ii))
-      (mvb (,xx) (mvc ,@body (funcall #',(veqsymb 1 type "$" :pref "-")
-                                      ,arr ,ii))
-        (declare (,type ,xx))
-        (setf (aref ,arr ,ii) ,xx)
-        ,xx))))
-
-(defmacro dwith ((arr i) &body body) (declare (symbol arr)) (with arr i 'df body))
-(defmacro fwith ((v i) &body body) (declare (symbol v)) (with v i 'ff body))
 
 (declaim (inline -d$))
 (defun -d$ (v &optional (i 0))
@@ -42,21 +26,11 @@
 
 (ops
 
-  (d+ (a b)) (+ a b)
-  (d- (a b)) (- a b)
-  (d* (a b)) (* a b)
-  (d/ (a b)) (/ a b)
+  (d+ (a b)) (+ a b) (d- (a b)) (- a b) (d* (a b)) (* a b) (d/ (a b)) (/ a b)
+  (f+ (a b)) (+ a b) (f- (a b)) (- a b) (f* (a b)) (* a b) (f/ (a b)) (/ a b)
 
-  (di- (a b)) (- b a)
-  (di/ (a b)) (/ b a)
-
-  (f+ (a b)) (+ a b)
-  (f- (a b)) (- a b)
-  (f* (a b)) (* a b)
-  (f/ (a b)) (/ a b)
-
-  (fi- (a b)) (- b a)
-  (fi/ (a b)) (/ b a)
+  (di- (a b)) (- b a) (di/ (a b)) (/ b a)
+  (fi- (a b)) (- b a) (fi/ (a b)) (/ b a)
 
   (dabs (a)) (abs a)
   (dneg (a)) (- a)
@@ -68,15 +42,9 @@
   (fsquare (a)) (* a a)
   (fsqrt (a)) (the pos-ff (sqrt (the pos-ff a)))
 
-  (d^ (a s)) (expt a s)
-  (dmod (a s)) (mod a s)
+  (d^ (a s)) (expt a s) (dmod (a s)) (mod a s)
+  (f^ (a s)) (expt a s) (fmod (a s)) (mod a s)
 
-  (f^ (a s)) (expt a s)
-  (fmod (a s)) (mod a s)
-
-  (dcos-sin (a)) (values (cos a) (sin a))
-  (fcos-sin (a)) (values (cos a) (sin a))
-
-  (dsin-cos (a)) (values (sin a) (cos a))
-  (fsin-cos (a)) (values (sin a) (cos a)))
+  (dcos-sin (a)) (values (cos a) (sin a)) (fcos-sin (a)) (values (cos a) (sin a))
+  (dsin-cos (a)) (values (sin a) (cos a)) (fsin-cos (a)) (values (sin a) (cos a)))
 

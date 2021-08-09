@@ -8,43 +8,20 @@
 (defun f2$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 2 :n n :v v))
 (defun f2$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 2 :n n))
 
+(defun 2$len (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 2)))
+
+
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
-
-(defun 2with (arr i type body)
-  (declare (symbol arr type))
-  "
-  execute (funcall body x y) for arr[i]. body must be a function that returns
-  (values x y), the new value for arr[i]
-  "
-  (awg (i* ii xx yy)
-    `(let* ((,i* ,i)
-            (,ii (* 2 ,i*)))
-      (declare (pos-int ,i* ,ii))
-      (mvb (,xx ,yy) (mvc ,@body (funcall #',(veqsymb 2 type "$" :pref "-")
-                                          ,arr ,i*))
-        (declare (,type ,xx ,yy))
-        (setf (aref ,arr ,ii) ,xx
-              (aref ,arr (the pos-int (1+ ,ii))) ,yy)
-        (values ,xx ,yy)))))
-
-(defmacro d2with ((arr i) &body body) (declare (symbol arr)) (2with arr i 'df body))
-(defmacro f2with ((arr i) &body body) (declare (symbol arr)) (2with arr i 'ff body))
-
-
 (declaim (inline -d2$))
-(defun -d2$ (v &optional (i 0))
-  (declare #.*opt* (dvec v) (pos-int i))
-  (let ((ii (* 2 i)))
-    (declare (pos-int ii))
-    (values (the df (aref v ii)) (the df (aref v (the pos-int (1+ ii)))))))
+(defun -d2$ (v &optional (i 0) &aux (ii (* 2 i)))
+  (declare #.*opt* (dvec v) (pos-int i ii))
+  (values (the df (aref v ii)) (the df (aref v (the pos-int (1+ ii))))))
 
 (declaim (inline -f2$))
-(defun -f2$ (v &optional (i 0))
-  (declare #.*opt* (fvec v) (pos-int i))
-  (let ((ii (* 2 i)))
-    (declare (pos-int ii))
-    (values (the ff (aref v ii)) (the ff (aref v (the pos-int (1+ ii)))))))
+(defun -f2$ (v &optional (i 0) &aux (ii (* 2 i)))
+  (declare #.*opt* (fvec v) (pos-int i ii))
+  (values (the ff (aref v ii)) (the ff (aref v (the pos-int (1+ ii))))))
 
 
 (ops
@@ -52,14 +29,14 @@
   (d2^ (a b s)) (values (expt a s) (expt b s))
   (d2mod (a b s)) (values (mod a s) (mod b s))
 
+  (f2^ (a b s)) (values (expt a s) (expt b s))
+  (f2mod (a b s)) (values (mod a s) (mod b s))
+
   (d2scale (a b s)) (values (* a s) (* b s))
   (d2iscale (a b s)) (values (/ a s) (/ b s))
 
   (f2scale (a b s)) (values (* a s) (* b s))
   (f2iscale (a b s)) (values (/ a s) (/ b s))
-
-  (f2^ (a b s)) (values (expt a s) (expt b s))
-  (f2mod (a b s)) (values (mod a s) (mod b s))
 
   (d2abs (a b)) (values (abs a) (abs b))
   (d2neg (a b)) (values (- a) (- b))
@@ -82,14 +59,12 @@
   (d2len2 (a b)) (the pos-df (mvc #'+ (-d2square a b)))
   (d2len (a b)) (the pos-df (sqrt (the pos-df (mvc #'+ (-d2square a b)))))
 
-  (d2max (a b)) (max a b)
-  (d2min (a b)) (min a b)
+  (d2max (a b)) (max a b) (d2min (a b)) (min a b)
+  (f2max (a b)) (max a b) (f2min (a b)) (min a b)
 
   (f2len2 (a b)) (the pos-ff (mvc #'+ (-f2square a b)))
   (f2len (a b)) (the pos-ff (sqrt (the pos-ff (mvc #'+ (-f2square a b)))))
 
-  (f2max (a b)) (max a b)
-  (f2min (a b)) (min a b)
 
   (d2norm (a b)) (mvc #'-d2iscale a b (mvc #'-d2len a b))
   (f2norm (a b)) (mvc #'-f2iscale a b (mvc #'-f2len a b))
@@ -102,13 +77,13 @@
   (d2* (ax ay bx by)) (values (* ax bx) (* ay by))
   (d2/ (ax ay bx by)) (values (/ ax bx) (/ ay by))
 
-  (d2i- (ax ay bx by)) (values (- bx ax) (- by ay))
-  (d2i/ (ax ay bx by)) (values (/ bx ax) (/ by ay))
-
   (f2+ (ax ay bx by)) (values (+ ax bx) (+ ay by))
   (f2- (ax ay bx by)) (values (- ax bx) (- ay by))
   (f2* (ax ay bx by)) (values (* ax bx) (* ay by))
   (f2/ (ax ay bx by)) (values (/ ax bx) (/ ay by))
+
+  (d2i- (ax ay bx by)) (values (- bx ax) (- by ay))
+  (d2i/ (ax ay bx by)) (values (/ bx ax) (/ by ay))
 
   (f2i- (ax ay bx by)) (values (- bx ax) (- by ay))
   (f2i/ (ax ay bx by)) (values (/ bx ax) (/ by ay))

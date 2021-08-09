@@ -34,7 +34,7 @@
                          &body body)
   (declare (list arr fxs exs))
   ; TODO: handle case where largest inds >= n
-  (awg (n* inds* i*)
+  (awg (n* inds*)
     (let ((itr (if itr itr (gensym "ITR")))
           (cnt (if cnt cnt (gensym "CNT"))))
       (declare (symbol itr cnt))

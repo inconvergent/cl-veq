@@ -11,9 +11,12 @@
     #:fpi5
     #:fpii
 
-    #:vprint
+    #:$len
+    #:2$len
     #:2vprint
+    #:3$len
     #:3vprint
+    #:vprint
 
     #:df
     #:df*
@@ -47,12 +50,6 @@
     #:2to-list
     #:3to-list
 
-    #:d2with
-    #:d3with
-    #:dwith
-    #:f2with
-    #:f3with
-    #:fwith
 
     #:d$_
     #:d$copy
