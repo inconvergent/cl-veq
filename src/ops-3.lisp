@@ -1,32 +1,6 @@
 
 (in-package :veq)
 
-(defun d3$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 3 :n n :v 1d0))
-(defun d3$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 3 :n n :v v))
-(defun d3$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 3 :n n))
-(defun f3$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 3 :n n :v 1f0))
-(defun f3$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 3 :n n :v v))
-(defun f3$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 3 :n n))
-
-(defun 3$len (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 3)))
-
-;;;;;;;;;;;;;;;;;;;;;; ACCESS
-
-(declaim (inline -d3$))
-(defun -d3$ (v &optional (i 0) &aux (ii (* 3 i)))
-  (declare #.*opt* (dvec v) (pos-int i ii))
-  (values (the df (aref v ii))
-          (the df (aref v (the pos-int (1+ ii))))
-          (the df (aref v (the pos-int (+ 2 ii))))))
-
-(declaim (inline -f3$))
-(defun -f3$ (v &optional (i 0) &aux (ii (* 3 i)))
-  (declare #.*opt* (fvec v) (pos-int i ii))
-  (values (the ff (aref v ii))
-          (the ff (aref v (the pos-int (1+ ii))))
-          (the ff (aref v (the pos-int (+ 2 ii))))))
-
-
 (ops
 
   (d3abs (a b c)) (values (abs a) (abs b) (abs c))

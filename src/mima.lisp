@@ -1,6 +1,8 @@
 
 (in-package :veq)
 
+; TODO: type template. argmax/min
+
 (defun minmax (a n &key type)
   (awg (i minx maxx)
     `(loop for ,i of-type pos-int from 0 below ,n

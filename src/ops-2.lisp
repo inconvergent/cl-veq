@@ -1,29 +1,6 @@
 
 (in-package :veq)
 
-(defun d2$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n :v 1d0))
-(defun d2$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n :v v))
-(defun d2$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n))
-(defun f2$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 2 :n n :v 1f0))
-(defun f2$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 2 :n n :v v))
-(defun f2$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 2 :n n))
-
-(defun 2$len (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 2)))
-
-
-;;;;;;;;;;;;;;;;;;;;;; ACCESS
-
-(declaim (inline -d2$))
-(defun -d2$ (v &optional (i 0) &aux (ii (* 2 i)))
-  (declare #.*opt* (dvec v) (pos-int i ii))
-  (values (the df (aref v ii)) (the df (aref v (the pos-int (1+ ii))))))
-
-(declaim (inline -f2$))
-(defun -f2$ (v &optional (i 0) &aux (ii (* 2 i)))
-  (declare #.*opt* (fvec v) (pos-int i ii))
-  (values (the ff (aref v ii)) (the ff (aref v (the pos-int (1+ ii))))))
-
-
 (ops
 
   (d2^ (a b s)) (values (expt a s) (expt b s))

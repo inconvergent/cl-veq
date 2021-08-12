@@ -6,29 +6,22 @@
 (declaim (list *symbols-map*))
 (defvar *symbols-map* '())
 
-
 (defun veqsymb (dim type fx &key pref)
   (declare (string fx))
 
-  (let ((elem (list (cdr (assoc type `((veq:df . "D")
-                                       (veq:ff . "F")
-                                       (veq:in . "I"))))
+  (let ((elem (list (cdr (assoc type `((df . "D") (ff . "F") (in . "I"))))
                     (if (> dim 1) dim "")
                     (string fx))))
     (when pref (setf elem (cons pref elem)))
     (values (intern (apply #'mkstr elem) "VEQ"))))
 
 (defun arrtype (type)
-  (intern (mkstr (cdr (assoc type `((veq:df . "DVEC")
-                                    (veq:ff . "FVEC")
-                                    (veq:in . "IVEC")))))
-          "VEQ"))
+  (intern
+    (mkstr (cdr (assoc type `((df . "DVEC") (ff . "FVEC") (in . "IVEC"))))) "VEQ"))
 
 (defun optype (mname)
   (declare (symbol mname))
-  (cdr (assoc (char (string mname) 0)
-              `((#\D . veq:df) (#\F . veq:ff) (#\I . veq:in)))))
-
+  (cdr (assoc (char (string mname) 0) `((#\D . df) (#\F . ff) (#\I . in)))))
 
 (defun map-symbol (pair)
   (declare (list pair))
@@ -44,7 +37,6 @@
             ,@(unless #.*dev* `((declaim (inline ,fname))))
             (defun ,fname ,args (declare ,*opt* ,declares)
                                 (progn ,@body)))))
-
 
 (defmacro ops (&body body)
   `(progn ,@(loop for (args body*) in (group body 2)

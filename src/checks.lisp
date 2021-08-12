@@ -13,9 +13,7 @@
   (let ((l2 (f2dst2 va vb)))
     (declare (ff l2))
     (if (< l2 *eps*)
-      ; line is a point
-      (values (f2dst va v) 0d0)
-      ; else
+      (values (f2dst va v) 0d0) ; line is a point, else:
       (let ((s (max 0f0 (min 1f0 (/ (+ (* (- (vref v 0) (vref va 0))
                                           (- (vref vb 0) (vref va 0)))
                                        (* (- (vref v 1) (vref va 1))
@@ -54,12 +52,6 @@
 
 (deftype array-fvec () `(simple-array fvec))
 
-(defun -to-array-fvec (l)
-  (declare (list l))
-  (make-array (length l)
-    :initial-contents l :adjustable nil :element-type 'fvec))
-
-
 (declaim (inline -sweep-line))
 (defun -sweep-line (lines line-points)
   (declare #.*opt* (array-fvec lines) (list line-points))
@@ -77,7 +69,6 @@
          (declare #.*opt* (pos-int i c) (ff p))
          (if (aref res i) (push `(,c . ,p) (aref res i))
                           (setf (aref res i) `((,c . ,p)))))
-
        (-isects (i cands)
          (declare #.*opt* (pos-int i) (list cands))
          "intersection test"
@@ -88,11 +79,11 @@
                             (declare (boolean x) (ff p q))
                             (when x (-append i c p) (-append c i q))))))
        (-remove (i)
-          (declare #.*opt* (pos-int i))
-          (setf state (remove-if #'(lambda (e)
-                                     (declare (optimize speed) (pos-int e))
-                                     (eql e i))
-                                 state))))
+         (declare #.*opt* (pos-int i))
+         (setf state (remove-if #'(lambda (e)
+                                    (declare (optimize speed) (pos-int e))
+                                    (eql e i))
+                                state))))
 
       (loop for (_ . i) of-type (ff . pos-int) in (cdr line-points)
             ; if i in state, kick i out of state,
@@ -110,6 +101,7 @@
            (push `(,(aref line 2) . ,i) res))
   (sort res #'< :key #'car))
 
+
 (defun f2lsegx (lines*)
   (declare #.*opt* (sequence lines*))
   "
@@ -120,7 +112,12 @@
   cover. it can be improved further by using binary search tree to store
   current state.
   "
-  (let ((lines (if (listp lines*) (-to-array-fvec lines*) lines*)))
+  (let ((lines (typecase lines*
+                 (list (make-array (length lines*) :initial-contents lines*
+                                                   :adjustable nil
+                                                   :element-type 'fvec))
+                 (vector lines*)
+                 (t (error "f2lsegx error: incorrect type: ~a~%" lines*)))))
     (declare (array-fvec lines))
     (-sweep-line lines (-sorted-point-pairs lines))))
 
@@ -134,13 +131,10 @@
 
 (vdef f2inside-concave (shape (varg 2 pt))
   (declare (fvec shape) (ff pt))
-  (let ((n (round (/ (length shape) 2))))
-
+  (let ((n (2$len shape)))
     (mvb (minx maxx miny maxy) (f2mima n shape)
-      ; pt outside bbox -> outside shape
-      (unless (f2inside-bbox minx miny maxx maxy pt)
+      (unless (f2inside-bbox minx miny maxx maxy pt) ; pt outside bbox -> outside shape
               (return-from f2inside-concave nil))
-
       (let* ((c 0)
              (width (- maxx minx))
              (shift (- (vref pt 0) (* 2f0 width))))
@@ -148,7 +142,7 @@
           (lambda (i (varg 2 a))
             (declare (optimize speed) (ff a))
             (when (mvc #'f2segx pt shift (vref pt 1)
-                              a (f2$ shape (mod (1+ i) n)))
+                       a (f2$ shape (mod (1+ i) n)))
                   (incf c))))
         ; odd number of isects means pt is inside shape
         (oddp c)))))
@@ -157,15 +151,11 @@
 (vdef f3planex ((varg 3 n p a b))
   (declare #.*opt* (ff n p a b))
   "intersection of plane (n:normal, p:point) and line (a b)"
-  (veq:f3let ((ln (f3- b a)))
+  (f3let ((ln (f3- b a)))
     (let ((ldotn (f3. ln n)))
       (declare (ff ldotn))
-
-      ; avoid div0.
-      (when (< (abs ldotn) *eps*)
-            (return-from f3planex (values nil 0f0 0f0 0f0 0f0)))
-
-      ; else
+      (when (< (abs ldotn) *eps*) ; avoid div0.
+            (return-from f3planex (values nil 0f0 0f0 0f0 0f0))) ; else:
       (let ((d (/ (f3. (f3- p a) n) ldotn)))
         (declare (ff d))
         (mvc #'values t d (f3from a ln d))))))

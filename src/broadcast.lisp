@@ -24,15 +24,14 @@
               (declare #.*opt* (,(arrtype type) a) (,type x))
               (,arrmacro (:itr k :n (/ (length a) ,dim)
                           :arr ((a ,dim a))
-                          :fxs ((fx ((varg ,dim vx))
-                                    (,opname x vx)))
+                          :fxs ((fx ((varg ,dim vx)) (,opname x vx)))
                           :exs ((a k (fx a)))))
               a))))
 
 
 (defmacro make-broadcast-fx (op)
   "
-  makes function (veq:f2$+ arr x y) from operation +.
+  makes function (f2$+ arr x y) from operation +.
   so that x y is added to every row of arr.
   "
   `(progn
@@ -44,8 +43,7 @@
 (make-broadcast-fx /)
 (make-broadcast-fx *)
 
-
-; redefine vdef/vprogn macros with new elements in symbols map (added via
-; broadcast-op)
+; redefine vdef/vprogn macros with new elements in symbols map
+; (added via broadcast-op)
 (define-env-macros *symbols-map*)
 

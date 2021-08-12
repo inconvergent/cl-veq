@@ -30,7 +30,7 @@
 
 (vdef to-list (arr &key (dim 1))
   (declare (simple-array arr) (pos-int dim))
-  (let ((n (ceiling (/ (length arr) dim))))
+  (let ((n (the pos-int (/ (length arr) dim))))
     (declare (pos-int n))
     (let ((res (list)))
       (labels ((acc (&rest rest) (push (cdr rest) res)))

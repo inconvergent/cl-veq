@@ -2,35 +2,52 @@
 (in-package :veq)
 
 
-(defun dimaref (a ii dim)
-  (declare (symbol a) (pos-int dim))
-  (loop for j of-type pos-int from 0 below dim
-        collect `(aref ,a (+ ,ii ,j))))
+; (declaim (inline f$last d$last f2$last d2$last f3$last d3$last))
+(defun f$last (a) (declare #.*opt* (fvec a)) (-f$ a (1- (the pos-int ($len a)))))
+(defun d$last (a) (declare #.*opt* (dvec a)) (-d$ a (1- (the pos-int ($len a)))))
+(defun f2$last (a) (declare #.*opt* (fvec a)) (-f2$ a (1- (the pos-int (2$len a)))))
+(defun d2$last (a) (declare #.*opt* (dvec a)) (-d2$ a (1- (the pos-int (2$len a)))))
+(defun f3$last (a) (declare #.*opt* (fvec a)) (-f3$ a (1- (the pos-int (3$len a)))))
+(defun d3$last (a) (declare #.*opt* (dvec a)) (-d3$ a (1- (the pos-int (3$len a)))))
 
+
+(defun -ind-to-val (type dim a rest)
+  "return (values a[i] a[j] ...) for rest = (i j ...)
+  rest can be on the form (i j k) or ((i j k))"
+  (unless rest (setf rest `(0))) ; defaults to (0)
+  (awg (a*) `(let ((,a* ,a))
+               (declare (,(arrtype type) ,a*))
+               (mvc #'values ,@(loop for ind in rest
+                                     collect `(,(veqsymb dim type "$" :pref "-")
+                                                ,a* ,ind))))))
 
 ; TODO: for all inds
-(defun for-all-rows (n arr expr &key dim)
-  (declare (pos-int dim) (list arr))
-  "
-  "
+(defun for-all-rows (n arrs expr &key dim)
+  (declare (pos-int dim) (list arrs))
+  "execute function (expr i ax ay az bx by bz) for row i and arrsays a and b.
+   arrs can be one or more arrsays."
   (unless (= 1 (length expr))
-          (error "for-all-rows error. ~% malformed expr: ~a" expr))
-  (when (remove-if #'symbolp arr)
-        (error "for-all-rows error. ~% arr must be one or more symbols.~% got: ~a" arr))
-  (awg (i ii n*)
-    `(let ((,n* ,n))
-       (declare (pos-int ,n*))
-       (loop for ,i of-type pos-int from 0 below ,n*
-             for ,ii of-type pos-int from 0 by ,dim
-             do (mvc ,(last* expr) ,i
-                     ,@(loop with res = (list)
-                             for a of-type symbol in arr
-                             do (setf res `(,@res ,@(dimaref a ii dim)))
-                             finally (return res)))))))
+          (error "for-all-rows error: ~% malformed expr: ~a" expr))
+  (when (remove-if #'symbolp arrs)
+        (error "for-all-rows error:
+                arrs must be one or more symbols.~% got: ~a" arrs))
+  (labels ((dimaref (a ii)
+            (declare (symbol a))
+            (loop for j of-type pos-int from 0 below dim
+                  collect `(aref ,a (+ ,ii ,j)))))
+    (awg (i ii n*)
+      `(let ((,n* ,n))
+         (declare (pos-int ,n*))
+         (loop for ,i of-type pos-int from 0 below ,n*
+               for ,ii of-type pos-int from 0 by ,dim
+               do (mvc ,(last* expr) ,i
+                       ,@(loop with res = (list)
+                               for a of-type symbol in arrs
+                               do (setf res `(,@res ,@(dimaref a ii)))
+                               finally (return res))))))))
 
 
-(defmacro -with-arrays ((&key type n (inds nil inds?) itr cnt arr fxs exs
-                              start)
+(defmacro -with-arrays ((&key type n (inds nil inds?) itr cnt arr fxs exs start)
                          &body body)
   (declare (list arr fxs exs))
   ; TODO: handle case where largest inds >= n
@@ -88,28 +105,4 @@
                           (error "with arrays error. incorrect exs: ~a " ex))
                         (dsb (a i expr) ex (vaset-loop-body a i expr)))))
            ,@body))))))
-
-
-(defun -ind-to-val (type dim a rest)
-  "
-  return (values a[i] a[j] ...) for rest = (i j ...)
-
-  rest can be on the form (i j k) or ((i j k))
-  "
-  (unless rest (setf rest `(0))) ; defaults to (0)
-  (awg (a*)
-    `(let ((,a* ,a))
-       (declare (,(arrtype type) ,a*))
-       (mvc #'values ,@(loop for ind in rest
-                             collect `(,(veqsymb dim type "$" :pref "-")
-                                        ,a* ,ind))))))
-
-
-(declaim (inline f$last d$last f2$last d2$last f3$last d3$last))
-(defun f$last (a) (declare #.*opt* (fvec a)) (-f$ a (1- (the pos-int (length a)))))
-(defun d$last (a) (declare #.*opt* (dvec a)) (-d$ a (1- (the pos-int (length a)))))
-(defun f2$last (a) (declare #.*opt* (fvec a)) (-f2$ a (1- (the pos-int (/ (length a) 2)))))
-(defun d2$last (a) (declare #.*opt* (dvec a)) (-d2$ a (1- (the pos-int (/ (length a) 2)))))
-(defun f3$last (a) (declare #.*opt* (fvec a)) (-f3$ a (1- (the pos-int (/ (length a) 3)))))
-(defun d3$last (a) (declare #.*opt* (dvec a)) (-d3$ a (1- (the pos-int (/ (length a) 3)))))
 

@@ -127,12 +127,12 @@
     (d3<* (&body body) `(mvc #'values (df* ,@(dim? body 3))))
     (f3<* (&body body) `(mvc #'values (ff* ,@(dim? body 3))))
 
-    (f$ (a &rest rest) (-ind-to-val 'ff 1 a rest))
-    (d$ (a &rest rest) (-ind-to-val 'df 1 a rest))
-    (f2$ (a &rest rest) (-ind-to-val 'ff 2 a rest))
-    (d2$ (a &rest rest) (-ind-to-val 'df 2 a rest))
-    (f3$ (a &rest rest) (-ind-to-val 'ff 3 a rest))
-    (d3$ (a &rest rest) (-ind-to-val 'df 3 a rest))
+    (f$ (a &rest inds) (-ind-to-val 'ff 1 a inds))
+    (d$ (a &rest inds) (-ind-to-val 'df 1 a inds))
+    (f2$ (a &rest inds) (-ind-to-val 'ff 2 a inds))
+    (d2$ (a &rest inds) (-ind-to-val 'df 2 a inds))
+    (f3$ (a &rest inds) (-ind-to-val 'ff 3 a inds))
+    (d3$ (a &rest inds) (-ind-to-val 'df 3 a inds))
 
     (d2mvb (arg expr &body body) (-vmvb 'df 2 arg expr body))
     (d3mvb (arg expr &body body) (-vmvb 'df 3 arg expr body))
@@ -180,9 +180,9 @@
     (d3mima* (inds a) (3minmax* a inds :type 'df))
     (f3mima* (inds a) (3minmax* a inds :type 'ff))
 
-    (for-all-rows ((n &rest arr) &body body) (for-all-rows n arr body :dim 1))
-    (2for-all-rows ((n &rest arr) &body body) (for-all-rows n arr body :dim 2))
-    (3for-all-rows ((n &rest arr) &body body) (for-all-rows n arr body :dim 3))
+    (for-all-rows ((n &rest arrs) &body expr) (for-all-rows n arrs expr :dim 1))
+    (2for-all-rows ((n &rest arrs) &body expr) (for-all-rows n arrs expr :dim 2))
+    (3for-all-rows ((n &rest arrs) &body expr) (for-all-rows n arrs expr :dim 3))
 
     ; TODO: typed
     ; vset for setting multi symbols
