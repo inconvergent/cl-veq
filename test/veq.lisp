@@ -115,7 +115,10 @@
                       collect (list (veq:df i)
                                     (veq:df (1+ i)))))
         #(0d0 1d0 1d0 2d0 2d0 3d0)
-        :test #'equalp)))
+        :test #'equalp)
+
+    (is (veq:d_ '(1d0 2d0 3d0 4d0)) #(1d0 2d0 3d0 4d0) :test #'equalp)
+    (let ((a (list 1d0 2d0))) (is (veq:d_ a) #(1d0 2d0) :test #'equalp))))
 
 
 (subtest "macro"
@@ -143,6 +146,7 @@
     (veq:fvlet ((a 3 (veq:f3< 1f0 2f0 3f0))
                 (b 2 (veq:f2< 5f0 -1f0)))
       (is (veq:lst a b) '(1f0 2f0 3f0 5f0 -1f0)))
+
 
     (let ((a 1f0))
       (is (veq:lst (veq:f2rep (incf a))) '(2f0 3f0))

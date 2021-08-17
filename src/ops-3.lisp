@@ -46,7 +46,7 @@
   (d3cross (ax ay az bx by bz)) (values (- (* ay bz) (* az by)) (- (* az bx) (* ax bz)) (- (* ax by) (* ay bx)))
   (f3cross (ax ay az bx by bz)) (values (- (* ay bz) (* az by)) (- (* az bx) (* ax bz)) (- (* ax by) (* ay bx)))
 
-  (d3.(ax ay az bx by bz)) (+ (* ax bx) (* ay by) (* az bz))
+  (d3. (ax ay az bx by bz)) (+ (* ax bx) (* ay by) (* az bz))
 
   (d3dst2 (ax ay az bx by bz)) (mvc #'+ (-d3square (- bx ax) (- by ay) (- bz az)))
   (d3dst (ax ay az bx by bz)) (sqrt (the pos-df (mvc #'+ (-d3square (- bx ax) (- by ay) (- bz az)))))

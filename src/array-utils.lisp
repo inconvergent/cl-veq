@@ -52,37 +52,7 @@
 (defun f3$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 3 :n n))
 
 
-;;;;;;;;;;;;;;;;;;;;;; ACCESS
-
-(declaim (inline -d$ -f$ -d2$ -f2$ -d3$ -f3$))
-(defun -d$ (v &optional (i 0))
-  (declare #.*opt* (dvec v) (pos-int i))
-  (the df (aref v i)))
-
-(defun -f$ (v &optional (i 0))
-  (declare #.*opt* (fvec v) (pos-int i))
-  (the ff (aref v i)))
-
-(defun -d2$ (v &optional (i 0) &aux (ii (* 2 i)))
-  (declare #.*opt* (dvec v) (pos-int i ii))
-  (values (the df (aref v ii)) (the df (aref v (the pos-int (1+ ii))))))
-
-(defun -f2$ (v &optional (i 0) &aux (ii (* 2 i)))
-  (declare #.*opt* (fvec v) (pos-int i ii))
-  (values (the ff (aref v ii)) (the ff (aref v (the pos-int (1+ ii))))))
-
-(defun -d3$ (v &optional (i 0) &aux (ii (* 3 i)))
-  (declare #.*opt* (dvec v) (pos-int i ii))
-  (values (the df (aref v ii))
-          (the df (aref v (the pos-int (1+ ii))))
-          (the df (aref v (the pos-int (+ 2 ii))))))
-
-(defun -f3$ (v &optional (i 0) &aux (ii (* 3 i)))
-  (declare #.*opt* (fvec v) (pos-int i ii))
-  (values (the ff (aref v ii))
-          (the ff (aref v (the pos-int (1+ ii))))
-          (the ff (aref v (the pos-int (+ 2 ii))))))
-
+;;;;;;;;;;;;;;;;;;;;; INIT FROM EXPR
 
 (defmacro f$_ (&body body)
   "create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
@@ -114,29 +84,38 @@
                  ,dim ,n))
        (error (,e) (error "error in d$_ with: ~a~%. err: ~a~%" ',body ,e)))))
 
-(defmacro f_ (&body body)
-  "corresponds to ($_ '(body)), that is a single row of (length body)."
-  (awg (body* dim e)
-    `(handler-case
-       (let* ((,body* ,@body)
-              (,dim (length ,body*)))
-         (declare (pos-int ,dim) (list ,body*))
-         (values (make-array ,dim :initial-contents (the list (awf ,body*))
-                                  :element-type 'ff
-                                  :adjustable nil)
-                 ,dim 1))
-       (error (,e) (error "error in f_ with: ~a~%. err: ~a~%" ',body ,e)))))
+(defmacro f_ (&body body) `(f$_ (list ,@body)))
+(defmacro d_ (&body body) `(d$_ (list ,@body)))
 
-(defmacro d_ (&body body)
-  "corresponds to ($_ '(body)), that is a single row of (length body)."
-  (awg (body* dim e)
-    `(handler-case
-       (let* ((,body* ,@body)
-              (,dim (length ,body*)))
-         (declare (pos-int ,dim) (list ,body*))
-         (values (make-array ,dim :initial-contents (the list (awf ,body*))
-                                  :element-type 'df
-                                  :adjustable nil)
-                 ,dim 1))
-       (error (,e) (error "error in f_ with: ~a~%. err: ~a~%" ',body ,e)))))
+
+;;;;;;;;;;;;;;;;;;;;;; ACCESS
+
+(declaim (inline -d$ -f$ -d2$ -f2$ -d3$ -f3$))
+(defun -d$ (v &optional (i 0))
+  (declare #.*opt* (dvec v) (pos-int i))
+  (the df (aref v i)))
+
+(defun -f$ (v &optional (i 0))
+  (declare #.*opt* (fvec v) (pos-int i))
+  (the ff (aref v i)))
+
+(defun -d2$ (v &optional (i 0) &aux (ii (* 2 i)))
+  (declare #.*opt* (dvec v) (pos-int i ii))
+  (values (the df (aref v ii)) (the df (aref v (the pos-int (1+ ii))))))
+
+(defun -f2$ (v &optional (i 0) &aux (ii (* 2 i)))
+  (declare #.*opt* (fvec v) (pos-int i ii))
+  (values (the ff (aref v ii)) (the ff (aref v (the pos-int (1+ ii))))))
+
+(defun -d3$ (v &optional (i 0) &aux (ii (* 3 i)))
+  (declare #.*opt* (dvec v) (pos-int i ii))
+  (values (the df (aref v ii))
+          (the df (aref v (the pos-int (1+ ii))))
+          (the df (aref v (the pos-int (+ 2 ii))))))
+
+(defun -f3$ (v &optional (i 0) &aux (ii (* 3 i)))
+  (declare #.*opt* (fvec v) (pos-int i ii))
+  (values (the ff (aref v ii))
+          (the ff (aref v (the pos-int (1+ ii))))
+          (the ff (aref v (the pos-int (+ 2 ii))))))
 
