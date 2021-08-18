@@ -1,14 +1,11 @@
 
 (in-package :veq)
 
-; TODO: end
-; TODO: arr is a leaky abstraction.
+; TODO: the arr symb is leaky. fix?
 (defun fxlspace (n a b expr &key dim type (end t))
   (declare (fixnum dim) (symbol type) (boolean end))
-  "
-  assumes first form in expr is a function with args (i x y z).
-  number of arguments depend on dimension.
-  "
+  "assumes first form in expr is a function with args (i x y z).
+   number of arguments depend on dimension."
   (let ((declare-arr))
     (awg (i n* stp s fx)
     `(let* ((,n* ,n)

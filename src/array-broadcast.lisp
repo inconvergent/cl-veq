@@ -2,7 +2,7 @@
 (in-package :veq)
 
 ; TODO: handle various numberof arguments. so that it is possible to eg. do
-; (veq:f2$^ arr 4.0) to take raise all elements to the power of 4
+; (veq:f2$^ arr 4.0) to raise all elements to the power of 4
 
 (defmacro broadcast-op (dim type op)
   "
@@ -30,10 +30,8 @@
 
 
 (defmacro make-broadcast-fx (op)
-  "
-  makes function (f2$+ arr x y) from operation +.
-  so that x y is added to every row of arr.
-  "
+  "makes function (f2$+ arr x y) from operation +.
+   so that x y is added to every row of arr."
   `(progn
     ,@(loop for (dim type) in (group `(1 ff 2 ff 3 ff 1 df 2 df 3 df) 2)
             collect `(broadcast-op ,dim ,type ,op))))

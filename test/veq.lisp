@@ -2,7 +2,7 @@
 
 (in-package #:veq-tests)
 
-(plan 10)
+(plan 11)
 
 (subtest "2d double ops"
   (veq:vprogn
@@ -245,6 +245,13 @@
       :exs ((aa k (init c k))))
       (is aa
           #(0.0 0.0 0.0 0.0 0.0 0.0 2.0 1002.0 100.0 3.0 1003.0 102.0)
+          :test #'equalp))))
+
+(subtest "take"
+  (veq:vprogn
+    (let ((a (veq:f$_ '((1f0 2f0) (3f0 4f0) (5f0 6f0)
+                        (7f0 7f0) (8f0 9f0) (10f0 11f0)))))
+      (is (veq:f2$take a (list 2 4 5)) #(5.0 6.0 8.0 9.0 10.0 11.0)
           :test #'equalp))))
 
 (unless (finalize) (error "error in veq"))

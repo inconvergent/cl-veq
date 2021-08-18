@@ -2,7 +2,7 @@
 (in-package :veq)
 
 
-(defun numshow (a &key (width 10))
+(defun -numshow (a &key (width 10))
   (declare (number a))
   (format nil "~v@A |" width a))
 
@@ -20,8 +20,7 @@
                        repeat dim
                        if (>= j l)
                        do (error "incorrect size (~a) for dimension (~a)" n dim)
-                       collect (numshow (aref a j)
-                                        :width width)))))
+                       collect (-numshow (aref a j) :width width)))))
     (format t " dim: ~a n: ~a~%~%" dim n))
   a)
 (defun 2vprint (a &key n (width 10)) (vprint a :n n :dim 2 :width width))

@@ -186,18 +186,18 @@
 
     ; TODO: typed
     ; vset for setting multi symbols
-    (fvset (a &rest expr) `(vset 1 ,a ,@expr))
-    (dvset (a &rest expr) `(vset 1 ,a ,@expr))
+    (fvset (s &rest expr) `(vset 1 ,s ,@expr))
+    (dvset (s &rest expr) `(vset 1 ,s ,@expr))
 
-    (f2vset (a &rest expr) `(vset 2 ,a ,@expr))
-    (d2vset (a &rest expr) `(vset 2 ,a ,@expr))
+    (f2vset (s &rest expr) `(vset 2 ,s ,@expr))
+    (d2vset (s &rest expr) `(vset 2 ,s ,@expr))
 
-    (f3vset (a &rest expr) `(vset 3 ,a ,@expr))
-    (d3vset (a &rest expr) `(vset 3 ,a ,@expr))
+    (f3vset (s &rest expr) `(vset 3 ,s ,@expr))
+    (d3vset (s &rest expr) `(vset 3 ,s ,@expr))
 
-    (vaset ((arr i) &rest expr) `(-vaset (,arr 1 ,i) ,@expr))
-    (2vaset ((arr i) &rest expr) `(-vaset (,arr 2 ,i) ,@expr))
-    (3vaset ((arr i) &rest expr) `(-vaset (,arr 3 ,i) ,@expr))
+    (vaset ((a i) &rest expr) `(-vaset (,a 1 ,i) ,@expr))
+    (2vaset ((a i) &rest expr) `(-vaset (,a 2 ,i) ,@expr))
+    (3vaset ((a i) &rest expr) `(-vaset (,a 3 ,i) ,@expr))
 
     (dwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs) &body body)
       `(-with-arrays (:type 'df :n ,n ,@(when inds? `(:inds ,inds))
@@ -208,7 +208,20 @@
       `(-with-arrays (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
                             :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
                             :exs ,exs :start ,start)
-                     ,@body))))
+                     ,@body))
+
+    ; TODO: d types:
+    (f2$rect (&rest rest) `(mvc #'-f2$rect ,@rest))
+    (f2$square (&rest rest) `(mvc #'-f2$square ,@rest))
+    (f2$polygon (&rest rest) `(mvc #'-f2$polygon ,@rest))
+    (f2$circ (&rest rest) `(mvc #'-f2$circ ,@rest))
+    (f2$center (&rest rest) `(mvc #'-f2$center ,@rest)) ; TODO: 1d/3d
+    (f2segdst (&rest rest) `(mvc #'-f2segdst ,@rest))
+    (f2segx (&rest rest) `(mvc #'-f2segx ,@rest))
+    (f2lsegx (&rest rest) `(mvc #'-f2lsegx ,@rest))
+    (f2inside-concave (&rest rest) `(mvc #'-f2inside-concave ,@rest))
+    (f2inside-bbox (&rest rest) `(mvc #'-f2inside-bbox ,@rest))
+    (f3planex (&rest rest) `(mvc #'-f3planex ,@rest))))
 
 
 ; define vlet/vprogn with current symbols-map

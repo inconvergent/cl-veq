@@ -2,8 +2,7 @@
 (in-package :veq)
 
 
-; TODO: port this
-(vdef f2segdst ((varg 2 va vb v))
+(vdef -f2segdst ((varg 2 va vb v))
   "
   find distance between line, (va vb), and v.
   returns (values distance s) where is is the interpolation value that will
@@ -23,7 +22,7 @@
 
 
 
-(vdef f2segx ((varg 2 a1 a2 b1 b2))
+(vdef -f2segx ((varg 2 a1 a2 b1 b2))
   (declare #.*opt* (ff a1 a2 b1 b2))
   "
   find intersection between lines (a1 a2), (b1 b2).
@@ -74,8 +73,8 @@
          "intersection test"
          (loop with line of-type fvec = (aref lines i)
                for c of-type pos-int in cands
-               do (vprogn (mvb (x p q) (mvc #'f2segx (f2$ line 0 1)
-                                                     (f2$ (aref lines c) 0 1))
+               do (vprogn (mvb (x p q) (f2segx (f2$ line 0 1)
+                                               (f2$ (aref lines c) 0 1))
                             (declare (boolean x) (ff p q))
                             (when x (-append i c p) (-append c i q))))))
        (-remove (i)
@@ -102,7 +101,7 @@
   (sort res #'< :key #'car))
 
 
-(defun f2lsegx (lines*)
+(defun -f2lsegx (lines*)
   (declare #.*opt* (sequence lines*))
   "
   lines = #( #(ax ay bx by) ... )
@@ -123,39 +122,39 @@
 
 ;;;;;;;;;; CONCAVE SHAPE RAY CAST TEST
 
-(vdef f2inside-bbox ((varg 2 top-left bottom-right pt))
+(vdef -f2inside-bbox ((varg 2 top-left bottom-right pt))
   (declare (ff top-left bottom-right pt))
   (and (< (vref top-left 0) (vref pt 0) (vref bottom-right 0))
        (< (vref top-left 1) (vref pt 1) (vref bottom-right 1))))
 
 
-(vdef f2inside-concave (shape (varg 2 pt))
+(vdef -f2inside-concave (shape (varg 2 pt))
   (declare (fvec shape) (ff pt))
   (let ((n (2$len shape)))
     (mvb (minx maxx miny maxy) (f2mima n shape)
-      (unless (f2inside-bbox minx miny maxx maxy pt) ; pt outside bbox -> outside shape
-              (return-from f2inside-concave nil))
+      (unless (-f2inside-bbox minx miny maxx maxy pt) ; pt outside bbox -> outside shape
+              (return-from -f2inside-concave nil))
       (let* ((c 0)
              (width (- maxx minx))
              (shift (- (vref pt 0) (* 2f0 width))))
         (2for-all-rows (n shape)
           (lambda (i (varg 2 a))
             (declare (optimize speed) (ff a))
-            (when (mvc #'f2segx pt shift (vref pt 1)
-                       a (f2$ shape (mod (1+ i) n)))
+            (when (f2segx pt shift (vref pt 1)
+                          a (f2$ shape (mod (1+ i) n)))
                   (incf c))))
         ; odd number of isects means pt is inside shape
         (oddp c)))))
 
 
-(vdef f3planex ((varg 3 n p a b))
+(vdef -f3planex ((varg 3 n p a b))
   (declare #.*opt* (ff n p a b))
   "intersection of plane (n:normal, p:point) and line (a b)"
   (f3let ((ln (f3- b a)))
     (let ((ldotn (f3. ln n)))
       (declare (ff ldotn))
       (when (< (abs ldotn) *eps*) ; avoid div0.
-            (return-from f3planex (values nil 0f0 0f0 0f0 0f0))) ; else:
+            (return-from -f3planex (values nil 0f0 0f0 0f0 0f0))) ; else:
       (let ((d (/ (f3. (f3- p a) n) ldotn)))
         (declare (ff d))
         (mvc #'values t d (f3from a ln d))))))
