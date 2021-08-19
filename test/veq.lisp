@@ -186,12 +186,12 @@
     (let ((a #(-1f0 2f0 3f0 4f0 5f0 8f0))
           (b #(-1d0 2d0 3d0 4d0 5d0 8d0)))
 
-      (is (veq:lst (veq:fmima 6 a)) '(-1.0 8.0))
-      (is (veq:lst (veq:dmima 6 b)) '(-1d0 8d0))
-      (is (veq:lst (veq:f2mima 3 a)) '(-1.0 5.0 2.0 8.0))
-      (is (veq:lst (veq:d2mima 3 b)) '(-1d0 5d0 2d0 8d0))
-      (is (veq:lst (veq:f3mima 2 a)) '(-1.0 4.0 2.0 5.0 3.0 8.0))
-      (is (veq:lst (veq:d3mima 2 b)) '(-1.0d0 4.0d0 2.0d0 5.0d0 3.0d0 8.0d0)))))
+      (is (veq:lst (veq:f$mima 6 a)) '(-1.0 8.0))
+      (is (veq:lst (veq:d$mima 6 b)) '(-1d0 8d0))
+      (is (veq:lst (veq:f2$mima 3 a)) '(-1.0 5.0 2.0 8.0))
+      (is (veq:lst (veq:d2$mima 3 b)) '(-1d0 5d0 2d0 8d0))
+      (is (veq:lst (veq:f3$mima 2 a)) '(-1.0 4.0 2.0 5.0 3.0 8.0))
+      (is (veq:lst (veq:d3$mima 2 b)) '(-1.0d0 4.0d0 2.0d0 5.0d0 3.0d0 8.0d0)))))
 
 (subtest "for all rows"
   (veq:vprogn
@@ -204,7 +204,7 @@
       (labels ((cross (i (veq:varg 3 v w))
                  (veq:3vaset (c i) (veq:f3cross v w))))
 
-        (veq:3for-all-rows (3 a b) #'cross))
+        (veq:3with-rows (3 a b) #'cross))
 
       (is c #(0.0 0.0 -1.0 -7.0 1.5 2.0 -17.0 2.0 7.0) :test #'equalp)
       (is (veq:3to-list c)

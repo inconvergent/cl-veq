@@ -3,54 +3,52 @@
   (:use #:common-lisp)
   (:export
     #:*eps*
-    #:arr
+    #:df
+    #:df*
     #:dpi
     #:dpi5
     #:dpii
+    #:dvec
+    #:ff
+    #:ff*
     #:fpi
     #:fpi5
     #:fpii
+    #:fvec
+    #:in
+    #:in*
+    #:ivec
+
+    #:arr
+    #:varg
+    #:vdef
+    #:vdef*
+    #:vprogn
+    #:vref
+
+    #:lst
+    #:mac
+    #:mvb
+    #:mvc
+
+    #:d2mvb
+    #:d3mvb
+    #:f2mvb
+    #:f3mvb
+    #:d2let
+    #:d3let
+    #:f2let
+    #:f3let
+
+    #:to-list ; TODO: rename?
+    #:2to-list
+    #:3to-list
 
     #:$len
     #:2$len
     #:2vprint
     #:3$len
     #:3vprint
-    #:vprint
-
-    #:df
-    #:df*
-    #:dvec
-    #:ff
-    #:ff*
-    #:fvec
-    #:in
-    #:in*
-    #:ivec
-    #:lst
-    #:mac
-    #:mvb
-    #:mvc
-    #:varg
-    #:vdef
-    #:vprogn
-    #:vref
-
-    #:d2mvb
-    #:d3mvb
-    #:f2mvb
-    #:f3mvb
-
-    #:d2let
-    #:d3let
-    #:f2let
-    #:f3let
-
-    #:to-list
-    #:2to-list
-    #:3to-list
-
-
     #:d$_
     #:d$copy
     #:d$last
@@ -88,6 +86,7 @@
     #:f3$val
     #:f3$zero
     #:f_ ; TODO: rename
+    #:vprint
 
     #:f2inside-bbox
     #:f2inside-concave

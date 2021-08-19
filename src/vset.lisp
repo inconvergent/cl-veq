@@ -8,9 +8,8 @@
   (let ((gs (list))
         (vals (subseq expr dim)))
     (handler-case (caar vals)
-      (error (e) (format t "~%--------------~%vset error: ~a ~%
-                         the last part of expr must be a form~%" e)
-                 (error "quitting")))
+      (error (e) (error "~%--------------~%vset error: ~a ~%
+                         the last part of expr must be a form~%" e)))
     (labels ((mkgs (s) (let ((g (gensym (mkstr s "-"))))
                          (push g gs)
                          g)))

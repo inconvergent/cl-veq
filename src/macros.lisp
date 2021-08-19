@@ -20,22 +20,27 @@
   (defmacro vdef (fname &body body)
     `(macrolet ,symbols-map (defun ,fname ,@(replace-varg body))))
 
+  (defmacro vdef* (mname &body body)
+    (let ((fname (symb "%" mname)))
+      `(progn (macrolet ,symbols-map
+                (defun ,fname ,@(replace-varg
+                                  ; replace internal references to mname
+                                  (subst fname mname body))))
+              (defmacro ,mname (&rest rest)
+                `(mvc #',',fname ,@rest)))))
+
   (defmacro vprogn (&body body)
     `(macrolet ,symbols-map (progn ,@(replace-varg body))))))
 
 
 ;;;;;;;;;;;;;;;;; VARIOUS
 
-; using this makes thing much slower because of the consing.
-; avoid when possible
-; TODO: find a different solution.
-(defmacro lst (&body body)
-  " (values ...) to (list ...) "
-  `(mvc #'list ,@body))
+; using this makes things much slower because of the consing.  avoid when
+; possible TODO: find a different solution.
+(defmacro lst (&body body) `(mvc #'list ,@body))
 
 
 ;;;;;;;;;;;;;;;;;; MACRO UTILS
-
 
 (defun replace-varg (body &optional (root-rmap (list)))
   (labels
@@ -165,24 +170,20 @@
     (f3lspace ((n a b &key (end t)) &body body) (fxlspace n a b body :end end :dim 3 :type 'ff))
     (d3lspace ((n a b &key (end t)) &body body) (fxlspace n a b body :end end :dim 3 :type 'df))
 
-    (dmima (n a) (minmax a n :type 'df))
-    (fmima (n a) (minmax a n :type 'ff))
-    (dmima* (inds a) (minmax* a inds :type 'df))
-    (fmima* (inds a) (minmax* a inds :type 'ff))
+    (d$mima (n a) (minmax a n :type 'df))
+    (f$mima (n a) (minmax a n :type 'ff))
+    (d$mima* (inds a) (minmax* a inds :type 'df))
+    (f$mima* (inds a) (minmax* a inds :type 'ff))
 
-    (d2mima (n a) (2minmax a n :type 'df))
-    (f2mima (n a) (2minmax a n :type 'ff))
-    (d2mima* (inds a) (2minmax* a inds :type 'df))
-    (f2mima* (inds a) (2minmax* a inds :type 'ff))
+    (d2$mima (n a) (2minmax a n :type 'df))
+    (f2$mima (n a) (2minmax a n :type 'ff))
+    (d2$mima* (inds a) (2minmax* a inds :type 'df))
+    (f2$mima* (inds a) (2minmax* a inds :type 'ff))
 
-    (d3mima (n a) (3minmax a n :type 'df))
-    (f3mima (n a) (3minmax a n :type 'ff))
-    (d3mima* (inds a) (3minmax* a inds :type 'df))
-    (f3mima* (inds a) (3minmax* a inds :type 'ff))
-
-    (for-all-rows ((n &rest arrs) &body expr) (for-all-rows n arrs expr :dim 1))
-    (2for-all-rows ((n &rest arrs) &body expr) (for-all-rows n arrs expr :dim 2))
-    (3for-all-rows ((n &rest arrs) &body expr) (for-all-rows n arrs expr :dim 3))
+    (d3$mima (n a) (3minmax a n :type 'df))
+    (f3$mima (n a) (3minmax a n :type 'ff))
+    (d3$mima* (inds a) (3minmax* a inds :type 'df))
+    (f3$mima* (inds a) (3minmax* a inds :type 'ff))
 
     ; TODO: typed
     ; vset for setting multi symbols
@@ -199,16 +200,26 @@
     (2vaset ((a i) &rest expr) `(-vaset (,a 2 ,i) ,@expr))
     (3vaset ((a i) &rest expr) `(-vaset (,a 3 ,i) ,@expr))
 
-    (dwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs) &body body)
-      `(-with-arrays (:type 'df :n ,n ,@(when inds? `(:inds ,inds))
-                            :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
-                            :exs ,exs :start ,start)
-                     ,@body))
-    (fwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs) &body body)
-      `(-with-arrays (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
-                            :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
-                            :exs ,exs :start ,start)
-                     ,@body))
+    (with-rows ((n &rest arrs) &body expr) (with-rows n arrs expr :dim 1))
+    (2with-rows ((n &rest arrs) &body expr) (with-rows n arrs expr :dim 2))
+    (3with-rows ((n &rest arrs) &body expr) (with-rows n arrs expr :dim 3))
+
+    (dwith-arrays ((&key (n 0) (inds nil inds?) (start 0)
+                         itr cnt arr fxs exs)
+                    &body body)
+      `(-with-arrays
+         (:type 'df :n ,n ,@(when inds? `(:inds ,inds))
+                :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
+                :exs ,exs :start ,start)
+         ,@body))
+    (fwith-arrays ((&key (n 0) (inds nil inds?) (start 0)
+                         itr cnt arr fxs exs)
+                   &body body)
+      `(-with-arrays
+         (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
+                :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
+                :exs ,exs :start ,start)
+         ,@body))
 
     ; TODO: d types:
     (f2$rect (&rest rest) `(mvc #'-f2$rect ,@rest))

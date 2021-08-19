@@ -22,14 +22,14 @@
                                                 ,a* ,ind))))))
 
 ; TODO: for all inds
-(defun for-all-rows (n arrs expr &key dim)
+(defun with-rows (n arrs expr &key dim)
   (declare (pos-int dim) (list arrs))
   "execute function (expr i ax ay az bx by bz) for row i and arrsays a and b.
    arrs can be one or more arrsays."
   (unless (= 1 (length expr))
-          (error "for-all-rows error: ~% malformed expr: ~a" expr))
+          (error "with-rows error: ~% malformed expr: ~a" expr))
   (when (remove-if #'symbolp arrs)
-        (error "for-all-rows error:
+        (error "with-rows error:
                 arrs must be one or more symbols.~% got: ~a" arrs))
   (labels ((dimaref (a ii)
             (declare (symbol a))
