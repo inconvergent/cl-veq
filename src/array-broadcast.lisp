@@ -6,28 +6,22 @@
 
 (defmacro broadcast-op (dim type op)
   "
-  fxname: name of the internal array function.
   opname: name of the internal function for the operation
           (defined in ops-dim.lisp)
   arrmacro: with-arrays macro (from rows.lisp)
-  exportname: name of macrolet definition for broadcast op
+  exportname: name of macro definition for broadcast op
   "
-  (let ((fxname (veqsymb dim type (mkstr "$" op) :pref "-")) ; -f2$+
-        (opname (veqsymb dim type (mkstr op) :pref "-")) ; -f2+
+  (let ((opname (veqsymb dim type (mkstr op) :pref "-")) ; -f2+
         (arrmacro (veqsymb 1 type "WITH-ARRAYS")) ; fwith-arrays
         (exportname (veqsymb dim type (mkstr "$" op)))) ; f2$+
-    `(progn (map-symbol `(,',exportname (a &rest rest)
-                          `(mvc #',',',fxname (values ,a) ,@rest)))
-            (export ',exportname)
-            (declaim (inline ,fxname))
-            (vdef ,fxname (a (varg ,dim x))
+    `(progn (export ',exportname)
+            (vdef* ,exportname (a (varg ,dim x))
               (declare #.*opt* (,(arrtype type) a) (,type x))
               (,arrmacro (:itr k :n (/ (length a) ,dim)
                           :arr ((a ,dim a))
                           :fxs ((fx ((varg ,dim vx)) (,opname x vx)))
                           :exs ((a k (fx a)))))
               a))))
-
 
 (defmacro make-broadcast-fx (op)
   "makes function (f2$+ arr x y) from operation +.
@@ -40,8 +34,4 @@
 (make-broadcast-fx -)
 (make-broadcast-fx /)
 (make-broadcast-fx *)
-
-; redefine vdef/vprogn macros with new elements in symbols map
-; (added via broadcast-op)
-(define-env-macros *symbols-map*)
 

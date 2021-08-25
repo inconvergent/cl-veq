@@ -219,20 +219,7 @@
          (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
                 :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs
                 :exs ,exs :start ,start)
-         ,@body))
-
-    ; TODO: d types:
-    (f2$rect (&rest rest) `(mvc #'-f2$rect ,@rest))
-    (f2$square (&rest rest) `(mvc #'-f2$square ,@rest))
-    (f2$polygon (&rest rest) `(mvc #'-f2$polygon ,@rest))
-    (f2$circ (&rest rest) `(mvc #'-f2$circ ,@rest))
-    (f2$center (&rest rest) `(mvc #'-f2$center ,@rest)) ; TODO: 1d/3d
-    (f2segdst (&rest rest) `(mvc #'-f2segdst ,@rest))
-    (f2segx (&rest rest) `(mvc #'-f2segx ,@rest))
-    (f2lsegx (&rest rest) `(mvc #'-f2lsegx ,@rest))
-    (f2inside-concave (&rest rest) `(mvc #'-f2inside-concave ,@rest))
-    (f2inside-bbox (&rest rest) `(mvc #'-f2inside-bbox ,@rest))
-    (f3planex (&rest rest) `(mvc #'-f3planex ,@rest))))
+         ,@body))))
 
 
 ; define vlet/vprogn with current symbols-map
