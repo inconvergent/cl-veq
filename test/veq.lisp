@@ -218,7 +218,7 @@
       :fxs ((cross ((veq:varg 3 v w)) (veq:f3cross v w))
             (init1 (i) (veq:f3<* (1+ i) (* 2 i) (+ 2 i)))
             (init2 (i) (veq:f3<* (+ 2 i) (1+ i) (* 2 i))))
-      :exs ((a k (init1 k)) ; lenght == 1 -> no vaset
+      :exs ((a k (init1 k))
             (b k (init2 k))
             (c k (cross a b))))
       (is c #(-2.0 4.0 1.0 -2.0 5.0 -2.0 4.0 4.0 -7.0 16.0 1.0 -14.0 34.0 -4.0
@@ -239,7 +239,7 @@
             112.0)
           :test #'equalp))
 
-    (veq:fwith-arrays (:n 2 :itr k :cnt c :start 2
+    (veq:fwith-arrays (:n 4 :itr k :cnt c :start 2
       :arr ((aa 3 (veq:f3$zero 4)))
       :fxs ((init (i j) (veq:f3<* (+ 2 i) (+ 1000 j) (+ 100 (* 2 i)))))
       :exs ((aa k (init c k))))

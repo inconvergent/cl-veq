@@ -88,7 +88,7 @@
                (vaset-loop-body (a i expr)
                  (declare (cons expr) (symbol a))
                  `(loop for ,itr of-type pos-int
-                        ,@(if inds? `(in ,inds*) `(from ,start below (+ ,start ,n*)))
+                        ,@(if inds? `(in ,inds*) `(from ,start below ,n*))
                         for ,cnt of-type pos-int from 0
                         ; TODO: fix inefficient indexing calc
                         do (-vaset (,a ,(get-dim a) ,i)
