@@ -7,8 +7,7 @@
 (defvar *symbols-map* '())
 
 (defun veqsymb (dim type fx &key pref)
-  (declare (string fx))
-
+  (declare (pos-int dim) (symbol type))
   (let ((elem (list (cdr (assoc type `((df . "D") (ff . "F") (in . "I"))))
                     (if (> dim 1) dim "")
                     (string fx))))
@@ -16,8 +15,11 @@
     (values (intern (apply #'mkstr elem) "VEQ"))))
 
 (defun arrtype (type)
-  (intern
-    (mkstr (cdr (assoc type `((df . "DVEC") (ff . "FVEC") (in . "IVEC"))))) "VEQ"))
+  (declare (symbol type))
+  (values (intern (mkstr (cdr (assoc type `((df . "DVEC")
+                                            (ff . "FVEC")
+                                            (in . "IVEC")))))
+                  "VEQ")))
 
 (defun optype (mname)
   (declare (symbol mname))

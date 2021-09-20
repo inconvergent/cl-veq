@@ -43,8 +43,9 @@
 ;;;;;;;;;;;;;;;;;; MACRO UTILS
 
 (defun replace-varg (body &optional (root-rmap (list)))
+  ; TODO: handle dotted pairs
   (labels
-    ((car-vargp (root rmap)
+    ((do-car-vargp (root rmap)
        (if (listp root)
          (loop with res = (list)
                for v in (reverse root)
@@ -58,28 +59,33 @@
                else do (push v res)
                finally (return (values res rmap)))
          (values root rmap)))
-     (-vref (root rmap)
-            (dsb (ref i) (cdr root)
-              ; replace-varg can encounter vrefs that have no match in rmap (eg
-              ; in -vmvb). so we need to ignore missing matches for vref.
-              ; these vrefs will be replaced at a later time (eg. in the call
-              ; to replace-varg in -vlet)
-              (aif (assoc ref rmap) (nth i (cdr it)) root)))
-     (-walk (root rmap)
+     (do-vref (root rmap)
+       ; replace-varg can encounter vrefs that have no match in rmap (eg
+       ; in -vmvb). so we need to ignore missing matches for vref.
+       ; these vrefs will be replaced at a later time (eg. in the call
+       ; to replace-varg in -vlet)
+       (aif (assoc (cadr root) rmap) ; if ref in rmap
+            (mapcar (lambda (i)
+                      (nth (the pos-int i) (cdr it))) ; (cdr it) == symbs
+                    (cddr root)) ; inds
+            (list root))) ; do nothing
+     (is-vref (root) (and (listp root)
+                          (listp (car root))
+                          (eq (caar root) 'vref)))
+     (walk (root rmap)
        (cond ((atom root) root)
-             ; TODO: handle dotted pairs
-
-             ((and (listp root) (eq (car root) 'vref))
-               (-vref root rmap))
+             ((is-vref root)
+               `(,@(do-vref (car root) rmap)
+                 ,@(walk (cdr root) rmap)))
 
              ((and (listp root) (assoc (car root) rmap))
                `(,@(cdr (assoc (car root) rmap))
-                  ,@(-walk (cdr root) rmap)))
+                 ,@(walk (cdr root) rmap)))
 
-             (t (mvb (car* rmap) (car-vargp (car root) rmap)
-                  (cons (-walk car* rmap)
-                        (-walk (cdr root) rmap)))))))
-    (-walk body root-rmap)))
+             (t (mvb (car* rmap) (do-car-vargp (car root) rmap)
+                  (cons (walk car* rmap)
+                        (walk (cdr root) rmap)))))))
+    (walk body root-rmap)))
 
 ;;;;;;;;;;;;;;;;;; VMVB
 

@@ -2,7 +2,7 @@
 
 (in-package #:veq-tests)
 
-(plan 11)
+(plan 12)
 
 (subtest "2d double ops"
   (veq:vprogn
@@ -136,12 +136,12 @@
       (is (veq:lst a) '(3f0 1f0)))
 
     (veq:mvb ((veq:varg 3 a)) (veq:f3< 1f0 2f0 3f0)
-      (is (veq:lst (veq:vref a 2) (veq:vref a 0) (veq:vref a 1))
-          '(3f0 1f0 2f0)))
+      (is (veq:lst (veq:vref a 2 0 1)) '(3f0 1f0 2f0)))
 
     (veq:f3let ((a (veq:f3< 1f0 2f0 3f0)))
       (is (veq:lst a) '(1f0 2f0 3f0))
-      (is (veq:vref a 2) 3f0))
+      (is (veq:vref a 2) 3f0)
+      (is (list (veq:vref a 0 1)) (list 1f0 2f0)))
 
     (veq:fvlet ((a 3 (veq:f3< 1f0 2f0 3f0))
                 (b 2 (veq:f2< 5f0 -1f0)))
@@ -230,8 +230,7 @@
       :fxs ((init-three (i) (veq:f3<* (+ 2 i) (1+ i) (+ 100 (* 2 i))))
             (three-to-two ((veq:varg 3 v))
                             (declare (ignore (veq:vref v 1)))
-                            (veq:f2< (veq:vref v 0)
-                                     (veq:vref v 2))))
+                            (veq:f2< (veq:vref v 0 2))))
       :exs ((three k (init-three k))
             (two k (three-to-two three))))
       (is two
@@ -253,6 +252,12 @@
                         (7f0 7f0) (8f0 9f0) (10f0 11f0)))))
       (is (veq:f2$take a (list 2 4 5)) #(5.0 6.0 8.0 9.0 10.0 11.0)
           :test #'equalp))))
+
+(subtest "select-dim"
+  (veq:vprogn
+    (is (veq:lst (veq:zyx (values 1 2 3))) (list 3 2 1))
+    (is (veq:lst (veq:yx (values 1 2 3))) (list 2 1))
+    ))
 
 (unless (finalize) (error "error in veq"))
 

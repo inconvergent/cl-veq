@@ -42,7 +42,6 @@
   (f2len2 (a b)) (the pos-ff (mvc #'+ (-f2square a b)))
   (f2len (a b)) (the pos-ff (sqrt (the pos-ff (mvc #'+ (-f2square a b)))))
 
-
   (d2norm (a b)) (mvc #'-d2iscale a b (mvc #'-d2len a b))
   (f2norm (a b)) (mvc #'-f2iscale a b (mvc #'-f2len a b))
 
@@ -99,12 +98,12 @@
                     (values (- (* x cosa) (* y sina))
                             (+ (* x sina) (* y cosa))))
 
-  (d2rots (x y a sx sy)) (mvc #'-d2+ (mvc #'-d2rot (-d2- x y sx sy ) a) sx sy)
+  (d2rots (x y a sx sy)) (mvc #'-d2+ (mvc #'-d2rot (-d2- x y sx sy) a) sx sy)
 
   (f2rot (x y a)) (let ((cosa (cos a)) (sina (sin a)))
                     (declare (veq:ff cosa sina))
                     (values (- (* x cosa) (* y sina))
                             (+ (* x sina) (* y cosa))))
 
-  (f2rots (x y a sx sy)) (mvc #'-f2+ (mvc #'-f2rot (-f2- x y sx sy ) a) sx sy))
+  (f2rots (x y a sx sy)) (mvc #'-f2+ (mvc #'-f2rot (-f2- x y sx sy) a) sx sy))
 

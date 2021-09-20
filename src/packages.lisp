@@ -19,6 +19,9 @@
     #:in*
     #:ivec
 
+    #:fclamp
+    #:dclamp
+
     #:arr
     #:varg
     #:vdef
@@ -93,5 +96,13 @@
     #:f2lsegx
     #:f2segdst
     #:f2segx
-    #:f3planex))
+    #:f3planex
+
+    #:x #:y #:z
+    #:xy #:xz
+    #:yz #:yx
+    #:zy #:zx
+    #:xzy #:xyz
+    #:zxy #:zyx
+    #:yxz #:yzx))
 
