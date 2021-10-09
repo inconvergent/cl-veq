@@ -23,6 +23,8 @@
     #:dclamp
 
     #:arr
+    #:ivdef
+    #:ivdef*
     #:varg
     #:vdef
     #:vdef*
@@ -33,25 +35,27 @@
     #:mac
     #:mvb
     #:mvc
+    #:mvcwrap
 
-    #:d2mvb
-    #:d3mvb
-    #:f2mvb
-    #:f3mvb
     #:d2let
+    #:d2mvb
     #:d3let
+    #:d3mvb
     #:f2let
+    #:f2mvb
     #:f3let
+    #:f3mvb
 
-    #:to-list ; TODO: rename?
     #:2to-list
     #:3to-list
+    #:to-list ; TODO: rename?
 
     #:$len
+    #:$print
     #:2$len
-    #:2vprint
+    #:2$print
     #:3$len
-    #:3vprint
+    #:3$print
     #:d$_
     #:d$copy
     #:d$last
@@ -89,7 +93,7 @@
     #:f3$val
     #:f3$zero
     #:f_ ; TODO: rename
-    #:vprint
+    #:vpr
 
     #:f2inside-bbox
     #:f2inside-concave
@@ -97,6 +101,9 @@
     #:f2segdst
     #:f2segx
     #:f3planex
+
+    #:vprod
+    #:vsum
 
     #:x #:y #:z
     #:xy #:xz

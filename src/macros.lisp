@@ -17,20 +17,27 @@
                       dupes: ~a~%
                       did you load :veq multiple times?~%" names dupes))
 
+  (defmacro vprogn (&body body)
+    `(macrolet ,symbols-map (progn ,@(replace-varg body))))
+
   (defmacro vdef (fname &body body)
     `(macrolet ,symbols-map (defun ,fname ,@(replace-varg body))))
+
+  (defmacro ivdef (mname &body body)
+    `(progn (declaim (inline ,mname))
+            (vdef ,mname ,@body)))
 
   (defmacro vdef* (mname &body body)
     (let ((fname (symb "%" mname)))
       `(progn (macrolet ,symbols-map
-                (defun ,fname ,@(replace-varg
-                                  ; replace internal references to mname
+                (defun ,fname ,@(replace-varg ; replace internal references to mname
                                   (subst fname mname body))))
               (defmacro ,mname (&rest rest)
                 `(mvc #',',fname ,@rest)))))
 
-  (defmacro vprogn (&body body)
-    `(macrolet ,symbols-map (progn ,@(replace-varg body))))))
+  (defmacro ivdef* (mname &body body)
+    `(progn (declaim (inline ,(symb "%" mname)))
+            (vdef* ,mname ,@body)))))
 
 
 ;;;;;;;;;;;;;;;;; VARIOUS
