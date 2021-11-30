@@ -34,5 +34,7 @@
   (fclamp* (x mi ma)) (min ma (max mi x)) (dclamp* (x mi ma)) (min ma (max mi x))
 
   (dcos-sin (a)) (values (cos a) (sin a)) (fcos-sin (a)) (values (cos a) (sin a))
-  (dsin-cos (a)) (values (sin a) (cos a)) (fsin-cos (a)) (values (sin a) (cos a)))
+  (dsin-cos (a)) (values (sin a) (cos a)) (fsin-cos (a)) (values (sin a) (cos a))
+
+  (fdeg->rad (d)) (* fpi (/ d 180f0)) (ddeg->rad (d)) (* dpi (/ d 180d0)))
 

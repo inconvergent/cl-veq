@@ -5,14 +5,25 @@
 
   (d3abs (a b c)) (values (abs a) (abs b) (abs c))
   (d3neg (a b c)) (values (- a) (- b) (- c))
-  (d3square (a b c)) (values (* a a) (* b b) (* c c))
+  (d3square (a b c)) (values (the pos-df (* a a))
+                             (the pos-df (* b b))
+                             (the pos-df (* c c)))
   (d3sqrt (a b c)) (values (the pos-df (sqrt (the pos-df a)))
                            (the pos-df (sqrt (the pos-df b)))
                            (the pos-df (sqrt (the pos-df c))))
 
-  (f3abs (a b c)) (values (abs a) (abs b) (abs c))
+  (f3abs (a b c)) (values (the pos-ff (abs a))
+                          (the pos-ff (abs b))
+                          (the pos-ff (abs c)))
+
+  (f3poslim (a b c)) (values (the pos-ff (max a 0f0))
+                             (the pos-ff (max b 0f0))
+                             (the pos-ff (max c 0f0)))
+
   (f3neg (a b c)) (values (- a) (- b) (- c))
-  (f3square (a b c)) (values (* a a) (* b b) (* c c))
+  (f3square (a b c)) (values (the pos-ff (* a a))
+                             (the pos-ff (* b b))
+                             (the pos-ff (* c c)))
   (f3sqrt (a b c)) (values (the pos-ff (sqrt (the pos-ff a)))
                            (the pos-ff (sqrt (the pos-ff b)))
                            (the pos-ff (sqrt (the pos-ff c))))

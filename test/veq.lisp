@@ -2,7 +2,7 @@
 
 (in-package #:veq-tests)
 
-(plan 12)
+(plan 13)
 
 (subtest "2d double ops"
   (veq:vprogn
@@ -256,8 +256,17 @@
 (subtest "select-dim"
   (veq:vprogn
     (is (veq:lst (veq:zyx (values 1 2 3))) (list 3 2 1))
-    (is (veq:lst (veq:yx (values 1 2 3))) (list 2 1))
-    ))
+    (is (veq:lst (veq:yx (values 1 2 3))) (list 2 1))))
+
+(subtest "broadcast"
+  (veq:vprogn
+    (is (veq:f2$+ (veq:f2$zero 3) 3f0 1f0)
+        #(3f0 1f0 3f0 1f0 3f0 1f0)
+        :test #'equalp)
+
+    (is (veq:f2$+ (veq:f2$zero 3) (veq:f2rep 3f0))
+        #(3f0 3f0 3f0 3f0 3f0 3f0)
+        :test #'equalp)))
 
 (unless (finalize) (error "error in veq"))
 

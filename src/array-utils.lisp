@@ -5,15 +5,13 @@
 
 (defmacro f$make (&key (dim 1) (n 1) (v 0f0))
   " create array with size (n dim), and initial value v"
-  `(values (make-array (the pos-int (* ,dim ,n))
-             :initial-element ,v :element-type 'ff :adjustable nil)
-           ,dim ,n))
+  `(make-array (the pos-int (* ,dim ,n))
+               :initial-element ,v :element-type 'ff :adjustable nil))
 
 (defmacro d$make (&key (dim 1) (n 1) (v 0d0))
   " create array with size (n dim), and initial value v"
-  `(values (make-array (the pos-int (* ,dim ,n))
-             :initial-element ,v :element-type 'df :adjustable nil)
-           ,dim ,n))
+  `(make-array (the pos-int (* ,dim ,n))
+               :initial-element ,v :element-type 'df :adjustable nil))
 
 ;;;;;;;;;;;;;;;;;; COPY ARRAY
 
@@ -63,10 +61,9 @@
             (,n (length ,body*))
             (,dim (length (the list (car ,body*)))))
        (declare (pos-int ,n ,dim) (list ,body*))
-       (values (make-array (* ,n ,dim) :initial-contents (the list (awf ,body*))
-                                       :element-type 'ff
-                                       :adjustable nil)
-               ,dim ,n))
+       (make-array (* ,n ,dim) :initial-contents (the list (awf ,body*))
+                               :element-type 'ff
+                               :adjustable nil))
        (error (,e) (error "error in f$_ with: ~a~%. err: ~a~%" ',body ,e)))))
 
 (defmacro d$_ (&body body)
@@ -78,10 +75,9 @@
               (,n (length ,body*))
               (,dim (length (the list (car ,body*)))))
          (declare (pos-int ,n ,dim) (list ,body*))
-         (values (make-array (* ,n ,dim) :initial-contents (the list (awf ,body*))
-                                         :element-type 'df
-                                         :adjustable nil)
-                 ,dim ,n))
+         (make-array (* ,n ,dim) :initial-contents (the list (awf ,body*))
+                                 :element-type 'df
+                                 :adjustable nil))
        (error (,e) (error "error in d$_ with: ~a~%. err: ~a~%" ',body ,e)))))
 
 (defmacro f_ (&body body) `(f$_ (list ,@body)))
