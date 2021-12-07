@@ -42,8 +42,9 @@
 
 ;;;;;;;;;;;;;;;;; VARIOUS
 
-; using this makes things much slower because of the consing.  avoid when
-; possible TODO: find a different solution.
+; using this makes things much slower because of the consing or because the
+; number of values is unknown?. avoid when possible.
+; TODO: find a different solution.
 (defmacro lst (&body body) `(mvc #'list ,@body))
 
 
@@ -52,17 +53,26 @@
 (defun replace-varg (body &optional (root-rmap (list)))
   ; TODO: handle dotted pairs
   (labels
-    ((do-car-vargp (root rmap)
+    ((is-varg (v) (and (listp v) (eq (car v) 'varg)))
+     (is-vref (root) (and (listp root)
+                          (listp (car root))
+                          (eq (caar root) 'vref)))
+     (get-car-rmap (root rmap)
        (if (listp root)
          (loop with res = (list)
                for v in (reverse root)
-               if (and (listp v) (eq (car v) 'varg))
+               if (is-varg v)
                do (dsb (n &rest rest) (cdr v)
                     (loop for name in rest
-                          collect (let ((syms (-gensyms name n)))
-                                    (push `(,name . ,syms) rmap)
-                                    syms) into new
+                          collect (if (assoc name rmap)
+                                    ; already in rmap, use existing gensyms
+                                    `(,(cdr (assoc name rmap)))
+                                    ; make new gensyms and add to rmap
+                                    (let ((syms (-gensyms name n)))
+                                      (push `(,name . ,syms) rmap)
+                                      syms)) into new
                           finally (setf res `(,@(awf new) ,@res))))
+
                else do (push v res)
                finally (return (values res rmap)))
          (values root rmap)))
@@ -76,9 +86,6 @@
                       (nth (the pos-int i) (cdr it))) ; (cdr it) == symbs
                     (cddr root)) ; inds
             (list root))) ; do nothing
-     (is-vref (root) (and (listp root)
-                          (listp (car root))
-                          (eq (caar root) 'vref)))
      (walk (root rmap)
        (cond ((atom root) root)
              ((is-vref root)
@@ -89,7 +96,7 @@
                `(,@(cdr (assoc (car root) rmap))
                  ,@(walk (cdr root) rmap)))
 
-             (t (mvb (car* rmap) (do-car-vargp (car root) rmap)
+             (t (mvb (car* rmap) (get-car-rmap (car root) rmap)
                   (cons (walk car* rmap)
                         (walk (cdr root) rmap)))))))
     (walk body root-rmap)))

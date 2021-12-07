@@ -147,11 +147,17 @@
                 (b 2 (veq:f2< 5f0 -1f0)))
       (is (veq:lst a b) '(1f0 2f0 3f0 5f0 -1f0)))
 
-
     (let ((a 1f0))
       (is (veq:lst (veq:f2rep (incf a))) '(2f0 3f0))
       (is (veq:lst (veq:f3rep (incf a))) '(4f0 5f0 6f0))
-      (is (veq:lst (veq:f2rep* (incf a))) '(7f0 7f0)))))
+      (is (veq:lst (veq:f2rep* (incf a))) '(7f0 7f0)))
+
+    (veq:f2let ((a (veq:f2< 1f0 2f0))
+                (b (veq:f2< 10 20))
+                (a (veq:f2+ a b)))
+
+      (is (veq:lst a) (list 11f0 22f0))
+      (is (veq:lst b) (list 10f0 20f0)))))
 
 (subtest "lerp"
   (veq:vprogn

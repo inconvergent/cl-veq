@@ -38,6 +38,7 @@
 
   (d2max (a b)) (max a b) (d2min (a b)) (min a b)
   (f2max (a b)) (max a b) (f2min (a b)) (min a b)
+  ; TODO: dimmax/argmax, dimmin, argmin
 
   (f2len2 (a b)) (the pos-ff (mvc #'+ (-f2square a b)))
   (f2len (a b)) (the pos-ff (sqrt (the pos-ff (mvc #'+ (-f2square a b)))))

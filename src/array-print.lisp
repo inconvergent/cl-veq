@@ -2,7 +2,7 @@
 (in-package :veq)
 
 
-(defun vaprint (a &key n (dim 1) (width 10))
+(defun $print (a &key n (dim 1) (width 10))
   (declare (simple-array a) (pos-int dim))
   (labels ((numshow (a) (format nil "~v@A |" width a))
            (row (n l i)
@@ -18,8 +18,8 @@
       (loop for i from 0 below n do (format t "~%~a" (row n l i)))
       (format t " dim: ~a n: ~a~%~%" dim n)))
   a)
-(defun 2vaprint (a &key n (width 10)) (vaprint a :n n :dim 2 :width width))
-(defun 3vaprint (a &key n (width 10)) (vaprint a :n n :dim 3 :width width))
+(defun 2$print (a &key n (width 10)) ($print a :n n :dim 2 :width width))
+(defun 3$print (a &key n (width 10)) ($print a :n n :dim 3 :width width))
 
 
 (vdef to-list (arr &key (dim 1))

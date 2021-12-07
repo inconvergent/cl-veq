@@ -18,7 +18,7 @@
                   (res ,dim (if res res (,resarr :dim ,dim :n n))))
             :fxs ((acc ((varg ,dim x)) (values x)))
             :exs ((res cnt (acc a))))
-            (values res ,dim n)))))))
+            res))))))
 
 (make-take-fx 1 ff)
 (make-take-fx 2 ff)
