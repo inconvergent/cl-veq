@@ -18,16 +18,20 @@
                       did you load :veq multiple times?~%" names dupes))
 
   (defmacro vprogn (&body body)
+    "enable veq inside this progn"
     `(macrolet ,symbols-map (progn ,@(replace-varg body))))
 
   (defmacro vdef (fname &body body)
+    "define function with veq enabled"
     `(macrolet ,symbols-map (defun ,fname ,@(replace-varg body))))
 
   (defmacro ivdef (mname &body body)
+    "define inline function with veq enabled"
     `(progn (declaim (inline ,mname))
             (vdef ,mname ,@body)))
 
   (defmacro vdef* (mname &body body)
+    "define function, and corresponding macro, with veq enabled."
     (let ((fname (symb "%" mname)))
       `(progn (macrolet ,symbols-map
                 (defun ,fname ,@(replace-varg ; replace internal references to mname
@@ -36,6 +40,7 @@
                 `(mvc #',',fname ,@rest)))))
 
   (defmacro ivdef* (mname &body body)
+    "define inline function, and corresponding macro, with veq enabled."
     `(progn (declaim (inline ,(symb "%" mname)))
             (vdef* ,mname ,@body)))))
 
