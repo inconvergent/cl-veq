@@ -270,8 +270,16 @@
         #(3f0 1f0 3f0 1f0 3f0 1f0)
         :test #'equalp)
 
+    (is (veq:f2$len (veq:f2$+ (veq:f2$zero 3) 3f0 1f0))
+        #(3.1622777 3.1622777 3.1622777)
+        :test #'equalp)
+
     (is (veq:f2$+ (veq:f2$zero 3) (veq:f2rep 3f0))
         #(3f0 3f0 3f0 3f0 3f0 3f0)
+        :test #'equalp)
+
+    (is (veq:f2$- (veq:f2$zero 3) (veq:f2rep 3f0))
+        #(-3f0 -3f0 -3f0 -3f0 -3f0 -3f0)
         :test #'equalp)))
 
 (unless (finalize) (error "error in veq"))

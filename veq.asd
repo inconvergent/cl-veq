@@ -1,7 +1,7 @@
 
 (asdf:defsystem #:veq
   :description "reasonably fast operations for 1d, 2d, 3d vectors"
-  :version "0.4.0"
+  :version "0.4.2"
   :author "anders hoff/inconvergent"
   :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))

@@ -198,8 +198,16 @@
       ;> #(1.0 2.0 1.0 2.0 3.0 3.0 3.0 4.0 5.0)
 
       ; divide every row by [1.0 2.0 3.0]
-      (vpr (f3$/ a 1f0 2f0 3f0)))
-      ;> #(0.5 0.6666667 1.5 0.33333334 0.5 0.75 0.25 0.4 0.5)
+      (vpr (f3$/ a 1f0 2f0 3f0))
+
+      (vpr (f3$len c))
+      ;> #(1.0 7.4330344 18.493242)
+
+      (vpr (f$neg (f3$len c)))
+      ;> #(-1.0 -7.4330344 -18.493242)
+
+      (vpr (f$abs (f$neg (f3$len c)))))
+      ;> #(1.0 7.4330344 18.493242)
 
     ; with arrays is a macro for doing more flexible manipulation of arrays.
     ; this is mostly used internally, but it is exposed to the user as well.
