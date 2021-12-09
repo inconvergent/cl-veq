@@ -229,6 +229,11 @@
     (2vaset ((a i) &rest expr) `(-vaset (,a 2 ,i) ,@expr))
     (3vaset ((a i) &rest expr) `(-vaset (,a 3 ,i) ,@expr))
 
+    ; TODO: see array-rows
+    ; (with-op ((n &rest arrs) &body expr) (with-op n arrs expr :dim 1))
+    ; (2with-op ((n &rest arrs) &body expr) (with-op n arrs expr :dim 2))
+    ; (3with-op ((n &rest arrs) &body expr) (with-op n arrs expr :dim 3))
+
     (with-rows ((n &rest arrs) &body expr) (with-rows n arrs expr :dim 1))
     (2with-rows ((n &rest arrs) &body expr) (with-rows n arrs expr :dim 2))
     (3with-rows ((n &rest arrs) &body expr) (with-rows n arrs expr :dim 3))

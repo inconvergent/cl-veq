@@ -64,7 +64,7 @@
   ;> (1f0 1f0)
 
   ; equivalent to (multiple-value-bind #'list (f2rep 1f0)):
-  (veq:vpr (lst (f2rep 1f0)))
+  (vpr (lst (f2rep 1f0)))
   ;> '(1f0 1f0)
 
 
@@ -171,25 +171,55 @@
     (vpr (f2$take b (list 1 2))) ; select rows (vectors)
     ;> #(1.0 2.0 2.0 3.0)
 
-    (let ((a (veq:f3$zero 3))
-          (b (veq:f3$zero 3))
-          (c (veq:f3$zero 3)))
+    (let ((a (f3$zero 3))
+          (b (f3$zero 3))
+          (c (f3$zero 3)))
 
       ; set values of a and b
       (loop for i from 0 below 3
                ; set row i of a and b
-            do (veq:3vaset (a i) (veq:f3<* i (1+ i) (* 2 i)))
-               (veq:3vaset (b i) (veq:f3<* 1 (+ 3 i) (/ i 2))))
+               ; f3<* is like f3<, but it will coerce the type to float
+            do (3vaset (a i) (f3<* i (1+ i) (* 2 i)))
+               (3vaset (b i) (f3<* 1 (+ 3 i) (/ i 2))))
 
-      (labels ((cross (i (veq:varg 3 v w))
-                 (veq:3vaset (c i) (veq:f3cross v w))))
+      (labels ((cross (i (varg 3 v w))
+                 (3vaset (c i) (f3cross v w))))
 
         ; execute cross on rows of a and b
-        (veq:3with-rows (3 a b) #'cross))
+        (3with-rows (3 a b) #'cross))
 
       (vpr c)
       ;> #(0.0 0.0 -1.0 -7.0 1.5 2.0 -17.0 2.0 7.0)
-      (vpr (veq:3to-list c))
+      (vpr (3to-list c))
       ;> '((0.0 0.0 -1.0) (-7.0 1.5 2.0) (-17.0 2.0 7.0))
-      )))
+
+      ; add 1 to every row of a
+      (vpr (f3$+ a (f3rep 1f0)))
+      ;> #(1.0 2.0 1.0 2.0 3.0 3.0 3.0 4.0 5.0)
+
+      ; divide every row by [1.0 2.0 3.0]
+      (vpr (f3$/ a 1f0 2f0 3f0)))
+      ;> #(0.5 0.6666667 1.5 0.33333334 0.5 0.75 0.25 0.4 0.5)
+
+    ; with arrays is a macro for doing more flexible manipulation of arrays.
+    ; this is mostly used internally, but it is exposed to the user as well.
+    ; the macro is more complicated than i'd like, and might be improved in the
+    ; future
+    (fwith-arrays (:n 7 :itr k ; k is 0, 1, ... 6
+      ; the third form in elements of arr can be empty, a form that will be
+      ; executed, or a symbol that refers to an array defined outside of
+      ; with-arrays
+      :arr ((a 3 (f3$one 7)) ; init as (f3$one 7)
+            (b 3) ; init as (f3$zero 7)
+            (c 3)) ; init as (f3$zero 7)
+      ; define functions to use in exs
+      :fxs ((cross ((varg 3 v w)) (f3cross v w))
+            (init1 (i) (f3<* (1+ i) (* 2 i) (+ 2 i)))
+            (init2 (i) (f3<* (+ 2 i) (1+ i) (* 2 i))))
+      ; perform the calculations
+      :exs ((a k (init1 k)) ; init row k of a with init1
+            (b k (init2 k)) ; init row k of b with init2
+            (c k (cross a b)))) ; set row k of c to (cross a b)
+      ; use the arrays. the last form is returned, as in a progn
+      (vpr c))))
 

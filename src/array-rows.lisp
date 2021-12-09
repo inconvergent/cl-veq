@@ -21,16 +21,19 @@
                                      collect `(,(veqsymb dim type "$" :pref "-")
                                                 ,a* ,ind))))))
 
+; TODO: with-op; simpler version of with-rows that takes input arrays and
+; creates an output array of a given dimension
+
 ; TODO: for all inds
 (defun with-rows (n arrs expr &key dim)
   (declare (pos-int dim) (list arrs))
-  "execute function (expr i ax ay az bx by bz) for row i and arrsays a and b.
-   arrs can be one or more arrsays."
+  "execute function (expr i ax ay az bx by bz) for row i and arrays a and b.
+   arrs can be one or more arrays."
   (unless (= 1 (length expr))
           (error "with-rows error: ~% malformed expr: ~a" expr))
-  (when (remove-if #'symbolp arrs)
-        (error "with-rows error:
-                arrs must be one or more symbols.~% got: ~a" arrs))
+  (unless (every #'symbolp arrs)
+          (error "with-rows error:
+                    arrs must be one or more symbols.~% got: ~a" arrs))
   (labels ((dimaref (a ii)
             (declare (symbol a))
             (loop for j of-type pos-int from 0 below dim
