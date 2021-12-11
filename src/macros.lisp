@@ -211,20 +211,12 @@
     (f3$lspace (n a b &key (end t)) (lspace n a b :end end :dim 3 :type 'ff))
     (d3$lspace (n a b &key (end t)) (lspace n a b :end end :dim 3 :type 'df))
 
-    (d$mima (n a) (minmax a n :type 'df))
-    (f$mima (n a) (minmax a n :type 'ff))
-    (d$mima* (inds a) (minmax* a inds :type 'df))
-    (f$mima* (inds a) (minmax* a inds :type 'ff))
-
-    (d2$mima (n a) (2minmax a n :type 'df))
-    (f2$mima (n a) (2minmax a n :type 'ff))
-    (d2$mima* (inds a) (2minmax* a inds :type 'df))
-    (f2$mima* (inds a) (2minmax* a inds :type 'ff))
-
-    (d3$mima (n a) (3minmax a n :type 'df))
-    (f3$mima (n a) (3minmax a n :type 'ff))
-    (d3$mima* (inds a) (3minmax* a inds :type 'df))
-    (f3$mima* (inds a) (3minmax* a inds :type 'ff))
+    (d$mima (a &key n inds) (mima a n inds :type 'df))
+    (f$mima (a &key n inds) (mima a n inds :type 'ff))
+    (d2$mima (a &key n inds) (2mima a n inds :type 'df))
+    (f2$mima (a &key n inds) (2mima a n inds :type 'ff))
+    (d3$mima (a &key n inds) (3mima a n inds :type 'df))
+    (f3$mima (a &key n inds) (3mima a n inds :type 'ff))
 
     ; TODO: typed
     ; vset for setting multi symbols

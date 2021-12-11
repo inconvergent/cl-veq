@@ -185,12 +185,12 @@
     (let ((a #(-1f0 2f0 3f0 4f0 5f0 8f0))
           (b #(-1d0 2d0 3d0 4d0 5d0 8d0)))
 
-      (is (veq:lst (veq:f$mima 6 a)) '(-1.0 8.0))
-      (is (veq:lst (veq:d$mima 6 b)) '(-1d0 8d0))
-      (is (veq:lst (veq:f2$mima 3 a)) '(-1.0 5.0 2.0 8.0))
-      (is (veq:lst (veq:d2$mima 3 b)) '(-1d0 5d0 2d0 8d0))
-      (is (veq:lst (veq:f3$mima 2 a)) '(-1.0 4.0 2.0 5.0 3.0 8.0))
-      (is (veq:lst (veq:d3$mima 2 b)) '(-1.0d0 4.0d0 2.0d0 5.0d0 3.0d0 8.0d0)))))
+      (is (veq:lst (veq:f$mima a :n 6)) '(-1.0 8.0))
+      (is (veq:lst (veq:d$mima b :n 6)) '(-1d0 8d0))
+      (is (veq:lst (veq:f2$mima a)) '(-1.0 5.0 2.0 8.0))
+      (is (veq:lst (veq:d2$mima b :n 3)) '(-1d0 5d0 2d0 8d0))
+      (is (veq:lst (veq:f3$mima a)) '(-1.0 4.0 2.0 5.0 3.0 8.0))
+      (is (veq:lst (veq:d3$mima b)) '(-1.0d0 4.0d0 2.0d0 5.0d0 3.0d0 8.0d0)))))
 
 (subtest "for all rows"
   (veq:vprogn
