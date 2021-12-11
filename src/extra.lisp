@@ -14,7 +14,9 @@
 
 (defmacro -vprint (&rest rest)
   "print (mvc #'list rest) and return (mvc #'values rest)"
-  `(progn (format t "~%val of~%  ~a:~%  ~a~%" ',rest (lst ,@rest))
-          (mvc #'values ,@rest)))
+  (awg (res)
+    `(let ((,res (lst ,@rest)))
+       (format t "~%val of~%  ~a:~%  ~a~%" ',rest ,res)
+       (apply #'values ,res))))
 (abbrev vpr -vprint)
 

@@ -54,6 +54,8 @@
 (broadcast-op 1 ff f$abs -fabs (a) ())
 (broadcast-op 1 ff f$neg -fneg (a) ())
 
+(broadcast-op 1 ff f$cos-sin -fcos-sin (a) () :dim-out 2)
+
 (broadcast-op 2 ff f2$+ -f2+ ((varg 2 a)) ((varg 2 s)))
 (broadcast-op 2 ff f2$* -f2* ((varg 2 a)) ((varg 2 s)))
 (broadcast-op 2 ff f2$- -f2- ((varg 2 a)) ((varg 2 s)))
@@ -69,6 +71,7 @@
 ; TODO: more reduce operations
 (broadcast-op 2 ff f2$len2 -f2len2 ((varg 2 a)) () :dim-out 1)
 (broadcast-op 2 ff f2$len -f2len ((varg 2 a)) () :dim-out 1)
+
 
 (broadcast-op 3 ff f3$+ -f3+ ((varg 3 a)) ((varg 3 s)))
 (broadcast-op 3 ff f3$* -f3* ((varg 3 a)) ((varg 3 s)))

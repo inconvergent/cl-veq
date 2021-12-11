@@ -2,6 +2,7 @@
 (in-package :veq)
 
 ; TODO: type template. argmax/min
+; TODO: remove minmax*, make n/inds optional.
 
 (defun minmax (a n &key type)
   (awg (i minx maxx)

@@ -206,8 +206,12 @@
       (vpr (f$neg (f3$len c)))
       ;> #(-1.0 -7.4330344 -18.493242)
 
-      (vpr (f$abs (f$neg (f3$len c)))))
+      (vpr (f$abs (f$neg (f3$len c))))
       ;> #(1.0 7.4330344 18.493242)
+
+      (vpr (f$cos-sin (f$lspace 4 0f0 fpii))))
+      ;> #(1.0 0.0 -0.50000006 0.8660254 -0.4999999 -0.86602545 1.0
+      ;>   1.7484555e-7)
 
     ; with arrays is a macro for doing more flexible manipulation of arrays.
     ; this is mostly used internally, but it is exposed to the user as well.

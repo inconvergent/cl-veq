@@ -18,7 +18,7 @@
   (declare #.*opt* (ff rad rs))
   (f2$polygon (values (the fixnum (ceiling (the ff (* fpii (the ff (* rad rs))))))) rad))
 
-(vdef* f2$center (arr &aux (n (2$len arr)))
+(vdef* f2$center (arr &aux (n (2$num arr)))
   (declare #.*opt* (fvec arr) (pos-int n))
   (mvb (minx maxx miny maxy) (f2$mima n arr)
        (f2$+ arr (f2< (- (* 0.5 (+ minx maxx)))

@@ -25,7 +25,7 @@
 
 ;;;;;;;;;;;;;;;;;; INIT ARRAY OF VEC
 
-(defun $len (a) (declare #.*opt* (simple-array a)) (the pos-int (length a)))
+(defun $num (a) (declare #.*opt* (simple-array a)) (the pos-int (length a)))
 (defun d$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 1 :n n :v 1d0))
 (defun d$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 1 :n n :v v))
 (defun d$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 1 :n n))
@@ -33,7 +33,7 @@
 (defun f$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 1 :n n :v v))
 (defun f$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 1 :n n))
 
-(defun 2$len (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 2)))
+(defun 2$num (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 2)))
 (defun d2$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n :v 1d0))
 (defun d2$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n :v v))
 (defun d2$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n))
@@ -41,7 +41,7 @@
 (defun f2$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 2 :n n :v v))
 (defun f2$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 2 :n n))
 
-(defun 3$len (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 3)))
+(defun 3$num (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 3)))
 (defun d3$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 3 :n n :v 1d0))
 (defun d3$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 3 :n n :v v))
 (defun d3$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 3 :n n))
@@ -58,12 +58,12 @@
   (awg (body* n dim e)
     `(handler-case
        (let* ((,body* ,@body)
-            (,n (length ,body*))
-            (,dim (length (the list (car ,body*)))))
-       (declare (pos-int ,n ,dim) (list ,body*))
-       (make-array (* ,n ,dim) :initial-contents (the list (awf ,body*))
-                               :element-type 'ff
-                               :adjustable nil))
+              (,n (length ,body*))
+              (,dim (length (the list (car ,body*)))))
+         (declare (pos-int ,n ,dim) (list ,body*))
+         (make-array (* ,n ,dim) :initial-contents (the list (awf ,body*))
+                                 :element-type 'ff
+                                 :adjustable nil))
        (error (,e) (error "error in f$_ with: ~a~%. err: ~a~%" ',body ,e)))))
 
 (defmacro d$_ (&body body)

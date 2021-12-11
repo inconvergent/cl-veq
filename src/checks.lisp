@@ -124,7 +124,7 @@
 
 (vdef* f2inside-concave (shape (varg 2 pt))
   (declare (fvec shape) (ff pt))
-  (let ((n (2$len shape)))
+  (let ((n (2$num shape)))
     (mvb (minx maxx miny maxy) (f2$mima n shape)
       (unless (f2inside-bbox minx miny maxx maxy pt) ; pt outside bbox -> outside shape
               (return-from f2inside-concave nil))

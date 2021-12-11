@@ -48,21 +48,29 @@
 
     #:2to-list
     #:3to-list
-    #:to-list ; TODO: rename?
+    #:to-list
 
-    #:$len
+    #:$num
+    #:2$num
+    #:3$num
+
     #:$print
-    #:2$len
     #:2$print
-    #:3$len
     #:3$print
+    #:vpr
+
     #:d$_
+    #:d_ ; TODO: rename
+    #:f$_
+    #:f_ ; TODO: rename
+
     #:d$copy
     #:d$last
     #:d$make
     #:d$one
     #:d$val
     #:d$zero
+
     #:d2$last
     #:d2$one
     #:d2$val
@@ -71,14 +79,14 @@
     #:d3$one
     #:d3$val
     #:d3$zero
-    #:d_ ; TODO: rename
-    #:f$_
+
     #:f$copy
     #:f$last
     #:f$make
     #:f$one
     #:f$val
     #:f$zero
+
     #:f2$center
     #:f2$circ
     #:f2$last
@@ -88,12 +96,11 @@
     #:f2$square
     #:f2$val
     #:f2$zero
+
     #:f3$last
     #:f3$one
     #:f3$val
     #:f3$zero
-    #:f_ ; TODO: rename
-    #:vpr
 
     #:f2inside-bbox
     #:f2inside-concave
@@ -102,8 +109,7 @@
     #:f2segx
     #:f3planex
 
-    #:vprod
-    #:vsum
+    #:vprod #:vsum
 
     #:x #:y #:z
     #:xy #:xz

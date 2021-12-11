@@ -3,12 +3,12 @@
 
 
 ; (declaim (inline f$last d$last f2$last d2$last f3$last d3$last))
-(defun f$last (a) (declare #.*opt* (fvec a)) (-f$ a (1- (the pos-int ($len a)))))
-(defun d$last (a) (declare #.*opt* (dvec a)) (-d$ a (1- (the pos-int ($len a)))))
-(defun f2$last (a) (declare #.*opt* (fvec a)) (-f2$ a (1- (the pos-int (2$len a)))))
-(defun d2$last (a) (declare #.*opt* (dvec a)) (-d2$ a (1- (the pos-int (2$len a)))))
-(defun f3$last (a) (declare #.*opt* (fvec a)) (-f3$ a (1- (the pos-int (3$len a)))))
-(defun d3$last (a) (declare #.*opt* (dvec a)) (-d3$ a (1- (the pos-int (3$len a)))))
+(defun f$last (a) (declare #.*opt* (fvec a)) (-f$ a (1- (the pos-int ($num a)))))
+(defun d$last (a) (declare #.*opt* (dvec a)) (-d$ a (1- (the pos-int ($num a)))))
+(defun f2$last (a) (declare #.*opt* (fvec a)) (-f2$ a (1- (the pos-int (2$num a)))))
+(defun d2$last (a) (declare #.*opt* (dvec a)) (-d2$ a (1- (the pos-int (2$num a)))))
+(defun f3$last (a) (declare #.*opt* (fvec a)) (-f3$ a (1- (the pos-int (3$num a)))))
+(defun d3$last (a) (declare #.*opt* (dvec a)) (-d3$ a (1- (the pos-int (3$num a)))))
 
 
 (defun -ind-to-val (type dim a rest)
@@ -93,9 +93,11 @@
                  `(loop for ,itr of-type pos-int
                         ,@(if inds? `(in ,inds*) `(from ,start below ,n*))
                         for ,cnt of-type pos-int from 0
-                        ; TODO: fix inefficient indexing calc
-                        do (-vaset (,a ,(get-dim a) ,i)
-                                     ,(transform-expr expr itr)))))
+                        ; TODO: fix inefficient indexing calc?
+                        do ,(if a `(-vaset (,a ,(get-dim a) ,i) ; assign result to a
+                                           ,(transform-expr expr itr))
+                                   ; do not assign result
+                                  (transform-expr expr itr)))))
 
       `(let ((,n* ,n) ,@(when inds? `((,inds* ,inds))))
          (declare (pos-int ,n*) (ignorable ,n*)

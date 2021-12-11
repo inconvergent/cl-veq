@@ -162,15 +162,8 @@
 (subtest "lerp"
   (veq:vprogn
 
-    (is (veq:f3lspace (5 (veq:f3< 1f0 2f0 -1f0) (veq:f3rep 2f0)))
+    (is (veq:f3$lspace 5 (veq:f3< 1f0 2f0 -1f0) (veq:f3rep 2f0))
         #(1.0 2.0 -1.0 1.25 2.0 -0.25 1.5 2.0 0.5 1.75 2.0 1.25 2.0 2.0 2.0)
-        :test #'equalp)
-
-    (is (veq:f3lspace (5 (veq:f3< 1f0 5f0 7f0) (veq:f3rep 2f0) )
-                      (veq:f$make :dim 3 :n 5 :v 0f0)
-                      (lambda (i x y z) (veq:3vaset (veq::arr i) (values x y (* z z)))))
-         #(1.0 5.0 49.0 1.25 4.25 33.0625 1.5 3.5 20.25 1.75 2.75 10.5625 2.0
-           2.0 4.0)
         :test #'equalp)
 
     (let ((a (veq:f$make :dim 3 :n 5 :v 0f0)))
@@ -280,6 +273,11 @@
 
     (is (veq:f2$- (veq:f2$zero 3) (veq:f2rep 3f0))
         #(-3f0 -3f0 -3f0 -3f0 -3f0 -3f0)
+        :test #'equalp)
+
+    (is (veq:f$cos-sin (veq:f$lspace 4 0f0 veq:fpii))
+        #(1.0 0.0 -0.50000006 0.8660254 -0.4999999 -0.86602545 1.0
+          1.7484555e-7)
         :test #'equalp)))
 
 (unless (finalize) (error "error in veq"))

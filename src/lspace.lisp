@@ -1,27 +1,41 @@
 
 (in-package :veq)
 
-; TODO: the arr symb is leaky. fix?
-(defun fxlspace (n a b expr &key dim type (end t))
+; TODO: inefficient use of xdlerp
+
+; wrap non cons n in (values n)
+(defun -wrapnum (n) (typecase n (cons n) (t `(values ,n))))
+
+(defun lspace (n a b &key dim type (end t))
   (declare (fixnum dim) (symbol type) (boolean end))
-  "assumes first form in expr is a function with args (i x y z).
-   number of arguments depend on dimension."
-  (let ((declare-arr))
-    (awg (i n* stp s fx)
+  "n points between a, b"
+  (awg (i n* stp s arr a* b*)
     `(let* ((,n* ,n)
             (,stp (coerce ,(if end `(/ (1- ,n*)) `(/ ,n*)) ',type))
-            (arr ,(cond ((not expr) (setf declare-arr t)
-                                    `(,(veqsymb dim type "$ZERO") ,n*))
-                         ((butlast expr) (setf declare-arr t)
-                                         `(progn ,@(butlast expr))))))
-     (declare (pos-int ,n*) (,type ,stp)
-              ,@(if declare-arr `((,(arrtype type) veq:arr))))
-     (loop with ,fx of-type function = ,(last* expr)
-           for ,i of-type pos-int from 0 below ,n*
-           for ,s of-type ,type from ,(coerce 0 type)
-           ; TODO: inefficient use of xdlerp
-           do ,(if expr `(mvc ,fx ,i (,(veqsymb dim type "LERP") ,a ,b (* ,s ,stp)))
-                        `(-vaset (veq:arr ,dim ,i)
-                                 (,(veqsymb dim type "LERP") ,a ,b (* ,s ,stp))))
-           finally (return arr))))))
+            (,arr (,(veqsymb dim type "$ZERO") ,n*)))
+
+     (declare (pos-int ,n*) (,type ,stp) (,(arrtype type) ,arr))
+     (fvlet ((,a* ,dim ,(-wrapnum a))
+             (,b* ,dim ,(-wrapnum b)))
+       (loop for ,i of-type pos-int from 0 below ,n*
+             for ,s of-type ,type from ,(coerce 0 type)
+             do (-vaset (,arr ,dim ,i)
+                        (,(veqsymb dim type "LERP") ,a* ,b* (* ,s ,stp)))
+             finally (return ,arr))))))
+
+
+(defun fxlspace (n a b fx &key dim type (end t))
+  (declare (fixnum dim) (symbol type) (boolean end))
+  "do (mvc fx i x y ...) for n points between a, b"
+  (awg (i n* stp s fx* a* b*)
+    `(let* ((,n* ,n)
+            (,fx* (progn ,@fx))
+            (,stp (coerce ,(if end `(/ (1- ,n*)) `(/ ,n*)) ',type)))
+     (declare (pos-int ,n*) (,type ,stp) (function ,fx*))
+     (fvlet ((,a* ,dim ,(-wrapnum a))
+             (,b* ,dim ,(-wrapnum b)))
+       (loop for ,i of-type pos-int from 0 below ,n*
+             for ,s of-type ,type from ,(coerce 0 type)
+             do (mvc ,fx* ,i (,(veqsymb dim type "LERP")
+                               ,a* ,b* (* ,s ,stp))))))))
 
