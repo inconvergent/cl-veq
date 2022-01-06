@@ -65,6 +65,9 @@
 (broadcast-op 2 ff f2$scale -f2scale ((varg 2 a)) (s))
 (broadcast-op 2 ff f2$iscale -f2iscale ((varg 2 a)) (s))
 
+(broadcast-op 2 ff f2$rot -f2rot ((varg 2 arr)) (a))
+(broadcast-op 2 ff f2$rots -f2rots ((varg 2 arr)) (a x y))
+
 (broadcast-op 2 ff f$2abs -f2abs ((varg 2 a)) ())
 (broadcast-op 2 ff f$2neg -f2neg ((varg 2 a)) ())
 
@@ -81,6 +84,9 @@
 (broadcast-op 3 ff f3$i/ -f3i/ ((varg 3 a)) ((varg 3 s)))
 (broadcast-op 3 ff f3$scale -f3scale ((varg 3 a)) (s))
 (broadcast-op 3 ff f3$iscale -f3iscale ((varg 3 a)) (s))
+
+(broadcast-op 2 df d2$rot -d2rot ((varg 2 arr)) (a))
+(broadcast-op 2 df d2$rots -d2rots ((varg 2 arr)) (a x y))
 
 (broadcast-op 3 ff f$3abs -f3abs ((varg 3 a)) ())
 (broadcast-op 3 ff f$3neg -f3neg ((varg 3 a)) ())

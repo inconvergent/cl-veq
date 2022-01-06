@@ -8,16 +8,16 @@
   (veq:vprogn
 
   (is (veq:mvb (x s)
-        (veq:f2segx (veq:f2rep 1.1f0) (veq:f2< 11f0 12.3f0)
-                    (veq:f2< 0.1f0 10f0) (veq:f2< 8f0 -1.1f0))
+        (veq:f2segx (veq:f2rep 1.1f0) (veq:f2 11f0 12.3f0)
+                    (veq:f2 0.1f0 10f0) (veq:f2 8f0 -1.1f0))
         (list x s))
       '(t 0.2984826334627212f0))
 
-  (is (veq:f2segx (veq:f2< 0f0 0f0) (veq:f2< 100f0 0f0)
-                  (veq:f2< 0f0 1f0) (veq:f2< 100f0 1f0))
+  (is (veq:f2segx (veq:f2 0f0 0f0) (veq:f2 100f0 0f0)
+                  (veq:f2 0f0 1f0) (veq:f2 100f0 1f0))
       nil)
-  (is (veq:f2segx (veq:f2< 0f0 0f0) (veq:f2< 1f0 1f0)
-                  (veq:f2< 0f0 1f0) (veq:f2< 1f0 0f0))
+  (is (veq:f2segx (veq:f2 0f0 0f0) (veq:f2 1f0 1f0)
+                  (veq:f2 0f0 1f0) (veq:f2 1f0 0f0))
       t)
 
   (let* ((lines '((171.65283402050164f0  440.93255770900925f0

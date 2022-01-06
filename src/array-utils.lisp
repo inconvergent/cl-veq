@@ -80,9 +80,18 @@
                                  :adjustable nil))
        (error (,e) (error "error in d$_ with: ~a~%. err: ~a~%" ',body ,e)))))
 
-(defmacro f_ (&body body) `(f$_ (list ,@body)))
-(defmacro d_ (&body body) `(d$_ (list ,@body)))
-
+(defmacro f_ (&body body)
+  "create fvec from body: (f_ '(1f0 2f0 3f0))"
+  (awg (l) `(let ((,l (progn ,@body)))
+             (declare (list ,l))
+             (make-array (length ,l) :initial-contents ,l
+                         :element-type 'ff :adjustable nil))))
+(defmacro d_ (&body body)
+  "create dvec from body: (d_ '(1d0 2d0 3d0))"
+  (awg (l) `(let ((,l (progn ,@body)))
+             (declare (list ,l))
+             (make-array (length ,l) :initial-contents ,l
+                         :element-type 'df :adjustable nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 

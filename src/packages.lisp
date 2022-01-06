@@ -87,20 +87,33 @@
     #:f$val
     #:f$zero
 
+    #:f$line
+    #:f$point
     #:f2$center
     #:f2$circ
     #:f2$last
+    #:f2$line
     #:f2$one
+    #:f2$point
     #:f2$polygon
     #:f2$rect
     #:f2$square
     #:f2$val
     #:f2$zero
+    #:f3$line
+    #:f3$point
 
     #:f3$last
     #:f3$one
     #:f3$val
     #:f3$zero
+
+    #:d$sum
+    #:d2$sum
+    #:d3$sum
+    #:f$sum
+    #:f2$sum
+    #:f3$sum
 
     #:f2inside-bbox
     #:f2inside-concave
