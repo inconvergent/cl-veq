@@ -107,14 +107,14 @@
   ; call print-some-values with two 2d vectors [1f0 2f0] and [4f0 7f0]
   (print-some-values (f2+ 1f0 2f0 4f0 7f0))
 
-  ; this is equivalent to the above. f2< is avaliable in the event that the
+  ; this is equivalent to the above. f2 is avaliable in the event that the
   ; context requires that the vector is a single form
-  (print-some-values (f2+ (f2< 1d0 2f0) 4f0 7f0))
+  (print-some-values (f2+ (f2 1d0 2f0) 4f0 7f0))
 
   ; ---- LET ----
 
   ; such as when using the available lets:
-  (f2let ((a (f2< 3f0 32f0)) ; you can also just write (values 3f0 32f0)
+  (f2let ((a (f2 3f0 32f0)) ; you can also just write (values 3f0 32f0)
           (b (f2+ a 3f0 2f0)))
     (vpr (list a b))) ;> (list 3.0 32.0 6.0 34.0)
 
@@ -125,15 +125,15 @@
   ;       (list ,ax ,ay ,bx ,by)))))
 
   ; there is also a let that accepts different dimensions for each binding:
-  (fvlet ((a 2 (f2< 3f0 32f0))
+  (fvlet ((a 2 (f2 3f0 32f0))
           (b 3 (f3+ a 0f0 3f0 2f0 4f0))
           (c 3 (f3+ (vref a 0) 3f0 (vref b 2)
                     1f0 (vref b 1 1)))
-          (d 1 (f< 3f0)))
+          (d 1 (f 3f0)))
     (vpr (list a b d))
     ;> (3.0 32.0 6.0 34.0 4.0 3f0)
 
-    (f2vset a (f2< 4f0 4f0)) ; set 2d vector a
+    (f2vset a (f2 4f0 4f0)) ; set 2d vector a
     (setf (vref b 2) 999f0) ; set z value of 3d vector b
 
     (vpr (list a b)))
@@ -147,9 +147,9 @@
 
   ; ---- ARRAYS OF VECTORS ----
 
-  (let ((a (f$_ `((3f0 3f0))))
-        (line (f$_ `((3f0 40f0) (7f0 3f0))))
-        (line* (f$_ `((1f0 2f0) (3f0 4f0))))
+  (let ((a (f2$point 3f0 3f0))
+        (line (f2$line 3f0 40f0 7f0 3f0))
+        (line* (f2$line 1f0 2f0 3f0 4f0))
         (b (f$_ (loop for v from 0 below 6
                             collect (list (ff v) (ff (1+ v)))))))
 
@@ -178,9 +178,9 @@
       ; set values of a and b
       (loop for i from 0 below 3
                ; set row i of a and b
-               ; f3<* is like f3<, but it will coerce the type to float
-            do (3vaset (a i) (f3<* i (1+ i) (* 2 i)))
-               (3vaset (b i) (f3<* 1 (+ 3 i) (/ i 2))))
+               ; f3~ is like f3, but it will coerce the type to float
+            do (3vaset (a i) (f3~ i (1+ i) (* 2 i)))
+               (3vaset (b i) (f3~ 1 (+ 3 i) (/ i 2))))
 
       (labels ((cross (i (varg 3 v w))
                  (3vaset (c i) (f3cross v w))))
@@ -226,8 +226,8 @@
             (c 3)) ; init as (f3$zero 7)
       ; define functions to use in exs
       :fxs ((cross ((varg 3 v w)) (f3cross v w))
-            (init1 (i) (f3<* (1+ i) (* 2 i) (+ 2 i)))
-            (init2 (i) (f3<* (+ 2 i) (1+ i) (* 2 i))))
+            (init1 (i) (f3~ (1+ i) (* 2 i) (+ 2 i)))
+            (init2 (i) (f3~ (+ 2 i) (1+ i) (* 2 i))))
       ; perform the calculations
       :exs ((a k (init1 k)) ; init row k of a with init1
             (b k (init2 k)) ; init row k of b with init2

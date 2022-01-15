@@ -103,6 +103,22 @@
     #:f3$line
     #:f3$point
 
+    #:d$line
+    #:d$point
+    #:d2$center
+    #:d2$circ
+    #:d2$last
+    #:d2$line
+    #:d2$one
+    #:d2$point
+    #:d2$polygon
+    #:d2$rect
+    #:d2$square
+    #:d2$val
+    #:d2$zero
+    #:d3$line
+    #:d3$point
+
     #:f3$last
     #:f3$one
     #:f3$val
