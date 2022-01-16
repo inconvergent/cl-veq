@@ -129,7 +129,7 @@
 (subtest "macro"
   (veq:vprogn
 
-    (labels ((fx1 (h (veq:varg 3 a)) (declare (ignore h))
+    (labels ((fx1 (h (:va 3 a)) (declare (ignore h))
                (veq:f3+ a 1f0 2f0 0f0)))
       (is (veq:lst (fx1 0f0 1f0 1f0 2f0)) '(2f0 3f0 2f0)))
 
@@ -145,8 +145,8 @@
 
     (veq:f3let ((a (veq:f3 1f0 2f0 3f0)))
       (is (veq:lst a) '(1f0 2f0 3f0))
-      (is (veq:vref a 2) 3f0)
-      (is (list (veq:vref a 0 1)) (list 1f0 2f0)))
+      (is (:vr a 2) 3f0)
+      (is (list (:vref a 0 1)) (list 1f0 2f0)))
 
     (veq:fvlet ((a 3 (veq:f3 1f0 2f0 3f0))
                 (b 2 (veq:f2 5f0 -1f0)))
@@ -232,7 +232,7 @@
     (veq:fwith-arrays (:n 7 :itr k
       :arr ((two 2) (three 3))
       :fxs ((init-three (i) (veq:f3~ (+ 2 i) (1+ i) (+ 100 (* 2 i))))
-            (three-to-two ((veq:varg 3 v))
+            (three-to-two ((:varg 3 v))
                             (declare (ignore (veq:vref v 1)))
                             (veq:f2 (veq:vref v 0 2))))
       :exs ((three k (init-three k))

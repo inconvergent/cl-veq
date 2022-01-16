@@ -14,8 +14,8 @@
                    #'string-lessp))
          (dupes (dupes names)))
   (when dupes (error "duplicate definitions in *symbols-map*: ~a~%
-                      dupes: ~a~%
-                      did you load :veq multiple times?~%" names dupes))
+dupes: ~a~%
+did you load :veq multiple times?~%" names dupes))
 
   (defmacro vprogn (&body body)
     "enable veq inside this progn"
@@ -34,7 +34,8 @@
     "define function, and corresponding macro, with veq enabled."
     (let ((fname (symb "%" mname)))
       `(progn (macrolet ,symbols-map
-                (defun ,fname ,@(replace-varg ; replace internal references to mname
+                (defun ,fname ,@(replace-varg
+                                  ; replace internal references to mname
                                   (subst fname mname body))))
               (defmacro ,mname (&rest rest)
                 `(mvc #',',fname ,@rest)))))
@@ -49,21 +50,19 @@
 
 ; using this makes things much slower because of the consing or because the
 ; number of values is unknown?. avoid when possible.
-; TODO: find a different solution.
+; TODO: find a different solution for some cases?
 (defmacro lst (&body body) `(mvc #'list ,@body))
 
 
 ;;;;;;;;;;;;;;;;;; MACRO UTILS
 
 (defun replace-varg (body &optional (root-rmap (list)))
-  ; TODO: handle dotted pairs
   (labels
-    ((is-varg (v) (and (listp v) (eq (car v) 'varg)))
-     (is-vref (root) (and (listp root)
-                          (listp (car root))
-                          (eq (caar root) 'vref)))
-     (get-car-rmap (root rmap)
-       (if (listp root)
+    ((is-varg (v) (and (listp v) (member (car v) '(varg :varg :va) :test #'eq)))
+     (is-vref (root) (and (listp root) (listp (car root))
+                          (member (caar root) '(vref :vref :vr) :test #'eq)))
+     (-safe-do-list (root rmap)
+       (handler-case
          (loop with res = (list)
                for v in (reverse root)
                if (is-varg v)
@@ -80,7 +79,11 @@
 
                else do (push v res)
                finally (return (values res rmap)))
-         (values root rmap)))
+         ; this breaks eg when root contains a dotted pair: '(:a :b . :c)
+         (error (e) (values root rmap))))
+     (get-car-rmap (root rmap)
+       (if (listp root) (-safe-do-list root rmap)
+                        (values root rmap)))
      (do-vref (root rmap)
        ; replace-varg can encounter vrefs that have no match in rmap (eg
        ; in -vmvb). so we need to ignore missing matches for vref.
