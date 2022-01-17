@@ -2,8 +2,10 @@
 
 VEQ is a set of convenience utilities for writing (1d/)2d/3d vector mathematics.
 It suports single vectors or arrays of vectors, with some broadcasting and
-reduction operations. `veq` was written to be the vector library used in
-my generative art library [weird](https://github.com/inconvergent/weird).
+reduction operations.
+
+VEQ was written to be the vector library used in my generative art library
+[weird](https://github.com/inconvergent/weird).
 
 ## Examples
 
@@ -53,4 +55,14 @@ Here are some examples of use:
 For more examples go to [examples](examples/ex.lisp).
 
 You can also see some usagee in the [tests](test/veq.lisp).
+
+## Versions Issues and feature requests
+
+The most recent stable version is v1.0.0.
+
+This code is still somewhat immature, and the interface might change in the
+future. But I will try to document future breaking changes here.
+
+To report issues, or suggest features use:
+[Github](https://github.com/inconvergent/cl-veq).
 
