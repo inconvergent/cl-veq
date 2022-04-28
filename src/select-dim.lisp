@@ -2,23 +2,45 @@
 (in-package :veq)
 
 
-; vdef* renames all symbols inside the function that are the same as the
-; function name. so we use x* instead of x etc.
-(vdef* x (x* &rest rest) (declare #.*opt* (ignorable rest)) x*)
-(vdef* y (x y* &rest rest) (declare #.*opt* (ignorable x rest)) y*)
-(vdef* z (x y z* &rest rest) (declare #.*opt* (ignorable x y rest)) z*)
+(defmacro make-swizzle-macro (symb type)
+  (awg (rest)
+    (let* ((string-symb (string-upcase (mkstr symb)))
+           (exportname (veqsymb 1 type string-symb))
+           (symb (map 'list #'symb string-symb))
+           (vals `(values ,@symb))
+           (ign `(ignore ,@(set-difference '(x y z w) symb)))
+           (typ `(,type ,@symb)))
+      `(progn (export ',exportname)
+              (defmacro ,exportname (&rest ,rest)
+                `(multiple-value-bind (x y z w) (mvc #'values ,@,rest)
+                   (declare ,',typ ,',ign)
+                   ,',vals))))))
 
-(vdef* xy (x y &rest rest) (declare #.*opt* (ignorable rest)) (values x y))
-(vdef* xz (x y z &rest rest) (declare #.*opt* (ignorable y rest)) (values x z))
-(vdef* yz (x y z &rest rest) (declare #.*opt* (ignorable x rest)) (values y z))
-(vdef* yx (x y &rest rest) (declare #.*opt* (ignorable rest)) (values y x))
-(vdef* zx (x y z &rest rest) (declare #.*opt* (ignorable y rest)) (values z x))
-(vdef* zy (x y z &rest rest) (declare #.*opt* (ignorable x rest)) (values z y))
 
-(vdef* xzy (x y z &rest rest) (declare #.*opt* (ignorable rest)) (values x z y))
-(vdef* xyz (x y z &rest rest) (declare #.*opt* (ignorable rest)) (values x y z))
-(vdef* zxy (x y z &rest rest) (declare #.*opt* (ignorable rest)) (values z x y))
-(vdef* zyx (x y z &rest rest) (declare #.*opt* (ignorable rest)) (values z y x))
-(vdef* yxz (x y z &rest rest) (declare #.*opt* (ignorable rest)) (values y x z))
-(vdef* yzx (x y z &rest rest) (declare #.*opt* (ignorable rest)) (values y z x))
+(defmacro make-swizzle (type)
+  "
+  build all selector macros for combinations of xyzw. so that
+  (xyxw (values 1f0 2f0 3f0 4f0)) -> (values 1f0 2f0 1f0 4f0).
+  "
+  (labels
+    ((rec-swizzle-gen (symbs &aux (res))
+       (labels ((acc (a &optional (b "")) (push* (symb a b) res)) ; -> (symb a b)
+                (rec (res level)
+                  (when (> level 2) (return-from rec))
+                  (loop for s in res
+                        do (rec (mapcar (lambda (b) (acc s b)) symbs)
+                                (1+ level)))))
+         (rec (loop for s in symbs collect (acc s)) 0)
+         res)))
+
+    `(progn ,@(loop for symb in (rec-swizzle-gen '(x y z w))
+                    collect `(make-swizzle-macro ,symb ,type)))))
+
+(make-swizzle ff)
+(make-swizzle df)
+
+; (defun id (&rest rest) (apply #'values rest))
+; (defun idx (x &rest rest) x)
+; (defun idxy (x y &rest rest) x y)
+; (defun idxyz (x y &rest rest) x y z)
 

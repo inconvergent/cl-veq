@@ -9,7 +9,7 @@
         (resarr (veqsymb 1 type "$MAKE"))) ; f2$make
     `(progn
        (export ',fxname)
-       (vdef ,fxname (a inds &key res)
+       (fvdef ,fxname (a inds &key res)
        (declare (,(arrtype type) a))
        (let ((n (length inds)))
           (declare (pos-int n))
@@ -20,10 +20,6 @@
             :exs ((res cnt (acc a))))
             res))))))
 
-(make-take-fx 1 ff)
-(make-take-fx 2 ff)
-(make-take-fx 3 ff)
-(make-take-fx 1 df)
-(make-take-fx 2 df)
-(make-take-fx 3 df)
+(make-take-fx 1 ff) (make-take-fx 2 ff) (make-take-fx 3 ff) (make-take-fx 4 ff)
+(make-take-fx 1 df) (make-take-fx 2 df) (make-take-fx 3 df) (make-take-fx 4 df)
 

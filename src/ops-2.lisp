@@ -3,108 +3,55 @@
 
 (ops
 
-  (d2^ (a b s)) (values (expt a s) (expt b s))
-  (d2mod (a b s)) (values (mod a s) (mod b s))
+  (@2^ (a b s)) (values (expt a s) (expt b s))
+  (@2exp (a b)) (values (exp a) (exp b))
+  (@2mod (a b s)) (values (mod a s) (mod b s))
+  (@2scale (a b s)) (values (* a s) (* b s))
+  (@2iscale (a b s)) (values (/ a s) (/ b s))
 
-  (f2^ (a b s)) (values (expt a s) (expt b s))
-  (f2mod (a b s)) (values (mod a s) (mod b s))
+  (@2abs (a b)) (values (abs a) (abs b))
+  (@2neg (a b)) (values (- a) (- b))
+  (@2perp (a b)) (values b (- a))
+  (@2perp* (a b)) (values (- b) a)
+  (@2flip (a b)) (values b a)
+  (@2square (a b)) (values (* a a) (* b b))
+  (@2sqrt (a b)) (values (the pos-@f (sqrt (the pos-@f a))) (the pos-@f (sqrt (the pos-@f b))))
 
-  (d2scale (a b s)) (values (* a s) (* b s))
-  (d2iscale (a b s)) (values (/ a s) (/ b s))
+  (@2len2 (a b)) (the pos-@f (mvc #'+ (-@2square a b)))
+  (@2len (a b)) (the pos-@f (sqrt (the pos-@f (mvc #'+ (-@2square a b)))))
 
-  (f2scale (a b s)) (values (* a s) (* b s))
-  (f2iscale (a b s)) (values (/ a s) (/ b s))
+  (@2max (a b)) (max a b) (@2min (a b)) (min a b)
 
-  (d2abs (a b)) (values (abs a) (abs b))
-  (d2neg (a b)) (values (- a) (- b))
-  (d2perp (a b)) (values b (- a))
-  (d2perp* (a b)) (values (- b) a)
-  (d2flip (a b)) (values b a)
-  (d2square (a b)) (values (* a a) (* b b))
-  (d2sqrt (a b)) (values (the pos-df (sqrt (the pos-df a)))
-                         (the pos-df (sqrt (the pos-df b))))
+  (@2norm (a b)) (mvc #'-@2iscale a b (mvc #'-@2len a b))
 
-  (f2abs (a b)) (values (abs a) (abs b))
-  (f2neg (a b)) (values (- a) (- b))
-  (f2perp (a b)) (values b (- a))
-  (f2perp* (a b)) (values (- b) a)
-  (f2flip (a b)) (values b a)
-  (f2square (a b)) (values (* a a) (* b b))
-  (f2sqrt (a b)) (values (the pos-ff (sqrt (values (the pos-ff a))))
-                         (the pos-ff (sqrt (values (the pos-ff b)))))
+  (@2angle (a b)) (mvc #'atan (-@2norm b a))
 
-  (d2len2 (a b)) (the pos-df (mvc #'+ (-d2square a b)))
-  (d2len (a b)) (the pos-df (sqrt (the pos-df (mvc #'+ (-d2square a b)))))
+  (@2+ (ax ay bx by)) (values (+ ax bx) (+ ay by))
+  (@2- (ax ay bx by)) (values (- ax bx) (- ay by))
+  (@2* (ax ay bx by)) (values (* ax bx) (* ay by))
+  (@2/ (ax ay bx by)) (values (/ ax bx) (/ ay by))
 
-  (d2max (a b)) (max a b) (d2min (a b)) (min a b)
-  (f2max (a b)) (max a b) (f2min (a b)) (min a b)
-  ; TODO: dimmax/argmax, dimmin, argmin
+  (@2i- (ax ay bx by)) (values (- bx ax) (- by ay))
+  (@2i/ (ax ay bx by)) (values (/ bx ax) (/ by ay))
 
-  (f2len2 (a b)) (the pos-ff (mvc #'+ (-f2square a b)))
-  (f2len (a b)) (the pos-ff (sqrt (the pos-ff (mvc #'+ (-f2square a b)))))
+  (@2cross (ax ay bx by)) (- (* ax by) (* ay bx))
 
-  (d2norm (a b)) (mvc #'-d2iscale a b (mvc #'-d2len a b))
-  (f2norm (a b)) (mvc #'-f2iscale a b (mvc #'-f2len a b))
+  (@2. (ax ay bx by)) (+ (* ax bx) (* ay by))
 
-  (d2angle (a b)) (mvc #'atan (-d2norm b a))
-  (f2angle (a b)) (mvc #'atan (-f2norm b a))
+  (@2dst2 (ax ay bx by)) (mvc #'+ (-@2square (- bx ax) (- by ay)))
+  (@2dst (ax ay bx by)) (sqrt (the pos-@f (mvc #'+ (-@2square (- bx ax) (- by ay)))))
 
-  (d2+ (ax ay bx by)) (values (+ ax bx) (+ ay by))
-  (d2- (ax ay bx by)) (values (- ax bx) (- ay by))
-  (d2* (ax ay bx by)) (values (* ax bx) (* ay by))
-  (d2/ (ax ay bx by)) (values (/ ax bx) (/ ay by))
-
-  (f2+ (ax ay bx by)) (values (+ ax bx) (+ ay by))
-  (f2- (ax ay bx by)) (values (- ax bx) (- ay by))
-  (f2* (ax ay bx by)) (values (* ax bx) (* ay by))
-  (f2/ (ax ay bx by)) (values (/ ax bx) (/ ay by))
-
-  (d2i- (ax ay bx by)) (values (- bx ax) (- by ay))
-  (d2i/ (ax ay bx by)) (values (/ bx ax) (/ by ay))
-
-  (f2i- (ax ay bx by)) (values (- bx ax) (- by ay))
-  (f2i/ (ax ay bx by)) (values (/ bx ax) (/ by ay))
-
-  (d2cross (ax ay bx by)) (- (* ax by) (* ay bx))
-  (f2cross (ax ay bx by)) (- (* ax by) (* ay bx))
-
-  (d2. (ax ay bx by)) (+ (* ax bx) (* ay by))
-
-  (d2dst2 (ax ay bx by)) (mvc #'+ (-d2square (- bx ax) (- by ay)))
-  (d2dst (ax ay bx by)) (sqrt (the pos-df (mvc #'+ (-d2square (- bx ax) (- by ay)))))
-
-  (f2. (ax ay bx by)) (+ (* ax bx) (* ay by))
-
-  (f2dst2 (ax ay bx by)) (mvc #'+ (-f2square (- bx ax) (- by ay)))
-  (f2dst (ax ay bx by)) (sqrt (the pos-ff (mvc #'+ (-f2square (- bx ax) (- by ay)))))
-
-  (d2lerp (ax ay bx by s)) (-d2+ ax ay (* (- bx ax) s) (* (- by ay) s))
-  (d2from (ax ay bx by s)) (-d2+ ax ay (* bx s) (* by s))
-  (d2mid (ax ay bx by)) (values (* 0.5d0 (+ ax bx)) (* 0.5d0 (+ ay by)))
-
-  (f2lerp (ax ay bx by s)) (-f2+ ax ay (* (- bx ax) s) (* (- by ay) s))
-  (f2from (ax ay bx by s)) (-f2+ ax ay (* bx s) (* by s))
-  (f2mid (ax ay bx by)) (values (* 0.5f0 (+ ax bx)) (* 0.5f0 (+ ay by)))
+  (@2lerp (ax ay bx by s)) (-@2+ ax ay (* (- bx ax) s) (* (- by ay) s))
+  (@2from (ax ay bx by s)) (-@2+ ax ay (* bx s) (* by s))
+  (@2mid (ax ay bx by)) (values (* 1/2 (+ ax bx)) (* 1/2 (+ ay by)))
 
   ; OTHER
 
-  (d2on-circ (a rad)) (mvc #'-d2scale (-dcos-sin (* a dpii)) rad)
-  (f2on-circ (a rad)) (mvc #'-f2scale (-fcos-sin (* a fpii)) rad)
+  (@2on-circ (a rad)) (mvc #'-@2scale (-@cos-sin (* a @pii)) rad)
+  (@2on-circ* (a rad)) (mvc #'-@2scale (-@cos-sin a) rad)
 
-  (d2on-circ* (a rad)) (mvc #'-d2scale (-dcos-sin a) rad)
-  (f2on-circ* (a rad)) (mvc #'-f2scale (-fcos-sin a) rad)
-
-  (d2rot (x y a)) (let ((cosa (cos a)) (sina (sin a)))
-                    (declare (veq:df cosa sina))
+  (@2rot (x y a)) (let ((cosa (cos a)) (sina (sin a)))
+                    (declare (@f cosa sina))
                     (values (- (* x cosa) (* y sina))
                             (+ (* x sina) (* y cosa))))
-
-  (d2rots (x y a sx sy)) (mvc #'-d2+ (mvc #'-d2rot (-d2- x y sx sy) a) sx sy)
-
-  (f2rot (x y a)) (let ((cosa (cos a)) (sina (sin a)))
-                    (declare (veq:ff cosa sina))
-                    (values (- (* x cosa) (* y sina))
-                            (+ (* x sina) (* y cosa))))
-
-  (f2rots (x y a sx sy)) (mvc #'-f2+ (mvc #'-f2rot (-f2- x y sx sy) a) sx sy))
-
+  (@2rots (x y a sx sy)) (mvc #'-@2+ (mvc #'-@2rot (-@2- x y sx sy) a) sx sy))

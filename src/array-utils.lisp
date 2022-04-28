@@ -49,6 +49,13 @@
 (defun f3$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 3 :n n :v v))
 (defun f3$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 3 :n n))
 
+(defun 4$num (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 4)))
+(defun d4$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 4 :n n :v 1d0))
+(defun d4$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 4 :n n :v v))
+(defun d4$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 4 :n n))
+(defun f4$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 4 :n n :v 1f0))
+(defun f4$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 4 :n n :v v))
+(defun f4$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 4 :n n))
 
 ;;;;;;;;;;;;;;;;;;;;; INIT FROM EXPR
 
@@ -95,7 +102,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
-(declaim (inline -d$ -f$ -d2$ -f2$ -d3$ -f3$))
+(declaim (inline -d$ -f$ -d2$ -f2$ -d3$ -f3$ -f4$ -d4$))
 (defun -d$ (v &optional (i 0))
   (declare #.*opt* (dvec v) (pos-int i))
   (the df (aref v i)))
@@ -123,4 +130,18 @@
   (values (the ff (aref v ii))
           (the ff (aref v (the pos-int (1+ ii))))
           (the ff (aref v (the pos-int (+ 2 ii))))))
+
+(defun -d4$ (v &optional (i 0) &aux (ii (* 4 i)))
+  (declare #.*opt* (dvec v) (pos-int i ii))
+  (values (the df (aref v ii))
+          (the df (aref v (the pos-int (1+ ii))))
+          (the df (aref v (the pos-int (+ 2 ii))))
+          (the df (aref v (the pos-int (+ 3 ii))))))
+
+(defun -f4$ (v &optional (i 0) &aux (ii (* 4 i)))
+  (declare #.*opt* (fvec v) (pos-int i ii))
+  (values (the ff (aref v ii))
+          (the ff (aref v (the pos-int (1+ ii))))
+          (the ff (aref v (the pos-int (+ 2 ii))))
+          (the ff (aref v (the pos-int (+ 3 ii))))))
 

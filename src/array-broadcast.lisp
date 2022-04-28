@@ -2,95 +2,72 @@
 (in-package :veq)
 
 
-(defmacro broadcast-op (dim type exportname fxname arr-arg br-arg &key dim-out)
+(defmacro broadcast-op (dim type exportname fxname arr-arg br-arg
+                        &optional out)
   "
   exportname: name of macro definition for broadcast op
   fxname: name of the internal function
   arr-arg: name of arguments from the array
   br-arg: name of arguments for the broadcast
+  out: is the dimensions of the output array. if nil, the input array is used
   "
-  (labels ((remove-varg (ll)
-             (awf
-               (loop for l in ll
-                     collect (if (and (consp l) (eq (car l) 'varg))
-                                 (cddr l) l) ))))
-
-    (let ((arr (gensym "arr"))
-          (arr-out (gensym "arr-out")))
-    `(progn (export ',exportname)
-            ,(if dim-out
-
-              ; create new output array
-              `(vdef* ,exportname (,arr ,@br-arg)
+  (awg (arr arr-out)
+    (labels ((fxarg (s) (and (symbolp s) (not (eq s :va))))
+             (-varg (l) (remove-if-not #'fxarg (awf l))))
+    `(fvprogn (export ',exportname)
+              (def* ,exportname (,arr ,@br-arg)
                 (declare #.*opt* (,(arrtype type) ,arr))
-                (,(veqsymb 1 type "WITH-ARRAYS") ; fwith-arrays
+                (,(veqsymb 1 type "WITH-ARRAYS")
                   (:itr k :n (/ (length ,arr) ,dim)
-                   :arr ((,arr ,dim ,arr)
-                         (,arr-out ,dim-out))
-                   :fxs ((bcastfx (,@arr-arg) (,fxname ,@(remove-varg arr-arg)
-                                                  ,@(remove-varg br-arg))))
-                   :exs ((,arr-out k (bcastfx ,arr))))
-                  ,arr-out))
+                   :arr ((,arr ,dim ,arr) ,@(if out `((,arr-out ,out))))
+                   :fxs ((fx (,@arr-arg) (,fxname ,@(-varg arr-arg)
+                                                  ,@(-varg br-arg))))
+                   :exs ((,(if out arr-out arr) k (fx ,arr))))
+                  ,(if out arr-out arr)))))))
 
-              ; alter input array
-              `(vdef* ,exportname (,arr ,@br-arg)
-                (declare #.*opt* (,(arrtype type) ,arr))
-                (,(veqsymb 1 type "WITH-ARRAYS") ; fwith-arrays
-                  (:itr k :n (/ (length ,arr) ,dim)
-                   :arr ((,arr ,dim ,arr))
-                   :fxs ((fx (,@arr-arg) (,fxname ,@(remove-varg arr-arg)
-                                                  ,@(remove-varg br-arg))))
-                   :exs ((,arr k (fx ,arr))))
-                  ,arr)))))))
+(defmacro make-broadcast-ops (typedim fxs &optional destructive)
+  (labels  ((make (dim type)
+              (let ((fxs (subst dim 'dim (eval fxs))))
+                (loop for (fx . rest) in fxs
+                      collect `(broadcast-op ,dim ,type
+                                ,(veqsymb dim type
+                                  (format nil "$~a~:[~;!~]" fx destructive))
+                                ,(veqsymb dim type fx :pref "-")
+                                ,@rest)))))
+    `(progn ,@(loop for pair in (eval typedim)
+                    collect `(progn ,@(apply #'make pair))))))
 
+(broadcast-op 1 ff f$cos-sin -fcos-sin (a) () 2)
+(broadcast-op 1 df d$cos-sin -dcos-sin (a) () 2)
 
-(broadcast-op 1 ff f$+ -f+ (a) (s))
-(broadcast-op 1 ff f$* -f* (a) (s))
-(broadcast-op 1 ff f$- -f- (a) (s))
-(broadcast-op 1 ff f$/ -f/ (a) (s))
-(broadcast-op 1 ff f$i- -fi- (a) (s))
-(broadcast-op 1 ff f$i/ -fi/ (a) (s))
-
-(broadcast-op 1 ff f$abs -fabs (a) ())
-(broadcast-op 1 ff f$neg -fneg (a) ())
-
-(broadcast-op 1 ff f$cos-sin -fcos-sin (a) () :dim-out 2)
-
-(broadcast-op 2 ff f2$+ -f2+ ((varg 2 a)) ((varg 2 s)))
-(broadcast-op 2 ff f2$* -f2* ((varg 2 a)) ((varg 2 s)))
-(broadcast-op 2 ff f2$- -f2- ((varg 2 a)) ((varg 2 s)))
-(broadcast-op 2 ff f2$/ -f2/ ((varg 2 a)) ((varg 2 s)))
-(broadcast-op 2 ff f2$i- -f2i- ((varg 2 a)) ((varg 2 s)))
-(broadcast-op 2 ff f2$i/ -f2i/ ((varg 2 a)) ((varg 2 s)))
-(broadcast-op 2 ff f2$scale -f2scale ((varg 2 a)) (s))
-(broadcast-op 2 ff f2$iscale -f2iscale ((varg 2 a)) (s))
-
-(broadcast-op 2 ff f2$rot -f2rot ((varg 2 arr)) (a))
-(broadcast-op 2 ff f2$rots -f2rots ((varg 2 arr)) (a x y))
-
-(broadcast-op 2 ff f$2abs -f2abs ((varg 2 a)) ())
-(broadcast-op 2 ff f$2neg -f2neg ((varg 2 a)) ())
-
-; TODO: more reduce operations
-(broadcast-op 2 ff f2$len2 -f2len2 ((varg 2 a)) () :dim-out 1)
-(broadcast-op 2 ff f2$len -f2len ((varg 2 a)) () :dim-out 1)
-
-
-(broadcast-op 3 ff f3$+ -f3+ ((varg 3 a)) ((varg 3 s)))
-(broadcast-op 3 ff f3$* -f3* ((varg 3 a)) ((varg 3 s)))
-(broadcast-op 3 ff f3$- -f3- ((varg 3 a)) ((varg 3 s)))
-(broadcast-op 3 ff f3$/ -f3/ ((varg 3 a)) ((varg 3 s)))
-(broadcast-op 3 ff f3$i- -f3i- ((varg 3 a)) ((varg 3 s)))
-(broadcast-op 3 ff f3$i/ -f3i/ ((varg 3 a)) ((varg 3 s)))
-(broadcast-op 3 ff f3$scale -f3scale ((varg 3 a)) (s))
-(broadcast-op 3 ff f3$iscale -f3iscale ((varg 3 a)) (s))
-
-(broadcast-op 2 df d2$rot -d2rot ((varg 2 arr)) (a))
-(broadcast-op 2 df d2$rots -d2rots ((varg 2 arr)) (a x y))
-
-(broadcast-op 3 ff f$3abs -f3abs ((varg 3 a)) ())
-(broadcast-op 3 ff f$3neg -f3neg ((varg 3 a)) ())
-
-(broadcast-op 3 ff f3$len2 -f3len2 ((varg 3 a)) () :dim-out 1)
-(broadcast-op 3 ff f3$len -f3len ((varg 3 a)) () :dim-out 1)
+; TODO: add most of the other ops
+(make-broadcast-ops ; non-destructive
+  (group '(1 ff 2 ff 3 ff 4 ff 1 df 2 df 3 df 4 df) 2)
+  (group '(+ ((:va dim a)) ((:va dim s)) dim - ((:va dim a)) ((:va dim s)) dim
+           / ((:va dim a)) ((:va dim s)) dim * ((:va dim a)) ((:va dim s)) dim
+           i- ((:va dim a)) ((:va dim s)) dim i/ ((:va dim a)) ((:va dim s)) dim
+           norm ((:va dim a)) () dim
+           ; ^ ((:va dim a)) (s) dim
+           from ((:va dim a)) ((:va dim s) ss) dim
+           scale ((:va dim a)) (s) dim iscale ((:va dim a)) (s) dim
+           len2 ((:va dim a)) () 1 len ((:va dim a)) () 1
+           abs ((:va dim a)) () dim neg ((:va dim a)) () dim) 4))
+(make-broadcast-ops ; destructive
+  (group '(1 ff 2 ff 3 ff 4 ff 1 df 2 df 3 df 4 df) 2)
+  (group '(+ ((:va dim a)) ((:va dim s)) - ((:va dim a)) ((:va dim s))
+           / ((:va dim a)) ((:va dim s)) * ((:va dim a)) ((:va dim s))
+           i- ((:va dim a)) ((:va dim s)) i/ ((:va dim a)) ((:va dim s))
+           norm ((:va dim a)) ()
+           ; ^ ((:va dim a)) (s)
+           from ((:va dim a)) ((:va dim s) ss)
+           scale ((:va dim a)) (s) iscale ((:va dim a)) (s)
+           abs ((:va dim a)) () neg ((:va dim a)) ()) 3)
+  t)
+(make-broadcast-ops (group '(2 ff 2 df) 2) ; non-destructive
+                    (group '(rot ((:va dim a)) (aa) dim
+                             rots ((:va dim a)) (aa (:va dim s)) dim) 4))
+(make-broadcast-ops (group '(2 ff 2 df) 2) ; destructive
+                    (group '(rot ((:va dim a)) (aa)
+                             rots ((:va dim a)) (aa (:va dim s))) 3)
+                    t)
 

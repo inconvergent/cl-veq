@@ -3,51 +3,28 @@
 
 ; TODO: make general macro similar to array-broadcast
 
-(vdef f$sum (a &aux (n ($num a)))
-  (let ((res 0f0))
-    (fwith-arrays (:n n :itr k
-      :arr ((a 1 a))
-      :fxs ((vsum (x) (f+ res x)))
-      :exs ((nil k (vsum a)))))
-    res))
+(defmacro -sum-agg (dim type name agg)
+  (declare (symbol type) (fixnum dim))
+  (let ((fxname (veqsymb dim type name))
+        (arrmacro (veqsymb 1 type "WITH-ARRAYS"))
+        (vlet (veqsymb 1 type "VLET")))
+    `(progn
+       (export ',fxname)
+       (fvdef ,fxname (a &key n)
+       (declare (,(arrtype type) a))
+       (let ((n (if n n (,(veqsymb dim nil "$NUM") a))))
+          (declare (pos-int n))
+          (,vlet ((res ,dim (,(veqsymb dim type "REP*") (coerce 0 ',type))))
+            (,arrmacro (:n n
+            :arr ((a ,dim a))
+            :fxs ((acc ((varg ,dim new)) (,(veqsymb dim type "VSET")
+                                            (res)
+                                            (,(veqsymb dim type agg) res new))))
+            :nxs ((acc a))))
+            (values res)))))))
 
-(vdef f2$sum (a &aux (n (2$num a)))
-  (f2let ((res (f2rep 0f0)))
-    (fwith-arrays (:n n :itr k
-      :arr ((a 2 a))
-      :fxs ((vsum (x y) (f2+ res x y)))
-      :exs ((nil k (vsum a)))))
-    (f2 res)))
-
-(vdef f3$sum (a &aux (n (3$num a)))
-  (f3let ((res (f3rep 0f0)))
-    (fwith-arrays (:n n :itr k
-      :arr ((a 3 a))
-      :fxs ((vsum (x y z) (f3+ res x y z)))
-      :exs ((nil k (vsum a)))))
-    (f3 res)))
-
-(vdef d$sum (a &aux (n ($num a)))
-  (let ((res 0d0))
-    (dwith-arrays (:n n :itr k
-      :arr ((a 1 a))
-      :fxs ((vsum (x) (d+ res x)))
-      :exs ((nil k (vsum a)))))
-    res))
-
-(vdef d2$sum (a &aux (n (2$num a)))
-  (d2let ((res (d2rep 0d0)))
-    (dwith-arrays (:n n :itr k
-      :arr ((a 2 a))
-      :fxs ((vsum (x y) (d2+ res x y)))
-      :exs ((nil k (vsum a)))))
-    (d2 res)))
-
-(vdef d3$sum (a &aux (n (3$num a)))
-  (d3let ((res (d3rep 0d0)))
-    (dwith-arrays (:n n :itr k
-      :arr ((a 3 a))
-      :fxs ((vsum (x y z) (d3+ res x y z)))
-      :exs ((nil k (vsum a)))))
-    (d3 res)))
+(-sum-agg 1 ff "$SUM" +) (-sum-agg 2 ff "$SUM" +)
+(-sum-agg 3 ff "$SUM" +) (-sum-agg 4 ff "$SUM" +)
+(-sum-agg 1 df "$SUM" +) (-sum-agg 2 df "$SUM" +)
+(-sum-agg 3 df "$SUM" +) (-sum-agg 4 df "$SUM" +)
 

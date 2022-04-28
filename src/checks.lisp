@@ -1,7 +1,7 @@
 (in-package :veq)
 
 
-(vdef* f2segdst ((varg 2 va vb v))
+(fvdef* f2segdst ((varg 2 va vb v))
   "find distance between line, (va vb), and v.
    returns (values distance s) where is is the interpolation value that will
    yield the closest point on line."
@@ -18,18 +18,17 @@
         (values (f2dst v (f2lerp va vb s)) s)))))
 
 
-
-(vdef* f2segx ((varg 2 a1 a2 b1 b2))
+(fvdef* f2segx ((varg 2 a1 a2 b1 b2))
   (declare #.*opt* (ff a1 a2 b1 b2))
   "find intersection between lines (a1 a2), (b1 b2).
    returns isect? p q where p and q is the distance along each line to the
    intersection point"
   (f2let ((sa (f2- a2 a1))
           (sb (f2- b2 b1)))
-
-    (let ((u (f2cross sa sb)))
-      (declare (ff u))
-      (if (<= (abs u) #.*eps*)
+    (let ((u (f2cross sa sb))
+          (1eps (- 1f0 *eps*)))
+      (declare (ff u 1eps))
+      (if (<= (abs u) *eps*)
           ; return nil if the lines are parallel or very short.
           ; this is just a div0 guard. it's not a good way to test.
           (values nil 0f0 0f0)
@@ -39,8 +38,8 @@
             (let ((p (/ (f2cross sa ab) u))
                   (q (/ (f2cross sb ab) u)))
               (declare (ff p q))
-              (values (and (> #.(- 1f0 *eps*) p #.*eps*)
-                           (> #.(- 1f0 *eps*) q #.*eps*))
+              (values (and (> 1eps p *eps*)
+                           (> 1eps q *eps*))
                       q p)))))))
 
 
@@ -68,10 +67,10 @@
          "intersection test"
          (loop with line of-type fvec = (aref lines i)
                for c of-type pos-int in cands
-               do (vprogn (mvb (x p q) (f2segx (f2$ line 0 1)
-                                               (f2$ (aref lines c) 0 1))
-                            (declare (boolean x) (ff p q))
-                            (when x (-append i c p) (-append c i q))))))
+               do (fvprogn (mvb (x p q) (f2segx (f2$ line 0 1)
+                                                (f2$ (aref lines c) 0 1))
+                             (declare (boolean x) (ff p q))
+                             (when x (-append i c p) (-append c i q))))))
        (-remove (i)
          (declare #.*opt* (pos-int i))
          (setf state (remove-if #'(lambda (e)
@@ -96,7 +95,7 @@
   (sort res #'< :key #'car))
 
 
-(vdef* f2lsegx (lines*)
+(fvdef* f2lsegx (lines*)
   (declare #.*opt* (sequence lines*))
   "lines = #( #(ax ay bx by) ... )
 
@@ -115,22 +114,22 @@
 
 ;;;;;;;;;; CONCAVE SHAPE RAY CAST TEST
 
-(vdef* f2inside-bbox ((varg 2 top-left bottom-right pt))
+(fvdef* f2in-bbox ((varg 2 top-left bottom-right pt))
   (declare (ff top-left bottom-right pt))
   (and (< (vref top-left 0) (vref pt 0) (vref bottom-right 0))
        (< (vref top-left 1) (vref pt 1) (vref bottom-right 1))))
 
 
-(vdef* f2inside-concave (shape (varg 2 pt))
+(fvdef* f2in-concave (shape (varg 2 pt))
   (declare (fvec shape) (ff pt))
   (let ((n (2$num shape)))
     (mvb (minx maxx miny maxy) (f2$mima shape :n n)
-      (unless (f2inside-bbox minx miny maxx maxy pt) ; pt outside bbox -> outside shape
-              (return-from f2inside-concave nil))
+      (unless (f2in-bbox minx miny maxx maxy pt) ; pt outside bbox -> outside shape
+              (return-from %f2in-concave nil))
       (let* ((c 0)
              (width (- maxx minx))
              (shift (- (vref pt 0) (* 2f0 width))))
-        (2with-rows (n shape)
+        (f2$with-rows (n shape)
           (lambda (i (varg 2 a))
             (declare (optimize speed) (ff a))
             (when (f2segx pt shift (vref pt 1)
@@ -140,15 +139,39 @@
         (oddp c)))))
 
 
-(vdef* f3planex ((varg 3 n p a b))
+(fvdef* f3planex ((varg 3 n p a b))
   (declare #.*opt* (ff n p a b))
   "intersection of plane (n:normal, p:point) and line (a b)"
   (f3let ((ln (f3- b a)))
     (let ((ldotn (f3. ln n)))
       (declare (ff ldotn))
       (when (< (abs ldotn) *eps*) ; avoid div0.
-            (return-from f3planex (values nil 0f0 0f0 0f0 0f0))) ; else:
+            (return-from %f3planex (values nil 0f0 0f0 0f0 0f0))) ; else:
       (let ((d (/ (f3. (f3- p a) n) ldotn)))
         (declare (ff d))
         (mvc #'values t d (f3from a ln d))))))
+
+; TODO:
+; (defun f2inside-convex-poly (convex v)
+;   (declare #.*opt-settings* (list convex) (vec v))
+;   (loop with convex* = (math:close-path* convex)
+;         for a of-type vec in convex*
+;         and b of-type vec in (cdr convex*)
+;         always (>= (cross (sub b a) (sub v b)) 0d0)))
+
+(fvdef* f2in-triangle ((varg 2 a b c p))
+  (declare #.*opt* (ff a b c p))
+  (labels ((f2norm-safe ((varg 2 a))
+             (declare (ff a))
+             (let ((l (f2len a)))
+               (declare (ff l))
+               (if (< *eps* l) (f2iscale a l) (f2rep 0f0))))
+           (check ((varg 2 p1 p2 p3))
+            (declare (ff p1 p2 p3))
+            (f2cross (mvc #'f2norm-safe (f2- p3 p1))
+                     (mvc #'f2norm-safe (f2- p3 p2)))))
+    (let ((d1 (check a b p)) (d2 (check b c p)) (d3 (check c a p))
+          (ep (- *eps*)) (-ep (+ *eps*)))
+      (not (and (or (< d1 ep) (< d2 ep) (< d3 ep))
+                (or (> d1 -ep) (> d2 -ep) (> d3 -ep)))))))
 

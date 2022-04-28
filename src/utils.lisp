@@ -1,30 +1,6 @@
 
 (in-package :veq)
 
-; from: http://cl-cookbook.sourceforge.net/os.html
-(defun vgetenv (name &optional default)
-  #+CMU (let ((x (assoc name ext:*environment-list* :test #'string=)))
-          (if x (cdr x) default))
-  #-CMU (or #+Allegro (sys:getenv name)
-            #+CLISP (ext:getenv name)
-            #+ECL (si:getenv name)
-            #+SBCL (sb-unix::posix-getenv name)
-            #+LISPWORKS (lispworks:environment-variable name)
-            default))
-
-
-(let ((devmode (string-downcase (vgetenv "DEV" ""))))
-  (if (> (length devmode) 0)
-    (progn
-      (defparameter *dev* t)
-      (defparameter *opt* '(optimize (safety 2) (speed 1) debug (space 1)
-                                     compilation-speed))
-      (format t "~%!!!!! VEQ DEVMODE !!!!!~%~%"))
-    (progn
-      (defparameter *dev* nil)
-      (defparameter *opt* '(optimize (safety 1) speed (debug 2) space)))))
-
-
 (deftype df () `double-float)
 (deftype dvec () `(simple-array df))
 (deftype ff () `single-float)
@@ -35,9 +11,6 @@
 (deftype pos-ff () `(single-float 0f0 *))
 (deftype pos-int (&optional (bits 31)) `(unsigned-byte ,bits))
 
-(declaim (ff *eps*))
-(defvar *eps* (* 3f0 single-float-epsilon))
-
 (defmacro df (&body body) `(coerce ,@body 'df))
 (defmacro ff (&body body) `(coerce ,@body 'ff))
 (defmacro in (&body body) `(coerce ,@body 'in))
@@ -45,6 +18,17 @@
 (defmacro ff* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'ff)) body)))
 (defmacro in* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'in)) body)))
 
+(defun ffl (l)
+  (declare (list l))
+  "return (values (ff a) (ff b) ..) from (list a b ..)"
+  (apply #'values (mapcar (lambda (v) (ff v)) l)))
+(defun dfl (l)
+  (declare (list l))
+  "return (values (df a) (df b ..) from (list a b ..)"
+  (apply #'values (mapcar (lambda (v) (df v)) l)))
+; (defun inl (l)
+;   (declare #.*opt* (list l))
+;   (apply #'values (mapcar (lambda (v) (in v)) l)))
 
 (declaim (df dpi dpii dpi5))
 (defconstant dpi #.(coerce pi 'df))
@@ -79,7 +63,7 @@
 
 ; modified from on lisp by pg
 (defun group (source n)
-  (if (zerop n) (error "group: zero length"))
+  (if (< n 1) (error "group error: group size is smaller than 1"))
   (labels ((rec (source acc)
              (let ((rest (nthcdr n source)))
                (if (consp rest)
@@ -100,12 +84,18 @@
 (defun reread (&rest args) (values (read-from-string (apply #'mkstr args))))
 
 
+(defmacro push* (v l)
+  (declare (symbol l))
+  "push v to list l, and return v"
+  (awg (vv) `(let ((,vv ,v)) (push ,vv ,l) ,vv)))
+
+
 (defun -gensyms (name n)
   (declare (symbol name) (fixnum n))
   (loop with name = (string name)
         repeat n
         for x across "XYZWUVPQR"
-        collect (gensym (format nil "~a~a-" name x))))
+        collect (gensym (format nil "~a-~a-" name x))))
 
 
 (declaim (inline lst>n))
@@ -119,8 +109,23 @@
 
 
 (defun dupes (lst)
+  (declare (list lst))
   (cond ((null lst) '())
         ((member (car lst) (cdr lst) :test #'equal) (cons (car lst)
                                                       (dupes (cdr lst))))
         (t (dupes (cdr lst)))))
+
+
+(defmacro vgrp-mvc ((dim fx) &body body)
+  "do (multiple-value-call fx g) where g is groups
+   of size dim over the (values ...) returned by body
+   "
+  (awg (gsfx rest x)
+  `(veq:fvprogn
+     (labels ((,gsfx (&rest ,rest)
+       (apply #'values
+         (awf
+           (loop for ((:va  ,dim ,x)) in (group ,rest ,dim)
+                 collect (veq:lst (veq:mvc ,fx ,x)))))))
+       (mvc #',gsfx ,@body)))))
 

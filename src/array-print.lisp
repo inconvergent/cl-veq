@@ -1,37 +1,36 @@
 
 (in-package :veq)
 
-
-(defun $print (a &key n (dim 1) (width 10))
+(defun $print (a &key n (dim 1) &aux (n (if n n (/ (length a) dim))))
   (declare (simple-array a) (pos-int dim))
-  (labels ((numshow (a) (format nil "~v@A |" width a))
-           (row (n l i)
-             (apply #'mkstr
-               (loop for j from (* i dim) repeat dim
-                     if (>= j l)
-                     do (error "incorrect size (~a) for dimension (~a)" n dim)
-                     collect (numshow (aref a j))))))
+  "pretty print a with dim columns"
+    (labels ((arr-max-digits (a n)
+              (declare (simple-array a) (pos-int n))
+              (loop repeat n for v across a
+                    maximizing (length (mkstr v)))))
 
-    (let* ((l (length a))
-           (n (if n (min n (/ l dim)) (/ l dim))))
-      (format t "~%")
-      (loop for i from 0 below n do (format t "~%~a" (row n l i)))
-      (format t " dim: ~a n: ~a~%~%" dim n)))
-  a)
-(defun 2$print (a &key n (width 10)) ($print a :n n :dim 2 :width width))
-(defun 3$print (a &key n (width 10)) ($print a :n n :dim 3 :width width))
+      (loop with indsize = (1+ (length (mkstr n)))
+          with colsize = (arr-max-digits a (* n dim))
+          for i from 0 below (* n dim) by dim
+          for row-ind from 0
+          do (progn (format t "~%~v,' d| " indsize row-ind)
+                    (loop for i from i repeat dim
+                          do (format t "~v@A~[~:; | ~]" colsize (aref a i)
+                                      (mod (1+ i) dim))))))
+    (format t "~%")
+    a)
+(defun 2$print (a &key n) ($print a :n n :dim 2))
+(defun 3$print (a &key n) ($print a :n n :dim 3))
+(defun 4$print (a &key n) ($print a :n n :dim 4))
 
 
-(vdef to-list (arr &key (dim 1))
-  (declare (simple-array arr) (pos-int dim))
-  (let ((n (the pos-int (/ (length arr) dim)))
-        (res (list)))
-    (declare (pos-int n) (list res))
-    (labels ((acc (&rest rest) (push (cdr rest) res))) ; car is row index
-      (case dim (3 (3with-rows (n arr) #'acc))
-                (2 (2with-rows (n arr) #'acc))
-                (t (with-rows (n arr) #'acc)))
-      (reverse res))))
-(defun 2to-list (arr) (to-list arr :dim 2))
-(defun 3to-list (arr) (to-list arr :dim 3))
+(vdef $to-list (a &key (dim 1))
+  (declare (simple-array a) (pos-int dim))
+  "return a as list of lists of length dim"
+  (loop for i of-type pos-int from 0 below (length a) by dim
+        collect (loop for j of-type pos-int from i repeat dim
+                      collect (aref a j))))
+(defun 2$to-list (a) ($to-list a :dim 2))
+(defun 3$to-list (a) ($to-list a :dim 3))
+(defun 4$to-list (a) ($to-list a :dim 4))
 

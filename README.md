@@ -58,10 +58,9 @@ You can also see some usagee in the [tests](test/veq.lisp).
 
 ## Versions Issues and feature requests
 
-The most recent stable version is v1.0.0.
+The most recent stable version is v2.0.1.
 
-This code is still somewhat immature, and the interface might change in the
-future. But I will try to document future breaking changes here.
+This code is still immature, and the interface might change in the future.
 
 To report issues, or suggest features use:
 [Github](https://github.com/inconvergent/cl-veq).

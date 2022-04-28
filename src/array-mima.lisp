@@ -1,52 +1,40 @@
 
 (in-package :veq)
 
-; TODO: type template. argmax/min
-; TODO: combine into single function?
 
-(defun mima (a n inds &key type)
-  (when (and n inds)
-    (error "error in mima: must use either :n or :inds. got both."))
-  (awg (a* i minx maxx)
-    `(loop with ,a* = ,a
-           ,@(cond (n `(for ,i of-type pos-int from 0 below ,n))
-                   (inds `(for ,i of-type pos-int in ,inds))
-                   (t `(for ,i of-type pos-int from 0 below ($num ,a*))))
-           minimizing (aref ,a* ,i) into ,minx of-type ,type
-           maximizing (aref ,a* ,i) into ,maxx of-type ,type
-           finally (return (values ,minx ,maxx)))))
+(defmacro update-mima (v mi ma)
+  (declare (symbol v mi ma))
+  `(cond ((< ,v ,mi) (setf ,mi ,v))
+         ((> ,v ,ma) (setf ,ma ,v))))
 
-(defun 2mima (a n inds &key type)
-  (when (and n inds)
-    (error "error in 2mima: must use either :n or :inds. got both."))
-  (awg (a* i* i minx maxx miny maxy)
-    `(loop with ,a* = ,a
-           ,@(cond (n `(for ,i of-type pos-int from 0 below (* 2 ,n) by 2))
-                   (inds `(with ,i of-type pos-int = 0
-                           for ,i* of-type pos-int in ,inds
-                           do (setf ,i (* 2 ,i*))))
-                   (t `(for ,i of-type pos-int from 0 below (* 2 (2$num ,a*)) by 2)))
-           minimizing (aref ,a* ,i) into ,minx of-type ,type
-           maximizing (aref ,a* ,i) into ,maxx of-type ,type
-           minimizing (aref ,a* (1+ ,i)) into ,miny of-type ,type
-           maximizing (aref ,a* (1+ ,i)) into ,maxy of-type ,type
-           finally (return (values ,minx ,maxx ,miny ,maxy)))))
+; TODO: from to as supported in with-arrays
+(defmacro -xmima (dim type)
+  (awg (a mimafx)
+    (let ((exportname (veqsymb dim type "$MIMA"))
+          (vlet (veqsymb 1 type "VLET"))
+          (with-arrays (veqsymb 1 type "WITH-ARRAYS"))
+          (indref (veqsymb dim type "$")))
+      `(progn (export ',exportname)
+       (fvdef ,exportname (,a &key (n (,(veqsymb dim nil "$NUM") ,a)) inds)
+          (declare (,(arrtype type) ,a))
+          (let ((,a ,a))
+            (,vlet ((mm ,dim (,indref ,a (if inds (car inds) 0)))
+                    (mi ,dim (values mm))
+                    (ma ,dim (values mm)))
+              (,with-arrays (:n n :itr k
+                  :arr ((,a ,dim ,a))
+                  :fxs ((,mimafx ((varg ,dim x))
+                          (progn ,@(loop for i from 0 below dim
+                                         collect `(update-mima
+                                                    (vref x ,i) (vref mi ,i)
+                                                    (vref ma ,i))))))
+                  :nxs ((,mimafx ,a))))
+              (values ,@(loop with res = (list)
+                              for i from 0 below dim
+                              do (push `(vref mi ,i) res)
+                                 (push `(vref ma ,i) res)
+                              finally (return (reverse res)))))))))))
 
-(defun 3mima (a n inds &key type)
-  (when (and n inds)
-    (error "error in 3mima: must use either :n or :inds. got both."))
-  (awg (a* i* i minx maxx miny maxy minz maxz)
-    `(loop with ,a* = ,a
-           ,@(cond (n `(for ,i of-type pos-int from 0 below (* 3 ,n) by 3))
-                   (inds `(with ,i of-type pos-int = 0
-                           for ,i* of-type pos-int in ,inds
-                           do (setf ,i (* 3 ,i*))))
-                   (t `(for ,i of-type pos-int from 0 below (* 3 (3$num ,a*)) by 3)))
-           minimizing (aref ,a* ,i) into ,minx of-type ,type
-           maximizing (aref ,a* ,i) into ,maxx of-type ,type
-           minimizing (aref ,a* (1+ ,i)) into ,miny of-type ,type
-           maximizing (aref ,a* (1+ ,i)) into ,maxy of-type ,type
-           minimizing (aref ,a* (+ 2 ,i)) into ,minz of-type ,type
-           maximizing (aref ,a* (+ 2 ,i)) into ,maxz of-type ,type
-           finally (return (values ,minx ,maxx ,miny ,maxy ,minz ,maxz)))))
+(-xmima 1 ff) (-xmima 2 ff) (-xmima 3 ff)
+(-xmima 1 df) (-xmima 2 df) (-xmima 3 df)
 

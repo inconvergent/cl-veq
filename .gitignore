@@ -1,10 +1,11 @@
+*.dat
+*.fasl
+*.gif
+*.mp4
+*.obj
 *.png
 *.svg
-*.dat
-*.obj
-*.mp4
 *.tmp
-*.gif
 *weir.core
-tmp.lisp
 system-index.txt
+tmp.lisp

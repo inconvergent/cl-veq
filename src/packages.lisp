@@ -3,148 +3,55 @@
   (:use #:common-lisp)
   (:export
     #:*eps*
-    #:df
-    #:df*
-    #:dpi
-    #:dpi5
-    #:dpii
-    #:dvec
-    #:ff
-    #:ff*
-    #:fpi
-    #:fpi5
-    #:fpii
-    #:fvec
-    #:in
-    #:in*
-    #:ivec
 
-    #:fclamp
-    #:dclamp
+    #:mac #:mac*
+    #:ffl #:dfl
 
-    #:arr
-    #:ivdef
-    #:ivdef*
-    #:varg
-    #:vdef
-    #:vdef*
-    #:vprogn
-    #:vref
+    #:dpi #:dpi5 #:dpii #:fpi #:fpi5 #:fpii
+    #:df #:df* #:dvec #:ff #:ff* #:fvec
+    #:in #:in* #:ivec
 
-    #:lst
-    #:mac
-    #:mvb
-    #:mvc
-    #:mvcwrap
+    #:fclamp #:dclamp
 
-    #:d2let
-    #:d2mvb
-    #:d3let
-    #:d3mvb
-    #:f2let
-    #:f2mvb
-    #:f3let
-    #:f3mvb
+    #:vdef #:vdef* #:def* #:fvdef* #:fvdef
+    #:vprogn #:fvprogn #:varg #:vref
 
-    #:2to-list
-    #:3to-list
-    #:to-list
+    #:from-lst #:lst #:mvb #:mvc #:mvcwrap #:dsb #:vgrp-mvc
 
-    #:$num
-    #:2$num
-    #:3$num
+    #:d2let #:d2mvb #:d3let #:d3mvb
+    #:f2let #:f2mvb #:f3let #:f3mvb
 
-    #:$print
-    #:2$print
-    #:3$print
-    #:vpr
+    #:d$_ #:d_ #:f$_ #:f_
+    #:$ #:2$ #:3$ #:4$
 
-    #:d$_
-    #:d_ ; TODO: rename
-    #:f$_
-    #:f_ ; TODO: rename
+    #:$print #:2$print #:3$print #:4$print #:vpr
+    #:$num #:2$num #:3$num
+    #:$to-list #:2$to-list #:3$to-list #:4to-list
 
-    #:d$copy
-    #:d$last
-    #:d$make
-    #:d$one
-    #:d$val
-    #:d$zero
+    #:d$make #:d$one #:d$val #:d$zero #:d$copy #:d$last
+    #:f$make #:f$one #:f$val #:f$zero #:f$copy #:f$last
 
-    #:d2$last
-    #:d2$one
-    #:d2$val
-    #:d2$zero
-    #:d3$last
-    #:d3$one
-    #:d3$val
-    #:d3$zero
+    #:d2$make #:d2$one #:d2$val #:d2$zero #:d2$copy #:d2$last
+    #:f2$make #:f2$one #:f2$val #:f2$zero #:f2$copy #:f2$last
 
-    #:f$copy
-    #:f$last
-    #:f$make
-    #:f$one
-    #:f$val
-    #:f$zero
+    #:d3$make #:d3$one #:d3$val #:d3$zero #:d3$copy #:d3$last
+    #:f3$make #:f3$one #:f3$val #:f3$zero #:f3$copy #:f3$last
 
-    #:f$line
-    #:f$point
-    #:f2$center
-    #:f2$circ
-    #:f2$last
-    #:f2$line
-    #:f2$one
-    #:f2$point
-    #:f2$polygon
-    #:f2$rect
-    #:f2$square
-    #:f2$val
-    #:f2$zero
-    #:f3$line
-    #:f3$point
+    #:d4$make #:d4$one #:d4$val #:d4$zero #:d4$copy #:d4$last
+    #:f4$make #:f4$one #:f4$val #:f4$zero #:f4$copy #:f4$last
 
-    #:d$line
-    #:d$point
-    #:d2$center
-    #:d2$circ
-    #:d2$last
-    #:d2$line
-    #:d2$one
-    #:d2$point
-    #:d2$polygon
-    #:d2$rect
-    #:d2$square
-    #:d2$val
-    #:d2$zero
-    #:d3$line
-    #:d3$point
+    #:d$line #:d$point #:d2$line #:d2$point
+    #:d3$line #:d3$point #:d4$line #:d4$point
 
-    #:f3$last
-    #:f3$one
-    #:f3$val
-    #:f3$zero
+    #:f$line #:f$point #:f2$line #:f2$point
+    #:f3$line #:f3$point #:f4$line #:f4$point
 
-    #:d$sum
-    #:d2$sum
-    #:d3$sum
-    #:f$sum
-    #:f2$sum
-    #:f3$sum
+    #:d2$center #:d2$circ #:d2$polygon #:d2$rect #:d2$square
+    #:f2$center #:f2$circ #:f2$polygon #:f2$rect #:f2$square
 
-    #:f2inside-bbox
-    #:f2inside-concave
-    #:f2lsegx
-    #:f2segdst
-    #:f2segx
+    #:f2in-triangle #:f2in-bbox #:f2in-concave
+    #:f2segdst #:f2lsegx #:f2segx
     #:f3planex
 
-    #:vprod #:vsum
-
-    #:x #:y #:z
-    #:xy #:xz
-    #:yz #:yx
-    #:zy #:zx
-    #:xzy #:xyz
-    #:zxy #:zyx
-    #:yxz #:yzx))
+    #:vprod #:vsum))
 
