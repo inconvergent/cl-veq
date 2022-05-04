@@ -35,9 +35,9 @@
 
 ; makes it possible to do: (setf (3$ a 3) (list 9f0 9f0 9f0))
 ; TODO: can we write this so new does not need to be a list?
-(defsetf $ (a i) (new) `(-vaset (,a 1 ,i) (apply #'values ,new)))
-(defsetf 2$ (a i) (new) `(-vaset (,a 2 ,i) (apply #'values ,new)))
-(defsetf 3$ (a i) (new) `(-vaset (,a 3 ,i) (apply #'values ,new)))
-(defsetf 4$ (a i) (new) `(-vaset (,a 4 ,i) (apply #'values ,new)))
+(defsetf $ (a &optional (i 0)) (new) `(-vaset (,a 1 ,i) (apply #'values ,new)))
+(defsetf 2$ (a &optional (i 0)) (new) `(-vaset (,a 2 ,i) (apply #'values ,new)))
+(defsetf 3$ (a &optional (i 0)) (new) `(-vaset (,a 3 ,i) (apply #'values ,new)))
+(defsetf 4$ (a &optional (i 0)) (new) `(-vaset (,a 4 ,i) (apply #'values ,new)))
 
 

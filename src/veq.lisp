@@ -6,6 +6,21 @@
 (declaim (list *symbols-map*))
 (defvar *symbols-map* '())
 
+(defmacro veq? ()
+  "list all macrolets in veq context"
+  `(list ,@(sort (mapcar (lambda (s) (mkstr (car s)))
+                         *symbols-map*)
+                 #'string-lessp)))
+
+(defun map-symbol (pair)
+  (declare #.*opt* (list pair))
+  "add pair macrolet pair. see macro.lisp"
+  (export (the symbol (car pair)))
+  (setf *symbols-map*
+        (remove-if (lambda (cand) (eq (car cand) (car pair))) *symbols-map*))
+  (push pair *symbols-map*))
+
+
 (defun veqsymb (dim type symb &key pref)
   (declare #.*opt* (pos-int dim) (symbol type))
   "builld a symbol with correct name convention.
@@ -31,13 +46,6 @@
   (cdr (assoc (char (string-upcase (mkstr symb)) 0)
               `((#\D . df) (#\F . ff) (#\I . in)))))
 
-(defun map-symbol (pair)
-  (declare #.*opt* (list pair))
-  "add pair macrolet pair. see macro.lisp"
-  (export (the symbol (car pair)))
-  (push pair *symbols-map*))
-
-; TODO: refactor to build types automatically
 (defmacro op ((mname args) &body body)
   (declare (symbol mname) (list args))
   "build an op. see ops-1.lisp, ops-2.lisp, ..."

@@ -149,7 +149,7 @@
             (return-from %f3planex (values nil 0f0 0f0 0f0 0f0))) ; else:
       (let ((d (/ (f3. (f3- p a) n) ldotn)))
         (declare (ff d))
-        (mvc #'values t d (f3from a ln d))))))
+        (~ t d (f3from a ln d))))))
 
 ; TODO:
 ; (defun f2inside-convex-poly (convex v)

@@ -1,6 +1,7 @@
 
 (in-package :veq)
 
+; mat * v ; (f3mtv mat x)
 (defmacro make-mat-mv (dim type &optional transpose)
   (awg (mm m v)
     (let ((exportname (veqsymb dim type (if transpose "mtv" "mv"))))
@@ -26,6 +27,7 @@
 (make-mat-mv 2 df t) (make-mat-mv 3 df t) (make-mat-mv 4 df t)
 
 
+; eye(n) ; (f3eye n)
 (defmacro make-mat-eye (dim type &aux (exportname
                                     (veqsymb dim type "meye")))
   (labels ((eye ()
@@ -43,7 +45,7 @@
 (make-mat-eye 2 ff) (make-mat-eye 3 ff) (make-mat-eye 4 ff)
 (make-mat-eye 2 df) (make-mat-eye 3 df) (make-mat-eye 4 df)
 
-
+; transpose inplace: (f3mt! mat)
 (defmacro make-mat-transp (dim type)
   (awg (arr a)
     (labels ((matind (i j) (+ (* i dim) j))
@@ -69,7 +71,7 @@
 (make-mat-transp 2 ff) (make-mat-transp 3 ff) (make-mat-transp 4 ff)
 (make-mat-transp 2 df) (make-mat-transp 3 df) (make-mat-transp 4 df)
 
-
+; mat * mat (f3mm mat mat) (f3mtm mat mat) etc
 (defmacro make-mat-mm (dim type &key ta tb)
   (awg (a a* b b* c)
     (labels ((matind (i j) (+ (* i dim) j))
@@ -93,7 +95,6 @@
                                              res))
                            finally (return res)))
                 ,',c)))))))
-
 (defmacro make-mat-all-mm ()
   (let ((pairs (group '(2 ff 3 ff 4 ff 2 df 3 df 4 df) 2))
         (transp (group '(nil nil t t nil t t nil) 2)))
@@ -105,6 +106,7 @@
 (make-mat-all-mm)
 
 
+; make transpose matrix (mtrans x)
 (defmacro make-mat-trans (dim type)
   (let ((exportname (veqsymb dim type "mtrans")))
     `(progn (export ',exportname)
@@ -119,6 +121,7 @@
 (make-mat-trans 2 ff) (make-mat-trans 3 ff)
 (make-mat-trans 2 df) (make-mat-trans 3 df)
 
+; make scale matrix (mascale s)
 (defmacro make-mat-scale (dim type)
   (let ((exportname (veqsymb dim type "mscale")))
     `(progn (export ',exportname)
@@ -136,6 +139,7 @@
 
 ; i tried to write these as macro-writing macros.
 ; and i couldn't get it to work ...
+; make rot matrix
 (defmacro make-2mrot (type &optional w)
   (let ((exportname (veqsymb 2 type (format nil "mrot~:[*~;~]" w)))
         (z0 (coerce 0 type)) (one (coerce 1 type)))
@@ -149,6 +153,8 @@
                       ,@(if w `(,z0 ,z0 ,z0 ,one)))))))))
 (make-2mrot ff) (make-2mrot ff t) (make-2mrot df) (make-2mrot df t)
 
+; make rot matrix
+; NOTE: f3mrot* is the 3x3 matrix version. f3mrot is 4x4 matrix, with w
 (defmacro make-3mrot (type &optional w)
   (let ((exportname (veqsymb 3 type (format nil "mrot~:[*~;~]" w)))
         (z0 (coerce 0 type)) (one (coerce 1 type)))

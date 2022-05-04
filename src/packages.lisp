@@ -4,8 +4,11 @@
   (:export
     #:*eps*
 
+    #:v? #:d? #:i?
+
     #:mac #:mac*
     #:ffl #:dfl
+    #:~
 
     #:dpi #:dpi5 #:dpii #:fpi #:fpi5 #:fpii
     #:df #:df* #:dvec #:ff #:ff* #:fvec
@@ -13,7 +16,7 @@
 
     #:fclamp #:dclamp
 
-    #:vdef #:vdef* #:def* #:fvdef* #:fvdef
+    #:vdef #:vdef* #:def* #:fvdef* #:fvdef #:vlabels
     #:vprogn #:fvprogn #:varg #:vref
 
     #:from-lst #:lst #:mvb #:mvc #:mvcwrap #:dsb #:vgrp-mvc

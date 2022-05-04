@@ -1,6 +1,10 @@
 
 (in-package :veq)
 
+(defparameter *duperr* "~%duplicate definitions in *symbols-map*: ~a~%
+dupes: ~a~%
+did you load :veq multiple times?~%")
+
 
 (defun filter-macrolets (symbols-map body)
   "remove macrolet tuples that are not present in body. this speeds up
@@ -12,7 +16,8 @@
   (let ((macrolet-symbols-in-body
           (remove-duplicates (remove-if-not #'symbolp (awf body)))))
     (declare (list macrolet-symbols-in-body))
-    (remove-if-not (lambda (s) (declare (symbol s)) (member s macrolet-symbols-in-body))
+    (remove-if-not (lambda (s) (declare (symbol s))
+                               (member s macrolet-symbols-in-body))
                    symbols-map :key #'car)))
 
 (defun define-env-macros (symbols-map)
@@ -26,9 +31,9 @@
   (let* ((names (sort (mapcar (lambda (v) (mkstr (first v))) symbols-map)
                    #'string-lessp))
          (dupes (dupes names)))
-  (when dupes (error "duplicate definitions in *symbols-map*: ~a~%
-dupes: ~a~%
-did you load :veq multiple times?~%" names dupes))
+  ; this should not happen anymore as duplicates are removed when
+  ; adding pairs via (map-symbol pair). keep this test for now.
+  (when dupes (error *duperr* names dupes))
 
   (defmacro vprogn (&body body)
     "enable veq inside this progn"
@@ -50,19 +55,23 @@ did you load :veq multiple times?~%" names dupes))
     `(fvprogn (defun ,fname ,@body)))
 
   (defmacro vdef* (mname &body body)
-    "define function, and corresponding macro, with veq enabled."
+    "define function, and corresponding macro, with veq enabled.
+     use %mname to call function outside mvc."
     (let ((fname (symb "%" mname)))
       `(vprogn ; replace internal references to mname
                (defun ,fname ,@(subst fname mname body))
                (defmacro ,mname (&rest rest)
+                 ,(format nil "macro wrapper: (mvc #'~a ...) in veq context.~%see function: ~0a" fname fname)
                  `(mvc #',',fname ,@rest)))))
 
   (defmacro fvdef* (mname &body body)
-    "define function, and corresponding macro, with veq enabled. see fvprogn."
+    "define function, and corresponding macro, with veq enabled. see fvprogn.
+     use %mname to call function outside mvc."
     (let ((fname (symb "%" mname)))
       `(fvprogn ; replace internal references to mname
                 (defun ,fname ,@(subst fname mname body))
                 (defmacro ,mname (&rest rest)
+                  ,(format nil "macro wrapper: (mvc #'~a ...) in veq context.~%see function: ~0a" fname fname)
                   `(mvc #',',fname ,@rest)))))
 
   (defmacro def* (mname &body body)
@@ -70,18 +79,19 @@ did you load :veq multiple times?~%" names dupes))
     (let ((fname (symb "%" mname)))
       `(progn (defun ,fname ,@body)
               (defmacro ,mname (&rest rest)
+                ,(format nil "macro wrapper: (mvc #'~a ...).~%see function: ~0a" fname fname)
                 `(mvc #',',fname ,@rest)))))))
 
 
 ;;;;;;;;;;;;;;;;; VARIOUS
 
-; using this makes things much slower because of the consing or because the
-; number of values is unknown?. avoid when possible.
-; TODO: find a different solution for some cases?
+; NOTE: using (lst ...) makes things slower in some cases.  because of the
+; consing or because the number of values is unknown?. avoid when possible.
 (defmacro lst (&body body)
   "wrap (values ..) in (list ..)"
   `(mvc #'list ,@body))
 (defmacro from-lst (v) `(apply #'values ,v))
+(defmacro ~ (&rest rest) `(mvc #'values ,@rest))
 
 
 ;;;;;;;;;;;;;;;;;; MACRO UTILS
@@ -183,26 +193,46 @@ did you load :veq multiple times?~%" names dupes))
 (defun ddim? (a dim) (dim? a dim :type 'df))
 (defun fdim? (a dim) (dim? a dim :type 'ff))
 
+;;;;;;;;;;;;;;;;;; VLABELS
 
-(mapcar (lambda (pair) (push pair *symbols-map*)
-                       (export (car pair)))
-  `((d (&body body) `(mvc #'values ,@(ddim? body 1)))
-    (f (&body body) `(mvc #'values ,@(fdim? body 1)))
-    (d2 (&body body) `(mvc #'values ,@(ddim? body 2)))
-    (f2 (&body body) `(mvc #'values ,@(fdim? body 2)))
-    (d3 (&body body) `(mvc #'values ,@(ddim? body 3)))
-    (f3 (&body body) `(mvc #'values ,@(fdim? body 3)))
-    (d4 (&body body) `(mvc #'values ,@(ddim? body 4)))
-    (f4 (&body body) `(mvc #'values ,@(fdim? body 4)))
+(defmacro vlabels ((&rest labs) &body body)
+  "wraps labels so that it can be used with implicit multiple value call (mvc).
+   that is, all labels are defined as if with vdef* or fvdef*
+   use %labelname to call the function directly, not via mvc."
+  (labels ((mfx (l)
+             (declare (list l))
+             `(,(car l) (&rest rest)
+                        `(veq:mvc #',',(cadr l) ,@rest)))
+           (ffx (l &aux (l* (cdr l)))
+             `(,(car l*) ,@(subst (car l*) (car l) (cdr l*)))))
+    (let ((labnames (loop for l in labs
+                          collect `(,(car l) ,(symb "%" (car l)) ,@(cdr l)))))
+      (declare (list labnames))
+      `(macrolet (,@(mapcar #'mfx labnames))
+         (labels (,@(mapcar #'ffx labnames))
+           ,@body)))))
 
-    (d~ (&body body) `(mvc #'values (df* ,@(dim? body 1))))
-    (f~ (&body body) `(mvc #'values (ff* ,@(dim? body 1))))
-    (d2~ (&body body) `(mvc #'values (df* ,@(dim? body 2))))
-    (f2~ (&body body) `(mvc #'values (ff* ,@(dim? body 2))))
-    (d3~ (&body body) `(mvc #'values (df* ,@(dim? body 3))))
-    (f3~ (&body body) `(mvc #'values (ff* ,@(dim? body 3))))
-    (d4~ (&body body) `(mvc #'values (df* ,@(dim? body 4))))
-    (f4~ (&body body) `(mvc #'values (ff* ,@(dim? body 4))))
+
+;;;;;;;;;;;;;;;;;; PAIRS
+
+(mapcar #'map-symbol
+  `((d (&body body) `(~ ,@(ddim? body 1)))
+    (f (&body body) `(~ ,@(fdim? body 1)))
+    (d2 (&body body) `(~ ,@(ddim? body 2)))
+    (f2 (&body body) `(~ ,@(fdim? body 2)))
+    (d3 (&body body) `(~ ,@(ddim? body 3)))
+    (f3 (&body body) `(~ ,@(fdim? body 3)))
+    (d4 (&body body) `(~ ,@(ddim? body 4)))
+    (f4 (&body body) `(~ ,@(fdim? body 4)))
+
+    (d~ (&body body) `(~ (df* ,@(dim? body 1))))
+    (f~ (&body body) `(~ (ff* ,@(dim? body 1))))
+    (d2~ (&body body) `(~ (df* ,@(dim? body 2))))
+    (f2~ (&body body) `(~ (ff* ,@(dim? body 2))))
+    (d3~ (&body body) `(~ (df* ,@(dim? body 3))))
+    (f3~ (&body body) `(~ (ff* ,@(dim? body 3))))
+    (d4~ (&body body) `(~ (df* ,@(dim? body 4))))
+    (f4~ (&body body) `(~ (ff* ,@(dim? body 4))))
 
     (d2mvb (arg expr &body body) (-vmvb 'df 2 arg expr body))
     (d3mvb (arg expr &body body) (-vmvb 'df 3 arg expr body))
@@ -223,8 +253,8 @@ did you load :veq multiple times?~%" names dupes))
 
     ; this is a bit hacky. but we need it for easy generaliziation in
     ; array-reduce
-    (drep (expr) `( ,@expr)) (drep* (expr) `( ,@expr))
-    (frep (expr) `( ,@expr)) (frep* (expr) `( ,@expr))
+    (drep (expr) `(,@expr)) (drep* (expr) `(,@expr))
+    (frep (expr) `(,@expr)) (frep* (expr) `(,@expr))
 
     (d2rep (expr) `(values ,@(loop repeat 2 collect expr of-type df)))
     (d2rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (df ,e)) (values ,e ,e))))
@@ -253,14 +283,24 @@ did you load :veq multiple times?~%" names dupes))
     (f4vset ((&rest symbs) &rest expr) `(-vset 4 ,symbs (progn ,@expr)))
     (d4vset ((&rest symbs) &rest expr) `(-vset 4 ,symbs (progn ,@expr)))
 
-    (d$ (a &rest inds) (-ind-to-val 'df 1 a inds))
-    (d2$ (a &rest inds) (-ind-to-val 'df 2 a inds))
-    (d3$ (a &rest inds) (-ind-to-val 'df 3 a inds))
-    (d4$ (a &rest inds) (-ind-to-val 'df 4 a inds))
+    (fnsum ((n) &body body) (-nsum 1 'ff n body))
+    (f2nsum ((n) &body body) (-nsum 2 'ff n body))
+    (f3nsum ((n) &body body) (-nsum 3 'ff n body))
+    (f4nsum ((n) &body body) (-nsum 4 'ff n body))
+
+    (dnsum ((n) &body body) (-nsum 1 'df n body))
+    (d2nsum ((n) &body body) (-nsum 2 'df n body))
+    (d3nsum ((n) &body body) (-nsum 3 'df n body))
+    (d4nsum ((n) &body body) (-nsum 4 'df n body))
+
     (f$ (a &rest inds) (-ind-to-val 'ff 1 a inds))
     (f2$ (a &rest inds) (-ind-to-val 'ff 2 a inds))
     (f3$ (a &rest inds) (-ind-to-val 'ff 3 a inds))
     (f4$ (a &rest inds) (-ind-to-val 'ff 4 a inds))
+    (d$ (a &rest inds) (-ind-to-val 'df 1 a inds))
+    (d2$ (a &rest inds) (-ind-to-val 'df 2 a inds))
+    (d3$ (a &rest inds) (-ind-to-val 'df 3 a inds))
+    (d4$ (a &rest inds) (-ind-to-val 'df 4 a inds))
 
     ($vset ((a i) &rest expr) `(-vaset (,a 1 ,i) ,@expr))
     (2$vset ((a i) &rest expr) `(-vaset (,a 2 ,i) ,@expr))

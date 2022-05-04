@@ -1,6 +1,7 @@
 #!/usr/bin/sbcl --script
 
-(load "../helpers/load")
+(load "~/quicklisp/setup.lisp")
+(ql:quickload :veq)
 
 (in-package :veq)
 

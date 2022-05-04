@@ -41,6 +41,15 @@
 (defconstant fpi5 #.(coerce (* pi 0.5f0) 'ff))
 
 
+(defun v? (&optional (silent t))
+  (let ((v (slot-value (asdf:find-system 'weird) 'asdf:version)))
+    (unless silent (format t "~%veq version: ~a~%" v))
+    v))
+(defun d? (f) (describe f))
+(defun i? (f) (inspect f))
+
+
+
 ; from on lisp by pg
 (defmacro mac (expr) `(pprint (macroexpand-1 ',expr)))
 #+sbcl (defmacro mac* (expr) `(pprint (sb-cltl2:macroexpand-all ',expr)))

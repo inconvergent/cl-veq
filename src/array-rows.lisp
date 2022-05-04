@@ -13,15 +13,15 @@
 (defun d4$last (a) (declare #.*opt* (dvec a)) (-d4$ a (1- (the pos-int (4$num a)))))
 
 
-(defun -ind-to-val (type dim a rest)
-  "return (values a[i] a[j] ...) for rest = (i j ...)
-  rest can be on the form (i j k) or ((i j k))"
-  (unless rest (setf rest `(0))) ; defaults to (0)
+(defun -ind-to-val (type dim a inds)
+  "return (values a[i] a[j] ...) for inds = (i j ...)
+  inds can be on the form (i j k) or ((i j k))"
+  (unless inds (setf inds `(0))) ; defaults to (0)
   (awg (a*) `(let ((,a* ,a))
                (declare (,(arrtype type) ,a*))
-               (mvc #'values ,@(loop for ind in rest
-                                     collect `(,(veqsymb dim type "$" :pref "-")
-                                                ,a* ,ind))))))
+               (~ ,@(loop for ind in inds
+                          collect `(,(veqsymb dim type "$" :pref "-")
+                                     ,a* ,ind))))))
 
 ; TODO: with-op; simpler version of with-rows that takes input arrays and
 ; creates an output array of a given dimension
