@@ -90,8 +90,12 @@ did you load :veq multiple times?~%")
 (defmacro lst (&body body)
   "wrap (values ..) in (list ..)"
   `(mvc #'list ,@body))
-(defmacro from-lst (v) `(apply #'values ,v))
-(defmacro ~ (&rest rest) `(mvc #'values ,@rest))
+(defmacro from-lst (l)
+  "get values from list"
+  `(apply #'values ,l))
+(defmacro ~ (&rest rest)
+  "wraps arguments in (mvc #'values ...)"
+  `(mvc #'values ,@rest))
 
 
 ;;;;;;;;;;;;;;;;;; MACRO UTILS

@@ -7,7 +7,7 @@ reduction operations.
 VEQ was written to be the vector library used in my generative art library
 [weird](https://github.com/inconvergent/weird).
 
-## Examples
+## Examples and Documentation
 
 Here are some examples of use:
 
@@ -56,9 +56,11 @@ For more examples go to [examples](examples/ex.lisp).
 
 You can also see some usagee in the [tests](test/veq.lisp).
 
-## Versions Issues and feature requests
+See [docs](DOCS.md) for automatically generated symbol documentation.
 
-The most recent stable version is v2.0.3.
+## Versions, Issues and feature requests
+
+The most recent stable version is v2.1.0.
 
 This code is still immature, and the interface might change in the future.
 

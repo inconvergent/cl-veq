@@ -14,16 +14,20 @@
   (awg (arr arr-out)
     (labels ((fxarg (s) (and (symbolp s) (not (eq s :va))))
              (-varg (l) (remove-if-not #'fxarg (awf l))))
-    `(fvprogn (export ',exportname)
-              (def* ,exportname (,arr ,@br-arg)
+    (let ((docs (format nil "broadcast for fx: ~a~%macroname: ~a~%~%"
+                 (mkstr fxname) (mkstr exportname))))
+      `(fvprogn (export ',exportname)
+          (map-docstring ',exportname ,docs)
+          (def* ,exportname (,arr ,@br-arg)
                 (declare #.*opt* (,(arrtype type) ,arr))
+                ,docs
                 (,(veqsymb 1 type "WITH-ARRAYS")
                   (:itr k :n (/ (length ,arr) ,dim)
                    :arr ((,arr ,dim ,arr) ,@(if out `((,arr-out ,out))))
                    :fxs ((fx (,@arr-arg) (,fxname ,@(-varg arr-arg)
                                                   ,@(-varg br-arg))))
                    :exs ((,(if out arr-out arr) k (fx ,arr))))
-                  ,(if out arr-out arr)))))))
+                  ,(if out arr-out arr))))))))
 
 (defmacro make-broadcast-ops (typedim fxs &optional destructive)
   (labels  ((make (dim type)

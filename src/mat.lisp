@@ -16,6 +16,7 @@
             `(fvprogn
               (let ((,',mm ,,m))
                 (declare (,',(arrtype type) ,',mm))
+                "multiply mat * v, use transpose to transmose mat"
                 (fvlet ((vv ,',dim (mvc #'values ,@,v)))
                        ,',(cons 'values
                                 (loop for i from 0 below dim
@@ -37,6 +38,7 @@
     `(progn (export ',exportname)
             (defun ,exportname (&optional (v ,(coerce 1 type)))
               (declare #.*opt* (,type v))
+              "return eye matrix for dimension"
               (the ,(arrtype type) (make-array ,(* dim dim)
                                      :initial-contents (list ,@(eye))
                                      :adjustable nil
@@ -63,6 +65,7 @@
       (let ((exportname (veqsymb dim type "mt!")))
         `(progn (export ',exportname)
                 (defmacro ,exportname (,a)
+                  "transpose matrix of type ~a in-place"
                   `(let ((,',arr ,,a))
                      (declare (,',(arrtype type) ,',arr))
                      ,',(cons 'progn (rotate))
@@ -82,6 +85,8 @@
       (let ((exportname (veqsymb dim type (format nil "m~:[~;t~]m~:[~;t~]" ta tb))))
         `(fvprogn (export ',exportname)
            (defmacro ,exportname (,a* ,b*)
+             ,(format nil "multiply ~:[mat~;(transpose mat)~] * ~:[mat~;(transpose mat)~]~%of type: ~a"
+                      ta tb (arrtype type))
              `(let* ((,',a ,,a*)
                      (,',b ,,b*)
                      (,',c (,',(veqsymb  dim type "$zero") ,,dim)))
@@ -112,6 +117,7 @@
     `(progn (export ',exportname)
             (fvdef* ,exportname ((varg ,dim x))
               (declare #.*opt* (,type x))
+              "make transpose matrix for moving by x"
               (let ((res (,(veqsymb (1+ dim) type "meye"))))
                 (declare (,(arrtype type) res))
                 ,@(loop for i from 1 to dim
@@ -127,6 +133,7 @@
     `(progn (export ',exportname)
             (fvdef* ,exportname ((varg ,dim x))
               (declare #.*opt* (,type x))
+              "create matrix for scaling by x"
               (let ((res (,(veqsymb (1+ dim) type "meye"))))
                 (declare (,(arrtype type) res))
                 ,@(loop for i from 0 below dim
@@ -146,7 +153,7 @@
      `(progn (export ',exportname)
         (def* ,exportname (a)
          (declare #.*opt* (,type a))
-         "create 2d rotation matrix for rotating a rad"
+         "create 2d rotation matrix for rotating a rads"
           (let ((cosa (cos a)) (sina (sin a)))
             (declare (,type cosa sina))
             (f_ (list cosa (- sina) ,@(if w `(,z0)) sina cosa

@@ -17,11 +17,14 @@
       (num-types
         `(fvprogn (export ',in) (export ',out) (export ',inout)
                   (defun ,in ,args
+                    ,(format nil "ease in:~%arg: ~a~%body: ~a" args (car body))
                     (let ((,x* (,(veqsymb 1 type "CLAMP") ,x*))) ,@body))
                   (defun ,out ,args
+                    ,(format nil "ease out:~%arg: ~a~%body: ~a" args (car body))
                     (let ((,x* (,(veqsymb 1 type "CLAMP") (- 1 ,x*))))
                       (1+ (- ,@body))))
                   (defun ,inout ,args
+                    ,(format nil "ease in-out:~%arg: ~a~%body: ~a" args (car body))
                     (let ((,x* (,(veqsymb 1 type "CLAMP") ,x*)))
                       (if (< ,x* 1/2) (let ((,x* (* 2 ,x*))) (* 1/2 ,@body))
                                       (let ((,x* (- 1 (* 2 (- ,x* 1/2)))))

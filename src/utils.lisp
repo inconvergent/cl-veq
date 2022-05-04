@@ -42,11 +42,12 @@
 
 
 (defun v? (&optional (silent t))
+  "get version. use silent to surpress stdout"
   (let ((v (slot-value (asdf:find-system 'weird) 'asdf:version)))
     (unless silent (format t "~%veq version: ~a~%" v))
     v))
-(defun d? (f) (describe f))
-(defun i? (f) (inspect f))
+(defun d? (f) "describe argument" (describe f))
+(defun i? (f) "inspect argument" (inspect f))
 
 
 

@@ -9,10 +9,13 @@
            (symb (map 'list #'symb string-symb))
            (vals `(values ,@symb))
            (ign `(ignore ,@(set-difference '(x y z w) symb)))
-           (typ `(,type ,@symb)))
+           (typ `(,type ,@symb))
+           (docs (format nil "macro. reorder arguments (X Y Z W) as ~a, ~a.~%" symb ign)))
       `(progn (export ',exportname)
+              (map-docstring ',exportname ,docs :nodesc)
               (defmacro ,exportname (&rest ,rest)
-                `(multiple-value-bind (x y z w) (mvc #'values ,@,rest)
+                ,docs
+                `(mvb (x y z w) (mvc #'values ,@,rest)
                    (declare ,',typ ,',ign)
                    ,',vals))))))
 

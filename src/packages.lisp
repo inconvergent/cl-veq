@@ -5,6 +5,7 @@
     #:*eps*
 
     #:v? #:d? #:i?
+    #:context?  #:ext-symbols?
 
     #:mac #:mac*
     #:ffl #:dfl
