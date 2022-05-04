@@ -14077,7 +14077,8 @@ V? names a compiled function:
 
 ```
 use (veq:varg n a b ...) or (:vr n a b ...) to represent vectors a,b 
-of dim n in fvdef*, vdef*, def*. see replace-varg for details```
+of dim n in fvdef*, vdef*, def*. see replace-varg for details
+```
 ### VDEF
 
 ```
@@ -14182,7 +14183,8 @@ VPROGN names a macro:
 
 ```
 use (veq:vref s x) or (:vr s x) to get dim x of symbol s
-in fvdef*, vdef*, def*. see replace-varg for details```
+in fvdef*, vdef*, def*. see replace-varg for details
+```
 ### VSUM
 
 ```

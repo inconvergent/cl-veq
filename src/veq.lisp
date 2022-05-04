@@ -59,13 +59,15 @@
 (map-docstring 'vref
   (mkstr "use (veq:vref s x) or (:vr s x) to get dim x of symbol s"
          #\Newline
-         "in fvdef*, vdef*, def*. see replace-varg for details")
+         "in fvdef*, vdef*, def*. see replace-varg for details"
+         #\Newline)
   :nodesc)
 
 (map-docstring 'varg
   (mkstr "use (veq:varg n a b ...) or (:vr n a b ...) to represent vectors a,b "
          #\Newline
-         "of dim n in fvdef*, vdef*, def*. see replace-varg for details")
+         "of dim n in fvdef*, vdef*, def*. see replace-varg for details"
+         #\Newline)
   :nodesc)
 
 
