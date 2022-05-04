@@ -58,7 +58,7 @@ You can also see some usagee in the [tests](test/veq.lisp).
 
 ## Versions Issues and feature requests
 
-The most recent stable version is v2.0.1.
+The most recent stable version is v2.0.3.
 
 This code is still immature, and the interface might change in the future.
 
