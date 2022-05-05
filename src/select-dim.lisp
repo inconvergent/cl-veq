@@ -12,7 +12,7 @@
            (typ `(,type ,@symb))
            (docs (format nil "macro. reorder arguments (X Y Z W) as ~a, ~a.~%" symb ign)))
       `(progn (export ',exportname)
-              (map-docstring ',exportname ,docs :nodesc)
+              (map-docstring ',exportname ,docs :skip)
               (defmacro ,exportname (&rest ,rest)
                 ,docs
                 `(mvb (x y z w) (mvc #'values ,@,rest)

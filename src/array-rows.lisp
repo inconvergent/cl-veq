@@ -2,26 +2,39 @@
 (in-package :veq)
 
 
-; (declaim (inline f$last d$last f2$last d2$last f3$last d3$last))
-(defun f$last (a) (declare #.*opt* (fvec a)) (-f$ a (1- (the pos-int ($num a)))))
-(defun d$last (a) (declare #.*opt* (dvec a)) (-d$ a (1- (the pos-int ($num a)))))
-(defun f2$last (a) (declare #.*opt* (fvec a)) (-f2$ a (1- (the pos-int (2$num a)))))
-(defun d2$last (a) (declare #.*opt* (dvec a)) (-d2$ a (1- (the pos-int (2$num a)))))
-(defun f3$last (a) (declare #.*opt* (fvec a)) (-f3$ a (1- (the pos-int (3$num a)))))
-(defun d3$last (a) (declare #.*opt* (dvec a)) (-d3$ a (1- (the pos-int (3$num a)))))
-(defun f4$last (a) (declare #.*opt* (fvec a)) (-f4$ a (1- (the pos-int (4$num a)))))
-(defun d4$last (a) (declare #.*opt* (dvec a)) (-d4$ a (1- (the pos-int (4$num a)))))
+(defmacro make-last ( dim type )
+  (awg (a)
+    `(progn
+       (export ',(veqsymb dim type "$last"))
+       (defun ,(veqsymb dim type "$last") (,a)
+         (declare #.*opt* (,(arrtype type) ,a))
+         ,(format nil "get last row of ~ad array as (values ...)" dim)
+       (,(veqsymb dim type "$" :pref "-") ,a
+          (1- (the pos-int (,(veqsymb dim nil "$num") ,a))))))))
+(make-last 1 ff) (make-last 2 ff) (make-last 3 ff) (make-last 4 ff)
+(make-last 1 df) (make-last 2 df) (make-last 3 df) (make-last 4 df)
 
 
 (defun -ind-to-val (type dim a inds)
-  "return (values a[i] a[j] ...) for inds = (i j ...)
-  inds can be on the form (i j k) or ((i j k))"
   (unless inds (setf inds `(0))) ; defaults to (0)
   (awg (a*) `(let ((,a* ,a))
                (declare (,(arrtype type) ,a*))
                (~ ,@(loop for ind in inds
                           collect `(,(veqsymb dim type "$" :pref "-")
                                      ,a* ,ind))))))
+(defmacro map-ind (dim type)
+  (let* ((mname (veqsymb dim type "$"))
+         (docs (format nil "returns values from ~ad array.
+supports multiple indices. default is 0.
+ex: (~a a i j ...) returns (values a[i] a[j] ...).
+note that the number of values depends on the dimension." dim mname)))
+    `(progn (map-docstring ',mname ,docs :nodesc :context)
+            (map-symbol `(,',mname
+                           (a &rest inds) ,,docs
+                           (-ind-to-val ',',type ,,dim a inds))))))
+(map-ind 1 ff) (map-ind 2 ff) (map-ind 3 ff) (map-ind 4 ff)
+(map-ind 1 df) (map-ind 2 df) (map-ind 3 df) (map-ind 4 df)
+
 
 ; TODO: with-op; simpler version of with-rows that takes input arrays and
 ; creates an output array of a given dimension
@@ -30,17 +43,6 @@
                               fxs exs nxs start)
                          &body body)
   (declare (list arr fxs exs))
-  "
-  n is the number of steps
-  inds is indices to iterate. replaces n/start
-  start is the first index (then n-1 more)
-  arr is the arrays to be defined/references
-  itr is the symbol representing indices
-  cnt is the symbol representing iterations from 0
-  fxs is the labels
-  exs is the expressions assigned to array
-  nxs is the expressions with no assignment
-  "
   ; TODO: handle case where largest inds >= n
   (awg (n* inds*)
     (let ((itr (if itr itr (gensym "ITR")))
@@ -109,6 +111,57 @@
              ,@(loop for ex in nxs collect (no-set-loop-body ex)))
            ,@body))))))
 
+(defun -with-arr-doc (n)
+  (format nil "args: (&key (n 0) inds (start 0) itr cnt arr fxs exs nxs)
+
+n is the number of iterations
+start is the first index. then n-1 more.
+inds is indices to iterate. replaces n/start
+arr is the arrays to be defined/referenced
+itr is the symbol representing indices
+cnt is the symbol representing iterations from 0
+fxs is the labels
+exs is the expressions assigned to array
+nxs is the expressions with no assignment
+
+ex:
+
+(~a (:n 7 :itr k ; k will be 0, 1, ..., 6
+  ; the third form in elements of arr can be empty, a form that will be
+  ; executed, or a symbol that refers to an array defined outside of
+  ; with-arrays
+  :arr ((a 3 (f3$one 7)) ; init a as (f3$one 7)
+        (b 3) (c 3)) ; init b,c as (f3$zero 7)
+  ; define functions to use in fxs
+  :fxs ((cross ((varg 3 v w)) (f3cross v w))
+        (init1 (i) (f3~~ (1+ i) (* 2 i) (+ 2 i)))
+        (init2 (i) (f3~~ (+ 2 i) (1+ i) (* 2 i))))
+  ; perform the calculations
+  :exs ((a k (init1 k)) ; init row k of a with init1
+        (b k (init2 k)) ; init row k of b with init2
+        (c k (cross a b)))) ; set row k of c to (cross a b)
+  ; use the arrays. the last form is returned, as in a progn
+  (vpr c))" n))
+
+(map-docstring 'dwith-arrays (-with-arr-doc "dwith-arrays") :nodesc :context)
+(map-docstring 'fwith-arrays (-with-arr-doc "fwith-arrays") :nodesc :context)
+
+(mapcar #'map-symbol
+  `((dwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs nxs)
+                    &body body)
+      `(-with-arrays (:type 'df :n ,n ,@(when inds? `(:inds ,inds))
+                      :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs :nxs ,nxs
+                      :exs ,exs :start ,start)
+                     ,@body))
+    (fwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs nxs)
+                   &body body)
+      `(-with-arrays (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
+                      :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs :nxs ,nxs
+                      :exs ,exs :start ,start)
+                     ,@body))))
+
+
+; -------------- WITH-ROWS
 
 ; TODO: for all inds?
 ; TODO: THERE WAS a bug that behaved as follows:
@@ -139,4 +192,14 @@
                   `((,fx (,itr (varg ,dim ,@arr-gensyms))
                          (,@expr ,itr ,@arr-gensyms))))
           :nxs ((,fx ,itr ,@arrs)))))))
+
+(defmacro map-wrows (dim type)
+  (let* ((mname (veqsymb dim type "$with-rows"))
+         (docs (format nil "make ~ad" dim)))
+    `(progn (map-docstring ',mname ,docs :nodesc :context)
+            (map-symbol `(,',mname
+                           ((n &rest arrs) &body expr) ,,docs
+                           (-with-rows n arrs expr :dim ,,dim :type ',',type))))))
+(map-wrows 1 ff) (map-wrows 2 ff) (map-wrows 3 ff) (map-wrows 4 ff)
+(map-wrows 1 df) (map-wrows 2 df) (map-wrows 3 df) (map-wrows 4 df)
 

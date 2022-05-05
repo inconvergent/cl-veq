@@ -3,7 +3,7 @@
 
 (defun $print (a &key n (dim 1) &aux (n (if n n (/ (length a) dim))))
   (declare (simple-array a) (pos-int dim))
-  "pretty print a with dim columns"
+  "pretty print nd array"
     (labels ((arr-max-digits (a n)
               (declare (simple-array a) (pos-int n))
               (loop repeat n for v across a
@@ -19,18 +19,18 @@
                                       (mod (1+ i) dim))))))
     (format t "~%")
     a)
-(defun 2$print (a &key n) ($print a :n n :dim 2))
-(defun 3$print (a &key n) ($print a :n n :dim 3))
-(defun 4$print (a &key n) ($print a :n n :dim 4))
+(defun 2$print (a &key n) "print 2d array" ($print a :n n :dim 2))
+(defun 3$print (a &key n) "print 3d array" ($print a :n n :dim 3))
+(defun 4$print (a &key n) "print 4d array" ($print a :n n :dim 4))
 
 
 (vdef $to-list (a &key (dim 1))
   (declare (simple-array a) (pos-int dim))
-  "return a as list of lists of length dim"
+  "return array as a list of nd lists"
   (loop for i of-type pos-int from 0 below (length a) by dim
         collect (loop for j of-type pos-int from i repeat dim
                       collect (aref a j))))
-(defun 2$to-list (a) ($to-list a :dim 2))
-(defun 3$to-list (a) ($to-list a :dim 3))
-(defun 4$to-list (a) ($to-list a :dim 4))
+(defun 2$to-list (a) "return array as a list of 2d lists" ($to-list a :dim 2))
+(defun 3$to-list (a) "return array as a list of 3d lists" ($to-list a :dim 3))
+(defun 4$to-list (a) "return array as a list of 4d lists" ($to-list a :dim 4))
 

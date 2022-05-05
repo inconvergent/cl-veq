@@ -9,3 +9,13 @@
                  (,(veqsymb dim type "+") ,res ,@body)))
       (values ,res))))
 
+(defmacro map-nsum (dim type)
+  (let* ((mname (veqsymb dim type "nsum"))
+         (docs (format nil "make ~ad" dim)))
+    `(progn (map-docstring ',mname ,docs :nodesc :context)
+            (map-symbol `(,',mname
+                           ((n) &body body) ,,docs
+                           (-nsum ',',type ,,dim n body))))))
+(map-nsum 1 ff) (map-nsum 2 ff) (map-nsum 3 ff) (map-nsum 4 ff)
+(map-nsum 1 df) (map-nsum 2 df) (map-nsum 3 df) (map-nsum 4 df)
+

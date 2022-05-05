@@ -10,13 +10,19 @@
 ; TODO: from to as supported in with-arrays
 (defmacro -xmima (dim type)
   (awg (a mimafx)
-    (let ((exportname (veqsymb dim type "$MIMA"))
-          (vlet (veqsymb 1 type "VLET"))
-          (with-arrays (veqsymb 1 type "WITH-ARRAYS"))
-          (indref (veqsymb dim type "$")))
+    (let* ((exportname (veqsymb dim type "$MIMA"))
+           (vlet (veqsymb 1 type "VLET"))
+           (with-arrays (veqsymb 1 type "WITH-ARRAYS"))
+           (indref (veqsymb dim type "$"))
+           (docs (format nil "find min and max for all dimensions of ~d array.
+ex: (~a &key n) returns (values xmin xmax ...).
+use n to limit to first n rows." dim exportname))
+
+          )
       `(progn (export ',exportname)
        (fvdef ,exportname (,a &key (n (,(veqsymb dim nil "$NUM") ,a)) inds)
           (declare (,(arrtype type) ,a))
+          ,docs
           (let ((,a ,a))
             ; TODO: what should happen when a is empty?
             ; early exit when a is empty. returns (values 0 ...) for dim
@@ -31,8 +37,10 @@
                 :arr ((,a ,dim ,a))
                 :fxs ((,mimafx ((varg ,dim x))
                         (progn ,@(loop for i from 0 below dim
-                                       collect `(update-mima (:vr x ,i)
-                                                  (:vr mi ,i) (:vr ma ,i))))))
+                                       collect `(update-mima
+                                                  (:vr x ,i)
+                                                  (:vr mi ,i)
+                                                  (:vr ma ,i))))))
                 :nxs ((,mimafx ,a))))
               (values ,@(loop with res = (list)
                               for i from 0 below dim

@@ -60,7 +60,7 @@ See [docs](DOCS.md) for automatically generated symbol documentation.
 
 ## Versions, Issues and feature requests
 
-The most recent stable version is v2.1.0.
+The most recent stable version is v2.2.0.
 
 This code is still immature, and the interface might change in the future.
 

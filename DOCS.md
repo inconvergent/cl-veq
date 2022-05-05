@@ -1,945 +1,1213 @@
 # VEQ DOCUMENTATION
 
-## Symbols
-### $
+### Explanation
+
+#### Context
+
+All symbols marked with `:contex:` are only valid inside a veq context.  veq
+context can be initiated using `vprogn`, `fvprogn`, `vdef`, `fvdef`,
+`vdef*` or `fvdef*`. See further documentation below.
+
+See [examples](/examples/ex.lisp) for working examples of some use.
+
+#### Names and Types
+
+Symols prefixed with `f` pertain to type `ff`, short for `single-float`.
+The corresponding vector array type is `fvec`, short for `(simple-array ff)`.
+
+Symols prefixed with `d` pertain to type `df`, short for `double-float`.
+The corresponding vector array type is `dvec`, short for `(simple-array df)`.
+
+Symbols with `$` in the name pertain to vector arrays.
+
+Symbols postfixed with `!` are destructive or in-place.
+
+
+#### Abbreviations
+
+`dsb` is short for `destructuring-bind`.
+
+`mvb` is short for `multiple-value-bind`.
+
+`mvc` is short for `multiple-value-call`.
+
+
+### Symbols
+
+#### $
 
 ```
-:missing:
+use (setf ($ a i) (list x)) to set a[i].
 
-VEQ:$
-  [symbol]
-
-(SETF $) has a complex setf-expansion:
-  Lambda-list: (A &OPTIONAL (I 0))
-  (undocumented)
-  Source file: /data/x/veq/src/vset.lisp
+ ; VEQ:$
+ ;   [symbol]
+ ;
+ ; (SETF $) has a complex setf-expansion:
+ ;   Lambda-list: (A &OPTIONAL (I 0))
+ ;   Documentation:
+ ;     use (setf ($ a i) (list x)) to set a[i].
+ ;   Source file: /data/x/veq/src/vset.lisp
 ```
-### $NUM
 
-```
-:missing:
-
-VEQ:$NUM
-  [symbol]
-
-$NUM names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION (SIMPLE-ARRAY)
-                 (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### $PRINT
+#### $NUM
 
 ```
-pretty print a with dim columns
-VEQ:$PRINT
-  [symbol]
+number of elements in 1d array.
+untyped.
 
-$PRINT names a compiled function:
-  Lambda-list: (A &KEY N (DIM 1) &AUX
-                (N
-                 (IF N
-                     N
-                     (/ (LENGTH A) DIM))))
-  Derived type: (FUNCTION
-                 (SIMPLE-ARRAY &KEY (:N T) (:DIM (UNSIGNED-BYTE 31)))
-                 (VALUES (SIMPLE-ARRAY * (*)) &OPTIONAL))
-  Documentation:
-    pretty print a with dim columns
-  Source file: /data/x/veq/src/array-print.lisp
+ ; VEQ:$NUM
+ ;   [symbol]
+ ;
+ ; $NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION (SIMPLE-ARRAY)
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 1d array.
+ ;     untyped.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### $TO-LIST
 
-```
-return a as list of lists of length dim
-VEQ:$TO-LIST
-  [symbol]
-
-$TO-LIST names a compiled function:
-  Lambda-list: (A &KEY (DIM 1))
-  Derived type: (FUNCTION (SIMPLE-ARRAY &KEY (:DIM (UNSIGNED-BYTE 31)))
-                 (VALUES LIST &OPTIONAL))
-  Documentation:
-    return a as list of lists of length dim
-  Source file: /data/x/veq/src/array-print.lisp
-```
-### $VSET
+#### $PRINT
 
 ```
-:missing:
+pretty print nd array
 
-VEQ:$VSET
-  [symbol]
+ ; VEQ:$PRINT
+ ;   [symbol]
+ ;
+ ; $PRINT names a compiled function:
+ ;   Lambda-list: (A &KEY N (DIM 1) &AUX
+ ;                 (N
+ ;                  (IF N
+ ;                      N
+ ;                      (/ (LENGTH A) DIM))))
+ ;   Derived type: (FUNCTION
+ ;                  (SIMPLE-ARRAY &KEY (:N T) (:DIM (UNSIGNED-BYTE 31)))
+ ;                  (VALUES (SIMPLE-ARRAY * (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     pretty print nd array
+ ;   Source file: /data/x/veq/src/array-print.lisp
 ```
-### *EPS*
 
-```
-:missing:
-
-VEQ:*EPS*
-  [symbol]
-
-*EPS* names a special variable:
-  Declared type: SINGLE-FLOAT
-  Value: 1.7881396e-7
-```
-### 2$
-
-```
-:missing:
-
-VEQ:2$
-  [symbol]
-
-(SETF 2$) has a complex setf-expansion:
-  Lambda-list: (A &OPTIONAL (I 0))
-  (undocumented)
-  Source file: /data/x/veq/src/vset.lisp
-```
-### 2$NUM
+#### $TO-LIST
 
 ```
-:missing:
+return array as a list of nd lists
 
-VEQ:2$NUM
-  [symbol]
-
-2$NUM names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION (SIMPLE-ARRAY)
-                 (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:$TO-LIST
+ ;   [symbol]
+ ;
+ ; $TO-LIST names a compiled function:
+ ;   Lambda-list: (A &KEY (DIM 1))
+ ;   Derived type: (FUNCTION (SIMPLE-ARRAY &KEY (:DIM (UNSIGNED-BYTE 31)))
+ ;                  (VALUES LIST &OPTIONAL))
+ ;   Documentation:
+ ;     return array as a list of nd lists
+ ;   Source file: /data/x/veq/src/array-print.lisp
 ```
-### 2$PRINT
 
-```
-:missing:
-
-VEQ:2$PRINT
-  [symbol]
-
-2$PRINT names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION (T &KEY (:N T)) *)
-  Source file: /data/x/veq/src/array-print.lisp
-```
-### 2$TO-LIST
+#### :context: $VSET
 
 ```
-:missing:
-
-VEQ:2$TO-LIST
-  [symbol]
-
-2$TO-LIST names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION (T) *)
-  Source file: /data/x/veq/src/array-print.lisp
+use ($vset (a i) (values ...)) to set a[i] of 1d array.
 ```
-### 2$VSET
+
+#### \*EPS\*
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:2$VSET
-  [symbol]
+ ; VEQ:*EPS*
+ ;   [symbol]
+ ;
+ ; *EPS* names a special variable:
+ ;   Declared type: SINGLE-FLOAT
+ ;   Value: 1.7881396e-7
 ```
-### 3$
 
-```
-:missing:
-
-VEQ:3$
-  [symbol]
-
-(SETF 3$) has a complex setf-expansion:
-  Lambda-list: (A &OPTIONAL (I 0))
-  (undocumented)
-  Source file: /data/x/veq/src/vset.lisp
-```
-### 3$NUM
+#### 2$
 
 ```
-:missing:
+use (setf (2$ a i) (list x y)) to set a[i].
 
-VEQ:3$NUM
-  [symbol]
-
-3$NUM names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION (SIMPLE-ARRAY)
-                 (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:2$
+ ;   [symbol]
+ ;
+ ; (SETF 2$) has a complex setf-expansion:
+ ;   Lambda-list: (A &OPTIONAL (I 0))
+ ;   Documentation:
+ ;     use (setf (2$ a i) (list x y)) to set a[i].
+ ;   Source file: /data/x/veq/src/vset.lisp
 ```
-### 3$PRINT
 
-```
-:missing:
-
-VEQ:3$PRINT
-  [symbol]
-
-3$PRINT names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION (T &KEY (:N T)) *)
-  Source file: /data/x/veq/src/array-print.lisp
-```
-### 3$TO-LIST
+#### 2$NUM
 
 ```
-:missing:
+number of elements in 2d array.
+untyped.
 
-VEQ:3$TO-LIST
-  [symbol]
-
-3$TO-LIST names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION (T) *)
-  Source file: /data/x/veq/src/array-print.lisp
+ ; VEQ:2$NUM
+ ;   [symbol]
+ ;
+ ; 2$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION (SIMPLE-ARRAY)
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 2d array.
+ ;     untyped.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### 3$VSET
 
-```
-:missing:
-
-VEQ:3$VSET
-  [symbol]
-```
-### 4$
+#### 2$PRINT
 
 ```
-:missing:
+print 2d array
 
-VEQ:4$
-  [symbol]
-
-(SETF 4$) has a complex setf-expansion:
-  Lambda-list: (A &OPTIONAL (I 0))
-  (undocumented)
-  Source file: /data/x/veq/src/vset.lisp
+ ; VEQ:2$PRINT
+ ;   [symbol]
+ ;
+ ; 2$PRINT names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION (T &KEY (:N T)) *)
+ ;   Documentation:
+ ;     print 2d array
+ ;   Source file: /data/x/veq/src/array-print.lisp
 ```
-### 4$PRINT
 
-```
-:missing:
-
-VEQ:4$PRINT
-  [symbol]
-
-4$PRINT names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION (T &KEY (:N T)) *)
-  Source file: /data/x/veq/src/array-print.lisp
-```
-### 4$VSET
+#### 2$TO-LIST
 
 ```
-:missing:
+return array as a list of 2d lists
 
-VEQ:4$VSET
-  [symbol]
+ ; VEQ:2$TO-LIST
+ ;   [symbol]
+ ;
+ ; 2$TO-LIST names a compiled function:
+ ;   Lambda-list: (A)
+ ;   Derived type: (FUNCTION (T) *)
+ ;   Documentation:
+ ;     return array as a list of 2d lists
+ ;   Source file: /data/x/veq/src/array-print.lisp
 ```
-### 4TO-LIST
+
+#### :context: 2$VSET
 
 ```
-:missing:
-
-VEQ:4TO-LIST
-  [symbol]
+use (2$vset (a i) (values ...)) to set a[i] of 2d array.
 ```
-### CONTEXT?
+
+#### 3$
+
+```
+use (setf (3$ a i) (list x y z)) to set a[i].
+
+ ; VEQ:3$
+ ;   [symbol]
+ ;
+ ; (SETF 3$) has a complex setf-expansion:
+ ;   Lambda-list: (A &OPTIONAL (I 0))
+ ;   Documentation:
+ ;     use (setf (3$ a i) (list x y z)) to set a[i].
+ ;   Source file: /data/x/veq/src/vset.lisp
+```
+
+#### 3$NUM
+
+```
+number of elements in 3d array.
+untyped.
+
+ ; VEQ:3$NUM
+ ;   [symbol]
+ ;
+ ; 3$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION (SIMPLE-ARRAY)
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 3d array.
+ ;     untyped.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### 3$PRINT
+
+```
+print 3d array
+
+ ; VEQ:3$PRINT
+ ;   [symbol]
+ ;
+ ; 3$PRINT names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION (T &KEY (:N T)) *)
+ ;   Documentation:
+ ;     print 3d array
+ ;   Source file: /data/x/veq/src/array-print.lisp
+```
+
+#### 3$TO-LIST
+
+```
+return array as a list of 3d lists
+
+ ; VEQ:3$TO-LIST
+ ;   [symbol]
+ ;
+ ; 3$TO-LIST names a compiled function:
+ ;   Lambda-list: (A)
+ ;   Derived type: (FUNCTION (T) *)
+ ;   Documentation:
+ ;     return array as a list of 3d lists
+ ;   Source file: /data/x/veq/src/array-print.lisp
+```
+
+#### :context: 3$VSET
+
+```
+use (3$vset (a i) (values ...)) to set a[i] of 3d array.
+```
+
+#### 4$
+
+```
+use (setf (4$ a i) (list x y z w)) to set a[i].
+
+ ; VEQ:4$
+ ;   [symbol]
+ ;
+ ; (SETF 4$) has a complex setf-expansion:
+ ;   Lambda-list: (A &OPTIONAL (I 0))
+ ;   Documentation:
+ ;     use (setf (4$ a i) (list x y z w)) to set a[i].
+ ;   Source file: /data/x/veq/src/vset.lisp
+```
+
+#### 4$NUM
+
+```
+number of elements in 4d array.
+untyped.
+
+ ; VEQ:4$NUM
+ ;   [symbol]
+ ;
+ ; 4$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION (SIMPLE-ARRAY)
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 4d array.
+ ;     untyped.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### 4$PRINT
+
+```
+print 4d array
+
+ ; VEQ:4$PRINT
+ ;   [symbol]
+ ;
+ ; 4$PRINT names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION (T &KEY (:N T)) *)
+ ;   Documentation:
+ ;     print 4d array
+ ;   Source file: /data/x/veq/src/array-print.lisp
+```
+
+#### 4$TO-LIST
+
+```
+return array as a list of 4d lists
+
+ ; VEQ:4$TO-LIST
+ ;   [symbol]
+ ;
+ ; 4$TO-LIST names a compiled function:
+ ;   Lambda-list: (A)
+ ;   Derived type: (FUNCTION (T) *)
+ ;   Documentation:
+ ;     return array as a list of 4d lists
+ ;   Source file: /data/x/veq/src/array-print.lisp
+```
+
+#### :context: 4$VSET
+
+```
+use (4$vset (a i) (values ...)) to set a[i] of 4d array.
+```
+
+#### CONTEXT?
 
 ```
 list all macrolets in veq context. that is ops available inside vprog,
   fvprogn, vdef, fvdef defined contexts/functions.
-VEQ:CONTEXT?
-  [symbol]
 
-CONTEXT? names a macro:
-  Lambda-list: ()
-  Documentation:
-    list all macrolets in veq context. that is ops available inside vprog,
-      fvprogn, vdef, fvdef defined contexts/functions.
-  Source file: /data/x/veq/src/veq.lisp
+ ; VEQ:CONTEXT?
+ ;   [symbol]
+ ;
+ ; CONTEXT? names a macro:
+ ;   Lambda-list: ()
+ ;   Documentation:
+ ;     list all macrolets in veq context. that is ops available inside vprog,
+ ;       fvprogn, vdef, fvdef defined contexts/functions.
+ ;   Source file: /data/x/veq/src/docs.lisp
 ```
-### D
 
-```
-:missing:
-
-VEQ:D
-  [symbol]
-```
-### D$
+#### :context: D
 
 ```
-:missing:
-
-VEQ:D$
-  [symbol]
+make 1d vector in veq context.
+strict.
 ```
-### D$*
+
+#### :context: D$
+
+```
+returns values from 1d array.
+supports multiple indices. default is 0.
+ex: (D$ a i j ...) returns (values a[i] a[j] ...).
+note that the number of values depends on the dimension.
+```
+
+#### D$\*
 
 ```
 broadcast for fx: -D*
 macroname: D$*
+ex: (D$* a ...) performs (mvc #'-D* a[i] ...) for every row in a.
 
-
-VEQ:D$*
-  [symbol]
-
-D$* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$* ...).
-    see function: %D$*
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$*
+ ;   [symbol]
+ ;
+ ; D$* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$*
+ ;     macro wrapper: D$*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$*!
+
+#### D$\*!
 
 ```
 broadcast for fx: -D*
 macroname: D$*!
+ex: (D$*! a ...) performs (mvc #'-D* a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$*!
-  [symbol]
-
-D$*! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$*! ...).
-    see function: %D$*!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$*!
+ ;   [symbol]
+ ;
+ ; D$*! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$*!
+ ;     macro wrapper: D$*!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$+
+
+#### D$+
 
 ```
 broadcast for fx: -D+
 macroname: D$+
+ex: (D$+ a ...) performs (mvc #'-D+ a[i] ...) for every row in a.
 
-
-VEQ:D$+
-  [symbol]
-
-D$+ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$+ ...).
-    see function: %D$+
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$+
+ ;   [symbol]
+ ;
+ ; D$+ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$+
+ ;     macro wrapper: D$+
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$+!
+
+#### D$+!
 
 ```
 broadcast for fx: -D+
 macroname: D$+!
+ex: (D$+! a ...) performs (mvc #'-D+ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$+!
-  [symbol]
-
-D$+! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$+! ...).
-    see function: %D$+!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$+!
+ ;   [symbol]
+ ;
+ ; D$+! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$+!
+ ;     macro wrapper: D$+!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$-
+
+#### D$-
 
 ```
 broadcast for fx: -D-
 macroname: D$-
+ex: (D$- a ...) performs (mvc #'-D- a[i] ...) for every row in a.
 
-
-VEQ:D$-
-  [symbol]
-
-D$- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$- ...).
-    see function: %D$-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$-
+ ;   [symbol]
+ ;
+ ; D$- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$-
+ ;     macro wrapper: D$-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$-!
+
+#### D$-!
 
 ```
 broadcast for fx: -D-
 macroname: D$-!
+ex: (D$-! a ...) performs (mvc #'-D- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$-!
-  [symbol]
-
-D$-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$-! ...).
-    see function: %D$-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$-!
+ ;   [symbol]
+ ;
+ ; D$-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$-!
+ ;     macro wrapper: D$-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$/
+
+#### D$/
 
 ```
 broadcast for fx: -D/
 macroname: D$/
+ex: (D$/ a ...) performs (mvc #'-D/ a[i] ...) for every row in a.
 
-
-VEQ:D$/
-  [symbol]
-
-D$/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$/ ...).
-    see function: %D$/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$/
+ ;   [symbol]
+ ;
+ ; D$/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$/
+ ;     macro wrapper: D$/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$/!
+
+#### D$/!
 
 ```
 broadcast for fx: -D/
 macroname: D$/!
+ex: (D$/! a ...) performs (mvc #'-D/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$/!
-  [symbol]
-
-D$/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$/! ...).
-    see function: %D$/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$/!
+ ;   [symbol]
+ ;
+ ; D$/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$/!
+ ;     macro wrapper: D$/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$_
+
+#### D$_
 
 ```
 create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
    or: ($_ '((1d0 2d0) (1d0 2d0)))
-VEQ:D$_
-  [symbol]
 
-D$_ names a macro:
-  Lambda-list: (&BODY BODY)
-  Documentation:
-    create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
-       or: ($_ '((1d0 2d0) (1d0 2d0)))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:D$_
+ ;   [symbol]
+ ;
+ ; D$_ names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Documentation:
+ ;     create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
+ ;        or: ($_ '((1d0 2d0) (1d0 2d0)))
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D$ABS
+
+#### D$ABS
 
 ```
 broadcast for fx: -DABS
 macroname: D$ABS
+ex: (D$ABS a ...) performs (mvc #'-DABS a[i] ...) for every row in a.
 
-
-VEQ:D$ABS
-  [symbol]
-
-D$ABS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$ABS ...).
-    see function: %D$ABS
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$ABS
+ ;   [symbol]
+ ;
+ ; D$ABS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$ABS
+ ;     macro wrapper: D$ABS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$ABS!
+
+#### D$ABS!
 
 ```
 broadcast for fx: -DABS
 macroname: D$ABS!
+ex: (D$ABS! a ...) performs (mvc #'-DABS a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$ABS!
-  [symbol]
-
-D$ABS! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$ABS! ...).
-    see function: %D$ABS!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$ABS!
+ ;   [symbol]
+ ;
+ ; D$ABS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$ABS!
+ ;     macro wrapper: D$ABS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$COPY
+
+#### D$COPY
 
 ```
-:missing:
+copy array
 
-VEQ:D$COPY
-  [symbol]
-
-D$COPY names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:D$COPY
+ ;   [symbol]
+ ;
+ ; D$COPY names a compiled function:
+ ;   Lambda-list: (A)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     copy array
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D$COS-SIN
+
+#### D$COS-SIN
 
 ```
 broadcast for fx: -DCOS-SIN
 macroname: D$COS-SIN
+ex: (D$COS-SIN a ...) performs (mvc #'-DCOS-SIN a[i] ...) for every row in a.
 
-
-VEQ:D$COS-SIN
-  [symbol]
-
-D$COS-SIN names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$COS-SIN ...).
-    see function: %D$COS-SIN
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$COS-SIN
+ ;   [symbol]
+ ;
+ ; D$COS-SIN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$COS-SIN
+ ;     macro wrapper: D$COS-SIN
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$FROM
+
+#### D$FROM
 
 ```
 broadcast for fx: -DFROM
 macroname: D$FROM
+ex: (D$FROM a ...) performs (mvc #'-DFROM a[i] ...) for every row in a.
 
-
-VEQ:D$FROM
-  [symbol]
-
-D$FROM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$FROM ...).
-    see function: %D$FROM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$FROM
+ ;   [symbol]
+ ;
+ ; D$FROM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$FROM
+ ;     macro wrapper: D$FROM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$FROM!
+
+#### D$FROM!
 
 ```
 broadcast for fx: -DFROM
 macroname: D$FROM!
+ex: (D$FROM! a ...) performs (mvc #'-DFROM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$FROM!
-  [symbol]
-
-D$FROM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$FROM! ...).
-    see function: %D$FROM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$FROM!
+ ;   [symbol]
+ ;
+ ; D$FROM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$FROM!
+ ;     macro wrapper: D$FROM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$FXLSPACE
+
+#### :context: D$FXLSPACE
 
 ```
-:missing:
-
-VEQ:D$FXLSPACE
-  [symbol]
+args: ((n a b &key (end t)) &body fx)
+for 1d points a, b.
+assumes the last form in fx is a function and does
+(mvc fx i x ...) for points between a, b.
+ex: (D$FXLSPACE (n a b) (lambda (i (:va 1 a b)) (vpr i a b)))
 ```
-### D$I-
+
+#### D$I-
 
 ```
 broadcast for fx: -DI-
 macroname: D$I-
+ex: (D$I- a ...) performs (mvc #'-DI- a[i] ...) for every row in a.
 
-
-VEQ:D$I-
-  [symbol]
-
-D$I- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$I- ...).
-    see function: %D$I-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$I-
+ ;   [symbol]
+ ;
+ ; D$I- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$I-
+ ;     macro wrapper: D$I-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$I-!
+
+#### D$I-!
 
 ```
 broadcast for fx: -DI-
 macroname: D$I-!
+ex: (D$I-! a ...) performs (mvc #'-DI- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$I-!
-  [symbol]
-
-D$I-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$I-! ...).
-    see function: %D$I-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$I-!
+ ;   [symbol]
+ ;
+ ; D$I-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$I-!
+ ;     macro wrapper: D$I-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$I/
+
+#### D$I/
 
 ```
 broadcast for fx: -DI/
 macroname: D$I/
+ex: (D$I/ a ...) performs (mvc #'-DI/ a[i] ...) for every row in a.
 
-
-VEQ:D$I/
-  [symbol]
-
-D$I/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$I/ ...).
-    see function: %D$I/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$I/
+ ;   [symbol]
+ ;
+ ; D$I/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$I/
+ ;     macro wrapper: D$I/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$I/!
+
+#### D$I/!
 
 ```
 broadcast for fx: -DI/
 macroname: D$I/!
+ex: (D$I/! a ...) performs (mvc #'-DI/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$I/!
-  [symbol]
-
-D$I/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$I/! ...).
-    see function: %D$I/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$I/!
+ ;   [symbol]
+ ;
+ ; D$I/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$I/!
+ ;     macro wrapper: D$I/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$ISCALE
+
+#### D$ISCALE
 
 ```
 broadcast for fx: -DISCALE
 macroname: D$ISCALE
+ex: (D$ISCALE a ...) performs (mvc #'-DISCALE a[i] ...) for every row in a.
 
-
-VEQ:D$ISCALE
-  [symbol]
-
-D$ISCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$ISCALE ...).
-    see function: %D$ISCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$ISCALE
+ ;   [symbol]
+ ;
+ ; D$ISCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$ISCALE
+ ;     macro wrapper: D$ISCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$ISCALE!
+
+#### D$ISCALE!
 
 ```
 broadcast for fx: -DISCALE
 macroname: D$ISCALE!
+ex: (D$ISCALE! a ...) performs (mvc #'-DISCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$ISCALE!
-  [symbol]
-
-D$ISCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$ISCALE! ...).
-    see function: %D$ISCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$ISCALE!
+ ;   [symbol]
+ ;
+ ; D$ISCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$ISCALE!
+ ;     macro wrapper: D$ISCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$LAST
+
+#### D$LAST
 
 ```
-:missing:
+get last row of 1d array as (values ...)
 
-VEQ:D$LAST
-  [symbol]
-
-D$LAST names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
-                 (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-rows.lisp
+ ; VEQ:D$LAST
+ ;   [symbol]
+ ;
+ ; D$LAST names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     get last row of 1d array as (values ...)
+ ;   Source file: /data/x/veq/src/array-rows.lisp
 ```
-### D$LEN
+
+#### D$LEN
 
 ```
 broadcast for fx: -DLEN
 macroname: D$LEN
+ex: (D$LEN a ...) performs (mvc #'-DLEN a[i] ...) for every row in a.
 
-
-VEQ:D$LEN
-  [symbol]
-
-D$LEN names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$LEN ...).
-    see function: %D$LEN
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$LEN
+ ;   [symbol]
+ ;
+ ; D$LEN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$LEN
+ ;     macro wrapper: D$LEN
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$LEN2
+
+#### D$LEN2
 
 ```
 broadcast for fx: -DLEN2
 macroname: D$LEN2
+ex: (D$LEN2 a ...) performs (mvc #'-DLEN2 a[i] ...) for every row in a.
 
-
-VEQ:D$LEN2
-  [symbol]
-
-D$LEN2 names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$LEN2 ...).
-    see function: %D$LEN2
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$LEN2
+ ;   [symbol]
+ ;
+ ; D$LEN2 names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$LEN2
+ ;     macro wrapper: D$LEN2
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$LINE
 
-```
-macro wrapper: (mvc #'%D$LINE ...).
-see function: %D$LINE
-VEQ:D$LINE
-  [symbol]
-
-D$LINE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$LINE ...).
-    see function: %D$LINE
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### D$LSPACE
+#### D$LINE
 
 ```
-macro wrapper: (mvc #'%D$LSPACE ...) in veq context.
-see function: %D$LSPACE
-VEQ:D$LSPACE
-  [symbol]
+fx: %D$LINE
+macro wrapper: D$LINE
 
-D$LSPACE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$LSPACE ...) in veq context.
-    see function: %D$LSPACE
-  Source file: /data/x/veq/src/lspace.lisp
+defined via veq:def*
+
+ ; VEQ:D$LINE
+ ;   [symbol]
+ ;
+ ; D$LINE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$LINE
+ ;     macro wrapper: D$LINE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-### D$MAKE
+
+#### D$LSPACE
+
+```
+fx: %D$LSPACE
+macro wrapper: D$LSPACE
+
+defined via veq:fvdef*
+
+ ; VEQ:D$LSPACE
+ ;   [symbol]
+ ;
+ ; D$LSPACE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$LSPACE
+ ;     macro wrapper: D$LSPACE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/lspace.lisp
+```
+
+#### D$MAKE
 
 ```
  create array with size (n dim), and initial value v
-VEQ:D$MAKE
-  [symbol]
 
-D$MAKE names a macro:
-  Lambda-list: (&KEY (DIM 1) (N 1) (V 0.0d0))
-  Documentation:
-     create array with size (n dim), and initial value v
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:D$MAKE
+ ;   [symbol]
+ ;
+ ; D$MAKE names a macro:
+ ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0.0d0))
+ ;   Documentation:
+ ;      create array with size (n dim), and initial value v
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D$MIMA
+
+#### D$MIMA
 
 ```
-:missing:
+find min and max for all dimensions of 1 array.
+ex: (D$MIMA &key n) returns (values xmin xmax ...).
+use n to limit to first n rows.
 
-VEQ:D$MIMA
-  [symbol]
-
-D$MIMA names a compiled function:
-  Lambda-list: (A0 &KEY (N ($NUM A0)) INDS)
-  Derived type: (FUNCTION
-                 ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T) (:INDS T))
-                 (VALUES DOUBLE-FLOAT DOUBLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-mima.lisp
+ ; VEQ:D$MIMA
+ ;   [symbol]
+ ;
+ ; D$MIMA names a compiled function:
+ ;   Lambda-list: (A0 &KEY (N ($NUM A0)) INDS)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T) (:INDS T))
+ ;                  (VALUES DOUBLE-FLOAT DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     find min and max for all dimensions of 1 array.
+ ;     ex: (D$MIMA &key n) returns (values xmin xmax ...).
+ ;     use n to limit to first n rows.
+ ;   Source file: /data/x/veq/src/array-mima.lisp
 ```
-### D$NEG
+
+#### D$NEG
 
 ```
 broadcast for fx: -DNEG
 macroname: D$NEG
+ex: (D$NEG a ...) performs (mvc #'-DNEG a[i] ...) for every row in a.
 
-
-VEQ:D$NEG
-  [symbol]
-
-D$NEG names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$NEG ...).
-    see function: %D$NEG
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$NEG
+ ;   [symbol]
+ ;
+ ; D$NEG names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$NEG
+ ;     macro wrapper: D$NEG
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$NEG!
+
+#### D$NEG!
 
 ```
 broadcast for fx: -DNEG
 macroname: D$NEG!
+ex: (D$NEG! a ...) performs (mvc #'-DNEG a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$NEG!
-  [symbol]
-
-D$NEG! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$NEG! ...).
-    see function: %D$NEG!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$NEG!
+ ;   [symbol]
+ ;
+ ; D$NEG! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$NEG!
+ ;     macro wrapper: D$NEG!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$NORM
+
+#### D$NORM
 
 ```
 broadcast for fx: -DNORM
 macroname: D$NORM
+ex: (D$NORM a ...) performs (mvc #'-DNORM a[i] ...) for every row in a.
 
-
-VEQ:D$NORM
-  [symbol]
-
-D$NORM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$NORM ...).
-    see function: %D$NORM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$NORM
+ ;   [symbol]
+ ;
+ ; D$NORM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$NORM
+ ;     macro wrapper: D$NORM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$NORM!
+
+#### D$NORM!
 
 ```
 broadcast for fx: -DNORM
 macroname: D$NORM!
+ex: (D$NORM! a ...) performs (mvc #'-DNORM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$NORM!
-  [symbol]
-
-D$NORM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$NORM! ...).
-    see function: %D$NORM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$NORM!
+ ;   [symbol]
+ ;
+ ; D$NORM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$NORM!
+ ;     macro wrapper: D$NORM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$ONE
 
-```
-:missing:
-
-VEQ:D$ONE
-  [symbol]
-
-D$ONE names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### D$POINT
+#### D$NUM
 
 ```
-macro wrapper: (mvc #'%D$POINT ...).
-see function: %D$POINT
-VEQ:D$POINT
-  [symbol]
+number of elements in 1d array.
+typed.
 
-D$POINT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$POINT ...).
-    see function: %D$POINT
-  Source file: /data/x/veq/src/shapes.lisp
+ ; VEQ:D$NUM
+ ;   [symbol]
+ ;
+ ; D$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 1d array.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D$SCALE
+
+#### D$ONE
+
+```
+make 1d array of ones.
+typed.
+
+ ; VEQ:D$ONE
+ ;   [symbol]
+ ;
+ ; D$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d array of ones.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### D$POINT
+
+```
+fx: %D$POINT
+macro wrapper: D$POINT
+
+defined via veq:def*
+
+ ; VEQ:D$POINT
+ ;   [symbol]
+ ;
+ ; D$POINT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$POINT
+ ;     macro wrapper: D$POINT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### D$SCALE
 
 ```
 broadcast for fx: -DSCALE
 macroname: D$SCALE
+ex: (D$SCALE a ...) performs (mvc #'-DSCALE a[i] ...) for every row in a.
 
-
-VEQ:D$SCALE
-  [symbol]
-
-D$SCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$SCALE ...).
-    see function: %D$SCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$SCALE
+ ;   [symbol]
+ ;
+ ; D$SCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$SCALE
+ ;     macro wrapper: D$SCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$SCALE!
+
+#### D$SCALE!
 
 ```
 broadcast for fx: -DSCALE
 macroname: D$SCALE!
+ex: (D$SCALE! a ...) performs (mvc #'-DSCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D$SCALE!
-  [symbol]
-
-D$SCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D$SCALE! ...).
-    see function: %D$SCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D$SCALE!
+ ;   [symbol]
+ ;
+ ; D$SCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D$SCALE!
+ ;     macro wrapper: D$SCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D$SUM
 
-```
-:missing:
-
-VEQ:D$SUM
-  [symbol]
-
-D$SUM names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T))
-                 (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-reduce.lisp
-```
-### D$TAKE
+#### D$SUM
 
 ```
-:missing:
+sum all rows of 1d array.
 
-VEQ:D$TAKE
-  [symbol]
-
-D$TAKE names a compiled function:
-  Lambda-list: (A INDS &KEY RES)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) T &KEY (:RES T))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
-  Source file: /data/x/veq/src/array-take.lisp
+ ; VEQ:D$SUM
+ ;   [symbol]
+ ;
+ ; D$SUM names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T))
+ ;                  (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     sum all rows of 1d array.
+ ;   Source file: /data/x/veq/src/array-reduce.lisp
 ```
-### D$VAL
 
-```
-:missing:
-
-VEQ:D$VAL
-  [symbol]
-
-D$VAL names a compiled function:
-  Lambda-list: (V &OPTIONAL (N 1))
-  Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### D$WITH-ROWS
+#### D$TAKE
 
 ```
-:missing:
+returns 1d array with rows for inds.
+use :res put result in existing array
 
-VEQ:D$WITH-ROWS
-  [symbol]
+ ; VEQ:D$TAKE
+ ;   [symbol]
+ ;
+ ; D$TAKE names a compiled function:
+ ;   Lambda-list: (A INDS &KEY RES)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY DOUBLE-FLOAT) SEQUENCE &KEY (:RES T))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
+ ;   Documentation:
+ ;     returns 1d array with rows for inds.
+ ;     use :res put result in existing array
+ ;   Source file: /data/x/veq/src/array-take.lisp
 ```
-### D$ZERO
+
+#### D$VAL
 
 ```
-:missing:
+make 1d array of val.
+typed.
 
-VEQ:D$ZERO
-  [symbol]
-
-D$ZERO names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:D$VAL
+ ;   [symbol]
+ ;
+ ; D$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d array of val.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D*
+
+#### :context: D$WITH-ROWS
+
+```
+make 1d
+```
+
+#### D$ZERO
+
+```
+make 1d array of zeros.
+typed.
+
+ ; VEQ:D$ZERO
+ ;   [symbol]
+ ;
+ ; D$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d array of zeros.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### :context: D\*
 
 ```
 veq context op: D*
@@ -947,7 +1215,8 @@ fxname: -D*
 args: (A B)
 body: (* A B)
 ```
-### D+
+
+#### :context: D+
 
 ```
 veq context op: D+
@@ -955,7 +1224,8 @@ fxname: -D+
 args: (A B)
 body: (+ A B)
 ```
-### D-
+
+#### :context: D-
 
 ```
 veq context op: D-
@@ -963,7 +1233,8 @@ fxname: -D-
 args: (A B)
 body: (- A B)
 ```
-### D/
+
+#### :context: D/
 
 ```
 veq context op: D/
@@ -971,750 +1242,870 @@ fxname: -D/
 args: (A B)
 body: (/ A B)
 ```
-### D2
+
+#### :context: D2
 
 ```
-:missing:
-
-VEQ:D2
-  [symbol]
+make 2d vector in veq context.
+strict.
 ```
-### D2$
+
+#### :context: D2$
 
 ```
-:missing:
-
-VEQ:D2$
-  [symbol]
+returns values from 2d array.
+supports multiple indices. default is 0.
+ex: (D2$ a i j ...) returns (values a[i] a[j] ...).
+note that the number of values depends on the dimension.
 ```
-### D2$*
+
+#### D2$\*
 
 ```
 broadcast for fx: -D2*
 macroname: D2$*
+ex: (D2$* a ...) performs (mvc #'-D2* a[i] ...) for every row in a.
 
-
-VEQ:D2$*
-  [symbol]
-
-D2$* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$* ...).
-    see function: %D2$*
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$*
+ ;   [symbol]
+ ;
+ ; D2$* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$*
+ ;     macro wrapper: D2$*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$*!
+
+#### D2$\*!
 
 ```
 broadcast for fx: -D2*
 macroname: D2$*!
+ex: (D2$*! a ...) performs (mvc #'-D2* a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$*!
-  [symbol]
-
-D2$*! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$*! ...).
-    see function: %D2$*!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$*!
+ ;   [symbol]
+ ;
+ ; D2$*! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$*!
+ ;     macro wrapper: D2$*!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$+
+
+#### D2$+
 
 ```
 broadcast for fx: -D2+
 macroname: D2$+
+ex: (D2$+ a ...) performs (mvc #'-D2+ a[i] ...) for every row in a.
 
-
-VEQ:D2$+
-  [symbol]
-
-D2$+ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$+ ...).
-    see function: %D2$+
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$+
+ ;   [symbol]
+ ;
+ ; D2$+ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$+
+ ;     macro wrapper: D2$+
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$+!
+
+#### D2$+!
 
 ```
 broadcast for fx: -D2+
 macroname: D2$+!
+ex: (D2$+! a ...) performs (mvc #'-D2+ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$+!
-  [symbol]
-
-D2$+! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$+! ...).
-    see function: %D2$+!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$+!
+ ;   [symbol]
+ ;
+ ; D2$+! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$+!
+ ;     macro wrapper: D2$+!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$-
+
+#### D2$-
 
 ```
 broadcast for fx: -D2-
 macroname: D2$-
+ex: (D2$- a ...) performs (mvc #'-D2- a[i] ...) for every row in a.
 
-
-VEQ:D2$-
-  [symbol]
-
-D2$- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$- ...).
-    see function: %D2$-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$-
+ ;   [symbol]
+ ;
+ ; D2$- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$-
+ ;     macro wrapper: D2$-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$-!
+
+#### D2$-!
 
 ```
 broadcast for fx: -D2-
 macroname: D2$-!
+ex: (D2$-! a ...) performs (mvc #'-D2- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$-!
-  [symbol]
-
-D2$-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$-! ...).
-    see function: %D2$-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$-!
+ ;   [symbol]
+ ;
+ ; D2$-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$-!
+ ;     macro wrapper: D2$-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$/
+
+#### D2$/
 
 ```
 broadcast for fx: -D2/
 macroname: D2$/
+ex: (D2$/ a ...) performs (mvc #'-D2/ a[i] ...) for every row in a.
 
-
-VEQ:D2$/
-  [symbol]
-
-D2$/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$/ ...).
-    see function: %D2$/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$/
+ ;   [symbol]
+ ;
+ ; D2$/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$/
+ ;     macro wrapper: D2$/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$/!
+
+#### D2$/!
 
 ```
 broadcast for fx: -D2/
 macroname: D2$/!
+ex: (D2$/! a ...) performs (mvc #'-D2/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$/!
-  [symbol]
-
-D2$/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$/! ...).
-    see function: %D2$/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$/!
+ ;   [symbol]
+ ;
+ ; D2$/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$/!
+ ;     macro wrapper: D2$/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$ABS
+
+#### D2$ABS
 
 ```
 broadcast for fx: -D2ABS
 macroname: D2$ABS
+ex: (D2$ABS a ...) performs (mvc #'-D2ABS a[i] ...) for every row in a.
 
-
-VEQ:D2$ABS
-  [symbol]
-
-D2$ABS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$ABS ...).
-    see function: %D2$ABS
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$ABS
+ ;   [symbol]
+ ;
+ ; D2$ABS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$ABS
+ ;     macro wrapper: D2$ABS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$ABS!
+
+#### D2$ABS!
 
 ```
 broadcast for fx: -D2ABS
 macroname: D2$ABS!
+ex: (D2$ABS! a ...) performs (mvc #'-D2ABS a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$ABS!
-  [symbol]
-
-D2$ABS! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$ABS! ...).
-    see function: %D2$ABS!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$ABS!
+ ;   [symbol]
+ ;
+ ; D2$ABS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$ABS!
+ ;     macro wrapper: D2$ABS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$CENTER
 
-```
-:missing:
-
-VEQ:D2$CENTER
-  [symbol]
-```
-### D2$CIRC
-
-```
-:missing:
-
-VEQ:D2$CIRC
-  [symbol]
-```
-### D2$COPY
-
-```
-:missing:
-
-VEQ:D2$COPY
-  [symbol]
-```
-### D2$FROM
+#### D2$FROM
 
 ```
 broadcast for fx: -D2FROM
 macroname: D2$FROM
+ex: (D2$FROM a ...) performs (mvc #'-D2FROM a[i] ...) for every row in a.
 
-
-VEQ:D2$FROM
-  [symbol]
-
-D2$FROM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$FROM ...).
-    see function: %D2$FROM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$FROM
+ ;   [symbol]
+ ;
+ ; D2$FROM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$FROM
+ ;     macro wrapper: D2$FROM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$FROM!
+
+#### D2$FROM!
 
 ```
 broadcast for fx: -D2FROM
 macroname: D2$FROM!
+ex: (D2$FROM! a ...) performs (mvc #'-D2FROM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$FROM!
-  [symbol]
-
-D2$FROM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$FROM! ...).
-    see function: %D2$FROM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$FROM!
+ ;   [symbol]
+ ;
+ ; D2$FROM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$FROM!
+ ;     macro wrapper: D2$FROM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$FXLSPACE
+
+#### :context: D2$FXLSPACE
 
 ```
-:missing:
-
-VEQ:D2$FXLSPACE
-  [symbol]
+args: ((n a b &key (end t)) &body fx)
+for 2d points a, b.
+assumes the last form in fx is a function and does
+(mvc fx i x ...) for points between a, b.
+ex: (D2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
 ```
-### D2$I-
+
+#### D2$I-
 
 ```
 broadcast for fx: -D2I-
 macroname: D2$I-
+ex: (D2$I- a ...) performs (mvc #'-D2I- a[i] ...) for every row in a.
 
-
-VEQ:D2$I-
-  [symbol]
-
-D2$I- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$I- ...).
-    see function: %D2$I-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$I-
+ ;   [symbol]
+ ;
+ ; D2$I- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$I-
+ ;     macro wrapper: D2$I-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$I-!
+
+#### D2$I-!
 
 ```
 broadcast for fx: -D2I-
 macroname: D2$I-!
+ex: (D2$I-! a ...) performs (mvc #'-D2I- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$I-!
-  [symbol]
-
-D2$I-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$I-! ...).
-    see function: %D2$I-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$I-!
+ ;   [symbol]
+ ;
+ ; D2$I-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$I-!
+ ;     macro wrapper: D2$I-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$I/
+
+#### D2$I/
 
 ```
 broadcast for fx: -D2I/
 macroname: D2$I/
+ex: (D2$I/ a ...) performs (mvc #'-D2I/ a[i] ...) for every row in a.
 
-
-VEQ:D2$I/
-  [symbol]
-
-D2$I/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$I/ ...).
-    see function: %D2$I/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$I/
+ ;   [symbol]
+ ;
+ ; D2$I/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$I/
+ ;     macro wrapper: D2$I/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$I/!
+
+#### D2$I/!
 
 ```
 broadcast for fx: -D2I/
 macroname: D2$I/!
+ex: (D2$I/! a ...) performs (mvc #'-D2I/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$I/!
-  [symbol]
-
-D2$I/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$I/! ...).
-    see function: %D2$I/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$I/!
+ ;   [symbol]
+ ;
+ ; D2$I/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$I/!
+ ;     macro wrapper: D2$I/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$ISCALE
+
+#### D2$ISCALE
 
 ```
 broadcast for fx: -D2ISCALE
 macroname: D2$ISCALE
+ex: (D2$ISCALE a ...) performs (mvc #'-D2ISCALE a[i] ...) for every row in a.
 
-
-VEQ:D2$ISCALE
-  [symbol]
-
-D2$ISCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$ISCALE ...).
-    see function: %D2$ISCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$ISCALE
+ ;   [symbol]
+ ;
+ ; D2$ISCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$ISCALE
+ ;     macro wrapper: D2$ISCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$ISCALE!
+
+#### D2$ISCALE!
 
 ```
 broadcast for fx: -D2ISCALE
 macroname: D2$ISCALE!
+ex: (D2$ISCALE! a ...) performs (mvc #'-D2ISCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$ISCALE!
-  [symbol]
-
-D2$ISCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$ISCALE! ...).
-    see function: %D2$ISCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$ISCALE!
+ ;   [symbol]
+ ;
+ ; D2$ISCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$ISCALE!
+ ;     macro wrapper: D2$ISCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$LAST
+
+#### D2$LAST
 
 ```
-:missing:
+get last row of 2d array as (values ...)
 
-VEQ:D2$LAST
-  [symbol]
-
-D2$LAST names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
-                 (VALUES DOUBLE-FLOAT DOUBLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-rows.lisp
+ ; VEQ:D2$LAST
+ ;   [symbol]
+ ;
+ ; D2$LAST names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES DOUBLE-FLOAT DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     get last row of 2d array as (values ...)
+ ;   Source file: /data/x/veq/src/array-rows.lisp
 ```
-### D2$LEN
+
+#### D2$LEN
 
 ```
 broadcast for fx: -D2LEN
 macroname: D2$LEN
+ex: (D2$LEN a ...) performs (mvc #'-D2LEN a[i] ...) for every row in a.
 
-
-VEQ:D2$LEN
-  [symbol]
-
-D2$LEN names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$LEN ...).
-    see function: %D2$LEN
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$LEN
+ ;   [symbol]
+ ;
+ ; D2$LEN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$LEN
+ ;     macro wrapper: D2$LEN
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$LEN2
+
+#### D2$LEN2
 
 ```
 broadcast for fx: -D2LEN2
 macroname: D2$LEN2
+ex: (D2$LEN2 a ...) performs (mvc #'-D2LEN2 a[i] ...) for every row in a.
 
-
-VEQ:D2$LEN2
-  [symbol]
-
-D2$LEN2 names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$LEN2 ...).
-    see function: %D2$LEN2
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$LEN2
+ ;   [symbol]
+ ;
+ ; D2$LEN2 names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$LEN2
+ ;     macro wrapper: D2$LEN2
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$LINE
 
-```
-macro wrapper: (mvc #'%D2$LINE ...).
-see function: %D2$LINE
-VEQ:D2$LINE
-  [symbol]
-
-D2$LINE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$LINE ...).
-    see function: %D2$LINE
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### D2$LSPACE
+#### D2$LINE
 
 ```
-macro wrapper: (mvc #'%D2$LSPACE ...) in veq context.
-see function: %D2$LSPACE
-VEQ:D2$LSPACE
-  [symbol]
+fx: %D2$LINE
+macro wrapper: D2$LINE
 
-D2$LSPACE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$LSPACE ...) in veq context.
-    see function: %D2$LSPACE
-  Source file: /data/x/veq/src/lspace.lisp
-```
-### D2$MAKE
+defined via veq:def*
 
+ ; VEQ:D2$LINE
+ ;   [symbol]
+ ;
+ ; D2$LINE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$LINE
+ ;     macro wrapper: D2$LINE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-:missing:
 
-VEQ:D2$MAKE
-  [symbol]
-```
-### D2$MIMA
+#### D2$LSPACE
 
 ```
-:missing:
+fx: %D2$LSPACE
+macro wrapper: D2$LSPACE
 
-VEQ:D2$MIMA
-  [symbol]
+defined via veq:fvdef*
 
-D2$MIMA names a compiled function:
-  Lambda-list: (A0 &KEY (N (2$NUM A0)) INDS)
-  Derived type: (FUNCTION
-                 ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T) (:INDS T))
-                 (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
-                         DOUBLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-mima.lisp
+ ; VEQ:D2$LSPACE
+ ;   [symbol]
+ ;
+ ; D2$LSPACE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$LSPACE
+ ;     macro wrapper: D2$LSPACE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/lspace.lisp
 ```
-### D2$NEG
+
+#### D2$MIMA
+
+```
+find min and max for all dimensions of 2 array.
+ex: (D2$MIMA &key n) returns (values xmin xmax ...).
+use n to limit to first n rows.
+
+ ; VEQ:D2$MIMA
+ ;   [symbol]
+ ;
+ ; D2$MIMA names a compiled function:
+ ;   Lambda-list: (A0 &KEY (N (2$NUM A0)) INDS)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T) (:INDS T))
+ ;                  (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
+ ;                          DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     find min and max for all dimensions of 2 array.
+ ;     ex: (D2$MIMA &key n) returns (values xmin xmax ...).
+ ;     use n to limit to first n rows.
+ ;   Source file: /data/x/veq/src/array-mima.lisp
+```
+
+#### D2$NEG
 
 ```
 broadcast for fx: -D2NEG
 macroname: D2$NEG
+ex: (D2$NEG a ...) performs (mvc #'-D2NEG a[i] ...) for every row in a.
 
-
-VEQ:D2$NEG
-  [symbol]
-
-D2$NEG names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$NEG ...).
-    see function: %D2$NEG
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$NEG
+ ;   [symbol]
+ ;
+ ; D2$NEG names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$NEG
+ ;     macro wrapper: D2$NEG
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$NEG!
+
+#### D2$NEG!
 
 ```
 broadcast for fx: -D2NEG
 macroname: D2$NEG!
+ex: (D2$NEG! a ...) performs (mvc #'-D2NEG a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$NEG!
-  [symbol]
-
-D2$NEG! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$NEG! ...).
-    see function: %D2$NEG!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$NEG!
+ ;   [symbol]
+ ;
+ ; D2$NEG! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$NEG!
+ ;     macro wrapper: D2$NEG!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$NORM
+
+#### D2$NORM
 
 ```
 broadcast for fx: -D2NORM
 macroname: D2$NORM
+ex: (D2$NORM a ...) performs (mvc #'-D2NORM a[i] ...) for every row in a.
 
-
-VEQ:D2$NORM
-  [symbol]
-
-D2$NORM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$NORM ...).
-    see function: %D2$NORM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$NORM
+ ;   [symbol]
+ ;
+ ; D2$NORM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$NORM
+ ;     macro wrapper: D2$NORM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$NORM!
+
+#### D2$NORM!
 
 ```
 broadcast for fx: -D2NORM
 macroname: D2$NORM!
+ex: (D2$NORM! a ...) performs (mvc #'-D2NORM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$NORM!
-  [symbol]
-
-D2$NORM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$NORM! ...).
-    see function: %D2$NORM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$NORM!
+ ;   [symbol]
+ ;
+ ; D2$NORM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$NORM!
+ ;     macro wrapper: D2$NORM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$ONE
 
-```
-:missing:
-
-VEQ:D2$ONE
-  [symbol]
-
-D2$ONE names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### D2$POINT
+#### D2$NUM
 
 ```
-macro wrapper: (mvc #'%D2$POINT ...).
-see function: %D2$POINT
-VEQ:D2$POINT
-  [symbol]
+number of elements in 2d array.
+typed.
 
-D2$POINT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$POINT ...).
-    see function: %D2$POINT
-  Source file: /data/x/veq/src/shapes.lisp
+ ; VEQ:D2$NUM
+ ;   [symbol]
+ ;
+ ; D2$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 2d array.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D2$POLYGON
 
-```
-:missing:
-
-VEQ:D2$POLYGON
-  [symbol]
-```
-### D2$RECT
+#### D2$ONE
 
 ```
-:missing:
+make 2d array of ones.
+typed.
 
-VEQ:D2$RECT
-  [symbol]
+ ; VEQ:D2$ONE
+ ;   [symbol]
+ ;
+ ; D2$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d array of ones.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D2$ROT
+
+#### D2$POINT
+
+```
+fx: %D2$POINT
+macro wrapper: D2$POINT
+
+defined via veq:def*
+
+ ; VEQ:D2$POINT
+ ;   [symbol]
+ ;
+ ; D2$POINT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$POINT
+ ;     macro wrapper: D2$POINT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### D2$ROT
 
 ```
 broadcast for fx: -D2ROT
 macroname: D2$ROT
+ex: (D2$ROT a ...) performs (mvc #'-D2ROT a[i] ...) for every row in a.
 
-
-VEQ:D2$ROT
-  [symbol]
-
-D2$ROT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$ROT ...).
-    see function: %D2$ROT
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$ROT
+ ;   [symbol]
+ ;
+ ; D2$ROT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$ROT
+ ;     macro wrapper: D2$ROT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$ROT!
+
+#### D2$ROT!
 
 ```
 broadcast for fx: -D2ROT
 macroname: D2$ROT!
+ex: (D2$ROT! a ...) performs (mvc #'-D2ROT a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$ROT!
-  [symbol]
-
-D2$ROT! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$ROT! ...).
-    see function: %D2$ROT!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$ROT!
+ ;   [symbol]
+ ;
+ ; D2$ROT! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$ROT!
+ ;     macro wrapper: D2$ROT!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$ROTS
+
+#### D2$ROTS
 
 ```
 broadcast for fx: -D2ROTS
 macroname: D2$ROTS
+ex: (D2$ROTS a ...) performs (mvc #'-D2ROTS a[i] ...) for every row in a.
 
-
-VEQ:D2$ROTS
-  [symbol]
-
-D2$ROTS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$ROTS ...).
-    see function: %D2$ROTS
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$ROTS
+ ;   [symbol]
+ ;
+ ; D2$ROTS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$ROTS
+ ;     macro wrapper: D2$ROTS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$ROTS!
+
+#### D2$ROTS!
 
 ```
 broadcast for fx: -D2ROTS
 macroname: D2$ROTS!
+ex: (D2$ROTS! a ...) performs (mvc #'-D2ROTS a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$ROTS!
-  [symbol]
-
-D2$ROTS! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$ROTS! ...).
-    see function: %D2$ROTS!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$ROTS!
+ ;   [symbol]
+ ;
+ ; D2$ROTS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$ROTS!
+ ;     macro wrapper: D2$ROTS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$SCALE
+
+#### D2$SCALE
 
 ```
 broadcast for fx: -D2SCALE
 macroname: D2$SCALE
+ex: (D2$SCALE a ...) performs (mvc #'-D2SCALE a[i] ...) for every row in a.
 
-
-VEQ:D2$SCALE
-  [symbol]
-
-D2$SCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$SCALE ...).
-    see function: %D2$SCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$SCALE
+ ;   [symbol]
+ ;
+ ; D2$SCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$SCALE
+ ;     macro wrapper: D2$SCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$SCALE!
+
+#### D2$SCALE!
 
 ```
 broadcast for fx: -D2SCALE
 macroname: D2$SCALE!
+ex: (D2$SCALE! a ...) performs (mvc #'-D2SCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D2$SCALE!
-  [symbol]
-
-D2$SCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2$SCALE! ...).
-    see function: %D2$SCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D2$SCALE!
+ ;   [symbol]
+ ;
+ ; D2$SCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2$SCALE!
+ ;     macro wrapper: D2$SCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D2$SQUARE
 
-```
-:missing:
-
-VEQ:D2$SQUARE
-  [symbol]
-```
-### D2$SUM
+#### D2$SUM
 
 ```
-:missing:
+sum all rows of 2d array.
 
-VEQ:D2$SUM
-  [symbol]
-
-D2$SUM names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T))
-                 (VALUES DOUBLE-FLOAT DOUBLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-reduce.lisp
+ ; VEQ:D2$SUM
+ ;   [symbol]
+ ;
+ ; D2$SUM names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T))
+ ;                  (VALUES DOUBLE-FLOAT DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     sum all rows of 2d array.
+ ;   Source file: /data/x/veq/src/array-reduce.lisp
 ```
-### D2$TAKE
 
-```
-:missing:
-
-VEQ:D2$TAKE
-  [symbol]
-
-D2$TAKE names a compiled function:
-  Lambda-list: (A INDS &KEY RES)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) T &KEY (:RES T))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
-  Source file: /data/x/veq/src/array-take.lisp
-```
-### D2$VAL
+#### D2$TAKE
 
 ```
-:missing:
+returns 2d array with rows for inds.
+use :res put result in existing array
 
-VEQ:D2$VAL
-  [symbol]
-
-D2$VAL names a compiled function:
-  Lambda-list: (V &OPTIONAL (N 1))
-  Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:D2$TAKE
+ ;   [symbol]
+ ;
+ ; D2$TAKE names a compiled function:
+ ;   Lambda-list: (A INDS &KEY RES)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY DOUBLE-FLOAT) SEQUENCE &KEY (:RES T))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
+ ;   Documentation:
+ ;     returns 2d array with rows for inds.
+ ;     use :res put result in existing array
+ ;   Source file: /data/x/veq/src/array-take.lisp
 ```
-### D2$WITH-ROWS
 
-```
-:missing:
-
-VEQ:D2$WITH-ROWS
-  [symbol]
-```
-### D2$ZERO
+#### D2$VAL
 
 ```
-:missing:
+make 2d array of val.
+typed.
 
-VEQ:D2$ZERO
-  [symbol]
-
-D2$ZERO names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:D2$VAL
+ ;   [symbol]
+ ;
+ ; D2$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d array of val.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D2*
+
+#### :context: D2$WITH-ROWS
+
+```
+make 2d
+```
+
+#### D2$ZERO
+
+```
+make 2d array of zeros.
+typed.
+
+ ; VEQ:D2$ZERO
+ ;   [symbol]
+ ;
+ ; D2$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d array of zeros.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### :context: D2\*
 
 ```
 veq context op: D2*
@@ -1722,7 +2113,8 @@ fxname: -D2*
 args: (AX AY BX BY)
 body: (VALUES (* AX BX) (* AY BY))
 ```
-### D2+
+
+#### :context: D2+
 
 ```
 veq context op: D2+
@@ -1730,7 +2122,8 @@ fxname: -D2+
 args: (AX AY BX BY)
 body: (VALUES (+ AX BX) (+ AY BY))
 ```
-### D2-
+
+#### :context: D2-
 
 ```
 veq context op: D2-
@@ -1738,7 +2131,8 @@ fxname: -D2-
 args: (AX AY BX BY)
 body: (VALUES (- AX BX) (- AY BY))
 ```
-### D2.
+
+#### :context: D2.
 
 ```
 veq context op: D2.
@@ -1746,7 +2140,8 @@ fxname: -D2.
 args: (AX AY BX BY)
 body: (+ (* AX BX) (* AY BY))
 ```
-### D2/
+
+#### :context: D2/
 
 ```
 veq context op: D2/
@@ -1754,7 +2149,8 @@ fxname: -D2/
 args: (AX AY BX BY)
 body: (VALUES (/ AX BX) (/ AY BY))
 ```
-### D2^
+
+#### :context: D2^
 
 ```
 veq context op: D2^
@@ -1762,7 +2158,8 @@ fxname: -D2^
 args: (A B S)
 body: (VALUES (EXPT A S) (EXPT B S))
 ```
-### D2ABS
+
+#### :context: D2ABS
 
 ```
 veq context op: D2ABS
@@ -1770,7 +2167,8 @@ fxname: -D2ABS
 args: (A B)
 body: (VALUES (ABS A) (ABS B))
 ```
-### D2ANGLE
+
+#### :context: D2ANGLE
 
 ```
 veq context op: D2ANGLE
@@ -1778,7 +2176,8 @@ fxname: -D2ANGLE
 args: (A B)
 body: (MVC #'ATAN (-D2NORM B A))
 ```
-### D2CROSS
+
+#### :context: D2CROSS
 
 ```
 veq context op: D2CROSS
@@ -1786,7 +2185,8 @@ fxname: -D2CROSS
 args: (AX AY BX BY)
 body: (- (* AX BY) (* AY BX))
 ```
-### D2DST
+
+#### :context: D2DST
 
 ```
 veq context op: D2DST
@@ -1794,7 +2194,8 @@ fxname: -D2DST
 args: (AX AY BX BY)
 body: (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY)))))
 ```
-### D2DST2
+
+#### :context: D2DST2
 
 ```
 veq context op: D2DST2
@@ -1802,7 +2203,8 @@ fxname: -D2DST2
 args: (AX AY BX BY)
 body: (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY)))
 ```
-### D2EXP
+
+#### :context: D2EXP
 
 ```
 veq context op: D2EXP
@@ -1810,7 +2212,8 @@ fxname: -D2EXP
 args: (A B)
 body: (VALUES (EXP A) (EXP B))
 ```
-### D2FLIP
+
+#### :context: D2FLIP
 
 ```
 veq context op: D2FLIP
@@ -1818,7 +2221,8 @@ fxname: -D2FLIP
 args: (A B)
 body: (VALUES B A)
 ```
-### D2FROM
+
+#### :context: D2FROM
 
 ```
 veq context op: D2FROM
@@ -1826,7 +2230,8 @@ fxname: -D2FROM
 args: (AX AY BX BY S)
 body: (-D2+ AX AY (* BX S) (* BY S))
 ```
-### D2I-
+
+#### :context: D2I-
 
 ```
 veq context op: D2I-
@@ -1834,7 +2239,8 @@ fxname: -D2I-
 args: (AX AY BX BY)
 body: (VALUES (- BX AX) (- BY AY))
 ```
-### D2I/
+
+#### :context: D2I/
 
 ```
 veq context op: D2I/
@@ -1842,7 +2248,8 @@ fxname: -D2I/
 args: (AX AY BX BY)
 body: (VALUES (/ BX AX) (/ BY AY))
 ```
-### D2ISCALE
+
+#### :context: D2ISCALE
 
 ```
 veq context op: D2ISCALE
@@ -1850,7 +2257,8 @@ fxname: -D2ISCALE
 args: (A B S)
 body: (VALUES (/ A S) (/ B S))
 ```
-### D2LEN
+
+#### :context: D2LEN
 
 ```
 veq context op: D2LEN
@@ -1858,7 +2266,8 @@ fxname: -D2LEN
 args: (A B)
 body: (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE A B)))))
 ```
-### D2LEN2
+
+#### :context: D2LEN2
 
 ```
 veq context op: D2LEN2
@@ -1866,7 +2275,8 @@ fxname: -D2LEN2
 args: (A B)
 body: (THE POS-DF (MVC #'+ (-D2SQUARE A B)))
 ```
-### D2LERP
+
+#### :context: D2LERP
 
 ```
 veq context op: D2LERP
@@ -1874,15 +2284,16 @@ fxname: -D2LERP
 args: (AX AY BX BY S)
 body: (-D2+ AX AY (* (- BX AX) S) (* (- BY AY) S))
 ```
-### D2LET
+
+#### :context: D2LET
 
 ```
-:missing:
-
-VEQ:D2LET
-  [symbol]
+make 2d let.
+ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
+note that this behaves as native lisp let*.
 ```
-### D2MAX
+
+#### :context: D2MAX
 
 ```
 veq context op: D2MAX
@@ -1890,22 +2301,25 @@ fxname: -D2MAX
 args: (A B)
 body: (MAX A B)
 ```
-### D2MEYE
+
+#### D2MEYE
 
 ```
-return eye matrix for dimension
-VEQ:D2MEYE
-  [symbol]
+return 2d eye matrix.
 
-D2MEYE names a compiled function:
-  Lambda-list: (&OPTIONAL (V 1.0d0))
-  Derived type: (FUNCTION (&OPTIONAL DOUBLE-FLOAT)
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (4)) &OPTIONAL))
-  Documentation:
-    return eye matrix for dimension
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D2MEYE
+ ;   [symbol]
+ ;
+ ; D2MEYE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (V 1.0d0))
+ ;   Derived type: (FUNCTION (&OPTIONAL DOUBLE-FLOAT)
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (4)) &OPTIONAL))
+ ;   Documentation:
+ ;     return 2d eye matrix.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D2MID
+
+#### :context: D2MID
 
 ```
 veq context op: D2MID
@@ -1913,7 +2327,8 @@ fxname: -D2MID
 args: (AX AY BX BY)
 body: (VALUES (* 0.5d0 (+ AX BX)) (* 0.5d0 (+ AY BY)))
 ```
-### D2MIN
+
+#### :context: D2MIN
 
 ```
 veq context op: D2MIN
@@ -1921,52 +2336,59 @@ fxname: -D2MIN
 args: (A B)
 body: (MIN A B)
 ```
-### D2MINV
+
+#### D2MINV
 
 ```
-invert 2x2 matrix
-VEQ:D2MINV
-  [symbol]
+invert 2x2 matrix. non-destructive.
 
-D2MINV names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Documentation:
-    invert 2x2 matrix
-  Source file: /data/x/veq/src/mat-inv.lisp
+ ; VEQ:D2MINV
+ ;   [symbol]
+ ;
+ ; D2MINV names a compiled function:
+ ;   Lambda-list: (A)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     invert 2x2 matrix. non-destructive.
+ ;   Source file: /data/x/veq/src/mat-inv.lisp
 ```
-### D2MM
+
+#### D2MM
 
 ```
 multiply mat * mat
 of type: DVEC
-VEQ:D2MM
-  [symbol]
 
-D2MM names a macro:
-  Lambda-list: (A*349 B*351)
-  Documentation:
-    multiply mat * mat
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D2MM
+ ;   [symbol]
+ ;
+ ; D2MM names a macro:
+ ;   Lambda-list: (A*349 B*351)
+ ;   Documentation:
+ ;     multiply mat * mat
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D2MMT
+
+#### D2MMT
 
 ```
 multiply mat * (transpose mat)
 of type: DVEC
-VEQ:D2MMT
-  [symbol]
 
-D2MMT names a macro:
-  Lambda-list: (A*407 B*409)
-  Documentation:
-    multiply mat * (transpose mat)
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D2MMT
+ ;   [symbol]
+ ;
+ ; D2MMT names a macro:
+ ;   Lambda-list: (A*407 B*409)
+ ;   Documentation:
+ ;     multiply mat * (transpose mat)
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D2MOD
+
+#### :context: D2MOD
 
 ```
 veq context op: D2MOD
@@ -1974,142 +2396,171 @@ fxname: -D2MOD
 args: (A B S)
 body: (VALUES (MOD A S) (MOD B S))
 ```
-### D2MROT
+
+#### D2MROT
 
 ```
-macro wrapper: (mvc #'%D2MROT ...).
-see function: %D2MROT
-VEQ:D2MROT
-  [symbol]
+fx: %D2MROT
+macro wrapper: D2MROT
 
-D2MROT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2MROT ...).
-    see function: %D2MROT
-  Source file: /data/x/veq/src/mat.lisp
-```
-### D2MROT*
+defined via veq:def*
 
+ ; VEQ:D2MROT
+ ;   [symbol]
+ ;
+ ; D2MROT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2MROT
+ ;     macro wrapper: D2MROT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-macro wrapper: (mvc #'%D2MROT* ...).
-see function: %D2MROT*
-VEQ:D2MROT*
-  [symbol]
 
-D2MROT* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2MROT* ...).
-    see function: %D2MROT*
-  Source file: /data/x/veq/src/mat.lisp
-```
-### D2MSCALE
+#### D2MROT\*
 
 ```
-macro wrapper: (mvc #'%D2MSCALE ...) in veq context.
-see function: %D2MSCALE
-VEQ:D2MSCALE
-  [symbol]
+fx: %D2MROT*
+macro wrapper: D2MROT*
 
-D2MSCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2MSCALE ...) in veq context.
-    see function: %D2MSCALE
-  Source file: /data/x/veq/src/mat.lisp
+defined via veq:def*
+
+ ; VEQ:D2MROT*
+ ;   [symbol]
+ ;
+ ; D2MROT* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2MROT*
+ ;     macro wrapper: D2MROT*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D2MT!
+
+#### D2MSCALE
 
 ```
-transpose matrix of type ~a in-place
-VEQ:D2MT!
-  [symbol]
+fx: %D2MSCALE
+macro wrapper: D2MSCALE
 
-D2MT! names a macro:
-  Lambda-list: (A1)
-  Documentation:
-    transpose matrix of type ~a in-place
-  Source file: /data/x/veq/src/mat.lisp
+defined via veq:fvdef*
+
+ ; VEQ:D2MSCALE
+ ;   [symbol]
+ ;
+ ; D2MSCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2MSCALE
+ ;     macro wrapper: D2MSCALE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D2MTM
+
+#### D2MT!
+
+```
+transpose 2d matrix in-place.
+
+ ; VEQ:D2MT!
+ ;   [symbol]
+ ;
+ ; D2MT! names a macro:
+ ;   Lambda-list: (A1)
+ ;   Documentation:
+ ;     transpose 2d matrix in-place.
+ ;   Source file: /data/x/veq/src/mat.lisp
+```
+
+#### D2MTM
 
 ```
 multiply (transpose mat) * mat
 of type: DVEC
-VEQ:D2MTM
-  [symbol]
 
-D2MTM names a macro:
-  Lambda-list: (A*436 B*438)
-  Documentation:
-    multiply (transpose mat) * mat
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D2MTM
+ ;   [symbol]
+ ;
+ ; D2MTM names a macro:
+ ;   Lambda-list: (A*436 B*438)
+ ;   Documentation:
+ ;     multiply (transpose mat) * mat
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D2MTMT
+
+#### D2MTMT
 
 ```
 multiply (transpose mat) * (transpose mat)
 of type: DVEC
-VEQ:D2MTMT
-  [symbol]
 
-D2MTMT names a macro:
-  Lambda-list: (A*378 B*380)
-  Documentation:
-    multiply (transpose mat) * (transpose mat)
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D2MTMT
+ ;   [symbol]
+ ;
+ ; D2MTMT names a macro:
+ ;   Lambda-list: (A*378 B*380)
+ ;   Documentation:
+ ;     multiply (transpose mat) * (transpose mat)
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D2MTRANS
 
-```
-macro wrapper: (mvc #'%D2MTRANS ...) in veq context.
-see function: %D2MTRANS
-VEQ:D2MTRANS
-  [symbol]
-
-D2MTRANS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D2MTRANS ...) in veq context.
-    see function: %D2MTRANS
-  Source file: /data/x/veq/src/mat.lisp
-```
-### D2MTV
+#### D2MTRANS
 
 ```
-:missing:
+fx: %D2MTRANS
+macro wrapper: D2MTRANS
 
-VEQ:D2MTV
-  [symbol]
+defined via veq:fvdef*
 
-D2MTV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D2MTRANS
+ ;   [symbol]
+ ;
+ ; D2MTRANS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D2MTRANS
+ ;     macro wrapper: D2MTRANS
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D2MV
 
-```
-:missing:
-
-VEQ:D2MV
-  [symbol]
-
-D2MV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
-```
-### D2MVB
+#### D2MTV
 
 ```
-:missing:
+transpose(mat) * v. for 2d matrix and vector.
 
-VEQ:D2MVB
-  [symbol]
+ ; VEQ:D2MTV
+ ;   [symbol]
+ ;
+ ; D2MTV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     transpose(mat) * v. for 2d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D2NEG
+
+#### D2MV
+
+```
+mat * v. for 2d matrix and vector.
+
+ ; VEQ:D2MV
+ ;   [symbol]
+ ;
+ ; D2MV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     mat * v. for 2d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
+```
+
+#### :context: D2NEG
 
 ```
 veq context op: D2NEG
@@ -2117,7 +2568,8 @@ fxname: -D2NEG
 args: (A B)
 body: (VALUES (- A) (- B))
 ```
-### D2NORM
+
+#### :context: D2NORM
 
 ```
 veq context op: D2NORM
@@ -2125,15 +2577,14 @@ fxname: -D2NORM
 args: (A B)
 body: (MVC #'-D2ISCALE A B (MVC #'-D2LEN A B))
 ```
-### D2NSUM
+
+#### :context: D2NSUM
 
 ```
-:missing:
-
-VEQ:D2NSUM
-  [symbol]
+make 2d
 ```
-### D2ON-CIRC
+
+#### :context: D2ON-CIRC
 
 ```
 veq context op: D2ON-CIRC
@@ -2141,7 +2592,8 @@ fxname: -D2ON-CIRC
 args: (A RAD)
 body: (MVC #'-D2SCALE (-DCOS-SIN (* A DPII)) RAD)
 ```
-### D2ON-CIRC*
+
+#### :context: D2ON-CIRC\*
 
 ```
 veq context op: D2ON-CIRC*
@@ -2149,7 +2601,8 @@ fxname: -D2ON-CIRC*
 args: (A RAD)
 body: (MVC #'-D2SCALE (-DCOS-SIN A) RAD)
 ```
-### D2PERP
+
+#### :context: D2PERP
 
 ```
 veq context op: D2PERP
@@ -2157,7 +2610,8 @@ fxname: -D2PERP
 args: (A B)
 body: (VALUES B (- A))
 ```
-### D2PERP*
+
+#### :context: D2PERP\*
 
 ```
 veq context op: D2PERP*
@@ -2165,23 +2619,25 @@ fxname: -D2PERP*
 args: (A B)
 body: (VALUES (- B) A)
 ```
-### D2REP
+
+#### :context: D2REP
 
 ```
-:missing:
-
-VEQ:D2REP
-  [symbol]
+make 2d rep.
+ex: (f3rep (fx))
+corresponds to
+(values (fx) (fx) (fx))
 ```
-### D2REP*
+
+#### :context: D2REP\*
 
 ```
-:missing:
-
-VEQ:D2REP*
-  [symbol]
+make 2d rep*.
+ex: (f3rep (fx))
+returns (values v v v) where v = (fx)
 ```
-### D2ROT
+
+#### :context: D2ROT
 
 ```
 veq context op: D2ROT
@@ -2194,7 +2650,8 @@ body: (LET ((COSA (COS A)) (SINA (SIN A)))
      SINA))
   (VALUES (- (* X COSA) (* Y SINA)) (+ (* X SINA) (* Y COSA))))
 ```
-### D2ROTS
+
+#### :context: D2ROTS
 
 ```
 veq context op: D2ROTS
@@ -2202,7 +2659,8 @@ fxname: -D2ROTS
 args: (X Y A SX SY)
 body: (MVC #'-D2+ (MVC #'-D2ROT (-D2- X Y SX SY) A) SX SY)
 ```
-### D2SCALE
+
+#### :context: D2SCALE
 
 ```
 veq context op: D2SCALE
@@ -2210,7 +2668,8 @@ fxname: -D2SCALE
 args: (A B S)
 body: (VALUES (* A S) (* B S))
 ```
-### D2SQRT
+
+#### :context: D2SQRT
 
 ```
 veq context op: D2SQRT
@@ -2218,7 +2677,8 @@ fxname: -D2SQRT
 args: (A B)
 body: (VALUES (THE POS-DF (SQRT (THE POS-DF A))) (THE POS-DF (SQRT (THE POS-DF B))))
 ```
-### D2SQUARE
+
+#### :context: D2SQUARE
 
 ```
 veq context op: D2SQUARE
@@ -2226,661 +2686,806 @@ fxname: -D2SQUARE
 args: (A B)
 body: (VALUES (* A A) (* B B))
 ```
-### D2VSET
+
+#### :context: D2VSET
 
 ```
-:missing:
-
-VEQ:D2VSET
-  [symbol]
+set 2d value.
+ex: (D2VSET (a) (fx ...))
+where (fx ...) returns 2 values.
 ```
-### D2~
 
-```
-:missing:
-
-VEQ:D2~
-  [symbol]
-```
-### D3
+#### :context: D2~
 
 ```
-:missing:
-
-VEQ:D3
-  [symbol]
+make 2d vector in veq context.
+coerce to type.
 ```
-### D3$
+
+#### :context: D3
 
 ```
-:missing:
-
-VEQ:D3$
-  [symbol]
+make 3d vector in veq context.
+strict.
 ```
-### D3$*
+
+#### :context: D3$
+
+```
+returns values from 3d array.
+supports multiple indices. default is 0.
+ex: (D3$ a i j ...) returns (values a[i] a[j] ...).
+note that the number of values depends on the dimension.
+```
+
+#### D3$\*
 
 ```
 broadcast for fx: -D3*
 macroname: D3$*
+ex: (D3$* a ...) performs (mvc #'-D3* a[i] ...) for every row in a.
 
-
-VEQ:D3$*
-  [symbol]
-
-D3$* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$* ...).
-    see function: %D3$*
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$*
+ ;   [symbol]
+ ;
+ ; D3$* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$*
+ ;     macro wrapper: D3$*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$*!
+
+#### D3$\*!
 
 ```
 broadcast for fx: -D3*
 macroname: D3$*!
+ex: (D3$*! a ...) performs (mvc #'-D3* a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$*!
-  [symbol]
-
-D3$*! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$*! ...).
-    see function: %D3$*!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$*!
+ ;   [symbol]
+ ;
+ ; D3$*! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$*!
+ ;     macro wrapper: D3$*!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$+
+
+#### D3$+
 
 ```
 broadcast for fx: -D3+
 macroname: D3$+
+ex: (D3$+ a ...) performs (mvc #'-D3+ a[i] ...) for every row in a.
 
-
-VEQ:D3$+
-  [symbol]
-
-D3$+ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$+ ...).
-    see function: %D3$+
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$+
+ ;   [symbol]
+ ;
+ ; D3$+ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$+
+ ;     macro wrapper: D3$+
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$+!
+
+#### D3$+!
 
 ```
 broadcast for fx: -D3+
 macroname: D3$+!
+ex: (D3$+! a ...) performs (mvc #'-D3+ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$+!
-  [symbol]
-
-D3$+! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$+! ...).
-    see function: %D3$+!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$+!
+ ;   [symbol]
+ ;
+ ; D3$+! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$+!
+ ;     macro wrapper: D3$+!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$-
+
+#### D3$-
 
 ```
 broadcast for fx: -D3-
 macroname: D3$-
+ex: (D3$- a ...) performs (mvc #'-D3- a[i] ...) for every row in a.
 
-
-VEQ:D3$-
-  [symbol]
-
-D3$- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$- ...).
-    see function: %D3$-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$-
+ ;   [symbol]
+ ;
+ ; D3$- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$-
+ ;     macro wrapper: D3$-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$-!
+
+#### D3$-!
 
 ```
 broadcast for fx: -D3-
 macroname: D3$-!
+ex: (D3$-! a ...) performs (mvc #'-D3- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$-!
-  [symbol]
-
-D3$-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$-! ...).
-    see function: %D3$-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$-!
+ ;   [symbol]
+ ;
+ ; D3$-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$-!
+ ;     macro wrapper: D3$-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$/
+
+#### D3$/
 
 ```
 broadcast for fx: -D3/
 macroname: D3$/
+ex: (D3$/ a ...) performs (mvc #'-D3/ a[i] ...) for every row in a.
 
-
-VEQ:D3$/
-  [symbol]
-
-D3$/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$/ ...).
-    see function: %D3$/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$/
+ ;   [symbol]
+ ;
+ ; D3$/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$/
+ ;     macro wrapper: D3$/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$/!
+
+#### D3$/!
 
 ```
 broadcast for fx: -D3/
 macroname: D3$/!
+ex: (D3$/! a ...) performs (mvc #'-D3/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$/!
-  [symbol]
-
-D3$/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$/! ...).
-    see function: %D3$/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$/!
+ ;   [symbol]
+ ;
+ ; D3$/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$/!
+ ;     macro wrapper: D3$/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$ABS
+
+#### D3$ABS
 
 ```
 broadcast for fx: -D3ABS
 macroname: D3$ABS
+ex: (D3$ABS a ...) performs (mvc #'-D3ABS a[i] ...) for every row in a.
 
-
-VEQ:D3$ABS
-  [symbol]
-
-D3$ABS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$ABS ...).
-    see function: %D3$ABS
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$ABS
+ ;   [symbol]
+ ;
+ ; D3$ABS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$ABS
+ ;     macro wrapper: D3$ABS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$ABS!
+
+#### D3$ABS!
 
 ```
 broadcast for fx: -D3ABS
 macroname: D3$ABS!
+ex: (D3$ABS! a ...) performs (mvc #'-D3ABS a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$ABS!
-  [symbol]
-
-D3$ABS! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$ABS! ...).
-    see function: %D3$ABS!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$ABS!
+ ;   [symbol]
+ ;
+ ; D3$ABS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$ABS!
+ ;     macro wrapper: D3$ABS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$COPY
 
-```
-:missing:
-
-VEQ:D3$COPY
-  [symbol]
-```
-### D3$FROM
+#### D3$FROM
 
 ```
 broadcast for fx: -D3FROM
 macroname: D3$FROM
+ex: (D3$FROM a ...) performs (mvc #'-D3FROM a[i] ...) for every row in a.
 
-
-VEQ:D3$FROM
-  [symbol]
-
-D3$FROM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$FROM ...).
-    see function: %D3$FROM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$FROM
+ ;   [symbol]
+ ;
+ ; D3$FROM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$FROM
+ ;     macro wrapper: D3$FROM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$FROM!
+
+#### D3$FROM!
 
 ```
 broadcast for fx: -D3FROM
 macroname: D3$FROM!
+ex: (D3$FROM! a ...) performs (mvc #'-D3FROM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$FROM!
-  [symbol]
-
-D3$FROM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$FROM! ...).
-    see function: %D3$FROM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$FROM!
+ ;   [symbol]
+ ;
+ ; D3$FROM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$FROM!
+ ;     macro wrapper: D3$FROM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$FXLSPACE
+
+#### :context: D3$FXLSPACE
 
 ```
-:missing:
-
-VEQ:D3$FXLSPACE
-  [symbol]
+args: ((n a b &key (end t)) &body fx)
+for 3d points a, b.
+assumes the last form in fx is a function and does
+(mvc fx i x ...) for points between a, b.
+ex: (D3$FXLSPACE (n a b) (lambda (i (:va 3 a b)) (vpr i a b)))
 ```
-### D3$I-
+
+#### D3$I-
 
 ```
 broadcast for fx: -D3I-
 macroname: D3$I-
+ex: (D3$I- a ...) performs (mvc #'-D3I- a[i] ...) for every row in a.
 
-
-VEQ:D3$I-
-  [symbol]
-
-D3$I- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$I- ...).
-    see function: %D3$I-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$I-
+ ;   [symbol]
+ ;
+ ; D3$I- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$I-
+ ;     macro wrapper: D3$I-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$I-!
+
+#### D3$I-!
 
 ```
 broadcast for fx: -D3I-
 macroname: D3$I-!
+ex: (D3$I-! a ...) performs (mvc #'-D3I- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$I-!
-  [symbol]
-
-D3$I-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$I-! ...).
-    see function: %D3$I-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$I-!
+ ;   [symbol]
+ ;
+ ; D3$I-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$I-!
+ ;     macro wrapper: D3$I-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$I/
+
+#### D3$I/
 
 ```
 broadcast for fx: -D3I/
 macroname: D3$I/
+ex: (D3$I/ a ...) performs (mvc #'-D3I/ a[i] ...) for every row in a.
 
-
-VEQ:D3$I/
-  [symbol]
-
-D3$I/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$I/ ...).
-    see function: %D3$I/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$I/
+ ;   [symbol]
+ ;
+ ; D3$I/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$I/
+ ;     macro wrapper: D3$I/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$I/!
+
+#### D3$I/!
 
 ```
 broadcast for fx: -D3I/
 macroname: D3$I/!
+ex: (D3$I/! a ...) performs (mvc #'-D3I/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$I/!
-  [symbol]
-
-D3$I/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$I/! ...).
-    see function: %D3$I/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$I/!
+ ;   [symbol]
+ ;
+ ; D3$I/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$I/!
+ ;     macro wrapper: D3$I/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$ISCALE
+
+#### D3$ISCALE
 
 ```
 broadcast for fx: -D3ISCALE
 macroname: D3$ISCALE
+ex: (D3$ISCALE a ...) performs (mvc #'-D3ISCALE a[i] ...) for every row in a.
 
-
-VEQ:D3$ISCALE
-  [symbol]
-
-D3$ISCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$ISCALE ...).
-    see function: %D3$ISCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$ISCALE
+ ;   [symbol]
+ ;
+ ; D3$ISCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$ISCALE
+ ;     macro wrapper: D3$ISCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$ISCALE!
+
+#### D3$ISCALE!
 
 ```
 broadcast for fx: -D3ISCALE
 macroname: D3$ISCALE!
+ex: (D3$ISCALE! a ...) performs (mvc #'-D3ISCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$ISCALE!
-  [symbol]
-
-D3$ISCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$ISCALE! ...).
-    see function: %D3$ISCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$ISCALE!
+ ;   [symbol]
+ ;
+ ; D3$ISCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$ISCALE!
+ ;     macro wrapper: D3$ISCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$LAST
+
+#### D3$LAST
 
 ```
-:missing:
+get last row of 3d array as (values ...)
 
-VEQ:D3$LAST
-  [symbol]
-
-D3$LAST names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
-                 (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
-                         &OPTIONAL))
-  Source file: /data/x/veq/src/array-rows.lisp
+ ; VEQ:D3$LAST
+ ;   [symbol]
+ ;
+ ; D3$LAST names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     get last row of 3d array as (values ...)
+ ;   Source file: /data/x/veq/src/array-rows.lisp
 ```
-### D3$LEN
+
+#### D3$LEN
 
 ```
 broadcast for fx: -D3LEN
 macroname: D3$LEN
+ex: (D3$LEN a ...) performs (mvc #'-D3LEN a[i] ...) for every row in a.
 
-
-VEQ:D3$LEN
-  [symbol]
-
-D3$LEN names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$LEN ...).
-    see function: %D3$LEN
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$LEN
+ ;   [symbol]
+ ;
+ ; D3$LEN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$LEN
+ ;     macro wrapper: D3$LEN
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$LEN2
+
+#### D3$LEN2
 
 ```
 broadcast for fx: -D3LEN2
 macroname: D3$LEN2
+ex: (D3$LEN2 a ...) performs (mvc #'-D3LEN2 a[i] ...) for every row in a.
 
-
-VEQ:D3$LEN2
-  [symbol]
-
-D3$LEN2 names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$LEN2 ...).
-    see function: %D3$LEN2
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$LEN2
+ ;   [symbol]
+ ;
+ ; D3$LEN2 names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$LEN2
+ ;     macro wrapper: D3$LEN2
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$LINE
 
-```
-macro wrapper: (mvc #'%D3$LINE ...).
-see function: %D3$LINE
-VEQ:D3$LINE
-  [symbol]
-
-D3$LINE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$LINE ...).
-    see function: %D3$LINE
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### D3$LSPACE
+#### D3$LINE
 
 ```
-macro wrapper: (mvc #'%D3$LSPACE ...) in veq context.
-see function: %D3$LSPACE
-VEQ:D3$LSPACE
-  [symbol]
+fx: %D3$LINE
+macro wrapper: D3$LINE
 
-D3$LSPACE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$LSPACE ...) in veq context.
-    see function: %D3$LSPACE
-  Source file: /data/x/veq/src/lspace.lisp
-```
-### D3$MAKE
+defined via veq:def*
 
+ ; VEQ:D3$LINE
+ ;   [symbol]
+ ;
+ ; D3$LINE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$LINE
+ ;     macro wrapper: D3$LINE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-:missing:
 
-VEQ:D3$MAKE
-  [symbol]
-```
-### D3$MIMA
+#### D3$LSPACE
 
 ```
-:missing:
+fx: %D3$LSPACE
+macro wrapper: D3$LSPACE
 
-VEQ:D3$MIMA
-  [symbol]
+defined via veq:fvdef*
 
-D3$MIMA names a compiled function:
-  Lambda-list: (A0 &KEY (N (3$NUM A0)) INDS)
-  Derived type: (FUNCTION
-                 ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T) (:INDS T))
-                 (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
-                         DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
-                         &OPTIONAL))
-  Source file: /data/x/veq/src/array-mima.lisp
+ ; VEQ:D3$LSPACE
+ ;   [symbol]
+ ;
+ ; D3$LSPACE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$LSPACE
+ ;     macro wrapper: D3$LSPACE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/lspace.lisp
 ```
-### D3$NEG
+
+#### D3$MIMA
+
+```
+find min and max for all dimensions of 3 array.
+ex: (D3$MIMA &key n) returns (values xmin xmax ...).
+use n to limit to first n rows.
+
+ ; VEQ:D3$MIMA
+ ;   [symbol]
+ ;
+ ; D3$MIMA names a compiled function:
+ ;   Lambda-list: (A0 &KEY (N (3$NUM A0)) INDS)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T) (:INDS T))
+ ;                  (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
+ ;                          DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     find min and max for all dimensions of 3 array.
+ ;     ex: (D3$MIMA &key n) returns (values xmin xmax ...).
+ ;     use n to limit to first n rows.
+ ;   Source file: /data/x/veq/src/array-mima.lisp
+```
+
+#### D3$NEG
 
 ```
 broadcast for fx: -D3NEG
 macroname: D3$NEG
+ex: (D3$NEG a ...) performs (mvc #'-D3NEG a[i] ...) for every row in a.
 
-
-VEQ:D3$NEG
-  [symbol]
-
-D3$NEG names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$NEG ...).
-    see function: %D3$NEG
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$NEG
+ ;   [symbol]
+ ;
+ ; D3$NEG names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$NEG
+ ;     macro wrapper: D3$NEG
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$NEG!
+
+#### D3$NEG!
 
 ```
 broadcast for fx: -D3NEG
 macroname: D3$NEG!
+ex: (D3$NEG! a ...) performs (mvc #'-D3NEG a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$NEG!
-  [symbol]
-
-D3$NEG! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$NEG! ...).
-    see function: %D3$NEG!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$NEG!
+ ;   [symbol]
+ ;
+ ; D3$NEG! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$NEG!
+ ;     macro wrapper: D3$NEG!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$NORM
+
+#### D3$NORM
 
 ```
 broadcast for fx: -D3NORM
 macroname: D3$NORM
+ex: (D3$NORM a ...) performs (mvc #'-D3NORM a[i] ...) for every row in a.
 
-
-VEQ:D3$NORM
-  [symbol]
-
-D3$NORM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$NORM ...).
-    see function: %D3$NORM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$NORM
+ ;   [symbol]
+ ;
+ ; D3$NORM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$NORM
+ ;     macro wrapper: D3$NORM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$NORM!
+
+#### D3$NORM!
 
 ```
 broadcast for fx: -D3NORM
 macroname: D3$NORM!
+ex: (D3$NORM! a ...) performs (mvc #'-D3NORM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$NORM!
-  [symbol]
-
-D3$NORM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$NORM! ...).
-    see function: %D3$NORM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$NORM!
+ ;   [symbol]
+ ;
+ ; D3$NORM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$NORM!
+ ;     macro wrapper: D3$NORM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$ONE
 
-```
-:missing:
-
-VEQ:D3$ONE
-  [symbol]
-
-D3$ONE names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### D3$POINT
+#### D3$NUM
 
 ```
-macro wrapper: (mvc #'%D3$POINT ...).
-see function: %D3$POINT
-VEQ:D3$POINT
-  [symbol]
+number of elements in 3d array.
+typed.
 
-D3$POINT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$POINT ...).
-    see function: %D3$POINT
-  Source file: /data/x/veq/src/shapes.lisp
+ ; VEQ:D3$NUM
+ ;   [symbol]
+ ;
+ ; D3$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 3d array.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D3$SCALE
+
+#### D3$ONE
+
+```
+make 3d array of ones.
+typed.
+
+ ; VEQ:D3$ONE
+ ;   [symbol]
+ ;
+ ; D3$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d array of ones.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### D3$POINT
+
+```
+fx: %D3$POINT
+macro wrapper: D3$POINT
+
+defined via veq:def*
+
+ ; VEQ:D3$POINT
+ ;   [symbol]
+ ;
+ ; D3$POINT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$POINT
+ ;     macro wrapper: D3$POINT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### D3$SCALE
 
 ```
 broadcast for fx: -D3SCALE
 macroname: D3$SCALE
+ex: (D3$SCALE a ...) performs (mvc #'-D3SCALE a[i] ...) for every row in a.
 
-
-VEQ:D3$SCALE
-  [symbol]
-
-D3$SCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$SCALE ...).
-    see function: %D3$SCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$SCALE
+ ;   [symbol]
+ ;
+ ; D3$SCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$SCALE
+ ;     macro wrapper: D3$SCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$SCALE!
+
+#### D3$SCALE!
 
 ```
 broadcast for fx: -D3SCALE
 macroname: D3$SCALE!
+ex: (D3$SCALE! a ...) performs (mvc #'-D3SCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D3$SCALE!
-  [symbol]
-
-D3$SCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3$SCALE! ...).
-    see function: %D3$SCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D3$SCALE!
+ ;   [symbol]
+ ;
+ ; D3$SCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$SCALE!
+ ;     macro wrapper: D3$SCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D3$SUM
 
-```
-:missing:
-
-VEQ:D3$SUM
-  [symbol]
-
-D3$SUM names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T))
-                 (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
-                         &OPTIONAL))
-  Source file: /data/x/veq/src/array-reduce.lisp
-```
-### D3$TAKE
+#### D3$SUM
 
 ```
-:missing:
+sum all rows of 3d array.
 
-VEQ:D3$TAKE
-  [symbol]
-
-D3$TAKE names a compiled function:
-  Lambda-list: (A INDS &KEY RES)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) T &KEY (:RES T))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
-  Source file: /data/x/veq/src/array-take.lisp
+ ; VEQ:D3$SUM
+ ;   [symbol]
+ ;
+ ; D3$SUM names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T))
+ ;                  (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     sum all rows of 3d array.
+ ;   Source file: /data/x/veq/src/array-reduce.lisp
 ```
-### D3$VAL
 
-```
-:missing:
-
-VEQ:D3$VAL
-  [symbol]
-
-D3$VAL names a compiled function:
-  Lambda-list: (V &OPTIONAL (N 1))
-  Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### D3$WITH-ROWS
+#### D3$TAKE
 
 ```
-:missing:
+returns 3d array with rows for inds.
+use :res put result in existing array
 
-VEQ:D3$WITH-ROWS
-  [symbol]
+ ; VEQ:D3$TAKE
+ ;   [symbol]
+ ;
+ ; D3$TAKE names a compiled function:
+ ;   Lambda-list: (A INDS &KEY RES)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY DOUBLE-FLOAT) SEQUENCE &KEY (:RES T))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
+ ;   Documentation:
+ ;     returns 3d array with rows for inds.
+ ;     use :res put result in existing array
+ ;   Source file: /data/x/veq/src/array-take.lisp
 ```
-### D3$ZERO
+
+#### D3$VAL
 
 ```
-:missing:
+make 3d array of val.
+typed.
 
-VEQ:D3$ZERO
-  [symbol]
-
-D3$ZERO names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:D3$VAL
+ ;   [symbol]
+ ;
+ ; D3$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d array of val.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D3*
+
+#### :context: D3$WITH-ROWS
+
+```
+make 3d
+```
+
+#### D3$ZERO
+
+```
+make 3d array of zeros.
+typed.
+
+ ; VEQ:D3$ZERO
+ ;   [symbol]
+ ;
+ ; D3$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d array of zeros.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### :context: D3\*
 
 ```
 veq context op: D3*
@@ -2888,7 +3493,8 @@ fxname: -D3*
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (* AX BX) (* AY BY) (* AZ BZ))
 ```
-### D3+
+
+#### :context: D3+
 
 ```
 veq context op: D3+
@@ -2896,7 +3502,8 @@ fxname: -D3+
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ))
 ```
-### D3-
+
+#### :context: D3-
 
 ```
 veq context op: D3-
@@ -2904,7 +3511,8 @@ fxname: -D3-
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (- AX BX) (- AY BY) (- AZ BZ))
 ```
-### D3.
+
+#### :context: D3.
 
 ```
 veq context op: D3.
@@ -2912,7 +3520,8 @@ fxname: -D3.
 args: (AX AY AZ BX BY BZ)
 body: (+ (* AX BX) (* AY BY) (* AZ BZ))
 ```
-### D3/
+
+#### :context: D3/
 
 ```
 veq context op: D3/
@@ -2920,7 +3529,8 @@ fxname: -D3/
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ))
 ```
-### D3^
+
+#### :context: D3^
 
 ```
 veq context op: D3^
@@ -2928,7 +3538,8 @@ fxname: -D3^
 args: (A B C S)
 body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S))
 ```
-### D3ABS
+
+#### :context: D3ABS
 
 ```
 veq context op: D3ABS
@@ -2936,7 +3547,8 @@ fxname: -D3ABS
 args: (A B C)
 body: (VALUES (ABS A) (ABS B) (ABS C))
 ```
-### D3CROSS
+
+#### :context: D3CROSS
 
 ```
 veq context op: D3CROSS
@@ -2944,7 +3556,8 @@ fxname: -D3CROSS
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ)) (- (* AX BY) (* AY BX)))
 ```
-### D3DST
+
+#### :context: D3DST
 
 ```
 veq context op: D3DST
@@ -2952,7 +3565,8 @@ fxname: -D3DST
 args: (AX AY AZ BX BY BZ)
 body: (SQRT (THE POS-DF (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ)))))
 ```
-### D3DST2
+
+#### :context: D3DST2
 
 ```
 veq context op: D3DST2
@@ -2960,7 +3574,8 @@ fxname: -D3DST2
 args: (AX AY AZ BX BY BZ)
 body: (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ)))
 ```
-### D3EXP
+
+#### :context: D3EXP
 
 ```
 veq context op: D3EXP
@@ -2968,7 +3583,8 @@ fxname: -D3EXP
 args: (A B C)
 body: (VALUES (EXP A) (EXP B) (EXP C))
 ```
-### D3FROM
+
+#### :context: D3FROM
 
 ```
 veq context op: D3FROM
@@ -2976,7 +3592,8 @@ fxname: -D3FROM
 args: (AX AY AZ BX BY BZ S)
 body: (-D3+ AX AY AZ (* BX S) (* BY S) (* BZ S))
 ```
-### D3I-
+
+#### :context: D3I-
 
 ```
 veq context op: D3I-
@@ -2984,7 +3601,8 @@ fxname: -D3I-
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (- BX AX) (- BY AY) (- BZ AZ))
 ```
-### D3I/
+
+#### :context: D3I/
 
 ```
 veq context op: D3I/
@@ -2992,7 +3610,8 @@ fxname: -D3I/
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ))
 ```
-### D3ISCALE
+
+#### :context: D3ISCALE
 
 ```
 veq context op: D3ISCALE
@@ -3000,7 +3619,8 @@ fxname: -D3ISCALE
 args: (A B C S)
 body: (VALUES (/ A S) (/ B S) (/ C S))
 ```
-### D3LEN
+
+#### :context: D3LEN
 
 ```
 veq context op: D3LEN
@@ -3008,7 +3628,8 @@ fxname: -D3LEN
 args: (A B C)
 body: (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D3SQUARE A B C)))))
 ```
-### D3LEN2
+
+#### :context: D3LEN2
 
 ```
 veq context op: D3LEN2
@@ -3016,7 +3637,8 @@ fxname: -D3LEN2
 args: (A B C)
 body: (THE POS-DF (MVC #'+ (-D3SQUARE A B C)))
 ```
-### D3LERP
+
+#### :context: D3LERP
 
 ```
 veq context op: D3LERP
@@ -3024,15 +3646,16 @@ fxname: -D3LERP
 args: (AX AY AZ BX BY BZ S)
 body: (-D3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S))
 ```
-### D3LET
+
+#### :context: D3LET
 
 ```
-:missing:
-
-VEQ:D3LET
-  [symbol]
+make 3d let.
+ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
+note that this behaves as native lisp let*.
 ```
-### D3MAX
+
+#### :context: D3MAX
 
 ```
 veq context op: D3MAX
@@ -3040,22 +3663,25 @@ fxname: -D3MAX
 args: (A B C)
 body: (MAX A B C)
 ```
-### D3MEYE
+
+#### D3MEYE
 
 ```
-return eye matrix for dimension
-VEQ:D3MEYE
-  [symbol]
+return 3d eye matrix.
 
-D3MEYE names a compiled function:
-  Lambda-list: (&OPTIONAL (V 1.0d0))
-  Derived type: (FUNCTION (&OPTIONAL DOUBLE-FLOAT)
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (9)) &OPTIONAL))
-  Documentation:
-    return eye matrix for dimension
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D3MEYE
+ ;   [symbol]
+ ;
+ ; D3MEYE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (V 1.0d0))
+ ;   Derived type: (FUNCTION (&OPTIONAL DOUBLE-FLOAT)
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (9)) &OPTIONAL))
+ ;   Documentation:
+ ;     return 3d eye matrix.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D3MID
+
+#### :context: D3MID
 
 ```
 veq context op: D3MID
@@ -3063,7 +3689,8 @@ fxname: -D3MID
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0))
 ```
-### D3MIN
+
+#### :context: D3MIN
 
 ```
 veq context op: D3MIN
@@ -3071,52 +3698,59 @@ fxname: -D3MIN
 args: (A B C)
 body: (MIN A B C)
 ```
-### D3MINV
+
+#### D3MINV
 
 ```
-invert 3x3 matrix
-VEQ:D3MINV
-  [symbol]
+invert 3x3 matrix. non-destructive.
 
-D3MINV names a compiled function:
-  Lambda-list: (A0)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Documentation:
-    invert 3x3 matrix
-  Source file: /data/x/veq/src/mat-inv.lisp
+ ; VEQ:D3MINV
+ ;   [symbol]
+ ;
+ ; D3MINV names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     invert 3x3 matrix. non-destructive.
+ ;   Source file: /data/x/veq/src/mat-inv.lisp
 ```
-### D3MM
+
+#### D3MM
 
 ```
 multiply mat * mat
 of type: DVEC
-VEQ:D3MM
-  [symbol]
 
-D3MM names a macro:
-  Lambda-list: (A*465 B*467)
-  Documentation:
-    multiply mat * mat
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D3MM
+ ;   [symbol]
+ ;
+ ; D3MM names a macro:
+ ;   Lambda-list: (A*465 B*467)
+ ;   Documentation:
+ ;     multiply mat * mat
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D3MMT
+
+#### D3MMT
 
 ```
 multiply mat * (transpose mat)
 of type: DVEC
-VEQ:D3MMT
-  [symbol]
 
-D3MMT names a macro:
-  Lambda-list: (A*523 B*525)
-  Documentation:
-    multiply mat * (transpose mat)
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D3MMT
+ ;   [symbol]
+ ;
+ ; D3MMT names a macro:
+ ;   Lambda-list: (A*523 B*525)
+ ;   Documentation:
+ ;     multiply mat * (transpose mat)
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D3MOD
+
+#### :context: D3MOD
 
 ```
 veq context op: D3MOD
@@ -3124,142 +3758,171 @@ fxname: -D3MOD
 args: (A B C S)
 body: (VALUES (MOD A S) (MOD B S) (MOD C S))
 ```
-### D3MROT
+
+#### D3MROT
 
 ```
-macro wrapper: (mvc #'%D3MROT ...).
-see function: %D3MROT
-VEQ:D3MROT
-  [symbol]
+fx: %D3MROT
+macro wrapper: D3MROT
 
-D3MROT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3MROT ...).
-    see function: %D3MROT
-  Source file: /data/x/veq/src/mat.lisp
-```
-### D3MROT*
+defined via veq:def*
 
+ ; VEQ:D3MROT
+ ;   [symbol]
+ ;
+ ; D3MROT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3MROT
+ ;     macro wrapper: D3MROT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-macro wrapper: (mvc #'%D3MROT* ...).
-see function: %D3MROT*
-VEQ:D3MROT*
-  [symbol]
 
-D3MROT* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3MROT* ...).
-    see function: %D3MROT*
-  Source file: /data/x/veq/src/mat.lisp
-```
-### D3MSCALE
+#### D3MROT\*
 
 ```
-macro wrapper: (mvc #'%D3MSCALE ...) in veq context.
-see function: %D3MSCALE
-VEQ:D3MSCALE
-  [symbol]
+fx: %D3MROT*
+macro wrapper: D3MROT*
 
-D3MSCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3MSCALE ...) in veq context.
-    see function: %D3MSCALE
-  Source file: /data/x/veq/src/mat.lisp
+defined via veq:def*
+
+ ; VEQ:D3MROT*
+ ;   [symbol]
+ ;
+ ; D3MROT* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3MROT*
+ ;     macro wrapper: D3MROT*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D3MT!
+
+#### D3MSCALE
 
 ```
-transpose matrix of type ~a in-place
-VEQ:D3MT!
-  [symbol]
+fx: %D3MSCALE
+macro wrapper: D3MSCALE
 
-D3MT! names a macro:
-  Lambda-list: (A1)
-  Documentation:
-    transpose matrix of type ~a in-place
-  Source file: /data/x/veq/src/mat.lisp
+defined via veq:fvdef*
+
+ ; VEQ:D3MSCALE
+ ;   [symbol]
+ ;
+ ; D3MSCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3MSCALE
+ ;     macro wrapper: D3MSCALE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D3MTM
+
+#### D3MT!
+
+```
+transpose 3d matrix in-place.
+
+ ; VEQ:D3MT!
+ ;   [symbol]
+ ;
+ ; D3MT! names a macro:
+ ;   Lambda-list: (A1)
+ ;   Documentation:
+ ;     transpose 3d matrix in-place.
+ ;   Source file: /data/x/veq/src/mat.lisp
+```
+
+#### D3MTM
 
 ```
 multiply (transpose mat) * mat
 of type: DVEC
-VEQ:D3MTM
-  [symbol]
 
-D3MTM names a macro:
-  Lambda-list: (A*552 B*554)
-  Documentation:
-    multiply (transpose mat) * mat
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D3MTM
+ ;   [symbol]
+ ;
+ ; D3MTM names a macro:
+ ;   Lambda-list: (A*552 B*554)
+ ;   Documentation:
+ ;     multiply (transpose mat) * mat
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D3MTMT
+
+#### D3MTMT
 
 ```
 multiply (transpose mat) * (transpose mat)
 of type: DVEC
-VEQ:D3MTMT
-  [symbol]
 
-D3MTMT names a macro:
-  Lambda-list: (A*494 B*496)
-  Documentation:
-    multiply (transpose mat) * (transpose mat)
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D3MTMT
+ ;   [symbol]
+ ;
+ ; D3MTMT names a macro:
+ ;   Lambda-list: (A*494 B*496)
+ ;   Documentation:
+ ;     multiply (transpose mat) * (transpose mat)
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D3MTRANS
 
-```
-macro wrapper: (mvc #'%D3MTRANS ...) in veq context.
-see function: %D3MTRANS
-VEQ:D3MTRANS
-  [symbol]
-
-D3MTRANS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D3MTRANS ...) in veq context.
-    see function: %D3MTRANS
-  Source file: /data/x/veq/src/mat.lisp
-```
-### D3MTV
+#### D3MTRANS
 
 ```
-:missing:
+fx: %D3MTRANS
+macro wrapper: D3MTRANS
 
-VEQ:D3MTV
-  [symbol]
+defined via veq:fvdef*
 
-D3MTV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D3MTRANS
+ ;   [symbol]
+ ;
+ ; D3MTRANS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3MTRANS
+ ;     macro wrapper: D3MTRANS
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D3MV
 
-```
-:missing:
-
-VEQ:D3MV
-  [symbol]
-
-D3MV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
-```
-### D3MVB
+#### D3MTV
 
 ```
-:missing:
+transpose(mat) * v. for 3d matrix and vector.
 
-VEQ:D3MVB
-  [symbol]
+ ; VEQ:D3MTV
+ ;   [symbol]
+ ;
+ ; D3MTV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     transpose(mat) * v. for 3d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D3NEG
+
+#### D3MV
+
+```
+mat * v. for 3d matrix and vector.
+
+ ; VEQ:D3MV
+ ;   [symbol]
+ ;
+ ; D3MV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     mat * v. for 3d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
+```
+
+#### :context: D3NEG
 
 ```
 veq context op: D3NEG
@@ -3267,7 +3930,8 @@ fxname: -D3NEG
 args: (A B C)
 body: (VALUES (- A) (- B) (- C))
 ```
-### D3NORM
+
+#### :context: D3NORM
 
 ```
 veq context op: D3NORM
@@ -3275,31 +3939,31 @@ fxname: -D3NORM
 args: (A B C)
 body: (MVC #'-D3ISCALE A B C (THE POS-DF (MVC #'-D3LEN A B C)))
 ```
-### D3NSUM
+
+#### :context: D3NSUM
 
 ```
-:missing:
-
-VEQ:D3NSUM
-  [symbol]
+make 3d
 ```
-### D3REP
+
+#### :context: D3REP
 
 ```
-:missing:
-
-VEQ:D3REP
-  [symbol]
+make 3d rep.
+ex: (f3rep (fx))
+corresponds to
+(values (fx) (fx) (fx))
 ```
-### D3REP*
+
+#### :context: D3REP\*
 
 ```
-:missing:
-
-VEQ:D3REP*
-  [symbol]
+make 3d rep*.
+ex: (f3rep (fx))
+returns (values v v v) where v = (fx)
 ```
-### D3ROT
+
+#### :context: D3ROT
 
 ```
 veq context op: D3ROT
@@ -3313,7 +3977,8 @@ body: (LET ((COSA (COS A)))
        (MVC #'-D3FROM (-D3SCALE X Y Z COSA) (-D3CROSS NX NY NZ X Y Z) (SIN A))
        NX NY NZ (* (-D3. NX NY NZ X Y Z) (- 1.0d0 COSA))))
 ```
-### D3ROTS
+
+#### :context: D3ROTS
 
 ```
 veq context op: D3ROTS
@@ -3321,7 +3986,8 @@ fxname: -D3ROTS
 args: (X Y Z NX NY NZ A SX SY SZ)
 body: (MVC #'-D3+ (MVC #'-D3ROT (-D3- X Y Z SX SY SZ) NX NY NZ A) SX SY SZ)
 ```
-### D3SCALE
+
+#### :context: D3SCALE
 
 ```
 veq context op: D3SCALE
@@ -3329,7 +3995,8 @@ fxname: -D3SCALE
 args: (A B C S)
 body: (VALUES (* A S) (* B S) (* C S))
 ```
-### D3SQRT
+
+#### :context: D3SQRT
 
 ```
 veq context op: D3SQRT
@@ -3338,7 +4005,8 @@ args: (A B C)
 body: (VALUES (THE POS-DF (SQRT (THE POS-DF A))) (THE POS-DF (SQRT (THE POS-DF B)))
         (THE POS-DF (SQRT (THE POS-DF C))))
 ```
-### D3SQUARE
+
+#### :context: D3SQUARE
 
 ```
 veq context op: D3SQUARE
@@ -3346,644 +4014,782 @@ fxname: -D3SQUARE
 args: (A B C)
 body: (VALUES (THE POS-DF (* A A)) (THE POS-DF (* B B)) (THE POS-DF (* C C)))
 ```
-### D3VSET
+
+#### :context: D3VSET
 
 ```
-:missing:
-
-VEQ:D3VSET
-  [symbol]
+set 3d value.
+ex: (D3VSET (a) (fx ...))
+where (fx ...) returns 3 values.
 ```
-### D3~
 
-```
-:missing:
-
-VEQ:D3~
-  [symbol]
-```
-### D4
+#### :context: D3~
 
 ```
-:missing:
-
-VEQ:D4
-  [symbol]
+make 3d vector in veq context.
+coerce to type.
 ```
-### D4$
+
+#### :context: D4
 
 ```
-:missing:
-
-VEQ:D4$
-  [symbol]
+make 4d vector in veq context.
+strict.
 ```
-### D4$*
+
+#### :context: D4$
+
+```
+returns values from 4d array.
+supports multiple indices. default is 0.
+ex: (D4$ a i j ...) returns (values a[i] a[j] ...).
+note that the number of values depends on the dimension.
+```
+
+#### D4$\*
 
 ```
 broadcast for fx: -D4*
 macroname: D4$*
+ex: (D4$* a ...) performs (mvc #'-D4* a[i] ...) for every row in a.
 
-
-VEQ:D4$*
-  [symbol]
-
-D4$* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$* ...).
-    see function: %D4$*
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$*
+ ;   [symbol]
+ ;
+ ; D4$* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$*
+ ;     macro wrapper: D4$*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$*!
+
+#### D4$\*!
 
 ```
 broadcast for fx: -D4*
 macroname: D4$*!
+ex: (D4$*! a ...) performs (mvc #'-D4* a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$*!
-  [symbol]
-
-D4$*! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$*! ...).
-    see function: %D4$*!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$*!
+ ;   [symbol]
+ ;
+ ; D4$*! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$*!
+ ;     macro wrapper: D4$*!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$+
+
+#### D4$+
 
 ```
 broadcast for fx: -D4+
 macroname: D4$+
+ex: (D4$+ a ...) performs (mvc #'-D4+ a[i] ...) for every row in a.
 
-
-VEQ:D4$+
-  [symbol]
-
-D4$+ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$+ ...).
-    see function: %D4$+
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$+
+ ;   [symbol]
+ ;
+ ; D4$+ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$+
+ ;     macro wrapper: D4$+
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$+!
+
+#### D4$+!
 
 ```
 broadcast for fx: -D4+
 macroname: D4$+!
+ex: (D4$+! a ...) performs (mvc #'-D4+ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$+!
-  [symbol]
-
-D4$+! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$+! ...).
-    see function: %D4$+!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$+!
+ ;   [symbol]
+ ;
+ ; D4$+! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$+!
+ ;     macro wrapper: D4$+!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$-
+
+#### D4$-
 
 ```
 broadcast for fx: -D4-
 macroname: D4$-
+ex: (D4$- a ...) performs (mvc #'-D4- a[i] ...) for every row in a.
 
-
-VEQ:D4$-
-  [symbol]
-
-D4$- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$- ...).
-    see function: %D4$-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$-
+ ;   [symbol]
+ ;
+ ; D4$- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$-
+ ;     macro wrapper: D4$-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$-!
+
+#### D4$-!
 
 ```
 broadcast for fx: -D4-
 macroname: D4$-!
+ex: (D4$-! a ...) performs (mvc #'-D4- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$-!
-  [symbol]
-
-D4$-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$-! ...).
-    see function: %D4$-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$-!
+ ;   [symbol]
+ ;
+ ; D4$-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$-!
+ ;     macro wrapper: D4$-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$/
+
+#### D4$/
 
 ```
 broadcast for fx: -D4/
 macroname: D4$/
+ex: (D4$/ a ...) performs (mvc #'-D4/ a[i] ...) for every row in a.
 
-
-VEQ:D4$/
-  [symbol]
-
-D4$/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$/ ...).
-    see function: %D4$/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$/
+ ;   [symbol]
+ ;
+ ; D4$/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$/
+ ;     macro wrapper: D4$/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$/!
+
+#### D4$/!
 
 ```
 broadcast for fx: -D4/
 macroname: D4$/!
+ex: (D4$/! a ...) performs (mvc #'-D4/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$/!
-  [symbol]
-
-D4$/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$/! ...).
-    see function: %D4$/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$/!
+ ;   [symbol]
+ ;
+ ; D4$/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$/!
+ ;     macro wrapper: D4$/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$ABS
+
+#### D4$ABS
 
 ```
 broadcast for fx: -D4ABS
 macroname: D4$ABS
+ex: (D4$ABS a ...) performs (mvc #'-D4ABS a[i] ...) for every row in a.
 
-
-VEQ:D4$ABS
-  [symbol]
-
-D4$ABS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$ABS ...).
-    see function: %D4$ABS
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$ABS
+ ;   [symbol]
+ ;
+ ; D4$ABS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$ABS
+ ;     macro wrapper: D4$ABS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$ABS!
+
+#### D4$ABS!
 
 ```
 broadcast for fx: -D4ABS
 macroname: D4$ABS!
+ex: (D4$ABS! a ...) performs (mvc #'-D4ABS a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$ABS!
-  [symbol]
-
-D4$ABS! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$ABS! ...).
-    see function: %D4$ABS!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$ABS!
+ ;   [symbol]
+ ;
+ ; D4$ABS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$ABS!
+ ;     macro wrapper: D4$ABS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$COPY
 
-```
-:missing:
-
-VEQ:D4$COPY
-  [symbol]
-```
-### D4$FROM
+#### D4$FROM
 
 ```
 broadcast for fx: -D4FROM
 macroname: D4$FROM
+ex: (D4$FROM a ...) performs (mvc #'-D4FROM a[i] ...) for every row in a.
 
-
-VEQ:D4$FROM
-  [symbol]
-
-D4$FROM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$FROM ...).
-    see function: %D4$FROM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$FROM
+ ;   [symbol]
+ ;
+ ; D4$FROM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$FROM
+ ;     macro wrapper: D4$FROM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$FROM!
+
+#### D4$FROM!
 
 ```
 broadcast for fx: -D4FROM
 macroname: D4$FROM!
+ex: (D4$FROM! a ...) performs (mvc #'-D4FROM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$FROM!
-  [symbol]
-
-D4$FROM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$FROM! ...).
-    see function: %D4$FROM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$FROM!
+ ;   [symbol]
+ ;
+ ; D4$FROM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$FROM!
+ ;     macro wrapper: D4$FROM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$FXLSPACE
+
+#### :context: D4$FXLSPACE
 
 ```
-:missing:
-
-VEQ:D4$FXLSPACE
-  [symbol]
+args: ((n a b &key (end t)) &body fx)
+for 4d points a, b.
+assumes the last form in fx is a function and does
+(mvc fx i x ...) for points between a, b.
+ex: (D4$FXLSPACE (n a b) (lambda (i (:va 4 a b)) (vpr i a b)))
 ```
-### D4$I-
+
+#### D4$I-
 
 ```
 broadcast for fx: -D4I-
 macroname: D4$I-
+ex: (D4$I- a ...) performs (mvc #'-D4I- a[i] ...) for every row in a.
 
-
-VEQ:D4$I-
-  [symbol]
-
-D4$I- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$I- ...).
-    see function: %D4$I-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$I-
+ ;   [symbol]
+ ;
+ ; D4$I- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$I-
+ ;     macro wrapper: D4$I-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$I-!
+
+#### D4$I-!
 
 ```
 broadcast for fx: -D4I-
 macroname: D4$I-!
+ex: (D4$I-! a ...) performs (mvc #'-D4I- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$I-!
-  [symbol]
-
-D4$I-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$I-! ...).
-    see function: %D4$I-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$I-!
+ ;   [symbol]
+ ;
+ ; D4$I-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$I-!
+ ;     macro wrapper: D4$I-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$I/
+
+#### D4$I/
 
 ```
 broadcast for fx: -D4I/
 macroname: D4$I/
+ex: (D4$I/ a ...) performs (mvc #'-D4I/ a[i] ...) for every row in a.
 
-
-VEQ:D4$I/
-  [symbol]
-
-D4$I/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$I/ ...).
-    see function: %D4$I/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$I/
+ ;   [symbol]
+ ;
+ ; D4$I/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$I/
+ ;     macro wrapper: D4$I/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$I/!
+
+#### D4$I/!
 
 ```
 broadcast for fx: -D4I/
 macroname: D4$I/!
+ex: (D4$I/! a ...) performs (mvc #'-D4I/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$I/!
-  [symbol]
-
-D4$I/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$I/! ...).
-    see function: %D4$I/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$I/!
+ ;   [symbol]
+ ;
+ ; D4$I/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$I/!
+ ;     macro wrapper: D4$I/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$ISCALE
+
+#### D4$ISCALE
 
 ```
 broadcast for fx: -D4ISCALE
 macroname: D4$ISCALE
+ex: (D4$ISCALE a ...) performs (mvc #'-D4ISCALE a[i] ...) for every row in a.
 
-
-VEQ:D4$ISCALE
-  [symbol]
-
-D4$ISCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$ISCALE ...).
-    see function: %D4$ISCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$ISCALE
+ ;   [symbol]
+ ;
+ ; D4$ISCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$ISCALE
+ ;     macro wrapper: D4$ISCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$ISCALE!
+
+#### D4$ISCALE!
 
 ```
 broadcast for fx: -D4ISCALE
 macroname: D4$ISCALE!
+ex: (D4$ISCALE! a ...) performs (mvc #'-D4ISCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$ISCALE!
-  [symbol]
-
-D4$ISCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$ISCALE! ...).
-    see function: %D4$ISCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$ISCALE!
+ ;   [symbol]
+ ;
+ ; D4$ISCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$ISCALE!
+ ;     macro wrapper: D4$ISCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$LAST
+
+#### D4$LAST
 
 ```
-:missing:
+get last row of 4d array as (values ...)
 
-VEQ:D4$LAST
-  [symbol]
-
-D4$LAST names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
-                 (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
-                         DOUBLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-rows.lisp
+ ; VEQ:D4$LAST
+ ;   [symbol]
+ ;
+ ; D4$LAST names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
+ ;                          DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     get last row of 4d array as (values ...)
+ ;   Source file: /data/x/veq/src/array-rows.lisp
 ```
-### D4$LEN
+
+#### D4$LEN
 
 ```
 broadcast for fx: -D4LEN
 macroname: D4$LEN
+ex: (D4$LEN a ...) performs (mvc #'-D4LEN a[i] ...) for every row in a.
 
-
-VEQ:D4$LEN
-  [symbol]
-
-D4$LEN names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$LEN ...).
-    see function: %D4$LEN
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$LEN
+ ;   [symbol]
+ ;
+ ; D4$LEN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$LEN
+ ;     macro wrapper: D4$LEN
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$LEN2
+
+#### D4$LEN2
 
 ```
 broadcast for fx: -D4LEN2
 macroname: D4$LEN2
+ex: (D4$LEN2 a ...) performs (mvc #'-D4LEN2 a[i] ...) for every row in a.
 
-
-VEQ:D4$LEN2
-  [symbol]
-
-D4$LEN2 names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$LEN2 ...).
-    see function: %D4$LEN2
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$LEN2
+ ;   [symbol]
+ ;
+ ; D4$LEN2 names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$LEN2
+ ;     macro wrapper: D4$LEN2
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$LINE
 
-```
-macro wrapper: (mvc #'%D4$LINE ...).
-see function: %D4$LINE
-VEQ:D4$LINE
-  [symbol]
-
-D4$LINE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$LINE ...).
-    see function: %D4$LINE
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### D4$LSPACE
+#### D4$LINE
 
 ```
-macro wrapper: (mvc #'%D4$LSPACE ...) in veq context.
-see function: %D4$LSPACE
-VEQ:D4$LSPACE
-  [symbol]
+fx: %D4$LINE
+macro wrapper: D4$LINE
 
-D4$LSPACE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$LSPACE ...) in veq context.
-    see function: %D4$LSPACE
-  Source file: /data/x/veq/src/lspace.lisp
+defined via veq:def*
+
+ ; VEQ:D4$LINE
+ ;   [symbol]
+ ;
+ ; D4$LINE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$LINE
+ ;     macro wrapper: D4$LINE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-### D4$MAKE
+
+#### D4$LSPACE
 
 ```
-:missing:
+fx: %D4$LSPACE
+macro wrapper: D4$LSPACE
 
-VEQ:D4$MAKE
-  [symbol]
+defined via veq:fvdef*
+
+ ; VEQ:D4$LSPACE
+ ;   [symbol]
+ ;
+ ; D4$LSPACE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$LSPACE
+ ;     macro wrapper: D4$LSPACE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/lspace.lisp
 ```
-### D4$NEG
+
+#### D4$NEG
 
 ```
 broadcast for fx: -D4NEG
 macroname: D4$NEG
+ex: (D4$NEG a ...) performs (mvc #'-D4NEG a[i] ...) for every row in a.
 
-
-VEQ:D4$NEG
-  [symbol]
-
-D4$NEG names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$NEG ...).
-    see function: %D4$NEG
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$NEG
+ ;   [symbol]
+ ;
+ ; D4$NEG names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$NEG
+ ;     macro wrapper: D4$NEG
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$NEG!
+
+#### D4$NEG!
 
 ```
 broadcast for fx: -D4NEG
 macroname: D4$NEG!
+ex: (D4$NEG! a ...) performs (mvc #'-D4NEG a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$NEG!
-  [symbol]
-
-D4$NEG! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$NEG! ...).
-    see function: %D4$NEG!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$NEG!
+ ;   [symbol]
+ ;
+ ; D4$NEG! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$NEG!
+ ;     macro wrapper: D4$NEG!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$NORM
+
+#### D4$NORM
 
 ```
 broadcast for fx: -D4NORM
 macroname: D4$NORM
+ex: (D4$NORM a ...) performs (mvc #'-D4NORM a[i] ...) for every row in a.
 
-
-VEQ:D4$NORM
-  [symbol]
-
-D4$NORM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$NORM ...).
-    see function: %D4$NORM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$NORM
+ ;   [symbol]
+ ;
+ ; D4$NORM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$NORM
+ ;     macro wrapper: D4$NORM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$NORM!
+
+#### D4$NORM!
 
 ```
 broadcast for fx: -D4NORM
 macroname: D4$NORM!
+ex: (D4$NORM! a ...) performs (mvc #'-D4NORM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$NORM!
-  [symbol]
-
-D4$NORM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$NORM! ...).
-    see function: %D4$NORM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$NORM!
+ ;   [symbol]
+ ;
+ ; D4$NORM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$NORM!
+ ;     macro wrapper: D4$NORM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$ONE
 
-```
-:missing:
-
-VEQ:D4$ONE
-  [symbol]
-
-D4$ONE names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### D4$POINT
+#### D4$NUM
 
 ```
-macro wrapper: (mvc #'%D4$POINT ...).
-see function: %D4$POINT
-VEQ:D4$POINT
-  [symbol]
+number of elements in 4d array.
+typed.
 
-D4$POINT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$POINT ...).
-    see function: %D4$POINT
-  Source file: /data/x/veq/src/shapes.lisp
+ ; VEQ:D4$NUM
+ ;   [symbol]
+ ;
+ ; D4$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 4d array.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D4$SCALE
+
+#### D4$ONE
+
+```
+make 4d array of ones.
+typed.
+
+ ; VEQ:D4$ONE
+ ;   [symbol]
+ ;
+ ; D4$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d array of ones.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### D4$POINT
+
+```
+fx: %D4$POINT
+macro wrapper: D4$POINT
+
+defined via veq:def*
+
+ ; VEQ:D4$POINT
+ ;   [symbol]
+ ;
+ ; D4$POINT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$POINT
+ ;     macro wrapper: D4$POINT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### D4$SCALE
 
 ```
 broadcast for fx: -D4SCALE
 macroname: D4$SCALE
+ex: (D4$SCALE a ...) performs (mvc #'-D4SCALE a[i] ...) for every row in a.
 
-
-VEQ:D4$SCALE
-  [symbol]
-
-D4$SCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$SCALE ...).
-    see function: %D4$SCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$SCALE
+ ;   [symbol]
+ ;
+ ; D4$SCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$SCALE
+ ;     macro wrapper: D4$SCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$SCALE!
+
+#### D4$SCALE!
 
 ```
 broadcast for fx: -D4SCALE
 macroname: D4$SCALE!
+ex: (D4$SCALE! a ...) performs (mvc #'-D4SCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:D4$SCALE!
-  [symbol]
-
-D4$SCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%D4$SCALE! ...).
-    see function: %D4$SCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:D4$SCALE!
+ ;   [symbol]
+ ;
+ ; D4$SCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D4$SCALE!
+ ;     macro wrapper: D4$SCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### D4$SUM
 
-```
-:missing:
-
-VEQ:D4$SUM
-  [symbol]
-
-D4$SUM names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T))
-                 (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
-                         DOUBLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-reduce.lisp
-```
-### D4$TAKE
+#### D4$SUM
 
 ```
-:missing:
+sum all rows of 4d array.
 
-VEQ:D4$TAKE
-  [symbol]
-
-D4$TAKE names a compiled function:
-  Lambda-list: (A INDS &KEY RES)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) T &KEY (:RES T))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
-  Source file: /data/x/veq/src/array-take.lisp
+ ; VEQ:D4$SUM
+ ;   [symbol]
+ ;
+ ; D4$SUM names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) &KEY (:N T))
+ ;                  (VALUES DOUBLE-FLOAT DOUBLE-FLOAT DOUBLE-FLOAT
+ ;                          DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     sum all rows of 4d array.
+ ;   Source file: /data/x/veq/src/array-reduce.lisp
 ```
-### D4$VAL
 
-```
-:missing:
-
-VEQ:D4$VAL
-  [symbol]
-
-D4$VAL names a compiled function:
-  Lambda-list: (V &OPTIONAL (N 1))
-  Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### D4$WITH-ROWS
+#### D4$TAKE
 
 ```
-:missing:
+returns 4d array with rows for inds.
+use :res put result in existing array
 
-VEQ:D4$WITH-ROWS
-  [symbol]
+ ; VEQ:D4$TAKE
+ ;   [symbol]
+ ;
+ ; D4$TAKE names a compiled function:
+ ;   Lambda-list: (A INDS &KEY RES)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY DOUBLE-FLOAT) SEQUENCE &KEY (:RES T))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
+ ;   Documentation:
+ ;     returns 4d array with rows for inds.
+ ;     use :res put result in existing array
+ ;   Source file: /data/x/veq/src/array-take.lisp
 ```
-### D4$ZERO
+
+#### D4$VAL
 
 ```
-:missing:
+make 4d array of val.
+typed.
 
-VEQ:D4$ZERO
-  [symbol]
-
-D4$ZERO names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:D4$VAL
+ ;   [symbol]
+ ;
+ ; D4$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d array of val.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### D4*
+
+#### :context: D4$WITH-ROWS
+
+```
+make 4d
+```
+
+#### D4$ZERO
+
+```
+make 4d array of zeros.
+typed.
+
+ ; VEQ:D4$ZERO
+ ;   [symbol]
+ ;
+ ; D4$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d array of zeros.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### :context: D4\*
 
 ```
 veq context op: D4*
@@ -3991,7 +4797,8 @@ fxname: -D4*
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW))
 ```
-### D4+
+
+#### :context: D4+
 
 ```
 veq context op: D4+
@@ -3999,7 +4806,8 @@ fxname: -D4+
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW))
 ```
-### D4-
+
+#### :context: D4-
 
 ```
 veq context op: D4-
@@ -4007,7 +4815,8 @@ fxname: -D4-
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW))
 ```
-### D4.
+
+#### :context: D4.
 
 ```
 veq context op: D4.
@@ -4015,7 +4824,8 @@ fxname: -D4.
 args: (AX AY AZ AW BX BY BZ BW)
 body: (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW))
 ```
-### D4/
+
+#### :context: D4/
 
 ```
 veq context op: D4/
@@ -4023,7 +4833,8 @@ fxname: -D4/
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW))
 ```
-### D4^
+
+#### :context: D4^
 
 ```
 veq context op: D4^
@@ -4031,7 +4842,8 @@ fxname: -D4^
 args: (A B C D S)
 body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S) (EXPT D S))
 ```
-### D4ABS
+
+#### :context: D4ABS
 
 ```
 veq context op: D4ABS
@@ -4039,7 +4851,8 @@ fxname: -D4ABS
 args: (A B C D)
 body: (VALUES (ABS A) (ABS B) (ABS C) (ABS D))
 ```
-### D4DST
+
+#### :context: D4DST
 
 ```
 veq context op: D4DST
@@ -4048,7 +4861,8 @@ args: (AX AY AZ AW BX BY BZ BW)
 body: (SQRT
  (THE POS-DF (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)))))
 ```
-### D4DST2
+
+#### :context: D4DST2
 
 ```
 veq context op: D4DST2
@@ -4056,7 +4870,8 @@ fxname: -D4DST2
 args: (AX AY AZ AW BX BY BZ BW)
 body: (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)))
 ```
-### D4EXP
+
+#### :context: D4EXP
 
 ```
 veq context op: D4EXP
@@ -4064,7 +4879,8 @@ fxname: -D4EXP
 args: (A B C D)
 body: (VALUES (EXP A) (EXP B) (EXP C) (EXP D))
 ```
-### D4FROM
+
+#### :context: D4FROM
 
 ```
 veq context op: D4FROM
@@ -4072,7 +4888,8 @@ fxname: -D4FROM
 args: (AX AY AZ AW BX BY BZ BW S)
 body: (-D4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S))
 ```
-### D4I-
+
+#### :context: D4I-
 
 ```
 veq context op: D4I-
@@ -4080,7 +4897,8 @@ fxname: -D4I-
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))
 ```
-### D4I/
+
+#### :context: D4I/
 
 ```
 veq context op: D4I/
@@ -4088,7 +4906,8 @@ fxname: -D4I/
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW))
 ```
-### D4ISCALE
+
+#### :context: D4ISCALE
 
 ```
 veq context op: D4ISCALE
@@ -4096,7 +4915,8 @@ fxname: -D4ISCALE
 args: (A B C D S)
 body: (VALUES (/ A S) (/ B S) (/ C S) (/ D S))
 ```
-### D4LEN
+
+#### :context: D4LEN
 
 ```
 veq context op: D4LEN
@@ -4104,7 +4924,8 @@ fxname: -D4LEN
 args: (A B C D)
 body: (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D4SQUARE A B C D)))))
 ```
-### D4LEN2
+
+#### :context: D4LEN2
 
 ```
 veq context op: D4LEN2
@@ -4112,7 +4933,8 @@ fxname: -D4LEN2
 args: (A B C D)
 body: (THE POS-DF (MVC #'+ (-D4SQUARE A B C D)))
 ```
-### D4LERP
+
+#### :context: D4LERP
 
 ```
 veq context op: D4LERP
@@ -4121,15 +4943,16 @@ args: (AX AY AZ AW BX BY BZ BW S)
 body: (-D4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
  (* (- BW AW) S))
 ```
-### D4LET
+
+#### :context: D4LET
 
 ```
-:missing:
-
-VEQ:D4LET
-  [symbol]
+make 4d let.
+ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
+note that this behaves as native lisp let*.
 ```
-### D4MAX
+
+#### :context: D4MAX
 
 ```
 veq context op: D4MAX
@@ -4137,22 +4960,25 @@ fxname: -D4MAX
 args: (A B C D)
 body: (MAX A B C D)
 ```
-### D4MEYE
+
+#### D4MEYE
 
 ```
-return eye matrix for dimension
-VEQ:D4MEYE
-  [symbol]
+return 4d eye matrix.
 
-D4MEYE names a compiled function:
-  Lambda-list: (&OPTIONAL (V 1.0d0))
-  Derived type: (FUNCTION (&OPTIONAL DOUBLE-FLOAT)
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (16)) &OPTIONAL))
-  Documentation:
-    return eye matrix for dimension
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D4MEYE
+ ;   [symbol]
+ ;
+ ; D4MEYE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (V 1.0d0))
+ ;   Derived type: (FUNCTION (&OPTIONAL DOUBLE-FLOAT)
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (16)) &OPTIONAL))
+ ;   Documentation:
+ ;     return 4d eye matrix.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D4MID
+
+#### :context: D4MID
 
 ```
 veq context op: D4MID
@@ -4161,7 +4987,8 @@ args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)
         (* (+ BW AW) 0.5d0))
 ```
-### D4MIN
+
+#### :context: D4MIN
 
 ```
 veq context op: D4MIN
@@ -4169,52 +4996,59 @@ fxname: -D4MIN
 args: (A B C D)
 body: (MIN A B C D)
 ```
-### D4MINV
+
+#### D4MINV
 
 ```
-invert 4x4 matrix
-VEQ:D4MINV
-  [symbol]
+invert 4x4 matrix. non-destructive.
 
-D4MINV names a compiled function:
-  Lambda-list: (A0)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
-                 (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
-  Documentation:
-    invert 4x4 matrix
-  Source file: /data/x/veq/src/mat-inv.lisp
+ ; VEQ:D4MINV
+ ;   [symbol]
+ ;
+ ; D4MINV names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     invert 4x4 matrix. non-destructive.
+ ;   Source file: /data/x/veq/src/mat-inv.lisp
 ```
-### D4MM
+
+#### D4MM
 
 ```
 multiply mat * mat
 of type: DVEC
-VEQ:D4MM
-  [symbol]
 
-D4MM names a macro:
-  Lambda-list: (A*581 B*583)
-  Documentation:
-    multiply mat * mat
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D4MM
+ ;   [symbol]
+ ;
+ ; D4MM names a macro:
+ ;   Lambda-list: (A*581 B*583)
+ ;   Documentation:
+ ;     multiply mat * mat
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D4MMT
+
+#### D4MMT
 
 ```
 multiply mat * (transpose mat)
 of type: DVEC
-VEQ:D4MMT
-  [symbol]
 
-D4MMT names a macro:
-  Lambda-list: (A*639 B*641)
-  Documentation:
-    multiply mat * (transpose mat)
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D4MMT
+ ;   [symbol]
+ ;
+ ; D4MMT names a macro:
+ ;   Lambda-list: (A*639 B*641)
+ ;   Documentation:
+ ;     multiply mat * (transpose mat)
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D4MOD
+
+#### :context: D4MOD
 
 ```
 veq context op: D4MOD
@@ -4222,82 +5056,87 @@ fxname: -D4MOD
 args: (A B C D S)
 body: (VALUES (MOD A S) (MOD B S) (MOD C S) (MOD D S))
 ```
-### D4MT!
+
+#### D4MT!
 
 ```
-transpose matrix of type ~a in-place
-VEQ:D4MT!
-  [symbol]
+transpose 4d matrix in-place.
 
-D4MT! names a macro:
-  Lambda-list: (A1)
-  Documentation:
-    transpose matrix of type ~a in-place
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D4MT!
+ ;   [symbol]
+ ;
+ ; D4MT! names a macro:
+ ;   Lambda-list: (A1)
+ ;   Documentation:
+ ;     transpose 4d matrix in-place.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D4MTM
+
+#### D4MTM
 
 ```
 multiply (transpose mat) * mat
 of type: DVEC
-VEQ:D4MTM
-  [symbol]
 
-D4MTM names a macro:
-  Lambda-list: (A*668 B*670)
-  Documentation:
-    multiply (transpose mat) * mat
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D4MTM
+ ;   [symbol]
+ ;
+ ; D4MTM names a macro:
+ ;   Lambda-list: (A*668 B*670)
+ ;   Documentation:
+ ;     multiply (transpose mat) * mat
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D4MTMT
+
+#### D4MTMT
 
 ```
 multiply (transpose mat) * (transpose mat)
 of type: DVEC
-VEQ:D4MTMT
-  [symbol]
 
-D4MTMT names a macro:
-  Lambda-list: (A*610 B*612)
-  Documentation:
-    multiply (transpose mat) * (transpose mat)
-    of type: DVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D4MTMT
+ ;   [symbol]
+ ;
+ ; D4MTMT names a macro:
+ ;   Lambda-list: (A*610 B*612)
+ ;   Documentation:
+ ;     multiply (transpose mat) * (transpose mat)
+ ;     of type: DVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D4MTV
 
-```
-:missing:
-
-VEQ:D4MTV
-  [symbol]
-
-D4MTV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
-```
-### D4MV
+#### D4MTV
 
 ```
-:missing:
+transpose(mat) * v. for 4d matrix and vector.
 
-VEQ:D4MV
-  [symbol]
-
-D4MV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:D4MTV
+ ;   [symbol]
+ ;
+ ; D4MTV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     transpose(mat) * v. for 4d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D4MVB
+
+#### D4MV
 
 ```
-:missing:
+mat * v. for 4d matrix and vector.
 
-VEQ:D4MVB
-  [symbol]
+ ; VEQ:D4MV
+ ;   [symbol]
+ ;
+ ; D4MV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     mat * v. for 4d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### D4NEG
+
+#### :context: D4NEG
 
 ```
 veq context op: D4NEG
@@ -4305,7 +5144,8 @@ fxname: -D4NEG
 args: (A B C D)
 body: (VALUES (- A) (- B) (- C) (- D))
 ```
-### D4NORM
+
+#### :context: D4NORM
 
 ```
 veq context op: D4NORM
@@ -4313,31 +5153,31 @@ fxname: -D4NORM
 args: (A B C D)
 body: (MVC #'-D4ISCALE A B C D (THE POS-DF (MVC #'-D4LEN A B C D)))
 ```
-### D4NSUM
+
+#### :context: D4NSUM
 
 ```
-:missing:
-
-VEQ:D4NSUM
-  [symbol]
+make 4d
 ```
-### D4REP
+
+#### :context: D4REP
 
 ```
-:missing:
-
-VEQ:D4REP
-  [symbol]
+make 4d rep.
+ex: (f3rep (fx))
+corresponds to
+(values (fx) (fx) (fx))
 ```
-### D4REP*
+
+#### :context: D4REP\*
 
 ```
-:missing:
-
-VEQ:D4REP*
-  [symbol]
+make 4d rep*.
+ex: (f3rep (fx))
+returns (values v v v) where v = (fx)
 ```
-### D4SCALE
+
+#### :context: D4SCALE
 
 ```
 veq context op: D4SCALE
@@ -4345,7 +5185,8 @@ fxname: -D4SCALE
 args: (A B C D S)
 body: (VALUES (* A S) (* B S) (* C S) (* D S))
 ```
-### D4SQRT
+
+#### :context: D4SQRT
 
 ```
 veq context op: D4SQRT
@@ -4354,7 +5195,8 @@ args: (A B C D)
 body: (VALUES (THE POS-DF (SQRT (THE POS-DF A))) (THE POS-DF (SQRT (THE POS-DF B)))
         (THE POS-DF (SQRT (THE POS-DF C))) (THE POS-DF (SQRT (THE POS-DF D))))
 ```
-### D4SQUARE
+
+#### :context: D4SQUARE
 
 ```
 veq context op: D4SQUARE
@@ -4363,37 +5205,39 @@ args: (A B C D)
 body: (VALUES (THE POS-DF (* A A)) (THE POS-DF (* B B)) (THE POS-DF (* C C))
         (THE POS-DF (* D D)))
 ```
-### D4VSET
+
+#### :context: D4VSET
 
 ```
-:missing:
-
-VEQ:D4VSET
-  [symbol]
+set 4d value.
+ex: (D4VSET (a) (fx ...))
+where (fx ...) returns 4 values.
 ```
-### D4~
+
+#### :context: D4~
 
 ```
-:missing:
-
-VEQ:D4~
-  [symbol]
+make 4d vector in veq context.
+coerce to type.
 ```
-### D?
+
+#### D?
 
 ```
 describe argument
-VEQ:D?
-  [symbol]
 
-D? names a compiled function:
-  Lambda-list: (F)
-  Derived type: (FUNCTION (T) (VALUES &OPTIONAL))
-  Documentation:
-    describe argument
-  Source file: /data/x/veq/src/utils.lisp
+ ; VEQ:D?
+ ;   [symbol]
+ ;
+ ; D? names a compiled function:
+ ;   Lambda-list: (F)
+ ;   Derived type: (FUNCTION (T) (VALUES &OPTIONAL))
+ ;   Documentation:
+ ;     describe argument
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### D^
+
+#### :context: D^
 
 ```
 veq context op: D^
@@ -4401,20 +5245,23 @@ fxname: -D^
 args: (A S)
 body: (EXPT A S)
 ```
-### D_
+
+#### D_
 
 ```
 create dvec from body: (d_ '(1d0 2d0 3d0))
-VEQ:D_
-  [symbol]
 
-D_ names a macro:
-  Lambda-list: (&BODY BODY)
-  Documentation:
-    create dvec from body: (d_ '(1d0 2d0 3d0))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:D_
+ ;   [symbol]
+ ;
+ ; D_ names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Documentation:
+ ;     create dvec from body: (d_ '(1d0 2d0 3d0))
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### DABS
+
+#### :context: DABS
 
 ```
 veq context op: DABS
@@ -4422,7 +5269,8 @@ fxname: -DABS
 args: (A)
 body: (ABS A)
 ```
-### DCLAMP
+
+#### :context: DCLAMP
 
 ```
 veq context op: DCLAMP
@@ -4430,7 +5278,8 @@ fxname: -DCLAMP
 args: (X)
 body: (MIN 1.0d0 (MAX 0.0d0 X))
 ```
-### DCLAMP*
+
+#### :context: DCLAMP\*
 
 ```
 veq context op: DCLAMP*
@@ -4438,7 +5287,8 @@ fxname: -DCLAMP*
 args: (X MI MA)
 body: (MIN MA (MAX MI X))
 ```
-### DCOS-SIN
+
+#### :context: DCOS-SIN
 
 ```
 veq context op: DCOS-SIN
@@ -4446,7 +5296,8 @@ fxname: -DCOS-SIN
 args: (A)
 body: (VALUES (COS A) (SIN A))
 ```
-### DDEG->RAD
+
+#### :context: DDEG->RAD
 
 ```
 veq context op: DDEG->RAD
@@ -4454,67 +5305,74 @@ fxname: -DDEG->RAD
 args: (DEG)
 body: (* DPI (/ DEG 180.0d0))
 ```
-### DEASE-IN-BACK
+
+#### DEASE-IN-BACK
 
 ```
 ease in:
 arg: (X &OPTIONAL (S 1.70158))
 body: (* X X (- (* (+ 1.0d0 S) X) S))
-VEQ:DEASE-IN-BACK
-  [symbol]
 
-DEASE-IN-BACK names a compiled function:
-  Lambda-list: (X &OPTIONAL (S 1.7015800476074219d0))
-  Derived type: (FUNCTION (T &OPTIONAL T)
-                 (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
-                         &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X &OPTIONAL (S 1.70158))
-    body: (* X X (- (* (+ 1.0d0 S) X) S))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-BACK
+ ;   [symbol]
+ ;
+ ; DEASE-IN-BACK names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (S 1.7015800476074219d0))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T)
+ ;                  (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X &OPTIONAL (S 1.70158))
+ ;     body: (* X X (- (* (+ 1.0d0 S) X) S))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-CIRC
+
+#### DEASE-IN-CIRC
 
 ```
 ease in:
 arg: (X)
 body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
-VEQ:DEASE-IN-CIRC
-  [symbol]
 
-DEASE-IN-CIRC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T)
-                 (VALUES
-                  (OR (COMPLEX DOUBLE-FLOAT)
-                      (DOUBLE-FLOAT -0.0d0 1.0d0))
-                  &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-CIRC
+ ;   [symbol]
+ ;
+ ; DEASE-IN-CIRC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR (COMPLEX DOUBLE-FLOAT)
+ ;                       (DOUBLE-FLOAT -0.0d0 1.0d0))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-CUBIC
+
+#### DEASE-IN-CUBIC
 
 ```
 ease in:
 arg: (X)
 body: (* X X X)
-VEQ:DEASE-IN-CUBIC
-  [symbol]
 
-DEASE-IN-CUBIC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (* X X X)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-CUBIC
+ ;   [symbol]
+ ;
+ ; DEASE-IN-CUBIC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (* X X X)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-ELASTIC
+
+#### DEASE-IN-ELASTIC
 
 ```
 ease in:
@@ -4523,120 +5381,132 @@ body: (LET ((S (OR S (* (ASIN 1.0d0) (/ P DPII)))))
         (-
          (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
             (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
-VEQ:DEASE-IN-ELASTIC
-  [symbol]
 
-DEASE-IN-ELASTIC names a compiled function:
-  Lambda-list: (X &OPTIONAL (P 0.30000001192092896d0) (S NIL))
-  Derived type: (FUNCTION (T &OPTIONAL T T)
-                 (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
-                         &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X &OPTIONAL (P 0.3) (S NIL))
-    body: (LET ((S (OR S (* (ASIN 1.0d0) (/ P DPII)))))
-            (-
-             (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
-                (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-ELASTIC
+ ;   [symbol]
+ ;
+ ; DEASE-IN-ELASTIC names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (P 0.30000001192092896d0) (S NIL))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T T)
+ ;                  (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X &OPTIONAL (P 0.3) (S NIL))
+ ;     body: (LET ((S (OR S (* (ASIN 1.0d0) (/ P DPII)))))
+ ;             (-
+ ;              (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
+ ;                 (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-EXP
+
+#### DEASE-IN-EXP
 
 ```
 ease in:
 arg: (X)
 body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
-VEQ:DEASE-IN-EXP
-  [symbol]
 
-DEASE-IN-EXP names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES (DOUBLE-FLOAT 0.0d0) &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-EXP
+ ;   [symbol]
+ ;
+ ; DEASE-IN-EXP names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES (DOUBLE-FLOAT 0.0d0) &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-LINEAR
+
+#### DEASE-IN-LINEAR
 
 ```
 ease in:
 arg: (X)
 body: X
-VEQ:DEASE-IN-LINEAR
-  [symbol]
 
-DEASE-IN-LINEAR names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: X
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-LINEAR
+ ;   [symbol]
+ ;
+ ; DEASE-IN-LINEAR names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: X
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-OUT-BACK
+
+#### DEASE-IN-OUT-BACK
 
 ```
 ease in-out:
 arg: (X &OPTIONAL (S 1.70158))
 body: (* X X (- (* (+ 1.0d0 S) X) S))
-VEQ:DEASE-IN-OUT-BACK
-  [symbol]
 
-DEASE-IN-OUT-BACK names a compiled function:
-  Lambda-list: (X &OPTIONAL (S 1.7015800476074219d0))
-  Derived type: (FUNCTION (T &OPTIONAL T)
-                 (VALUES (OR (COMPLEX DOUBLE-FLOAT) DOUBLE-FLOAT)
-                         &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X &OPTIONAL (S 1.70158))
-    body: (* X X (- (* (+ 1.0d0 S) X) S))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-OUT-BACK
+ ;   [symbol]
+ ;
+ ; DEASE-IN-OUT-BACK names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (S 1.7015800476074219d0))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T)
+ ;                  (VALUES (OR (COMPLEX DOUBLE-FLOAT) DOUBLE-FLOAT)
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X &OPTIONAL (S 1.70158))
+ ;     body: (* X X (- (* (+ 1.0d0 S) X) S))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-OUT-CIRC
+
+#### DEASE-IN-OUT-CIRC
 
 ```
 ease in-out:
 arg: (X)
 body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
-VEQ:DEASE-IN-OUT-CIRC
-  [symbol]
 
-DEASE-IN-OUT-CIRC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T)
-                 (VALUES
-                  (OR (DOUBLE-FLOAT -0.0d0 1.0d0)
-                      (COMPLEX DOUBLE-FLOAT))
-                  &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-OUT-CIRC
+ ;   [symbol]
+ ;
+ ; DEASE-IN-OUT-CIRC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR (DOUBLE-FLOAT -0.0d0 1.0d0)
+ ;                       (COMPLEX DOUBLE-FLOAT))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-OUT-CUBIC
+
+#### DEASE-IN-OUT-CUBIC
 
 ```
 ease in-out:
 arg: (X)
 body: (* X X X)
-VEQ:DEASE-IN-OUT-CUBIC
-  [symbol]
 
-DEASE-IN-OUT-CUBIC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (* X X X)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-OUT-CUBIC
+ ;   [symbol]
+ ;
+ ; DEASE-IN-OUT-CUBIC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (* X X X)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-OUT-ELASTIC
+
+#### DEASE-IN-OUT-ELASTIC
 
 ```
 ease in-out:
@@ -4645,230 +5515,254 @@ body: (LET ((S (OR S (* (ASIN 1.0d0) (/ P DPII)))))
         (-
          (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
             (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
-VEQ:DEASE-IN-OUT-ELASTIC
-  [symbol]
 
-DEASE-IN-OUT-ELASTIC names a compiled function:
-  Lambda-list: (X &OPTIONAL (P 0.30000001192092896d0) (S NIL))
-  Derived type: (FUNCTION (T &OPTIONAL T T)
-                 (VALUES (OR (COMPLEX DOUBLE-FLOAT) DOUBLE-FLOAT)
-                         &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X &OPTIONAL (P 0.3) (S NIL))
-    body: (LET ((S (OR S (* (ASIN 1.0d0) (/ P DPII)))))
-            (-
-             (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
-                (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-OUT-ELASTIC
+ ;   [symbol]
+ ;
+ ; DEASE-IN-OUT-ELASTIC names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (P 0.30000001192092896d0) (S NIL))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T T)
+ ;                  (VALUES (OR (COMPLEX DOUBLE-FLOAT) DOUBLE-FLOAT)
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X &OPTIONAL (P 0.3) (S NIL))
+ ;     body: (LET ((S (OR S (* (ASIN 1.0d0) (/ P DPII)))))
+ ;             (-
+ ;              (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
+ ;                 (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-OUT-EXP
+
+#### DEASE-IN-OUT-EXP
 
 ```
 ease in-out:
 arg: (X)
 body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
-VEQ:DEASE-IN-OUT-EXP
-  [symbol]
 
-DEASE-IN-OUT-EXP names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-OUT-EXP
+ ;   [symbol]
+ ;
+ ; DEASE-IN-OUT-EXP names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-OUT-LINEAR
+
+#### DEASE-IN-OUT-LINEAR
 
 ```
 ease in-out:
 arg: (X)
 body: X
-VEQ:DEASE-IN-OUT-LINEAR
-  [symbol]
 
-DEASE-IN-OUT-LINEAR names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: X
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-OUT-LINEAR
+ ;   [symbol]
+ ;
+ ; DEASE-IN-OUT-LINEAR names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: X
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-OUT-QUART
+
+#### DEASE-IN-OUT-QUART
 
 ```
 ease in-out:
 arg: (X)
 body: (EXPT X 4.0d0)
-VEQ:DEASE-IN-OUT-QUART
-  [symbol]
 
-DEASE-IN-OUT-QUART names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (EXPT X 4.0d0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-OUT-QUART
+ ;   [symbol]
+ ;
+ ; DEASE-IN-OUT-QUART names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (EXPT X 4.0d0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-OUT-QUINT
+
+#### DEASE-IN-OUT-QUINT
 
 ```
 ease in-out:
 arg: (X)
 body: (EXPT X 5.0d0)
-VEQ:DEASE-IN-OUT-QUINT
-  [symbol]
 
-DEASE-IN-OUT-QUINT names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (EXPT X 5.0d0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-OUT-QUINT
+ ;   [symbol]
+ ;
+ ; DEASE-IN-OUT-QUINT names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (EXPT X 5.0d0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-OUT-SIN
+
+#### DEASE-IN-OUT-SIN
 
 ```
 ease in-out:
 arg: (X)
 body: (- 1.0d0 (COS (* X DPI5)))
-VEQ:DEASE-IN-OUT-SIN
-  [symbol]
 
-DEASE-IN-OUT-SIN names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T)
-                 (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (- 1.0d0 (COS (* X DPI5)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-OUT-SIN
+ ;   [symbol]
+ ;
+ ; DEASE-IN-OUT-SIN names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (- 1.0d0 (COS (* X DPI5)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-QUART
+
+#### DEASE-IN-QUART
 
 ```
 ease in:
 arg: (X)
 body: (EXPT X 4.0d0)
-VEQ:DEASE-IN-QUART
-  [symbol]
 
-DEASE-IN-QUART names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (EXPT X 4.0d0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-QUART
+ ;   [symbol]
+ ;
+ ; DEASE-IN-QUART names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (EXPT X 4.0d0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-QUINT
+
+#### DEASE-IN-QUINT
 
 ```
 ease in:
 arg: (X)
 body: (EXPT X 5.0d0)
-VEQ:DEASE-IN-QUINT
-  [symbol]
 
-DEASE-IN-QUINT names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (EXPT X 5.0d0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-QUINT
+ ;   [symbol]
+ ;
+ ; DEASE-IN-QUINT names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (EXPT X 5.0d0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-IN-SIN
+
+#### DEASE-IN-SIN
 
 ```
 ease in:
 arg: (X)
 body: (- 1.0d0 (COS (* X DPI5)))
-VEQ:DEASE-IN-SIN
-  [symbol]
 
-DEASE-IN-SIN names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T)
-                 (VALUES (DOUBLE-FLOAT 0.0d0 2.0d0) &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (- 1.0d0 (COS (* X DPI5)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-IN-SIN
+ ;   [symbol]
+ ;
+ ; DEASE-IN-SIN names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES (DOUBLE-FLOAT 0.0d0 2.0d0) &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (- 1.0d0 (COS (* X DPI5)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-OUT-BACK
+
+#### DEASE-OUT-BACK
 
 ```
 ease out:
 arg: (X &OPTIONAL (S 1.70158))
 body: (* X X (- (* (+ 1.0d0 S) X) S))
-VEQ:DEASE-OUT-BACK
-  [symbol]
 
-DEASE-OUT-BACK names a compiled function:
-  Lambda-list: (X &OPTIONAL (S 1.7015800476074219d0))
-  Derived type: (FUNCTION (T &OPTIONAL T)
-                 (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
-                         &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X &OPTIONAL (S 1.70158))
-    body: (* X X (- (* (+ 1.0d0 S) X) S))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-OUT-BACK
+ ;   [symbol]
+ ;
+ ; DEASE-OUT-BACK names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (S 1.7015800476074219d0))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T)
+ ;                  (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X &OPTIONAL (S 1.70158))
+ ;     body: (* X X (- (* (+ 1.0d0 S) X) S))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-OUT-CIRC
+
+#### DEASE-OUT-CIRC
 
 ```
 ease out:
 arg: (X)
 body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
-VEQ:DEASE-OUT-CIRC
-  [symbol]
 
-DEASE-OUT-CIRC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T)
-                 (VALUES
-                  (OR (COMPLEX DOUBLE-FLOAT)
-                      (DOUBLE-FLOAT 0.0d0 1.0d0))
-                  &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-OUT-CIRC
+ ;   [symbol]
+ ;
+ ; DEASE-OUT-CIRC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR (COMPLEX DOUBLE-FLOAT)
+ ;                       (DOUBLE-FLOAT 0.0d0 1.0d0))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-OUT-CUBIC
+
+#### DEASE-OUT-CUBIC
 
 ```
 ease out:
 arg: (X)
 body: (* X X X)
-VEQ:DEASE-OUT-CUBIC
-  [symbol]
 
-DEASE-OUT-CUBIC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (* X X X)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-OUT-CUBIC
+ ;   [symbol]
+ ;
+ ; DEASE-OUT-CUBIC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (* X X X)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-OUT-ELASTIC
+
+#### DEASE-OUT-ELASTIC
 
 ```
 ease out:
@@ -4877,128 +5771,150 @@ body: (LET ((S (OR S (* (ASIN 1.0d0) (/ P DPII)))))
         (-
          (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
             (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
-VEQ:DEASE-OUT-ELASTIC
-  [symbol]
 
-DEASE-OUT-ELASTIC names a compiled function:
-  Lambda-list: (X &OPTIONAL (P 0.30000001192092896d0) (S NIL))
-  Derived type: (FUNCTION (T &OPTIONAL T T)
-                 (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
-                         &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X &OPTIONAL (P 0.3) (S NIL))
-    body: (LET ((S (OR S (* (ASIN 1.0d0) (/ P DPII)))))
-            (-
-             (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
-                (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-OUT-ELASTIC
+ ;   [symbol]
+ ;
+ ; DEASE-OUT-ELASTIC names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (P 0.30000001192092896d0) (S NIL))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T T)
+ ;                  (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X &OPTIONAL (P 0.3) (S NIL))
+ ;     body: (LET ((S (OR S (* (ASIN 1.0d0) (/ P DPII)))))
+ ;             (-
+ ;              (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
+ ;                 (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-OUT-EXP
+
+#### DEASE-OUT-EXP
 
 ```
 ease out:
 arg: (X)
 body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
-VEQ:DEASE-OUT-EXP
-  [symbol]
 
-DEASE-OUT-EXP names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES (DOUBLE-FLOAT * 1.0d0) &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-OUT-EXP
+ ;   [symbol]
+ ;
+ ; DEASE-OUT-EXP names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES (DOUBLE-FLOAT * 1.0d0) &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-OUT-LINEAR
+
+#### DEASE-OUT-LINEAR
 
 ```
 ease out:
 arg: (X)
 body: X
-VEQ:DEASE-OUT-LINEAR
-  [symbol]
 
-DEASE-OUT-LINEAR names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: X
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-OUT-LINEAR
+ ;   [symbol]
+ ;
+ ; DEASE-OUT-LINEAR names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: X
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-OUT-QUART
+
+#### DEASE-OUT-QUART
 
 ```
 ease out:
 arg: (X)
 body: (EXPT X 4.0d0)
-VEQ:DEASE-OUT-QUART
-  [symbol]
 
-DEASE-OUT-QUART names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (EXPT X 4.0d0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-OUT-QUART
+ ;   [symbol]
+ ;
+ ; DEASE-OUT-QUART names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (EXPT X 4.0d0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-OUT-QUINT
+
+#### DEASE-OUT-QUINT
 
 ```
 ease out:
 arg: (X)
 body: (EXPT X 5.0d0)
-VEQ:DEASE-OUT-QUINT
-  [symbol]
 
-DEASE-OUT-QUINT names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (EXPT X 5.0d0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-OUT-QUINT
+ ;   [symbol]
+ ;
+ ; DEASE-OUT-QUINT names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (EXPT X 5.0d0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEASE-OUT-SIN
+
+#### DEASE-OUT-SIN
 
 ```
 ease out:
 arg: (X)
 body: (- 1.0d0 (COS (* X DPI5)))
-VEQ:DEASE-OUT-SIN
-  [symbol]
 
-DEASE-OUT-SIN names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T)
-                 (VALUES (DOUBLE-FLOAT -1.0d0 1.0d0) &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (- 1.0d0 (COS (* X DPI5)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:DEASE-OUT-SIN
+ ;   [symbol]
+ ;
+ ; DEASE-OUT-SIN names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES (DOUBLE-FLOAT -1.0d0 1.0d0) &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (- 1.0d0 (COS (* X DPI5)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### DEF*
+
+#### DEF\*
 
 ```
-define function, and corresponding macro, without veq enabled.
-VEQ:DEF*
-  [symbol]
+defines a function named: %fx
+and a wrapper macro named: fx
 
-DEF* names a macro:
-  Lambda-list: (MNAME &BODY BODY)
-  Documentation:
-    define function, and corresponding macro, without veq enabled.
-  Source file: /data/x/veq/src/macros.lisp
+the wrapper macro ensures every call to this function is done as
+(mvc #'%fx ...).
+
+ ; VEQ:DEF*
+ ;   [symbol]
+ ;
+ ; DEF* names a macro:
+ ;   Lambda-list: (MNAME &BODY BODY)
+ ;   Documentation:
+ ;     defines a function named: %fx
+ ;     and a wrapper macro named: fx
+ ;
+ ;     the wrapper macro ensures every call to this function is done as
+ ;     (mvc #'%fx ...).
+ ;   Source file: /data/x/veq/src/macros.lisp
 ```
-### DEXP
+
+#### :context: DEXP
 
 ```
 veq context op: DEXP
@@ -5006,49 +5922,54 @@ fxname: -DEXP
 args: (A)
 body: (VALUES (EXP A))
 ```
-### DF
+
+#### DF
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:DF
-  [symbol]
-
-DF names a macro:
-  Lambda-list: (&BODY BODY)
-  Source file: /data/x/veq/src/utils.lisp
-
-DF names a type-specifier:
-  Lambda-list: ()
-  Expansion: DOUBLE-FLOAT
+ ; VEQ:DF
+ ;   [symbol]
+ ;
+ ; DF names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Source file: /data/x/veq/src/utils.lisp
+ ;
+ ; DF names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: DOUBLE-FLOAT
 ```
-### DF*
 
-```
-:missing:
-
-VEQ:DF*
-  [symbol]
-
-DF* names a macro:
-  Lambda-list: (&BODY BODY)
-  Source file: /data/x/veq/src/utils.lisp
-```
-### DFL
+#### DF\*
 
 ```
-return (values (df a) (df b ..) from (list a b ..)
-VEQ:DFL
-  [symbol]
+:missing:todo:
 
-DFL names a compiled function:
-  Lambda-list: (L)
-  Derived type: (FUNCTION (LIST) *)
-  Documentation:
-    return (values (df a) (df b ..) from (list a b ..)
-  Source file: /data/x/veq/src/utils.lisp
+ ; VEQ:DF*
+ ;   [symbol]
+ ;
+ ; DF* names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### DFROM
+
+#### DFL
+
+```
+return (values (df a) (df b ..) from (list a b ..).
+
+ ; VEQ:DFL
+ ;   [symbol]
+ ;
+ ; DFL names a compiled function:
+ ;   Lambda-list: (L)
+ ;   Derived type: (FUNCTION (LIST) *)
+ ;   Documentation:
+ ;     return (values (df a) (df b ..) from (list a b ..).
+ ;   Source file: /data/x/veq/src/utils.lisp
+```
+
+#### :context: DFROM
 
 ```
 veq context op: DFROM
@@ -5056,7 +5977,8 @@ fxname: -DFROM
 args: (AX BX S)
 body: (+ AX (* BX S))
 ```
-### DI-
+
+#### :context: DI-
 
 ```
 veq context op: DI-
@@ -5064,7 +5986,8 @@ fxname: -DI-
 args: (A B)
 body: (- B A)
 ```
-### DI/
+
+#### :context: DI/
 
 ```
 veq context op: DI/
@@ -5072,7 +5995,8 @@ fxname: -DI/
 args: (A B)
 body: (/ B A)
 ```
-### DISCALE
+
+#### :context: DISCALE
 
 ```
 veq context op: DISCALE
@@ -5080,7 +6004,8 @@ fxname: -DISCALE
 args: (A S)
 body: (VALUES (/ A S))
 ```
-### DLEN
+
+#### :context: DLEN
 
 ```
 veq context op: DLEN
@@ -5088,7 +6013,8 @@ fxname: -DLEN
 args: (A)
 body: (THE POS-DF A)
 ```
-### DLEN2
+
+#### :context: DLEN2
 
 ```
 veq context op: DLEN2
@@ -5096,7 +6022,8 @@ fxname: -DLEN2
 args: (A)
 body: (THE POS-DF (MVC #'+ (-DSQUARE A)))
 ```
-### DLERP
+
+#### :context: DLERP
 
 ```
 veq context op: DLERP
@@ -5104,7 +6031,8 @@ fxname: -DLERP
 args: (AX BX S)
 body: (+ AX (* (- BX AX) S))
 ```
-### DMID
+
+#### :context: DMID
 
 ```
 veq context op: DMID
@@ -5112,7 +6040,8 @@ fxname: -DMID
 args: (AX BX)
 body: (* 0.5d0 (+ AX BX))
 ```
-### DMOD
+
+#### :context: DMOD
 
 ```
 veq context op: DMOD
@@ -5120,7 +6049,8 @@ fxname: -DMOD
 args: (A S)
 body: (MOD A S)
 ```
-### DNEG
+
+#### :context: DNEG
 
 ```
 veq context op: DNEG
@@ -5128,7 +6058,8 @@ fxname: -DNEG
 args: (A)
 body: (- A)
 ```
-### DNORM
+
+#### :context: DNORM
 
 ```
 veq context op: DNORM
@@ -5136,79 +6067,83 @@ fxname: -DNORM
 args: (A)
 body: (MVC #'-DISCALE A (MVC #'-DLEN A))
 ```
-### DNSUM
+
+#### :context: DNSUM
 
 ```
-:missing:
-
-VEQ:DNSUM
-  [symbol]
+make 1d
 ```
-### DPI
+
+#### DPI
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:DPI
-  [symbol]
-
-DPI names a constant variable:
-  Declared type: DOUBLE-FLOAT
-  Value: 3.141592653589793d0
+ ; VEQ:DPI
+ ;   [symbol]
+ ;
+ ; DPI names a constant variable:
+ ;   Declared type: DOUBLE-FLOAT
+ ;   Value: 3.141592653589793d0
 ```
-### DPI5
 
-```
-:missing:
-
-VEQ:DPI5
-  [symbol]
-
-DPI5 names a constant variable:
-  Declared type: DOUBLE-FLOAT
-  Value: 1.5707963267948966d0
-```
-### DPII
+#### DPI5
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:DPII
-  [symbol]
-
-DPII names a constant variable:
-  Declared type: DOUBLE-FLOAT
-  Value: 6.283185307179586d0
+ ; VEQ:DPI5
+ ;   [symbol]
+ ;
+ ; DPI5 names a constant variable:
+ ;   Declared type: DOUBLE-FLOAT
+ ;   Value: 1.5707963267948966d0
 ```
-### DREP
 
-```
-:missing:
-
-VEQ:DREP
-  [symbol]
-```
-### DREP*
+#### DPII
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:DREP*
-  [symbol]
+ ; VEQ:DPII
+ ;   [symbol]
+ ;
+ ; DPII names a constant variable:
+ ;   Declared type: DOUBLE-FLOAT
+ ;   Value: 6.283185307179586d0
 ```
-### DSB
+
+#### :context: DREP
 
 ```
-:missing:
-
-VEQ:DSB
-  [symbol]
-
-DSB names a macro:
-  Lambda-list: (&REST ARGS)
-  Source file: /data/x/veq/src/utils.lisp
+make 1d rep.
+ex: (f3rep (fx))
+corresponds to
+(values (fx) (fx) (fx))
 ```
-### DSCALE
+
+#### :context: DREP\*
+
+```
+make 1d rep*.
+ex: (f3rep (fx))
+returns (values v v v) where v = (fx)
+```
+
+#### DSB
+
+```
+:missing:todo:
+
+ ; VEQ:DSB
+ ;   [symbol]
+ ;
+ ; DSB names a macro:
+ ;   Lambda-list: (&REST ARGS)
+ ;   Source file: /data/x/veq/src/utils.lisp
+```
+
+#### :context: DSCALE
 
 ```
 veq context op: DSCALE
@@ -5216,7 +6151,8 @@ fxname: -DSCALE
 args: (A S)
 body: (VALUES (* A S))
 ```
-### DSIN-COS
+
+#### :context: DSIN-COS
 
 ```
 veq context op: DSIN-COS
@@ -5224,7 +6160,8 @@ fxname: -DSIN-COS
 args: (A)
 body: (VALUES (SIN A) (COS A))
 ```
-### DSQRT
+
+#### :context: DSQRT
 
 ```
 veq context op: DSQRT
@@ -5232,7 +6169,8 @@ fxname: -DSQRT
 args: (A)
 body: (THE POS-DF (SQRT (THE POS-DF A)))
 ```
-### DSQUARE
+
+#### :context: DSQUARE
 
 ```
 veq context op: DSQUARE
@@ -5240,2443 +6178,945 @@ fxname: -DSQUARE
 args: (A)
 body: (* A A)
 ```
-### DVEC
 
-```
-:missing:
-
-VEQ:DVEC
-  [symbol]
-
-DVEC names a type-specifier:
-  Lambda-list: ()
-  Expansion: (SIMPLE-ARRAY VEQ:DF)
-```
-### DVLET
-
-```
-:missing:
-
-VEQ:DVLET
-  [symbol]
-```
-### DVSET
-
-```
-:missing:
-
-VEQ:DVSET
-  [symbol]
-```
-### DW
-
-```
-macro. reorder arguments (X Y Z W) as (W), (IGNORE Z Y X).
-```
-### DWITH-ARRAYS
-
-```
-:missing:
-
-VEQ:DWITH-ARRAYS
-  [symbol]
-```
-### DWW
-
-```
-macro. reorder arguments (X Y Z W) as (W W), (IGNORE Z Y X).
-```
-### DWWW
-
-```
-macro. reorder arguments (X Y Z W) as (W W W), (IGNORE Z Y X).
-```
-### DWWWW
-
-```
-macro. reorder arguments (X Y Z W) as (W W W W), (IGNORE Z Y X).
-```
-### DWWWX
-
-```
-macro. reorder arguments (X Y Z W) as (W W W X), (IGNORE Z Y).
-```
-### DWWWY
-
-```
-macro. reorder arguments (X Y Z W) as (W W W Y), (IGNORE Z X).
-```
-### DWWWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W W W Z), (IGNORE Y X).
-```
-### DWWX
-
-```
-macro. reorder arguments (X Y Z W) as (W W X), (IGNORE Z Y).
-```
-### DWWXW
-
-```
-macro. reorder arguments (X Y Z W) as (W W X W), (IGNORE Z Y).
-```
-### DWWXX
-
-```
-macro. reorder arguments (X Y Z W) as (W W X X), (IGNORE Z Y).
-```
-### DWWXY
-
-```
-macro. reorder arguments (X Y Z W) as (W W X Y), (IGNORE Z).
-```
-### DWWXZ
-
-```
-macro. reorder arguments (X Y Z W) as (W W X Z), (IGNORE Y).
-```
-### DWWY
-
-```
-macro. reorder arguments (X Y Z W) as (W W Y), (IGNORE Z X).
-```
-### DWWYW
-
-```
-macro. reorder arguments (X Y Z W) as (W W Y W), (IGNORE Z X).
-```
-### DWWYX
-
-```
-macro. reorder arguments (X Y Z W) as (W W Y X), (IGNORE Z).
-```
-### DWWYY
-
-```
-macro. reorder arguments (X Y Z W) as (W W Y Y), (IGNORE Z X).
-```
-### DWWYZ
-
-```
-macro. reorder arguments (X Y Z W) as (W W Y Z), (IGNORE X).
-```
-### DWWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W W Z), (IGNORE Y X).
-```
-### DWWZW
-
-```
-macro. reorder arguments (X Y Z W) as (W W Z W), (IGNORE Y X).
-```
-### DWWZX
-
-```
-macro. reorder arguments (X Y Z W) as (W W Z X), (IGNORE Y).
-```
-### DWWZY
-
-```
-macro. reorder arguments (X Y Z W) as (W W Z Y), (IGNORE X).
-```
-### DWWZZ
-
-```
-macro. reorder arguments (X Y Z W) as (W W Z Z), (IGNORE Y X).
-```
-### DWX
-
-```
-macro. reorder arguments (X Y Z W) as (W X), (IGNORE Z Y).
-```
-### DWXW
-
-```
-macro. reorder arguments (X Y Z W) as (W X W), (IGNORE Z Y).
-```
-### DWXWW
-
-```
-macro. reorder arguments (X Y Z W) as (W X W W), (IGNORE Z Y).
-```
-### DWXWX
-
-```
-macro. reorder arguments (X Y Z W) as (W X W X), (IGNORE Z Y).
-```
-### DWXWY
-
-```
-macro. reorder arguments (X Y Z W) as (W X W Y), (IGNORE Z).
-```
-### DWXWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W X W Z), (IGNORE Y).
-```
-### DWXX
-
-```
-macro. reorder arguments (X Y Z W) as (W X X), (IGNORE Z Y).
-```
-### DWXXW
-
-```
-macro. reorder arguments (X Y Z W) as (W X X W), (IGNORE Z Y).
-```
-### DWXXX
-
-```
-macro. reorder arguments (X Y Z W) as (W X X X), (IGNORE Z Y).
-```
-### DWXXY
-
-```
-macro. reorder arguments (X Y Z W) as (W X X Y), (IGNORE Z).
-```
-### DWXXZ
-
-```
-macro. reorder arguments (X Y Z W) as (W X X Z), (IGNORE Y).
-```
-### DWXY
-
-```
-macro. reorder arguments (X Y Z W) as (W X Y), (IGNORE Z).
-```
-### DWXYW
-
-```
-macro. reorder arguments (X Y Z W) as (W X Y W), (IGNORE Z).
-```
-### DWXYX
-
-```
-macro. reorder arguments (X Y Z W) as (W X Y X), (IGNORE Z).
-```
-### DWXYY
-
-```
-macro. reorder arguments (X Y Z W) as (W X Y Y), (IGNORE Z).
-```
-### DWXYZ
-
-```
-macro. reorder arguments (X Y Z W) as (W X Y Z), (IGNORE).
-```
-### DWXZ
-
-```
-macro. reorder arguments (X Y Z W) as (W X Z), (IGNORE Y).
-```
-### DWXZW
-
-```
-macro. reorder arguments (X Y Z W) as (W X Z W), (IGNORE Y).
-```
-### DWXZX
-
-```
-macro. reorder arguments (X Y Z W) as (W X Z X), (IGNORE Y).
-```
-### DWXZY
-
-```
-macro. reorder arguments (X Y Z W) as (W X Z Y), (IGNORE).
-```
-### DWXZZ
-
-```
-macro. reorder arguments (X Y Z W) as (W X Z Z), (IGNORE Y).
-```
-### DWY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y), (IGNORE Z X).
-```
-### DWYW
-
-```
-macro. reorder arguments (X Y Z W) as (W Y W), (IGNORE Z X).
-```
-### DWYWW
-
-```
-macro. reorder arguments (X Y Z W) as (W Y W W), (IGNORE Z X).
-```
-### DWYWX
-
-```
-macro. reorder arguments (X Y Z W) as (W Y W X), (IGNORE Z).
-```
-### DWYWY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y W Y), (IGNORE Z X).
-```
-### DWYWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Y W Z), (IGNORE X).
-```
-### DWYX
-
-```
-macro. reorder arguments (X Y Z W) as (W Y X), (IGNORE Z).
-```
-### DWYXW
-
-```
-macro. reorder arguments (X Y Z W) as (W Y X W), (IGNORE Z).
-```
-### DWYXX
-
-```
-macro. reorder arguments (X Y Z W) as (W Y X X), (IGNORE Z).
-```
-### DWYXY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y X Y), (IGNORE Z).
-```
-### DWYXZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Y X Z), (IGNORE).
-```
-### DWYY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Y), (IGNORE Z X).
-```
-### DWYYW
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Y W), (IGNORE Z X).
-```
-### DWYYX
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Y X), (IGNORE Z).
-```
-### DWYYY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Y Y), (IGNORE Z X).
-```
-### DWYYZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Y Z), (IGNORE X).
-```
-### DWYZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Z), (IGNORE X).
-```
-### DWYZW
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Z W), (IGNORE X).
-```
-### DWYZX
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Z X), (IGNORE).
-```
-### DWYZY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Z Y), (IGNORE X).
-```
-### DWYZZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Z Z), (IGNORE X).
-```
-### DWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z), (IGNORE Y X).
-```
-### DWZW
-
-```
-macro. reorder arguments (X Y Z W) as (W Z W), (IGNORE Y X).
-```
-### DWZWW
-
-```
-macro. reorder arguments (X Y Z W) as (W Z W W), (IGNORE Y X).
-```
-### DWZWX
-
-```
-macro. reorder arguments (X Y Z W) as (W Z W X), (IGNORE Y).
-```
-### DWZWY
-
-```
-macro. reorder arguments (X Y Z W) as (W Z W Y), (IGNORE X).
-```
-### DWZWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z W Z), (IGNORE Y X).
-```
-### DWZX
-
-```
-macro. reorder arguments (X Y Z W) as (W Z X), (IGNORE Y).
-```
-### DWZXW
-
-```
-macro. reorder arguments (X Y Z W) as (W Z X W), (IGNORE Y).
-```
-### DWZXX
-
-```
-macro. reorder arguments (X Y Z W) as (W Z X X), (IGNORE Y).
-```
-### DWZXY
-
-```
-macro. reorder arguments (X Y Z W) as (W Z X Y), (IGNORE).
-```
-### DWZXZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z X Z), (IGNORE Y).
-```
-### DWZY
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Y), (IGNORE X).
-```
-### DWZYW
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Y W), (IGNORE X).
-```
-### DWZYX
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Y X), (IGNORE).
-```
-### DWZYY
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Y Y), (IGNORE X).
-```
-### DWZYZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Y Z), (IGNORE X).
-```
-### DWZZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Z), (IGNORE Y X).
-```
-### DWZZW
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Z W), (IGNORE Y X).
-```
-### DWZZX
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Z X), (IGNORE Y).
-```
-### DWZZY
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Z Y), (IGNORE X).
-```
-### DWZZZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Z Z), (IGNORE Y X).
-```
-### DX
-
-```
-macro. reorder arguments (X Y Z W) as (X), (IGNORE W Z Y).
-```
-### DXW
-
-```
-macro. reorder arguments (X Y Z W) as (X W), (IGNORE Z Y).
-```
-### DXWW
-
-```
-macro. reorder arguments (X Y Z W) as (X W W), (IGNORE Z Y).
-```
-### DXWWW
-
-```
-macro. reorder arguments (X Y Z W) as (X W W W), (IGNORE Z Y).
-```
-### DXWWX
-
-```
-macro. reorder arguments (X Y Z W) as (X W W X), (IGNORE Z Y).
-```
-### DXWWY
-
-```
-macro. reorder arguments (X Y Z W) as (X W W Y), (IGNORE Z).
-```
-### DXWWZ
-
-```
-macro. reorder arguments (X Y Z W) as (X W W Z), (IGNORE Y).
-```
-### DXWX
-
-```
-macro. reorder arguments (X Y Z W) as (X W X), (IGNORE Z Y).
-```
-### DXWXW
-
-```
-macro. reorder arguments (X Y Z W) as (X W X W), (IGNORE Z Y).
-```
-### DXWXX
-
-```
-macro. reorder arguments (X Y Z W) as (X W X X), (IGNORE Z Y).
-```
-### DXWXY
-
-```
-macro. reorder arguments (X Y Z W) as (X W X Y), (IGNORE Z).
-```
-### DXWXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X W X Z), (IGNORE Y).
-```
-### DXWY
-
-```
-macro. reorder arguments (X Y Z W) as (X W Y), (IGNORE Z).
-```
-### DXWYW
-
-```
-macro. reorder arguments (X Y Z W) as (X W Y W), (IGNORE Z).
-```
-### DXWYX
-
-```
-macro. reorder arguments (X Y Z W) as (X W Y X), (IGNORE Z).
-```
-### DXWYY
-
-```
-macro. reorder arguments (X Y Z W) as (X W Y Y), (IGNORE Z).
-```
-### DXWYZ
-
-```
-macro. reorder arguments (X Y Z W) as (X W Y Z), (IGNORE).
-```
-### DXWZ
-
-```
-macro. reorder arguments (X Y Z W) as (X W Z), (IGNORE Y).
-```
-### DXWZW
-
-```
-macro. reorder arguments (X Y Z W) as (X W Z W), (IGNORE Y).
-```
-### DXWZX
-
-```
-macro. reorder arguments (X Y Z W) as (X W Z X), (IGNORE Y).
-```
-### DXWZY
-
-```
-macro. reorder arguments (X Y Z W) as (X W Z Y), (IGNORE).
-```
-### DXWZZ
-
-```
-macro. reorder arguments (X Y Z W) as (X W Z Z), (IGNORE Y).
-```
-### DXX
-
-```
-macro. reorder arguments (X Y Z W) as (X X), (IGNORE W Z Y).
-```
-### DXXW
-
-```
-macro. reorder arguments (X Y Z W) as (X X W), (IGNORE Z Y).
-```
-### DXXWW
-
-```
-macro. reorder arguments (X Y Z W) as (X X W W), (IGNORE Z Y).
-```
-### DXXWX
-
-```
-macro. reorder arguments (X Y Z W) as (X X W X), (IGNORE Z Y).
-```
-### DXXWY
-
-```
-macro. reorder arguments (X Y Z W) as (X X W Y), (IGNORE Z).
-```
-### DXXWZ
-
-```
-macro. reorder arguments (X Y Z W) as (X X W Z), (IGNORE Y).
-```
-### DXXX
-
-```
-macro. reorder arguments (X Y Z W) as (X X X), (IGNORE W Z Y).
-```
-### DXXXW
-
-```
-macro. reorder arguments (X Y Z W) as (X X X W), (IGNORE Z Y).
-```
-### DXXXX
-
-```
-macro. reorder arguments (X Y Z W) as (X X X X), (IGNORE W Z Y).
-```
-### DXXXY
-
-```
-macro. reorder arguments (X Y Z W) as (X X X Y), (IGNORE W Z).
-```
-### DXXXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X X X Z), (IGNORE W Y).
-```
-### DXXY
-
-```
-macro. reorder arguments (X Y Z W) as (X X Y), (IGNORE W Z).
-```
-### DXXYW
-
-```
-macro. reorder arguments (X Y Z W) as (X X Y W), (IGNORE Z).
-```
-### DXXYX
-
-```
-macro. reorder arguments (X Y Z W) as (X X Y X), (IGNORE W Z).
-```
-### DXXYY
-
-```
-macro. reorder arguments (X Y Z W) as (X X Y Y), (IGNORE W Z).
-```
-### DXXYZ
-
-```
-macro. reorder arguments (X Y Z W) as (X X Y Z), (IGNORE W).
-```
-### DXXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X X Z), (IGNORE W Y).
-```
-### DXXZW
-
-```
-macro. reorder arguments (X Y Z W) as (X X Z W), (IGNORE Y).
-```
-### DXXZX
-
-```
-macro. reorder arguments (X Y Z W) as (X X Z X), (IGNORE W Y).
-```
-### DXXZY
-
-```
-macro. reorder arguments (X Y Z W) as (X X Z Y), (IGNORE W).
-```
-### DXXZZ
-
-```
-macro. reorder arguments (X Y Z W) as (X X Z Z), (IGNORE W Y).
-```
-### DXY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y), (IGNORE W Z).
-```
-### DXYW
-
-```
-macro. reorder arguments (X Y Z W) as (X Y W), (IGNORE Z).
-```
-### DXYWW
-
-```
-macro. reorder arguments (X Y Z W) as (X Y W W), (IGNORE Z).
-```
-### DXYWX
-
-```
-macro. reorder arguments (X Y Z W) as (X Y W X), (IGNORE Z).
-```
-### DXYWY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y W Y), (IGNORE Z).
-```
-### DXYWZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Y W Z), (IGNORE).
-```
-### DXYX
-
-```
-macro. reorder arguments (X Y Z W) as (X Y X), (IGNORE W Z).
-```
-### DXYXW
-
-```
-macro. reorder arguments (X Y Z W) as (X Y X W), (IGNORE Z).
-```
-### DXYXX
-
-```
-macro. reorder arguments (X Y Z W) as (X Y X X), (IGNORE W Z).
-```
-### DXYXY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y X Y), (IGNORE W Z).
-```
-### DXYXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Y X Z), (IGNORE W).
-```
-### DXYY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Y), (IGNORE W Z).
-```
-### DXYYW
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Y W), (IGNORE Z).
-```
-### DXYYX
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Y X), (IGNORE W Z).
-```
-### DXYYY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Y Y), (IGNORE W Z).
-```
-### DXYYZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Y Z), (IGNORE W).
-```
-### DXYZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Z), (IGNORE W).
-```
-### DXYZW
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Z W), (IGNORE).
-```
-### DXYZX
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Z X), (IGNORE W).
-```
-### DXYZY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Z Y), (IGNORE W).
-```
-### DXYZZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Z Z), (IGNORE W).
-```
-### DXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z), (IGNORE W Y).
-```
-### DXZW
-
-```
-macro. reorder arguments (X Y Z W) as (X Z W), (IGNORE Y).
-```
-### DXZWW
-
-```
-macro. reorder arguments (X Y Z W) as (X Z W W), (IGNORE Y).
-```
-### DXZWX
-
-```
-macro. reorder arguments (X Y Z W) as (X Z W X), (IGNORE Y).
-```
-### DXZWY
-
-```
-macro. reorder arguments (X Y Z W) as (X Z W Y), (IGNORE).
-```
-### DXZWZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z W Z), (IGNORE Y).
-```
-### DXZX
-
-```
-macro. reorder arguments (X Y Z W) as (X Z X), (IGNORE W Y).
-```
-### DXZXW
-
-```
-macro. reorder arguments (X Y Z W) as (X Z X W), (IGNORE Y).
-```
-### DXZXX
-
-```
-macro. reorder arguments (X Y Z W) as (X Z X X), (IGNORE W Y).
-```
-### DXZXY
-
-```
-macro. reorder arguments (X Y Z W) as (X Z X Y), (IGNORE W).
-```
-### DXZXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z X Z), (IGNORE W Y).
-```
-### DXZY
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Y), (IGNORE W).
-```
-### DXZYW
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Y W), (IGNORE).
-```
-### DXZYX
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Y X), (IGNORE W).
-```
-### DXZYY
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Y Y), (IGNORE W).
-```
-### DXZYZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Y Z), (IGNORE W).
-```
-### DXZZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Z), (IGNORE W Y).
-```
-### DXZZW
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Z W), (IGNORE Y).
-```
-### DXZZX
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Z X), (IGNORE W Y).
-```
-### DXZZY
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Z Y), (IGNORE W).
-```
-### DXZZZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Z Z), (IGNORE W Y).
-```
-### DY
-
-```
-macro. reorder arguments (X Y Z W) as (Y), (IGNORE W Z X).
-```
-### DYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W), (IGNORE Z X).
-```
-### DYWW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W W), (IGNORE Z X).
-```
-### DYWWW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W W W), (IGNORE Z X).
-```
-### DYWWX
-
-```
-macro. reorder arguments (X Y Z W) as (Y W W X), (IGNORE Z).
-```
-### DYWWY
-
-```
-macro. reorder arguments (X Y Z W) as (Y W W Y), (IGNORE Z X).
-```
-### DYWWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y W W Z), (IGNORE X).
-```
-### DYWX
-
-```
-macro. reorder arguments (X Y Z W) as (Y W X), (IGNORE Z).
-```
-### DYWXW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W X W), (IGNORE Z).
-```
-### DYWXX
-
-```
-macro. reorder arguments (X Y Z W) as (Y W X X), (IGNORE Z).
-```
-### DYWXY
-
-```
-macro. reorder arguments (X Y Z W) as (Y W X Y), (IGNORE Z).
-```
-### DYWXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y W X Z), (IGNORE).
-```
-### DYWY
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Y), (IGNORE Z X).
-```
-### DYWYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Y W), (IGNORE Z X).
-```
-### DYWYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Y X), (IGNORE Z).
-```
-### DYWYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Y Y), (IGNORE Z X).
-```
-### DYWYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Y Z), (IGNORE X).
-```
-### DYWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Z), (IGNORE X).
-```
-### DYWZW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Z W), (IGNORE X).
-```
-### DYWZX
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Z X), (IGNORE).
-```
-### DYWZY
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Z Y), (IGNORE X).
-```
-### DYWZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Z Z), (IGNORE X).
-```
-### DYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X), (IGNORE W Z).
-```
-### DYXW
-
-```
-macro. reorder arguments (X Y Z W) as (Y X W), (IGNORE Z).
-```
-### DYXWW
-
-```
-macro. reorder arguments (X Y Z W) as (Y X W W), (IGNORE Z).
-```
-### DYXWX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X W X), (IGNORE Z).
-```
-### DYXWY
-
-```
-macro. reorder arguments (X Y Z W) as (Y X W Y), (IGNORE Z).
-```
-### DYXWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y X W Z), (IGNORE).
-```
-### DYXX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X X), (IGNORE W Z).
-```
-### DYXXW
-
-```
-macro. reorder arguments (X Y Z W) as (Y X X W), (IGNORE Z).
-```
-### DYXXX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X X X), (IGNORE W Z).
-```
-### DYXXY
-
-```
-macro. reorder arguments (X Y Z W) as (Y X X Y), (IGNORE W Z).
-```
-### DYXXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y X X Z), (IGNORE W).
-```
-### DYXY
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Y), (IGNORE W Z).
-```
-### DYXYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Y W), (IGNORE Z).
-```
-### DYXYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Y X), (IGNORE W Z).
-```
-### DYXYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Y Y), (IGNORE W Z).
-```
-### DYXYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Y Z), (IGNORE W).
-```
-### DYXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Z), (IGNORE W).
-```
-### DYXZW
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Z W), (IGNORE).
-```
-### DYXZX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Z X), (IGNORE W).
-```
-### DYXZY
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Z Y), (IGNORE W).
-```
-### DYXZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Z Z), (IGNORE W).
-```
-### DYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y), (IGNORE W Z X).
-```
-### DYYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y W), (IGNORE Z X).
-```
-### DYYWW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y W W), (IGNORE Z X).
-```
-### DYYWX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y W X), (IGNORE Z).
-```
-### DYYWY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y W Y), (IGNORE Z X).
-```
-### DYYWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y W Z), (IGNORE X).
-```
-### DYYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y X), (IGNORE W Z).
-```
-### DYYXW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y X W), (IGNORE Z).
-```
-### DYYXX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y X X), (IGNORE W Z).
-```
-### DYYXY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y X Y), (IGNORE W Z).
-```
-### DYYXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y X Z), (IGNORE W).
-```
-### DYYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Y), (IGNORE W Z X).
-```
-### DYYYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Y W), (IGNORE Z X).
-```
-### DYYYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Y X), (IGNORE W Z).
-```
-### DYYYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Y Y), (IGNORE W Z X).
-```
-### DYYYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Y Z), (IGNORE W X).
-```
-### DYYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Z), (IGNORE W X).
-```
-### DYYZW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Z W), (IGNORE X).
-```
-### DYYZX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Z X), (IGNORE W).
-```
-### DYYZY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Z Y), (IGNORE W X).
-```
-### DYYZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Z Z), (IGNORE W X).
-```
-### DYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z), (IGNORE W X).
-```
-### DYZW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z W), (IGNORE X).
-```
-### DYZWW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z W W), (IGNORE X).
-```
-### DYZWX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z W X), (IGNORE).
-```
-### DYZWY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z W Y), (IGNORE X).
-```
-### DYZWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z W Z), (IGNORE X).
-```
-### DYZX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z X), (IGNORE W).
-```
-### DYZXW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z X W), (IGNORE).
-```
-### DYZXX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z X X), (IGNORE W).
-```
-### DYZXY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z X Y), (IGNORE W).
-```
-### DYZXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z X Z), (IGNORE W).
-```
-### DYZY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Y), (IGNORE W X).
-```
-### DYZYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Y W), (IGNORE X).
-```
-### DYZYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Y X), (IGNORE W).
-```
-### DYZYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Y Y), (IGNORE W X).
-```
-### DYZYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Y Z), (IGNORE W X).
-```
-### DYZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Z), (IGNORE W X).
-```
-### DYZZW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Z W), (IGNORE X).
-```
-### DYZZX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Z X), (IGNORE W).
-```
-### DYZZY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Z Y), (IGNORE W X).
-```
-### DYZZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Z Z), (IGNORE W X).
-```
-### DZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z), (IGNORE W Y X).
-```
-### DZW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W), (IGNORE Y X).
-```
-### DZWW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W W), (IGNORE Y X).
-```
-### DZWWW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W W W), (IGNORE Y X).
-```
-### DZWWX
-
-```
-macro. reorder arguments (X Y Z W) as (Z W W X), (IGNORE Y).
-```
-### DZWWY
-
-```
-macro. reorder arguments (X Y Z W) as (Z W W Y), (IGNORE X).
-```
-### DZWWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z W W Z), (IGNORE Y X).
-```
-### DZWX
-
-```
-macro. reorder arguments (X Y Z W) as (Z W X), (IGNORE Y).
-```
-### DZWXW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W X W), (IGNORE Y).
-```
-### DZWXX
-
-```
-macro. reorder arguments (X Y Z W) as (Z W X X), (IGNORE Y).
-```
-### DZWXY
-
-```
-macro. reorder arguments (X Y Z W) as (Z W X Y), (IGNORE).
-```
-### DZWXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z W X Z), (IGNORE Y).
-```
-### DZWY
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Y), (IGNORE X).
-```
-### DZWYW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Y W), (IGNORE X).
-```
-### DZWYX
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Y X), (IGNORE).
-```
-### DZWYY
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Y Y), (IGNORE X).
-```
-### DZWYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Y Z), (IGNORE X).
-```
-### DZWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Z), (IGNORE Y X).
-```
-### DZWZW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Z W), (IGNORE Y X).
-```
-### DZWZX
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Z X), (IGNORE Y).
-```
-### DZWZY
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Z Y), (IGNORE X).
-```
-### DZWZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Z Z), (IGNORE Y X).
-```
-### DZX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X), (IGNORE W Y).
-```
-### DZXW
-
-```
-macro. reorder arguments (X Y Z W) as (Z X W), (IGNORE Y).
-```
-### DZXWW
-
-```
-macro. reorder arguments (X Y Z W) as (Z X W W), (IGNORE Y).
-```
-### DZXWX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X W X), (IGNORE Y).
-```
-### DZXWY
-
-```
-macro. reorder arguments (X Y Z W) as (Z X W Y), (IGNORE).
-```
-### DZXWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z X W Z), (IGNORE Y).
-```
-### DZXX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X X), (IGNORE W Y).
-```
-### DZXXW
-
-```
-macro. reorder arguments (X Y Z W) as (Z X X W), (IGNORE Y).
-```
-### DZXXX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X X X), (IGNORE W Y).
-```
-### DZXXY
-
-```
-macro. reorder arguments (X Y Z W) as (Z X X Y), (IGNORE W).
-```
-### DZXXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z X X Z), (IGNORE W Y).
-```
-### DZXY
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Y), (IGNORE W).
-```
-### DZXYW
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Y W), (IGNORE).
-```
-### DZXYX
+#### DVEC
 
 ```
-macro. reorder arguments (X Y Z W) as (Z X Y X), (IGNORE W).
-```
-### DZXYY
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Y Y), (IGNORE W).
-```
-### DZXYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Y Z), (IGNORE W).
-```
-### DZXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Z), (IGNORE W Y).
-```
-### DZXZW
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Z W), (IGNORE Y).
-```
-### DZXZX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Z X), (IGNORE W Y).
-```
-### DZXZY
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Z Y), (IGNORE W).
-```
-### DZXZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Z Z), (IGNORE W Y).
-```
-### DZY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y), (IGNORE W X).
-```
-### DZYW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y W), (IGNORE X).
-```
-### DZYWW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y W W), (IGNORE X).
-```
-### DZYWX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y W X), (IGNORE).
-```
-### DZYWY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y W Y), (IGNORE X).
-```
-### DZYWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y W Z), (IGNORE X).
-```
-### DZYX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y X), (IGNORE W).
-```
-### DZYXW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y X W), (IGNORE).
-```
-### DZYXX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y X X), (IGNORE W).
-```
-### DZYXY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y X Y), (IGNORE W).
-```
-### DZYXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y X Z), (IGNORE W).
-```
-### DZYY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Y), (IGNORE W X).
-```
-### DZYYW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Y W), (IGNORE X).
-```
-### DZYYX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Y X), (IGNORE W).
-```
-### DZYYY
+:missing:todo:
 
+ ; VEQ:DVEC
+ ;   [symbol]
+ ;
+ ; DVEC names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (SIMPLE-ARRAY VEQ:DF)
 ```
-macro. reorder arguments (X Y Z W) as (Z Y Y Y), (IGNORE W X).
-```
-### DZYYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Y Z), (IGNORE W X).
-```
-### DZYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Z), (IGNORE W X).
-```
-### DZYZW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Z W), (IGNORE X).
-```
-### DZYZX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Z X), (IGNORE W).
-```
-### DZYZY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Z Y), (IGNORE W X).
-```
-### DZYZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Z Z), (IGNORE W X).
-```
-### DZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z), (IGNORE W Y X).
-```
-### DZZW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z W), (IGNORE Y X).
-```
-### DZZWW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z W W), (IGNORE Y X).
-```
-### DZZWX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z W X), (IGNORE Y).
-```
-### DZZWY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z W Y), (IGNORE X).
-```
-### DZZWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z W Z), (IGNORE Y X).
-```
-### DZZX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z X), (IGNORE W Y).
-```
-### DZZXW
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z X W), (IGNORE Y).
-```
-### DZZXX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z X X), (IGNORE W Y).
-```
-### DZZXY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z X Y), (IGNORE W).
-```
-### DZZXZ
+#### DVLET
 
 ```
-macro. reorder arguments (X Y Z W) as (Z Z X Z), (IGNORE W Y).
-```
-### DZZY
+:missing:todo:
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Y), (IGNORE W X).
+ ; VEQ:DVLET
+ ;   [symbol]
 ```
-### DZZYW
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Y W), (IGNORE X).
-```
-### DZZYX
+#### :context: DVSET
 
 ```
-macro. reorder arguments (X Y Z W) as (Z Z Y X), (IGNORE W).
+set 1d value.
+ex: (DVSET (a) (fx ...))
+where (fx ...) returns 1 values.
 ```
-### DZZYY
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Y Y), (IGNORE W X).
-```
-### DZZYZ
+#### :context: DWITH-ARRAYS
 
 ```
-macro. reorder arguments (X Y Z W) as (Z Z Y Z), (IGNORE W X).
-```
-### DZZZ
+args: (&key (n 0) inds (start 0) itr cnt arr fxs exs nxs)
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Z), (IGNORE W Y X).
-```
-### DZZZW
+n is the number of iterations
+start is the first index. then n-1 more.
+inds is indices to iterate. replaces n/start
+arr is the arrays to be defined/referenced
+itr is the symbol representing indices
+cnt is the symbol representing iterations from 0
+fxs is the labels
+exs is the expressions assigned to array
+nxs is the expressions with no assignment
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Z W), (IGNORE Y X).
-```
-### DZZZX
+ex:
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Z X), (IGNORE W Y).
+(dwith-arrays (:n 7 :itr k ; k will be 0, 1, ..., 6
+  ; the third form in elements of arr can be empty, a form that will be
+  ; executed, or a symbol that refers to an array defined outside of
+  ; with-arrays
+  :arr ((a 3 (f3$one 7)) ; init a as (f3$one 7)
+        (b 3) (c 3)) ; init b,c as (f3$zero 7)
+  ; define functions to use in fxs
+  :fxs ((cross ((varg 3 v w)) (f3cross v w))
+        (init1 (i) (f3~ (1+ i) (* 2 i) (+ 2 i)))
+        (init2 (i) (f3~ (+ 2 i) (1+ i) (* 2 i))))
+  ; perform the calculations
+  :exs ((a k (init1 k)) ; init row k of a with init1
+        (b k (init2 k)) ; init row k of b with init2
+        (c k (cross a b)))) ; set row k of c to (cross a b)
+  ; use the arrays. the last form is returned, as in a progn
+  (vpr c))
 ```
-### DZZZY
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Z Y), (IGNORE W X).
-```
-### DZZZZ
+#### :context: D~
 
 ```
-macro. reorder arguments (X Y Z W) as (Z Z Z Z), (IGNORE W Y X).
+make 1d vector in veq context.
+coerce to type.
 ```
-### D~
 
-```
-:missing:
-
-VEQ:D~
-  [symbol]
-```
-### EXT-SYMBOLS?
+#### EXT-SYMBOLS?
 
 ```
 list all external symbols in veq. use :verbose to inlcude docstring.  use
   :pretty to print verbose output to stdout in a readable form.
-VEQ:EXT-SYMBOLS?
-  [symbol]
 
-EXT-SYMBOLS? names a macro:
-  Lambda-list: (&OPTIONAL MODE)
-  Documentation:
-    list all external symbols in veq. use :verbose to inlcude docstring.  use
-      :pretty to print verbose output to stdout in a readable form.
-  Source file: /data/x/veq/src/veq.lisp
+ ; VEQ:EXT-SYMBOLS?
+ ;   [symbol]
+ ;
+ ; EXT-SYMBOLS? names a macro:
+ ;   Lambda-list: (&OPTIONAL MODE)
+ ;   Documentation:
+ ;     list all external symbols in veq. use :verbose to inlcude docstring.  use
+ ;       :pretty to print verbose output to stdout in a readable form.
+ ;   Source file: /data/x/veq/src/docs.lisp
 ```
-### F
 
-```
-:missing:
-
-VEQ:F
-  [symbol]
-```
-### F$
+#### :context: F
 
 ```
-:missing:
-
-VEQ:F$
-  [symbol]
+make 1d vector in veq context.
+strict.
 ```
-### F$*
+
+#### :context: F$
+
+```
+returns values from 1d array.
+supports multiple indices. default is 0.
+ex: (F$ a i j ...) returns (values a[i] a[j] ...).
+note that the number of values depends on the dimension.
+```
+
+#### F$\*
 
 ```
 broadcast for fx: -F*
 macroname: F$*
+ex: (F$* a ...) performs (mvc #'-F* a[i] ...) for every row in a.
 
-
-VEQ:F$*
-  [symbol]
-
-F$* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$* ...).
-    see function: %F$*
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$*
+ ;   [symbol]
+ ;
+ ; F$* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$*
+ ;     macro wrapper: F$*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$*!
+
+#### F$\*!
 
 ```
 broadcast for fx: -F*
 macroname: F$*!
+ex: (F$*! a ...) performs (mvc #'-F* a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$*!
-  [symbol]
-
-F$*! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$*! ...).
-    see function: %F$*!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$*!
+ ;   [symbol]
+ ;
+ ; F$*! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$*!
+ ;     macro wrapper: F$*!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$+
+
+#### F$+
 
 ```
 broadcast for fx: -F+
 macroname: F$+
+ex: (F$+ a ...) performs (mvc #'-F+ a[i] ...) for every row in a.
 
-
-VEQ:F$+
-  [symbol]
-
-F$+ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$+ ...).
-    see function: %F$+
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$+
+ ;   [symbol]
+ ;
+ ; F$+ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$+
+ ;     macro wrapper: F$+
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$+!
+
+#### F$+!
 
 ```
 broadcast for fx: -F+
 macroname: F$+!
+ex: (F$+! a ...) performs (mvc #'-F+ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$+!
-  [symbol]
-
-F$+! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$+! ...).
-    see function: %F$+!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$+!
+ ;   [symbol]
+ ;
+ ; F$+! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$+!
+ ;     macro wrapper: F$+!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$-
+
+#### F$-
 
 ```
 broadcast for fx: -F-
 macroname: F$-
+ex: (F$- a ...) performs (mvc #'-F- a[i] ...) for every row in a.
 
-
-VEQ:F$-
-  [symbol]
-
-F$- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$- ...).
-    see function: %F$-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$-
+ ;   [symbol]
+ ;
+ ; F$- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$-
+ ;     macro wrapper: F$-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$-!
+
+#### F$-!
 
 ```
 broadcast for fx: -F-
 macroname: F$-!
+ex: (F$-! a ...) performs (mvc #'-F- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$-!
-  [symbol]
-
-F$-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$-! ...).
-    see function: %F$-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$-!
+ ;   [symbol]
+ ;
+ ; F$-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$-!
+ ;     macro wrapper: F$-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$/
+
+#### F$/
 
 ```
 broadcast for fx: -F/
 macroname: F$/
+ex: (F$/ a ...) performs (mvc #'-F/ a[i] ...) for every row in a.
 
-
-VEQ:F$/
-  [symbol]
-
-F$/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$/ ...).
-    see function: %F$/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$/
+ ;   [symbol]
+ ;
+ ; F$/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$/
+ ;     macro wrapper: F$/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$/!
+
+#### F$/!
 
 ```
 broadcast for fx: -F/
 macroname: F$/!
+ex: (F$/! a ...) performs (mvc #'-F/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$/!
-  [symbol]
-
-F$/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$/! ...).
-    see function: %F$/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$/!
+ ;   [symbol]
+ ;
+ ; F$/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$/!
+ ;     macro wrapper: F$/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$_
+
+#### F$_
 
 ```
 create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
    or: ($_ '((1d0 2d0) (1d0 2d0)))
-VEQ:F$_
-  [symbol]
 
-F$_ names a macro:
-  Lambda-list: (&BODY BODY)
-  Documentation:
-    create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
-       or: ($_ '((1d0 2d0) (1d0 2d0)))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:F$_
+ ;   [symbol]
+ ;
+ ; F$_ names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Documentation:
+ ;     create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
+ ;        or: ($_ '((1d0 2d0) (1d0 2d0)))
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F$ABS
+
+#### F$ABS
 
 ```
 broadcast for fx: -FABS
 macroname: F$ABS
+ex: (F$ABS a ...) performs (mvc #'-FABS a[i] ...) for every row in a.
 
-
-VEQ:F$ABS
-  [symbol]
-
-F$ABS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$ABS ...).
-    see function: %F$ABS
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$ABS
+ ;   [symbol]
+ ;
+ ; F$ABS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$ABS
+ ;     macro wrapper: F$ABS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$ABS!
+
+#### F$ABS!
 
 ```
 broadcast for fx: -FABS
 macroname: F$ABS!
+ex: (F$ABS! a ...) performs (mvc #'-FABS a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$ABS!
-  [symbol]
-
-F$ABS! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$ABS! ...).
-    see function: %F$ABS!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$ABS!
+ ;   [symbol]
+ ;
+ ; F$ABS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$ABS!
+ ;     macro wrapper: F$ABS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$COPY
+
+#### F$COPY
 
 ```
-:missing:
+copy array
 
-VEQ:F$COPY
-  [symbol]
-
-F$COPY names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:F$COPY
+ ;   [symbol]
+ ;
+ ; F$COPY names a compiled function:
+ ;   Lambda-list: (A)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     copy array
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F$COS-SIN
+
+#### F$COS-SIN
 
 ```
 broadcast for fx: -FCOS-SIN
 macroname: F$COS-SIN
+ex: (F$COS-SIN a ...) performs (mvc #'-FCOS-SIN a[i] ...) for every row in a.
 
-
-VEQ:F$COS-SIN
-  [symbol]
-
-F$COS-SIN names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$COS-SIN ...).
-    see function: %F$COS-SIN
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$COS-SIN
+ ;   [symbol]
+ ;
+ ; F$COS-SIN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$COS-SIN
+ ;     macro wrapper: F$COS-SIN
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$FROM
+
+#### F$FROM
 
 ```
 broadcast for fx: -FFROM
 macroname: F$FROM
+ex: (F$FROM a ...) performs (mvc #'-FFROM a[i] ...) for every row in a.
 
-
-VEQ:F$FROM
-  [symbol]
-
-F$FROM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$FROM ...).
-    see function: %F$FROM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$FROM
+ ;   [symbol]
+ ;
+ ; F$FROM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$FROM
+ ;     macro wrapper: F$FROM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$FROM!
+
+#### F$FROM!
 
 ```
 broadcast for fx: -FFROM
 macroname: F$FROM!
+ex: (F$FROM! a ...) performs (mvc #'-FFROM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$FROM!
-  [symbol]
-
-F$FROM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$FROM! ...).
-    see function: %F$FROM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$FROM!
+ ;   [symbol]
+ ;
+ ; F$FROM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$FROM!
+ ;     macro wrapper: F$FROM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$FXLSPACE
+
+#### :context: F$FXLSPACE
 
 ```
-:missing:
-
-VEQ:F$FXLSPACE
-  [symbol]
+args: ((n a b &key (end t)) &body fx)
+for 1d points a, b.
+assumes the last form in fx is a function and does
+(mvc fx i x ...) for points between a, b.
+ex: (F$FXLSPACE (n a b) (lambda (i (:va 1 a b)) (vpr i a b)))
 ```
-### F$I-
+
+#### F$I-
 
 ```
 broadcast for fx: -FI-
 macroname: F$I-
+ex: (F$I- a ...) performs (mvc #'-FI- a[i] ...) for every row in a.
 
-
-VEQ:F$I-
-  [symbol]
-
-F$I- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$I- ...).
-    see function: %F$I-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$I-
+ ;   [symbol]
+ ;
+ ; F$I- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$I-
+ ;     macro wrapper: F$I-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$I-!
+
+#### F$I-!
 
 ```
 broadcast for fx: -FI-
 macroname: F$I-!
+ex: (F$I-! a ...) performs (mvc #'-FI- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$I-!
-  [symbol]
-
-F$I-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$I-! ...).
-    see function: %F$I-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$I-!
+ ;   [symbol]
+ ;
+ ; F$I-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$I-!
+ ;     macro wrapper: F$I-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$I/
+
+#### F$I/
 
 ```
 broadcast for fx: -FI/
 macroname: F$I/
+ex: (F$I/ a ...) performs (mvc #'-FI/ a[i] ...) for every row in a.
 
-
-VEQ:F$I/
-  [symbol]
-
-F$I/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$I/ ...).
-    see function: %F$I/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$I/
+ ;   [symbol]
+ ;
+ ; F$I/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$I/
+ ;     macro wrapper: F$I/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$I/!
+
+#### F$I/!
 
 ```
 broadcast for fx: -FI/
 macroname: F$I/!
+ex: (F$I/! a ...) performs (mvc #'-FI/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$I/!
-  [symbol]
-
-F$I/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$I/! ...).
-    see function: %F$I/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$I/!
+ ;   [symbol]
+ ;
+ ; F$I/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$I/!
+ ;     macro wrapper: F$I/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$ISCALE
+
+#### F$ISCALE
 
 ```
 broadcast for fx: -FISCALE
 macroname: F$ISCALE
+ex: (F$ISCALE a ...) performs (mvc #'-FISCALE a[i] ...) for every row in a.
 
-
-VEQ:F$ISCALE
-  [symbol]
-
-F$ISCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$ISCALE ...).
-    see function: %F$ISCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$ISCALE
+ ;   [symbol]
+ ;
+ ; F$ISCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$ISCALE
+ ;     macro wrapper: F$ISCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$ISCALE!
+
+#### F$ISCALE!
 
 ```
 broadcast for fx: -FISCALE
 macroname: F$ISCALE!
+ex: (F$ISCALE! a ...) performs (mvc #'-FISCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$ISCALE!
-  [symbol]
-
-F$ISCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$ISCALE! ...).
-    see function: %F$ISCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$ISCALE!
+ ;   [symbol]
+ ;
+ ; F$ISCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$ISCALE!
+ ;     macro wrapper: F$ISCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$LAST
+
+#### F$LAST
 
 ```
-:missing:
+get last row of 1d array as (values ...)
 
-VEQ:F$LAST
-  [symbol]
-
-F$LAST names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
-                 (VALUES SINGLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-rows.lisp
+ ; VEQ:F$LAST
+ ;   [symbol]
+ ;
+ ; F$LAST names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     get last row of 1d array as (values ...)
+ ;   Source file: /data/x/veq/src/array-rows.lisp
 ```
-### F$LEN
+
+#### F$LEN
 
 ```
 broadcast for fx: -FLEN
 macroname: F$LEN
+ex: (F$LEN a ...) performs (mvc #'-FLEN a[i] ...) for every row in a.
 
-
-VEQ:F$LEN
-  [symbol]
-
-F$LEN names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$LEN ...).
-    see function: %F$LEN
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$LEN
+ ;   [symbol]
+ ;
+ ; F$LEN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$LEN
+ ;     macro wrapper: F$LEN
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$LEN2
+
+#### F$LEN2
 
 ```
 broadcast for fx: -FLEN2
 macroname: F$LEN2
+ex: (F$LEN2 a ...) performs (mvc #'-FLEN2 a[i] ...) for every row in a.
 
-
-VEQ:F$LEN2
-  [symbol]
-
-F$LEN2 names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$LEN2 ...).
-    see function: %F$LEN2
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$LEN2
+ ;   [symbol]
+ ;
+ ; F$LEN2 names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$LEN2
+ ;     macro wrapper: F$LEN2
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$LINE
 
-```
-macro wrapper: (mvc #'%F$LINE ...).
-see function: %F$LINE
-VEQ:F$LINE
-  [symbol]
-
-F$LINE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$LINE ...).
-    see function: %F$LINE
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### F$LSPACE
+#### F$LINE
 
 ```
-macro wrapper: (mvc #'%F$LSPACE ...) in veq context.
-see function: %F$LSPACE
-VEQ:F$LSPACE
-  [symbol]
+fx: %F$LINE
+macro wrapper: F$LINE
 
-F$LSPACE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$LSPACE ...) in veq context.
-    see function: %F$LSPACE
-  Source file: /data/x/veq/src/lspace.lisp
+defined via veq:def*
+
+ ; VEQ:F$LINE
+ ;   [symbol]
+ ;
+ ; F$LINE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$LINE
+ ;     macro wrapper: F$LINE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-### F$MAKE
+
+#### F$LSPACE
+
+```
+fx: %F$LSPACE
+macro wrapper: F$LSPACE
+
+defined via veq:fvdef*
+
+ ; VEQ:F$LSPACE
+ ;   [symbol]
+ ;
+ ; F$LSPACE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$LSPACE
+ ;     macro wrapper: F$LSPACE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/lspace.lisp
+```
+
+#### F$MAKE
 
 ```
  create array with size (n dim), and initial value v
-VEQ:F$MAKE
-  [symbol]
 
-F$MAKE names a macro:
-  Lambda-list: (&KEY (DIM 1) (N 1) (V 0.0))
-  Documentation:
-     create array with size (n dim), and initial value v
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:F$MAKE
+ ;   [symbol]
+ ;
+ ; F$MAKE names a macro:
+ ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0.0))
+ ;   Documentation:
+ ;      create array with size (n dim), and initial value v
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F$MIMA
+
+#### F$MIMA
 
 ```
-:missing:
+find min and max for all dimensions of 1 array.
+ex: (F$MIMA &key n) returns (values xmin xmax ...).
+use n to limit to first n rows.
 
-VEQ:F$MIMA
-  [symbol]
-
-F$MIMA names a compiled function:
-  Lambda-list: (A0 &KEY (N ($NUM A0)) INDS)
-  Derived type: (FUNCTION
-                 ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T) (:INDS T))
-                 (VALUES SINGLE-FLOAT SINGLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-mima.lisp
+ ; VEQ:F$MIMA
+ ;   [symbol]
+ ;
+ ; F$MIMA names a compiled function:
+ ;   Lambda-list: (A0 &KEY (N ($NUM A0)) INDS)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T) (:INDS T))
+ ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     find min and max for all dimensions of 1 array.
+ ;     ex: (F$MIMA &key n) returns (values xmin xmax ...).
+ ;     use n to limit to first n rows.
+ ;   Source file: /data/x/veq/src/array-mima.lisp
 ```
-### F$NEG
+
+#### F$NEG
 
 ```
 broadcast for fx: -FNEG
 macroname: F$NEG
+ex: (F$NEG a ...) performs (mvc #'-FNEG a[i] ...) for every row in a.
 
-
-VEQ:F$NEG
-  [symbol]
-
-F$NEG names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$NEG ...).
-    see function: %F$NEG
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$NEG
+ ;   [symbol]
+ ;
+ ; F$NEG names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$NEG
+ ;     macro wrapper: F$NEG
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$NEG!
+
+#### F$NEG!
 
 ```
 broadcast for fx: -FNEG
 macroname: F$NEG!
+ex: (F$NEG! a ...) performs (mvc #'-FNEG a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$NEG!
-  [symbol]
-
-F$NEG! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$NEG! ...).
-    see function: %F$NEG!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$NEG!
+ ;   [symbol]
+ ;
+ ; F$NEG! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$NEG!
+ ;     macro wrapper: F$NEG!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$NORM
+
+#### F$NORM
 
 ```
 broadcast for fx: -FNORM
 macroname: F$NORM
+ex: (F$NORM a ...) performs (mvc #'-FNORM a[i] ...) for every row in a.
 
-
-VEQ:F$NORM
-  [symbol]
-
-F$NORM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$NORM ...).
-    see function: %F$NORM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$NORM
+ ;   [symbol]
+ ;
+ ; F$NORM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$NORM
+ ;     macro wrapper: F$NORM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$NORM!
+
+#### F$NORM!
 
 ```
 broadcast for fx: -FNORM
 macroname: F$NORM!
+ex: (F$NORM! a ...) performs (mvc #'-FNORM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$NORM!
-  [symbol]
-
-F$NORM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$NORM! ...).
-    see function: %F$NORM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$NORM!
+ ;   [symbol]
+ ;
+ ; F$NORM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$NORM!
+ ;     macro wrapper: F$NORM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$ONE
 
-```
-:missing:
-
-VEQ:F$ONE
-  [symbol]
-
-F$ONE names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### F$POINT
+#### F$NUM
 
 ```
-macro wrapper: (mvc #'%F$POINT ...).
-see function: %F$POINT
-VEQ:F$POINT
-  [symbol]
+number of elements in 1d array.
+typed.
 
-F$POINT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$POINT ...).
-    see function: %F$POINT
-  Source file: /data/x/veq/src/shapes.lisp
+ ; VEQ:F$NUM
+ ;   [symbol]
+ ;
+ ; F$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 1d array.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F$SCALE
+
+#### F$ONE
+
+```
+make 1d array of ones.
+typed.
+
+ ; VEQ:F$ONE
+ ;   [symbol]
+ ;
+ ; F$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d array of ones.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### F$POINT
+
+```
+fx: %F$POINT
+macro wrapper: F$POINT
+
+defined via veq:def*
+
+ ; VEQ:F$POINT
+ ;   [symbol]
+ ;
+ ; F$POINT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$POINT
+ ;     macro wrapper: F$POINT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### F$SCALE
 
 ```
 broadcast for fx: -FSCALE
 macroname: F$SCALE
+ex: (F$SCALE a ...) performs (mvc #'-FSCALE a[i] ...) for every row in a.
 
-
-VEQ:F$SCALE
-  [symbol]
-
-F$SCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$SCALE ...).
-    see function: %F$SCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$SCALE
+ ;   [symbol]
+ ;
+ ; F$SCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$SCALE
+ ;     macro wrapper: F$SCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$SCALE!
+
+#### F$SCALE!
 
 ```
 broadcast for fx: -FSCALE
 macroname: F$SCALE!
+ex: (F$SCALE! a ...) performs (mvc #'-FSCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F$SCALE!
-  [symbol]
-
-F$SCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F$SCALE! ...).
-    see function: %F$SCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F$SCALE!
+ ;   [symbol]
+ ;
+ ; F$SCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F$SCALE!
+ ;     macro wrapper: F$SCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F$SUM
 
-```
-:missing:
-
-VEQ:F$SUM
-  [symbol]
-
-F$SUM names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T))
-                 (VALUES SINGLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-reduce.lisp
-```
-### F$TAKE
+#### F$SUM
 
 ```
-:missing:
+sum all rows of 1d array.
 
-VEQ:F$TAKE
-  [symbol]
-
-F$TAKE names a compiled function:
-  Lambda-list: (A INDS &KEY RES)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) T &KEY (:RES T))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
-  Source file: /data/x/veq/src/array-take.lisp
+ ; VEQ:F$SUM
+ ;   [symbol]
+ ;
+ ; F$SUM names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T))
+ ;                  (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     sum all rows of 1d array.
+ ;   Source file: /data/x/veq/src/array-reduce.lisp
 ```
-### F$VAL
 
-```
-:missing:
-
-VEQ:F$VAL
-  [symbol]
-
-F$VAL names a compiled function:
-  Lambda-list: (V &OPTIONAL (N 1))
-  Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### F$WITH-ROWS
+#### F$TAKE
 
 ```
-:missing:
+returns 1d array with rows for inds.
+use :res put result in existing array
 
-VEQ:F$WITH-ROWS
-  [symbol]
+ ; VEQ:F$TAKE
+ ;   [symbol]
+ ;
+ ; F$TAKE names a compiled function:
+ ;   Lambda-list: (A INDS &KEY RES)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY SINGLE-FLOAT) SEQUENCE &KEY (:RES T))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
+ ;   Documentation:
+ ;     returns 1d array with rows for inds.
+ ;     use :res put result in existing array
+ ;   Source file: /data/x/veq/src/array-take.lisp
 ```
-### F$ZERO
+
+#### F$VAL
 
 ```
-:missing:
+make 1d array of val.
+typed.
 
-VEQ:F$ZERO
-  [symbol]
-
-F$ZERO names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:F$VAL
+ ;   [symbol]
+ ;
+ ; F$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d array of val.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F*
+
+#### :context: F$WITH-ROWS
+
+```
+make 1d
+```
+
+#### F$ZERO
+
+```
+make 1d array of zeros.
+typed.
+
+ ; VEQ:F$ZERO
+ ;   [symbol]
+ ;
+ ; F$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d array of zeros.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### :context: F\*
 
 ```
 veq context op: F*
@@ -7684,7 +7124,8 @@ fxname: -F*
 args: (A B)
 body: (* A B)
 ```
-### F+
+
+#### :context: F+
 
 ```
 veq context op: F+
@@ -7692,7 +7133,8 @@ fxname: -F+
 args: (A B)
 body: (+ A B)
 ```
-### F-
+
+#### :context: F-
 
 ```
 veq context op: F-
@@ -7700,7 +7142,8 @@ fxname: -F-
 args: (A B)
 body: (- A B)
 ```
-### F/
+
+#### :context: F/
 
 ```
 veq context op: F/
@@ -7708,785 +7151,975 @@ fxname: -F/
 args: (A B)
 body: (/ A B)
 ```
-### F2
+
+#### :context: F2
 
 ```
-:missing:
-
-VEQ:F2
-  [symbol]
+make 2d vector in veq context.
+strict.
 ```
-### F2$
+
+#### :context: F2$
 
 ```
-:missing:
-
-VEQ:F2$
-  [symbol]
+returns values from 2d array.
+supports multiple indices. default is 0.
+ex: (F2$ a i j ...) returns (values a[i] a[j] ...).
+note that the number of values depends on the dimension.
 ```
-### F2$*
+
+#### F2$\*
 
 ```
 broadcast for fx: -F2*
 macroname: F2$*
+ex: (F2$* a ...) performs (mvc #'-F2* a[i] ...) for every row in a.
 
-
-VEQ:F2$*
-  [symbol]
-
-F2$* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$* ...).
-    see function: %F2$*
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$*
+ ;   [symbol]
+ ;
+ ; F2$* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$*
+ ;     macro wrapper: F2$*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$*!
+
+#### F2$\*!
 
 ```
 broadcast for fx: -F2*
 macroname: F2$*!
+ex: (F2$*! a ...) performs (mvc #'-F2* a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$*!
-  [symbol]
-
-F2$*! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$*! ...).
-    see function: %F2$*!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$*!
+ ;   [symbol]
+ ;
+ ; F2$*! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$*!
+ ;     macro wrapper: F2$*!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$+
+
+#### F2$+
 
 ```
 broadcast for fx: -F2+
 macroname: F2$+
+ex: (F2$+ a ...) performs (mvc #'-F2+ a[i] ...) for every row in a.
 
-
-VEQ:F2$+
-  [symbol]
-
-F2$+ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$+ ...).
-    see function: %F2$+
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$+
+ ;   [symbol]
+ ;
+ ; F2$+ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$+
+ ;     macro wrapper: F2$+
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$+!
+
+#### F2$+!
 
 ```
 broadcast for fx: -F2+
 macroname: F2$+!
+ex: (F2$+! a ...) performs (mvc #'-F2+ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$+!
-  [symbol]
-
-F2$+! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$+! ...).
-    see function: %F2$+!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$+!
+ ;   [symbol]
+ ;
+ ; F2$+! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$+!
+ ;     macro wrapper: F2$+!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$-
+
+#### F2$-
 
 ```
 broadcast for fx: -F2-
 macroname: F2$-
+ex: (F2$- a ...) performs (mvc #'-F2- a[i] ...) for every row in a.
 
-
-VEQ:F2$-
-  [symbol]
-
-F2$- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$- ...).
-    see function: %F2$-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$-
+ ;   [symbol]
+ ;
+ ; F2$- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$-
+ ;     macro wrapper: F2$-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$-!
+
+#### F2$-!
 
 ```
 broadcast for fx: -F2-
 macroname: F2$-!
+ex: (F2$-! a ...) performs (mvc #'-F2- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$-!
-  [symbol]
-
-F2$-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$-! ...).
-    see function: %F2$-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$-!
+ ;   [symbol]
+ ;
+ ; F2$-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$-!
+ ;     macro wrapper: F2$-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$/
+
+#### F2$/
 
 ```
 broadcast for fx: -F2/
 macroname: F2$/
+ex: (F2$/ a ...) performs (mvc #'-F2/ a[i] ...) for every row in a.
 
-
-VEQ:F2$/
-  [symbol]
-
-F2$/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$/ ...).
-    see function: %F2$/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$/
+ ;   [symbol]
+ ;
+ ; F2$/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$/
+ ;     macro wrapper: F2$/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$/!
+
+#### F2$/!
 
 ```
 broadcast for fx: -F2/
 macroname: F2$/!
+ex: (F2$/! a ...) performs (mvc #'-F2/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$/!
-  [symbol]
-
-F2$/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$/! ...).
-    see function: %F2$/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$/!
+ ;   [symbol]
+ ;
+ ; F2$/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$/!
+ ;     macro wrapper: F2$/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$ABS
+
+#### F2$ABS
 
 ```
 broadcast for fx: -F2ABS
 macroname: F2$ABS
+ex: (F2$ABS a ...) performs (mvc #'-F2ABS a[i] ...) for every row in a.
 
-
-VEQ:F2$ABS
-  [symbol]
-
-F2$ABS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$ABS ...).
-    see function: %F2$ABS
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$ABS
+ ;   [symbol]
+ ;
+ ; F2$ABS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$ABS
+ ;     macro wrapper: F2$ABS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$ABS!
+
+#### F2$ABS!
 
 ```
 broadcast for fx: -F2ABS
 macroname: F2$ABS!
+ex: (F2$ABS! a ...) performs (mvc #'-F2ABS a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$ABS!
-  [symbol]
-
-F2$ABS! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$ABS! ...).
-    see function: %F2$ABS!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$ABS!
+ ;   [symbol]
+ ;
+ ; F2$ABS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$ABS!
+ ;     macro wrapper: F2$ABS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$CENTER
 
-```
-macro wrapper: (mvc #'%F2$CENTER ...).
-see function: %F2$CENTER
-VEQ:F2$CENTER
-  [symbol]
-
-F2$CENTER names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$CENTER ...).
-    see function: %F2$CENTER
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### F2$CIRC
+#### F2$CENTER
 
 ```
-macro wrapper: (mvc #'%F2$CIRC ...).
-see function: %F2$CIRC
-VEQ:F2$CIRC
-  [symbol]
+fx: %F2$CENTER
+macro wrapper: F2$CENTER
 
-F2$CIRC names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$CIRC ...).
-    see function: %F2$CIRC
-  Source file: /data/x/veq/src/shapes.lisp
+defined via veq:fvdef*
+
+ ; VEQ:F2$CENTER
+ ;   [symbol]
+ ;
+ ; F2$CENTER names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$CENTER
+ ;     macro wrapper: F2$CENTER
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-### F2$COPY
+
+#### F2$CIRC
 
 ```
-:missing:
+fx: %F2$CIRC
+macro wrapper: F2$CIRC
 
-VEQ:F2$COPY
-  [symbol]
+defined via veq:fvdef*
+
+ ; VEQ:F2$CIRC
+ ;   [symbol]
+ ;
+ ; F2$CIRC names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$CIRC
+ ;     macro wrapper: F2$CIRC
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-### F2$FROM
+
+#### F2$FROM
 
 ```
 broadcast for fx: -F2FROM
 macroname: F2$FROM
+ex: (F2$FROM a ...) performs (mvc #'-F2FROM a[i] ...) for every row in a.
 
-
-VEQ:F2$FROM
-  [symbol]
-
-F2$FROM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$FROM ...).
-    see function: %F2$FROM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$FROM
+ ;   [symbol]
+ ;
+ ; F2$FROM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$FROM
+ ;     macro wrapper: F2$FROM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$FROM!
+
+#### F2$FROM!
 
 ```
 broadcast for fx: -F2FROM
 macroname: F2$FROM!
+ex: (F2$FROM! a ...) performs (mvc #'-F2FROM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$FROM!
-  [symbol]
-
-F2$FROM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$FROM! ...).
-    see function: %F2$FROM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$FROM!
+ ;   [symbol]
+ ;
+ ; F2$FROM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$FROM!
+ ;     macro wrapper: F2$FROM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$FXLSPACE
+
+#### :context: F2$FXLSPACE
 
 ```
-:missing:
-
-VEQ:F2$FXLSPACE
-  [symbol]
+args: ((n a b &key (end t)) &body fx)
+for 2d points a, b.
+assumes the last form in fx is a function and does
+(mvc fx i x ...) for points between a, b.
+ex: (F2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
 ```
-### F2$I-
+
+#### F2$I-
 
 ```
 broadcast for fx: -F2I-
 macroname: F2$I-
+ex: (F2$I- a ...) performs (mvc #'-F2I- a[i] ...) for every row in a.
 
-
-VEQ:F2$I-
-  [symbol]
-
-F2$I- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$I- ...).
-    see function: %F2$I-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$I-
+ ;   [symbol]
+ ;
+ ; F2$I- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$I-
+ ;     macro wrapper: F2$I-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$I-!
+
+#### F2$I-!
 
 ```
 broadcast for fx: -F2I-
 macroname: F2$I-!
+ex: (F2$I-! a ...) performs (mvc #'-F2I- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$I-!
-  [symbol]
-
-F2$I-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$I-! ...).
-    see function: %F2$I-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$I-!
+ ;   [symbol]
+ ;
+ ; F2$I-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$I-!
+ ;     macro wrapper: F2$I-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$I/
+
+#### F2$I/
 
 ```
 broadcast for fx: -F2I/
 macroname: F2$I/
+ex: (F2$I/ a ...) performs (mvc #'-F2I/ a[i] ...) for every row in a.
 
-
-VEQ:F2$I/
-  [symbol]
-
-F2$I/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$I/ ...).
-    see function: %F2$I/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$I/
+ ;   [symbol]
+ ;
+ ; F2$I/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$I/
+ ;     macro wrapper: F2$I/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$I/!
+
+#### F2$I/!
 
 ```
 broadcast for fx: -F2I/
 macroname: F2$I/!
+ex: (F2$I/! a ...) performs (mvc #'-F2I/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$I/!
-  [symbol]
-
-F2$I/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$I/! ...).
-    see function: %F2$I/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$I/!
+ ;   [symbol]
+ ;
+ ; F2$I/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$I/!
+ ;     macro wrapper: F2$I/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$ISCALE
+
+#### F2$ISCALE
 
 ```
 broadcast for fx: -F2ISCALE
 macroname: F2$ISCALE
+ex: (F2$ISCALE a ...) performs (mvc #'-F2ISCALE a[i] ...) for every row in a.
 
-
-VEQ:F2$ISCALE
-  [symbol]
-
-F2$ISCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$ISCALE ...).
-    see function: %F2$ISCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$ISCALE
+ ;   [symbol]
+ ;
+ ; F2$ISCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$ISCALE
+ ;     macro wrapper: F2$ISCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$ISCALE!
+
+#### F2$ISCALE!
 
 ```
 broadcast for fx: -F2ISCALE
 macroname: F2$ISCALE!
+ex: (F2$ISCALE! a ...) performs (mvc #'-F2ISCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$ISCALE!
-  [symbol]
-
-F2$ISCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$ISCALE! ...).
-    see function: %F2$ISCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$ISCALE!
+ ;   [symbol]
+ ;
+ ; F2$ISCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$ISCALE!
+ ;     macro wrapper: F2$ISCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$LAST
+
+#### F2$LAST
 
 ```
-:missing:
+get last row of 2d array as (values ...)
 
-VEQ:F2$LAST
-  [symbol]
-
-F2$LAST names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
-                 (VALUES SINGLE-FLOAT SINGLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-rows.lisp
+ ; VEQ:F2$LAST
+ ;   [symbol]
+ ;
+ ; F2$LAST names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     get last row of 2d array as (values ...)
+ ;   Source file: /data/x/veq/src/array-rows.lisp
 ```
-### F2$LEN
+
+#### F2$LEN
 
 ```
 broadcast for fx: -F2LEN
 macroname: F2$LEN
+ex: (F2$LEN a ...) performs (mvc #'-F2LEN a[i] ...) for every row in a.
 
-
-VEQ:F2$LEN
-  [symbol]
-
-F2$LEN names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$LEN ...).
-    see function: %F2$LEN
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$LEN
+ ;   [symbol]
+ ;
+ ; F2$LEN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$LEN
+ ;     macro wrapper: F2$LEN
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$LEN2
+
+#### F2$LEN2
 
 ```
 broadcast for fx: -F2LEN2
 macroname: F2$LEN2
+ex: (F2$LEN2 a ...) performs (mvc #'-F2LEN2 a[i] ...) for every row in a.
 
-
-VEQ:F2$LEN2
-  [symbol]
-
-F2$LEN2 names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$LEN2 ...).
-    see function: %F2$LEN2
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$LEN2
+ ;   [symbol]
+ ;
+ ; F2$LEN2 names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$LEN2
+ ;     macro wrapper: F2$LEN2
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$LINE
 
-```
-macro wrapper: (mvc #'%F2$LINE ...).
-see function: %F2$LINE
-VEQ:F2$LINE
-  [symbol]
-
-F2$LINE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$LINE ...).
-    see function: %F2$LINE
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### F2$LSPACE
+#### F2$LINE
 
 ```
-macro wrapper: (mvc #'%F2$LSPACE ...) in veq context.
-see function: %F2$LSPACE
-VEQ:F2$LSPACE
-  [symbol]
+fx: %F2$LINE
+macro wrapper: F2$LINE
 
-F2$LSPACE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$LSPACE ...) in veq context.
-    see function: %F2$LSPACE
-  Source file: /data/x/veq/src/lspace.lisp
-```
-### F2$MAKE
+defined via veq:def*
 
+ ; VEQ:F2$LINE
+ ;   [symbol]
+ ;
+ ; F2$LINE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$LINE
+ ;     macro wrapper: F2$LINE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-:missing:
 
-VEQ:F2$MAKE
-  [symbol]
-```
-### F2$MIMA
+#### F2$LSPACE
 
 ```
-:missing:
+fx: %F2$LSPACE
+macro wrapper: F2$LSPACE
 
-VEQ:F2$MIMA
-  [symbol]
+defined via veq:fvdef*
 
-F2$MIMA names a compiled function:
-  Lambda-list: (A0 &KEY (N (2$NUM A0)) INDS)
-  Derived type: (FUNCTION
-                 ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T) (:INDS T))
-                 (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
-                         SINGLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-mima.lisp
+ ; VEQ:F2$LSPACE
+ ;   [symbol]
+ ;
+ ; F2$LSPACE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$LSPACE
+ ;     macro wrapper: F2$LSPACE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/lspace.lisp
 ```
-### F2$NEG
+
+#### F2$MIMA
+
+```
+find min and max for all dimensions of 2 array.
+ex: (F2$MIMA &key n) returns (values xmin xmax ...).
+use n to limit to first n rows.
+
+ ; VEQ:F2$MIMA
+ ;   [symbol]
+ ;
+ ; F2$MIMA names a compiled function:
+ ;   Lambda-list: (A0 &KEY (N (2$NUM A0)) INDS)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T) (:INDS T))
+ ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                          SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     find min and max for all dimensions of 2 array.
+ ;     ex: (F2$MIMA &key n) returns (values xmin xmax ...).
+ ;     use n to limit to first n rows.
+ ;   Source file: /data/x/veq/src/array-mima.lisp
+```
+
+#### F2$NEG
 
 ```
 broadcast for fx: -F2NEG
 macroname: F2$NEG
+ex: (F2$NEG a ...) performs (mvc #'-F2NEG a[i] ...) for every row in a.
 
-
-VEQ:F2$NEG
-  [symbol]
-
-F2$NEG names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$NEG ...).
-    see function: %F2$NEG
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$NEG
+ ;   [symbol]
+ ;
+ ; F2$NEG names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$NEG
+ ;     macro wrapper: F2$NEG
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$NEG!
+
+#### F2$NEG!
 
 ```
 broadcast for fx: -F2NEG
 macroname: F2$NEG!
+ex: (F2$NEG! a ...) performs (mvc #'-F2NEG a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$NEG!
-  [symbol]
-
-F2$NEG! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$NEG! ...).
-    see function: %F2$NEG!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$NEG!
+ ;   [symbol]
+ ;
+ ; F2$NEG! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$NEG!
+ ;     macro wrapper: F2$NEG!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$NORM
+
+#### F2$NORM
 
 ```
 broadcast for fx: -F2NORM
 macroname: F2$NORM
+ex: (F2$NORM a ...) performs (mvc #'-F2NORM a[i] ...) for every row in a.
 
-
-VEQ:F2$NORM
-  [symbol]
-
-F2$NORM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$NORM ...).
-    see function: %F2$NORM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$NORM
+ ;   [symbol]
+ ;
+ ; F2$NORM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$NORM
+ ;     macro wrapper: F2$NORM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$NORM!
+
+#### F2$NORM!
 
 ```
 broadcast for fx: -F2NORM
 macroname: F2$NORM!
+ex: (F2$NORM! a ...) performs (mvc #'-F2NORM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$NORM!
-  [symbol]
-
-F2$NORM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$NORM! ...).
-    see function: %F2$NORM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$NORM!
+ ;   [symbol]
+ ;
+ ; F2$NORM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$NORM!
+ ;     macro wrapper: F2$NORM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$ONE
 
-```
-:missing:
-
-VEQ:F2$ONE
-  [symbol]
-
-F2$ONE names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### F2$POINT
+#### F2$NUM
 
 ```
-macro wrapper: (mvc #'%F2$POINT ...).
-see function: %F2$POINT
-VEQ:F2$POINT
-  [symbol]
+number of elements in 2d array.
+typed.
 
-F2$POINT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$POINT ...).
-    see function: %F2$POINT
-  Source file: /data/x/veq/src/shapes.lisp
+ ; VEQ:F2$NUM
+ ;   [symbol]
+ ;
+ ; F2$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 2d array.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F2$POLYGON
 
-```
-macro wrapper: (mvc #'%F2$POLYGON ...).
-see function: %F2$POLYGON
-VEQ:F2$POLYGON
-  [symbol]
-
-F2$POLYGON names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$POLYGON ...).
-    see function: %F2$POLYGON
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### F2$RECT
+#### F2$ONE
 
 ```
-macro wrapper: (mvc #'%F2$RECT ...).
-see function: %F2$RECT
-VEQ:F2$RECT
-  [symbol]
+make 2d array of ones.
+typed.
 
-F2$RECT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$RECT ...).
-    see function: %F2$RECT
-  Source file: /data/x/veq/src/shapes.lisp
+ ; VEQ:F2$ONE
+ ;   [symbol]
+ ;
+ ; F2$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d array of ones.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F2$ROT
+
+#### F2$POINT
+
+```
+fx: %F2$POINT
+macro wrapper: F2$POINT
+
+defined via veq:def*
+
+ ; VEQ:F2$POINT
+ ;   [symbol]
+ ;
+ ; F2$POINT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$POINT
+ ;     macro wrapper: F2$POINT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### F2$POLYGON
+
+```
+fx: %F2$POLYGON
+macro wrapper: F2$POLYGON
+
+defined via veq:fvdef*
+
+ ; VEQ:F2$POLYGON
+ ;   [symbol]
+ ;
+ ; F2$POLYGON names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$POLYGON
+ ;     macro wrapper: F2$POLYGON
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### F2$RECT
+
+```
+fx: %F2$RECT
+macro wrapper: F2$RECT
+
+defined via veq:fvdef*
+
+ ; VEQ:F2$RECT
+ ;   [symbol]
+ ;
+ ; F2$RECT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$RECT
+ ;     macro wrapper: F2$RECT
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### F2$ROT
 
 ```
 broadcast for fx: -F2ROT
 macroname: F2$ROT
+ex: (F2$ROT a ...) performs (mvc #'-F2ROT a[i] ...) for every row in a.
 
-
-VEQ:F2$ROT
-  [symbol]
-
-F2$ROT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$ROT ...).
-    see function: %F2$ROT
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$ROT
+ ;   [symbol]
+ ;
+ ; F2$ROT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$ROT
+ ;     macro wrapper: F2$ROT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$ROT!
+
+#### F2$ROT!
 
 ```
 broadcast for fx: -F2ROT
 macroname: F2$ROT!
+ex: (F2$ROT! a ...) performs (mvc #'-F2ROT a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$ROT!
-  [symbol]
-
-F2$ROT! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$ROT! ...).
-    see function: %F2$ROT!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$ROT!
+ ;   [symbol]
+ ;
+ ; F2$ROT! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$ROT!
+ ;     macro wrapper: F2$ROT!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$ROTS
+
+#### F2$ROTS
 
 ```
 broadcast for fx: -F2ROTS
 macroname: F2$ROTS
+ex: (F2$ROTS a ...) performs (mvc #'-F2ROTS a[i] ...) for every row in a.
 
-
-VEQ:F2$ROTS
-  [symbol]
-
-F2$ROTS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$ROTS ...).
-    see function: %F2$ROTS
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$ROTS
+ ;   [symbol]
+ ;
+ ; F2$ROTS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$ROTS
+ ;     macro wrapper: F2$ROTS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$ROTS!
+
+#### F2$ROTS!
 
 ```
 broadcast for fx: -F2ROTS
 macroname: F2$ROTS!
+ex: (F2$ROTS! a ...) performs (mvc #'-F2ROTS a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$ROTS!
-  [symbol]
-
-F2$ROTS! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$ROTS! ...).
-    see function: %F2$ROTS!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$ROTS!
+ ;   [symbol]
+ ;
+ ; F2$ROTS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$ROTS!
+ ;     macro wrapper: F2$ROTS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$SCALE
+
+#### F2$SCALE
 
 ```
 broadcast for fx: -F2SCALE
 macroname: F2$SCALE
+ex: (F2$SCALE a ...) performs (mvc #'-F2SCALE a[i] ...) for every row in a.
 
-
-VEQ:F2$SCALE
-  [symbol]
-
-F2$SCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$SCALE ...).
-    see function: %F2$SCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$SCALE
+ ;   [symbol]
+ ;
+ ; F2$SCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$SCALE
+ ;     macro wrapper: F2$SCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$SCALE!
+
+#### F2$SCALE!
 
 ```
 broadcast for fx: -F2SCALE
 macroname: F2$SCALE!
+ex: (F2$SCALE! a ...) performs (mvc #'-F2SCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F2$SCALE!
-  [symbol]
-
-F2$SCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$SCALE! ...).
-    see function: %F2$SCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F2$SCALE!
+ ;   [symbol]
+ ;
+ ; F2$SCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$SCALE!
+ ;     macro wrapper: F2$SCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F2$SQUARE
 
-```
-macro wrapper: (mvc #'%F2$SQUARE ...).
-see function: %F2$SQUARE
-VEQ:F2$SQUARE
-  [symbol]
-
-F2$SQUARE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2$SQUARE ...).
-    see function: %F2$SQUARE
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### F2$SUM
+#### F2$SQUARE
 
 ```
-:missing:
+fx: %F2$SQUARE
+macro wrapper: F2$SQUARE
 
-VEQ:F2$SUM
-  [symbol]
+defined via veq:def*
 
-F2$SUM names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T))
-                 (VALUES SINGLE-FLOAT SINGLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-reduce.lisp
+ ; VEQ:F2$SQUARE
+ ;   [symbol]
+ ;
+ ; F2$SQUARE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$SQUARE
+ ;     macro wrapper: F2$SQUARE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-### F2$TAKE
 
-```
-:missing:
-
-VEQ:F2$TAKE
-  [symbol]
-
-F2$TAKE names a compiled function:
-  Lambda-list: (A INDS &KEY RES)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) T &KEY (:RES T))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
-  Source file: /data/x/veq/src/array-take.lisp
-```
-### F2$VAL
+#### F2$SUM
 
 ```
-:missing:
+sum all rows of 2d array.
 
-VEQ:F2$VAL
-  [symbol]
-
-F2$VAL names a compiled function:
-  Lambda-list: (V &OPTIONAL (N 1))
-  Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:F2$SUM
+ ;   [symbol]
+ ;
+ ; F2$SUM names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T))
+ ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     sum all rows of 2d array.
+ ;   Source file: /data/x/veq/src/array-reduce.lisp
 ```
-### F2$WITH-ROWS
 
-```
-:missing:
-
-VEQ:F2$WITH-ROWS
-  [symbol]
-```
-### F2$ZERO
+#### F2$TAKE
 
 ```
-:missing:
+returns 2d array with rows for inds.
+use :res put result in existing array
 
-VEQ:F2$ZERO
-  [symbol]
-
-F2$ZERO names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:F2$TAKE
+ ;   [symbol]
+ ;
+ ; F2$TAKE names a compiled function:
+ ;   Lambda-list: (A INDS &KEY RES)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY SINGLE-FLOAT) SEQUENCE &KEY (:RES T))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
+ ;   Documentation:
+ ;     returns 2d array with rows for inds.
+ ;     use :res put result in existing array
+ ;   Source file: /data/x/veq/src/array-take.lisp
 ```
-### F2*
+
+#### F2$VAL
+
+```
+make 2d array of val.
+typed.
+
+ ; VEQ:F2$VAL
+ ;   [symbol]
+ ;
+ ; F2$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d array of val.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### :context: F2$WITH-ROWS
+
+```
+make 2d
+```
+
+#### F2$ZERO
+
+```
+make 2d array of zeros.
+typed.
+
+ ; VEQ:F2$ZERO
+ ;   [symbol]
+ ;
+ ; F2$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d array of zeros.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### :context: F2\*
 
 ```
 veq context op: F2*
@@ -8494,7 +8127,8 @@ fxname: -F2*
 args: (AX AY BX BY)
 body: (VALUES (* AX BX) (* AY BY))
 ```
-### F2+
+
+#### :context: F2+
 
 ```
 veq context op: F2+
@@ -8502,7 +8136,8 @@ fxname: -F2+
 args: (AX AY BX BY)
 body: (VALUES (+ AX BX) (+ AY BY))
 ```
-### F2-
+
+#### :context: F2-
 
 ```
 veq context op: F2-
@@ -8510,7 +8145,8 @@ fxname: -F2-
 args: (AX AY BX BY)
 body: (VALUES (- AX BX) (- AY BY))
 ```
-### F2.
+
+#### :context: F2.
 
 ```
 veq context op: F2.
@@ -8518,7 +8154,8 @@ fxname: -F2.
 args: (AX AY BX BY)
 body: (+ (* AX BX) (* AY BY))
 ```
-### F2/
+
+#### :context: F2/
 
 ```
 veq context op: F2/
@@ -8526,7 +8163,8 @@ fxname: -F2/
 args: (AX AY BX BY)
 body: (VALUES (/ AX BX) (/ AY BY))
 ```
-### F2^
+
+#### :context: F2^
 
 ```
 veq context op: F2^
@@ -8534,7 +8172,8 @@ fxname: -F2^
 args: (A B S)
 body: (VALUES (EXPT A S) (EXPT B S))
 ```
-### F2ABS
+
+#### :context: F2ABS
 
 ```
 veq context op: F2ABS
@@ -8542,7 +8181,8 @@ fxname: -F2ABS
 args: (A B)
 body: (VALUES (ABS A) (ABS B))
 ```
-### F2ANGLE
+
+#### :context: F2ANGLE
 
 ```
 veq context op: F2ANGLE
@@ -8550,7 +8190,8 @@ fxname: -F2ANGLE
 args: (A B)
 body: (MVC #'ATAN (-F2NORM B A))
 ```
-### F2CROSS
+
+#### :context: F2CROSS
 
 ```
 veq context op: F2CROSS
@@ -8558,7 +8199,8 @@ fxname: -F2CROSS
 args: (AX AY BX BY)
 body: (- (* AX BY) (* AY BX))
 ```
-### F2DST
+
+#### :context: F2DST
 
 ```
 veq context op: F2DST
@@ -8566,7 +8208,8 @@ fxname: -F2DST
 args: (AX AY BX BY)
 body: (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY)))))
 ```
-### F2DST2
+
+#### :context: F2DST2
 
 ```
 veq context op: F2DST2
@@ -8574,7 +8217,8 @@ fxname: -F2DST2
 args: (AX AY BX BY)
 body: (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY)))
 ```
-### F2EXP
+
+#### :context: F2EXP
 
 ```
 veq context op: F2EXP
@@ -8582,7 +8226,8 @@ fxname: -F2EXP
 args: (A B)
 body: (VALUES (EXP A) (EXP B))
 ```
-### F2FLIP
+
+#### :context: F2FLIP
 
 ```
 veq context op: F2FLIP
@@ -8590,7 +8235,8 @@ fxname: -F2FLIP
 args: (A B)
 body: (VALUES B A)
 ```
-### F2FROM
+
+#### :context: F2FROM
 
 ```
 veq context op: F2FROM
@@ -8598,7 +8244,8 @@ fxname: -F2FROM
 args: (AX AY BX BY S)
 body: (-F2+ AX AY (* BX S) (* BY S))
 ```
-### F2I-
+
+#### :context: F2I-
 
 ```
 veq context op: F2I-
@@ -8606,7 +8253,8 @@ fxname: -F2I-
 args: (AX AY BX BY)
 body: (VALUES (- BX AX) (- BY AY))
 ```
-### F2I/
+
+#### :context: F2I/
 
 ```
 veq context op: F2I/
@@ -8614,52 +8262,71 @@ fxname: -F2I/
 args: (AX AY BX BY)
 body: (VALUES (/ BX AX) (/ BY AY))
 ```
-### F2IN-BBOX
+
+#### F2IN-BBOX
 
 ```
-macro wrapper: (mvc #'%F2IN-BBOX ...) in veq context.
-see function: %F2IN-BBOX
-VEQ:F2IN-BBOX
-  [symbol]
+fx: %F2IN-BBOX
+macro wrapper: F2IN-BBOX
 
-F2IN-BBOX names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2IN-BBOX ...) in veq context.
-    see function: %F2IN-BBOX
-  Source file: /data/x/veq/src/checks.lisp
-```
-### F2IN-CONCAVE
+defined via veq:fvdef*
 
+ ; VEQ:F2IN-BBOX
+ ;   [symbol]
+ ;
+ ; F2IN-BBOX names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2IN-BBOX
+ ;     macro wrapper: F2IN-BBOX
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/checks.lisp
 ```
-macro wrapper: (mvc #'%F2IN-CONCAVE ...) in veq context.
-see function: %F2IN-CONCAVE
-VEQ:F2IN-CONCAVE
-  [symbol]
 
-F2IN-CONCAVE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2IN-CONCAVE ...) in veq context.
-    see function: %F2IN-CONCAVE
-  Source file: /data/x/veq/src/checks.lisp
-```
-### F2IN-TRIANGLE
+#### F2IN-CONCAVE
 
 ```
-macro wrapper: (mvc #'%F2IN-TRIANGLE ...) in veq context.
-see function: %F2IN-TRIANGLE
-VEQ:F2IN-TRIANGLE
-  [symbol]
+fx: %F2IN-CONCAVE
+macro wrapper: F2IN-CONCAVE
 
-F2IN-TRIANGLE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2IN-TRIANGLE ...) in veq context.
-    see function: %F2IN-TRIANGLE
-  Source file: /data/x/veq/src/checks.lisp
+defined via veq:fvdef*
+
+ ; VEQ:F2IN-CONCAVE
+ ;   [symbol]
+ ;
+ ; F2IN-CONCAVE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2IN-CONCAVE
+ ;     macro wrapper: F2IN-CONCAVE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/checks.lisp
 ```
-### F2ISCALE
+
+#### F2IN-TRIANGLE
+
+```
+fx: %F2IN-TRIANGLE
+macro wrapper: F2IN-TRIANGLE
+
+defined via veq:fvdef*
+
+ ; VEQ:F2IN-TRIANGLE
+ ;   [symbol]
+ ;
+ ; F2IN-TRIANGLE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2IN-TRIANGLE
+ ;     macro wrapper: F2IN-TRIANGLE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/checks.lisp
+```
+
+#### :context: F2ISCALE
 
 ```
 veq context op: F2ISCALE
@@ -8667,7 +8334,8 @@ fxname: -F2ISCALE
 args: (A B S)
 body: (VALUES (/ A S) (/ B S))
 ```
-### F2LEN
+
+#### :context: F2LEN
 
 ```
 veq context op: F2LEN
@@ -8675,7 +8343,8 @@ fxname: -F2LEN
 args: (A B)
 body: (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE A B)))))
 ```
-### F2LEN2
+
+#### :context: F2LEN2
 
 ```
 veq context op: F2LEN2
@@ -8683,7 +8352,8 @@ fxname: -F2LEN2
 args: (A B)
 body: (THE POS-FF (MVC #'+ (-F2SQUARE A B)))
 ```
-### F2LERP
+
+#### :context: F2LERP
 
 ```
 veq context op: F2LERP
@@ -8691,30 +8361,37 @@ fxname: -F2LERP
 args: (AX AY BX BY S)
 body: (-F2+ AX AY (* (- BX AX) S) (* (- BY AY) S))
 ```
-### F2LET
+
+#### :context: F2LET
 
 ```
-:missing:
-
-VEQ:F2LET
-  [symbol]
+make 2d let.
+ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
+note that this behaves as native lisp let*.
 ```
-### F2LSEGX
+
+#### F2LSEGX
 
 ```
-macro wrapper: (mvc #'%F2LSEGX ...) in veq context.
-see function: %F2LSEGX
-VEQ:F2LSEGX
-  [symbol]
+fx: %F2LSEGX
+macro wrapper: F2LSEGX
 
-F2LSEGX names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2LSEGX ...) in veq context.
-    see function: %F2LSEGX
-  Source file: /data/x/veq/src/checks.lisp
+defined via veq:fvdef*
+
+ ; VEQ:F2LSEGX
+ ;   [symbol]
+ ;
+ ; F2LSEGX names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2LSEGX
+ ;     macro wrapper: F2LSEGX
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/checks.lisp
 ```
-### F2MAX
+
+#### :context: F2MAX
 
 ```
 veq context op: F2MAX
@@ -8722,22 +8399,25 @@ fxname: -F2MAX
 args: (A B)
 body: (MAX A B)
 ```
-### F2MEYE
+
+#### F2MEYE
 
 ```
-return eye matrix for dimension
-VEQ:F2MEYE
-  [symbol]
+return 2d eye matrix.
 
-F2MEYE names a compiled function:
-  Lambda-list: (&OPTIONAL (V 1.0))
-  Derived type: (FUNCTION (&OPTIONAL SINGLE-FLOAT)
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (4)) &OPTIONAL))
-  Documentation:
-    return eye matrix for dimension
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F2MEYE
+ ;   [symbol]
+ ;
+ ; F2MEYE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (V 1.0))
+ ;   Derived type: (FUNCTION (&OPTIONAL SINGLE-FLOAT)
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (4)) &OPTIONAL))
+ ;   Documentation:
+ ;     return 2d eye matrix.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F2MID
+
+#### :context: F2MID
 
 ```
 veq context op: F2MID
@@ -8745,7 +8425,8 @@ fxname: -F2MID
 args: (AX AY BX BY)
 body: (VALUES (* 0.5 (+ AX BX)) (* 0.5 (+ AY BY)))
 ```
-### F2MIN
+
+#### :context: F2MIN
 
 ```
 veq context op: F2MIN
@@ -8753,52 +8434,59 @@ fxname: -F2MIN
 args: (A B)
 body: (MIN A B)
 ```
-### F2MINV
+
+#### F2MINV
 
 ```
-invert 2x2 matrix
-VEQ:F2MINV
-  [symbol]
+invert 2x2 matrix. non-destructive.
 
-F2MINV names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Documentation:
-    invert 2x2 matrix
-  Source file: /data/x/veq/src/mat-inv.lisp
+ ; VEQ:F2MINV
+ ;   [symbol]
+ ;
+ ; F2MINV names a compiled function:
+ ;   Lambda-list: (A)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     invert 2x2 matrix. non-destructive.
+ ;   Source file: /data/x/veq/src/mat-inv.lisp
 ```
-### F2MM
+
+#### F2MM
 
 ```
 multiply mat * mat
 of type: FVEC
-VEQ:F2MM
-  [symbol]
 
-F2MM names a macro:
-  Lambda-list: (A*1 B*3)
-  Documentation:
-    multiply mat * mat
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F2MM
+ ;   [symbol]
+ ;
+ ; F2MM names a macro:
+ ;   Lambda-list: (A*1 B*3)
+ ;   Documentation:
+ ;     multiply mat * mat
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F2MMT
+
+#### F2MMT
 
 ```
 multiply mat * (transpose mat)
 of type: FVEC
-VEQ:F2MMT
-  [symbol]
 
-F2MMT names a macro:
-  Lambda-list: (A*59 B*61)
-  Documentation:
-    multiply mat * (transpose mat)
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F2MMT
+ ;   [symbol]
+ ;
+ ; F2MMT names a macro:
+ ;   Lambda-list: (A*59 B*61)
+ ;   Documentation:
+ ;     multiply mat * (transpose mat)
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F2MOD
+
+#### :context: F2MOD
 
 ```
 veq context op: F2MOD
@@ -8806,142 +8494,171 @@ fxname: -F2MOD
 args: (A B S)
 body: (VALUES (MOD A S) (MOD B S))
 ```
-### F2MROT
+
+#### F2MROT
 
 ```
-macro wrapper: (mvc #'%F2MROT ...).
-see function: %F2MROT
-VEQ:F2MROT
-  [symbol]
+fx: %F2MROT
+macro wrapper: F2MROT
 
-F2MROT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2MROT ...).
-    see function: %F2MROT
-  Source file: /data/x/veq/src/mat.lisp
-```
-### F2MROT*
+defined via veq:def*
 
+ ; VEQ:F2MROT
+ ;   [symbol]
+ ;
+ ; F2MROT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2MROT
+ ;     macro wrapper: F2MROT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-macro wrapper: (mvc #'%F2MROT* ...).
-see function: %F2MROT*
-VEQ:F2MROT*
-  [symbol]
 
-F2MROT* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2MROT* ...).
-    see function: %F2MROT*
-  Source file: /data/x/veq/src/mat.lisp
-```
-### F2MSCALE
+#### F2MROT\*
 
 ```
-macro wrapper: (mvc #'%F2MSCALE ...) in veq context.
-see function: %F2MSCALE
-VEQ:F2MSCALE
-  [symbol]
+fx: %F2MROT*
+macro wrapper: F2MROT*
 
-F2MSCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2MSCALE ...) in veq context.
-    see function: %F2MSCALE
-  Source file: /data/x/veq/src/mat.lisp
+defined via veq:def*
+
+ ; VEQ:F2MROT*
+ ;   [symbol]
+ ;
+ ; F2MROT* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2MROT*
+ ;     macro wrapper: F2MROT*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F2MT!
+
+#### F2MSCALE
 
 ```
-transpose matrix of type ~a in-place
-VEQ:F2MT!
-  [symbol]
+fx: %F2MSCALE
+macro wrapper: F2MSCALE
 
-F2MT! names a macro:
-  Lambda-list: (A1)
-  Documentation:
-    transpose matrix of type ~a in-place
-  Source file: /data/x/veq/src/mat.lisp
+defined via veq:fvdef*
+
+ ; VEQ:F2MSCALE
+ ;   [symbol]
+ ;
+ ; F2MSCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2MSCALE
+ ;     macro wrapper: F2MSCALE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F2MTM
+
+#### F2MT!
+
+```
+transpose 2d matrix in-place.
+
+ ; VEQ:F2MT!
+ ;   [symbol]
+ ;
+ ; F2MT! names a macro:
+ ;   Lambda-list: (A1)
+ ;   Documentation:
+ ;     transpose 2d matrix in-place.
+ ;   Source file: /data/x/veq/src/mat.lisp
+```
+
+#### F2MTM
 
 ```
 multiply (transpose mat) * mat
 of type: FVEC
-VEQ:F2MTM
-  [symbol]
 
-F2MTM names a macro:
-  Lambda-list: (A*88 B*90)
-  Documentation:
-    multiply (transpose mat) * mat
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F2MTM
+ ;   [symbol]
+ ;
+ ; F2MTM names a macro:
+ ;   Lambda-list: (A*88 B*90)
+ ;   Documentation:
+ ;     multiply (transpose mat) * mat
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F2MTMT
+
+#### F2MTMT
 
 ```
 multiply (transpose mat) * (transpose mat)
 of type: FVEC
-VEQ:F2MTMT
-  [symbol]
 
-F2MTMT names a macro:
-  Lambda-list: (A*30 B*32)
-  Documentation:
-    multiply (transpose mat) * (transpose mat)
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F2MTMT
+ ;   [symbol]
+ ;
+ ; F2MTMT names a macro:
+ ;   Lambda-list: (A*30 B*32)
+ ;   Documentation:
+ ;     multiply (transpose mat) * (transpose mat)
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F2MTRANS
 
-```
-macro wrapper: (mvc #'%F2MTRANS ...) in veq context.
-see function: %F2MTRANS
-VEQ:F2MTRANS
-  [symbol]
-
-F2MTRANS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2MTRANS ...) in veq context.
-    see function: %F2MTRANS
-  Source file: /data/x/veq/src/mat.lisp
-```
-### F2MTV
+#### F2MTRANS
 
 ```
-:missing:
+fx: %F2MTRANS
+macro wrapper: F2MTRANS
 
-VEQ:F2MTV
-  [symbol]
+defined via veq:fvdef*
 
-F2MTV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F2MTRANS
+ ;   [symbol]
+ ;
+ ; F2MTRANS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2MTRANS
+ ;     macro wrapper: F2MTRANS
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F2MV
 
-```
-:missing:
-
-VEQ:F2MV
-  [symbol]
-
-F2MV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
-```
-### F2MVB
+#### F2MTV
 
 ```
-:missing:
+transpose(mat) * v. for 2d matrix and vector.
 
-VEQ:F2MVB
-  [symbol]
+ ; VEQ:F2MTV
+ ;   [symbol]
+ ;
+ ; F2MTV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     transpose(mat) * v. for 2d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F2NEG
+
+#### F2MV
+
+```
+mat * v. for 2d matrix and vector.
+
+ ; VEQ:F2MV
+ ;   [symbol]
+ ;
+ ; F2MV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     mat * v. for 2d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
+```
+
+#### :context: F2NEG
 
 ```
 veq context op: F2NEG
@@ -8949,7 +8666,8 @@ fxname: -F2NEG
 args: (A B)
 body: (VALUES (- A) (- B))
 ```
-### F2NORM
+
+#### :context: F2NORM
 
 ```
 veq context op: F2NORM
@@ -8957,15 +8675,14 @@ fxname: -F2NORM
 args: (A B)
 body: (MVC #'-F2ISCALE A B (MVC #'-F2LEN A B))
 ```
-### F2NSUM
+
+#### :context: F2NSUM
 
 ```
-:missing:
-
-VEQ:F2NSUM
-  [symbol]
+make 2d
 ```
-### F2ON-CIRC
+
+#### :context: F2ON-CIRC
 
 ```
 veq context op: F2ON-CIRC
@@ -8973,7 +8690,8 @@ fxname: -F2ON-CIRC
 args: (A RAD)
 body: (MVC #'-F2SCALE (-FCOS-SIN (* A FPII)) RAD)
 ```
-### F2ON-CIRC*
+
+#### :context: F2ON-CIRC\*
 
 ```
 veq context op: F2ON-CIRC*
@@ -8981,7 +8699,8 @@ fxname: -F2ON-CIRC*
 args: (A RAD)
 body: (MVC #'-F2SCALE (-FCOS-SIN A) RAD)
 ```
-### F2PERP
+
+#### :context: F2PERP
 
 ```
 veq context op: F2PERP
@@ -8989,7 +8708,8 @@ fxname: -F2PERP
 args: (A B)
 body: (VALUES B (- A))
 ```
-### F2PERP*
+
+#### :context: F2PERP\*
 
 ```
 veq context op: F2PERP*
@@ -8997,23 +8717,25 @@ fxname: -F2PERP*
 args: (A B)
 body: (VALUES (- B) A)
 ```
-### F2REP
+
+#### :context: F2REP
 
 ```
-:missing:
-
-VEQ:F2REP
-  [symbol]
+make 2d rep.
+ex: (f3rep (fx))
+corresponds to
+(values (fx) (fx) (fx))
 ```
-### F2REP*
+
+#### :context: F2REP\*
 
 ```
-:missing:
-
-VEQ:F2REP*
-  [symbol]
+make 2d rep*.
+ex: (f3rep (fx))
+returns (values v v v) where v = (fx)
 ```
-### F2ROT
+
+#### :context: F2ROT
 
 ```
 veq context op: F2ROT
@@ -9026,7 +8748,8 @@ body: (LET ((COSA (COS A)) (SINA (SIN A)))
      SINA))
   (VALUES (- (* X COSA) (* Y SINA)) (+ (* X SINA) (* Y COSA))))
 ```
-### F2ROTS
+
+#### :context: F2ROTS
 
 ```
 veq context op: F2ROTS
@@ -9034,7 +8757,8 @@ fxname: -F2ROTS
 args: (X Y A SX SY)
 body: (MVC #'-F2+ (MVC #'-F2ROT (-F2- X Y SX SY) A) SX SY)
 ```
-### F2SCALE
+
+#### :context: F2SCALE
 
 ```
 veq context op: F2SCALE
@@ -9042,37 +8766,50 @@ fxname: -F2SCALE
 args: (A B S)
 body: (VALUES (* A S) (* B S))
 ```
-### F2SEGDST
+
+#### F2SEGDST
 
 ```
-macro wrapper: (mvc #'%F2SEGDST ...) in veq context.
-see function: %F2SEGDST
-VEQ:F2SEGDST
-  [symbol]
+fx: %F2SEGDST
+macro wrapper: F2SEGDST
 
-F2SEGDST names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2SEGDST ...) in veq context.
-    see function: %F2SEGDST
-  Source file: /data/x/veq/src/checks.lisp
+defined via veq:fvdef*
+
+ ; VEQ:F2SEGDST
+ ;   [symbol]
+ ;
+ ; F2SEGDST names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2SEGDST
+ ;     macro wrapper: F2SEGDST
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/checks.lisp
 ```
-### F2SEGX
+
+#### F2SEGX
 
 ```
-macro wrapper: (mvc #'%F2SEGX ...) in veq context.
-see function: %F2SEGX
-VEQ:F2SEGX
-  [symbol]
+fx: %F2SEGX
+macro wrapper: F2SEGX
 
-F2SEGX names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F2SEGX ...) in veq context.
-    see function: %F2SEGX
-  Source file: /data/x/veq/src/checks.lisp
+defined via veq:fvdef*
+
+ ; VEQ:F2SEGX
+ ;   [symbol]
+ ;
+ ; F2SEGX names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2SEGX
+ ;     macro wrapper: F2SEGX
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/checks.lisp
 ```
-### F2SQRT
+
+#### :context: F2SQRT
 
 ```
 veq context op: F2SQRT
@@ -9080,7 +8817,8 @@ fxname: -F2SQRT
 args: (A B)
 body: (VALUES (THE POS-FF (SQRT (THE POS-FF A))) (THE POS-FF (SQRT (THE POS-FF B))))
 ```
-### F2SQUARE
+
+#### :context: F2SQUARE
 
 ```
 veq context op: F2SQUARE
@@ -9088,661 +8826,806 @@ fxname: -F2SQUARE
 args: (A B)
 body: (VALUES (* A A) (* B B))
 ```
-### F2VSET
+
+#### :context: F2VSET
 
 ```
-:missing:
-
-VEQ:F2VSET
-  [symbol]
+set 2d value.
+ex: (F2VSET (a) (fx ...))
+where (fx ...) returns 2 values.
 ```
-### F2~
 
-```
-:missing:
-
-VEQ:F2~
-  [symbol]
-```
-### F3
+#### :context: F2~
 
 ```
-:missing:
-
-VEQ:F3
-  [symbol]
+make 2d vector in veq context.
+coerce to type.
 ```
-### F3$
+
+#### :context: F3
 
 ```
-:missing:
-
-VEQ:F3$
-  [symbol]
+make 3d vector in veq context.
+strict.
 ```
-### F3$*
+
+#### :context: F3$
+
+```
+returns values from 3d array.
+supports multiple indices. default is 0.
+ex: (F3$ a i j ...) returns (values a[i] a[j] ...).
+note that the number of values depends on the dimension.
+```
+
+#### F3$\*
 
 ```
 broadcast for fx: -F3*
 macroname: F3$*
+ex: (F3$* a ...) performs (mvc #'-F3* a[i] ...) for every row in a.
 
-
-VEQ:F3$*
-  [symbol]
-
-F3$* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$* ...).
-    see function: %F3$*
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$*
+ ;   [symbol]
+ ;
+ ; F3$* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$*
+ ;     macro wrapper: F3$*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$*!
+
+#### F3$\*!
 
 ```
 broadcast for fx: -F3*
 macroname: F3$*!
+ex: (F3$*! a ...) performs (mvc #'-F3* a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$*!
-  [symbol]
-
-F3$*! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$*! ...).
-    see function: %F3$*!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$*!
+ ;   [symbol]
+ ;
+ ; F3$*! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$*!
+ ;     macro wrapper: F3$*!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$+
+
+#### F3$+
 
 ```
 broadcast for fx: -F3+
 macroname: F3$+
+ex: (F3$+ a ...) performs (mvc #'-F3+ a[i] ...) for every row in a.
 
-
-VEQ:F3$+
-  [symbol]
-
-F3$+ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$+ ...).
-    see function: %F3$+
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$+
+ ;   [symbol]
+ ;
+ ; F3$+ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$+
+ ;     macro wrapper: F3$+
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$+!
+
+#### F3$+!
 
 ```
 broadcast for fx: -F3+
 macroname: F3$+!
+ex: (F3$+! a ...) performs (mvc #'-F3+ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$+!
-  [symbol]
-
-F3$+! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$+! ...).
-    see function: %F3$+!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$+!
+ ;   [symbol]
+ ;
+ ; F3$+! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$+!
+ ;     macro wrapper: F3$+!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$-
+
+#### F3$-
 
 ```
 broadcast for fx: -F3-
 macroname: F3$-
+ex: (F3$- a ...) performs (mvc #'-F3- a[i] ...) for every row in a.
 
-
-VEQ:F3$-
-  [symbol]
-
-F3$- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$- ...).
-    see function: %F3$-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$-
+ ;   [symbol]
+ ;
+ ; F3$- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$-
+ ;     macro wrapper: F3$-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$-!
+
+#### F3$-!
 
 ```
 broadcast for fx: -F3-
 macroname: F3$-!
+ex: (F3$-! a ...) performs (mvc #'-F3- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$-!
-  [symbol]
-
-F3$-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$-! ...).
-    see function: %F3$-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$-!
+ ;   [symbol]
+ ;
+ ; F3$-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$-!
+ ;     macro wrapper: F3$-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$/
+
+#### F3$/
 
 ```
 broadcast for fx: -F3/
 macroname: F3$/
+ex: (F3$/ a ...) performs (mvc #'-F3/ a[i] ...) for every row in a.
 
-
-VEQ:F3$/
-  [symbol]
-
-F3$/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$/ ...).
-    see function: %F3$/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$/
+ ;   [symbol]
+ ;
+ ; F3$/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$/
+ ;     macro wrapper: F3$/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$/!
+
+#### F3$/!
 
 ```
 broadcast for fx: -F3/
 macroname: F3$/!
+ex: (F3$/! a ...) performs (mvc #'-F3/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$/!
-  [symbol]
-
-F3$/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$/! ...).
-    see function: %F3$/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$/!
+ ;   [symbol]
+ ;
+ ; F3$/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$/!
+ ;     macro wrapper: F3$/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$ABS
+
+#### F3$ABS
 
 ```
 broadcast for fx: -F3ABS
 macroname: F3$ABS
+ex: (F3$ABS a ...) performs (mvc #'-F3ABS a[i] ...) for every row in a.
 
-
-VEQ:F3$ABS
-  [symbol]
-
-F3$ABS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$ABS ...).
-    see function: %F3$ABS
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$ABS
+ ;   [symbol]
+ ;
+ ; F3$ABS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$ABS
+ ;     macro wrapper: F3$ABS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$ABS!
+
+#### F3$ABS!
 
 ```
 broadcast for fx: -F3ABS
 macroname: F3$ABS!
+ex: (F3$ABS! a ...) performs (mvc #'-F3ABS a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$ABS!
-  [symbol]
-
-F3$ABS! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$ABS! ...).
-    see function: %F3$ABS!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$ABS!
+ ;   [symbol]
+ ;
+ ; F3$ABS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$ABS!
+ ;     macro wrapper: F3$ABS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$COPY
 
-```
-:missing:
-
-VEQ:F3$COPY
-  [symbol]
-```
-### F3$FROM
+#### F3$FROM
 
 ```
 broadcast for fx: -F3FROM
 macroname: F3$FROM
+ex: (F3$FROM a ...) performs (mvc #'-F3FROM a[i] ...) for every row in a.
 
-
-VEQ:F3$FROM
-  [symbol]
-
-F3$FROM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$FROM ...).
-    see function: %F3$FROM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$FROM
+ ;   [symbol]
+ ;
+ ; F3$FROM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$FROM
+ ;     macro wrapper: F3$FROM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$FROM!
+
+#### F3$FROM!
 
 ```
 broadcast for fx: -F3FROM
 macroname: F3$FROM!
+ex: (F3$FROM! a ...) performs (mvc #'-F3FROM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$FROM!
-  [symbol]
-
-F3$FROM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$FROM! ...).
-    see function: %F3$FROM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$FROM!
+ ;   [symbol]
+ ;
+ ; F3$FROM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$FROM!
+ ;     macro wrapper: F3$FROM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$FXLSPACE
+
+#### :context: F3$FXLSPACE
 
 ```
-:missing:
-
-VEQ:F3$FXLSPACE
-  [symbol]
+args: ((n a b &key (end t)) &body fx)
+for 3d points a, b.
+assumes the last form in fx is a function and does
+(mvc fx i x ...) for points between a, b.
+ex: (F3$FXLSPACE (n a b) (lambda (i (:va 3 a b)) (vpr i a b)))
 ```
-### F3$I-
+
+#### F3$I-
 
 ```
 broadcast for fx: -F3I-
 macroname: F3$I-
+ex: (F3$I- a ...) performs (mvc #'-F3I- a[i] ...) for every row in a.
 
-
-VEQ:F3$I-
-  [symbol]
-
-F3$I- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$I- ...).
-    see function: %F3$I-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$I-
+ ;   [symbol]
+ ;
+ ; F3$I- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$I-
+ ;     macro wrapper: F3$I-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$I-!
+
+#### F3$I-!
 
 ```
 broadcast for fx: -F3I-
 macroname: F3$I-!
+ex: (F3$I-! a ...) performs (mvc #'-F3I- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$I-!
-  [symbol]
-
-F3$I-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$I-! ...).
-    see function: %F3$I-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$I-!
+ ;   [symbol]
+ ;
+ ; F3$I-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$I-!
+ ;     macro wrapper: F3$I-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$I/
+
+#### F3$I/
 
 ```
 broadcast for fx: -F3I/
 macroname: F3$I/
+ex: (F3$I/ a ...) performs (mvc #'-F3I/ a[i] ...) for every row in a.
 
-
-VEQ:F3$I/
-  [symbol]
-
-F3$I/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$I/ ...).
-    see function: %F3$I/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$I/
+ ;   [symbol]
+ ;
+ ; F3$I/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$I/
+ ;     macro wrapper: F3$I/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$I/!
+
+#### F3$I/!
 
 ```
 broadcast for fx: -F3I/
 macroname: F3$I/!
+ex: (F3$I/! a ...) performs (mvc #'-F3I/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$I/!
-  [symbol]
-
-F3$I/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$I/! ...).
-    see function: %F3$I/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$I/!
+ ;   [symbol]
+ ;
+ ; F3$I/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$I/!
+ ;     macro wrapper: F3$I/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$ISCALE
+
+#### F3$ISCALE
 
 ```
 broadcast for fx: -F3ISCALE
 macroname: F3$ISCALE
+ex: (F3$ISCALE a ...) performs (mvc #'-F3ISCALE a[i] ...) for every row in a.
 
-
-VEQ:F3$ISCALE
-  [symbol]
-
-F3$ISCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$ISCALE ...).
-    see function: %F3$ISCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$ISCALE
+ ;   [symbol]
+ ;
+ ; F3$ISCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$ISCALE
+ ;     macro wrapper: F3$ISCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$ISCALE!
+
+#### F3$ISCALE!
 
 ```
 broadcast for fx: -F3ISCALE
 macroname: F3$ISCALE!
+ex: (F3$ISCALE! a ...) performs (mvc #'-F3ISCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$ISCALE!
-  [symbol]
-
-F3$ISCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$ISCALE! ...).
-    see function: %F3$ISCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$ISCALE!
+ ;   [symbol]
+ ;
+ ; F3$ISCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$ISCALE!
+ ;     macro wrapper: F3$ISCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$LAST
+
+#### F3$LAST
 
 ```
-:missing:
+get last row of 3d array as (values ...)
 
-VEQ:F3$LAST
-  [symbol]
-
-F3$LAST names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
-                 (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
-                         &OPTIONAL))
-  Source file: /data/x/veq/src/array-rows.lisp
+ ; VEQ:F3$LAST
+ ;   [symbol]
+ ;
+ ; F3$LAST names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     get last row of 3d array as (values ...)
+ ;   Source file: /data/x/veq/src/array-rows.lisp
 ```
-### F3$LEN
+
+#### F3$LEN
 
 ```
 broadcast for fx: -F3LEN
 macroname: F3$LEN
+ex: (F3$LEN a ...) performs (mvc #'-F3LEN a[i] ...) for every row in a.
 
-
-VEQ:F3$LEN
-  [symbol]
-
-F3$LEN names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$LEN ...).
-    see function: %F3$LEN
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$LEN
+ ;   [symbol]
+ ;
+ ; F3$LEN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$LEN
+ ;     macro wrapper: F3$LEN
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$LEN2
+
+#### F3$LEN2
 
 ```
 broadcast for fx: -F3LEN2
 macroname: F3$LEN2
+ex: (F3$LEN2 a ...) performs (mvc #'-F3LEN2 a[i] ...) for every row in a.
 
-
-VEQ:F3$LEN2
-  [symbol]
-
-F3$LEN2 names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$LEN2 ...).
-    see function: %F3$LEN2
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$LEN2
+ ;   [symbol]
+ ;
+ ; F3$LEN2 names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$LEN2
+ ;     macro wrapper: F3$LEN2
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$LINE
 
-```
-macro wrapper: (mvc #'%F3$LINE ...).
-see function: %F3$LINE
-VEQ:F3$LINE
-  [symbol]
-
-F3$LINE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$LINE ...).
-    see function: %F3$LINE
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### F3$LSPACE
+#### F3$LINE
 
 ```
-macro wrapper: (mvc #'%F3$LSPACE ...) in veq context.
-see function: %F3$LSPACE
-VEQ:F3$LSPACE
-  [symbol]
+fx: %F3$LINE
+macro wrapper: F3$LINE
 
-F3$LSPACE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$LSPACE ...) in veq context.
-    see function: %F3$LSPACE
-  Source file: /data/x/veq/src/lspace.lisp
-```
-### F3$MAKE
+defined via veq:def*
 
+ ; VEQ:F3$LINE
+ ;   [symbol]
+ ;
+ ; F3$LINE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$LINE
+ ;     macro wrapper: F3$LINE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-:missing:
 
-VEQ:F3$MAKE
-  [symbol]
-```
-### F3$MIMA
+#### F3$LSPACE
 
 ```
-:missing:
+fx: %F3$LSPACE
+macro wrapper: F3$LSPACE
 
-VEQ:F3$MIMA
-  [symbol]
+defined via veq:fvdef*
 
-F3$MIMA names a compiled function:
-  Lambda-list: (A0 &KEY (N (3$NUM A0)) INDS)
-  Derived type: (FUNCTION
-                 ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T) (:INDS T))
-                 (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
-                         SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
-                         &OPTIONAL))
-  Source file: /data/x/veq/src/array-mima.lisp
+ ; VEQ:F3$LSPACE
+ ;   [symbol]
+ ;
+ ; F3$LSPACE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$LSPACE
+ ;     macro wrapper: F3$LSPACE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/lspace.lisp
 ```
-### F3$NEG
+
+#### F3$MIMA
+
+```
+find min and max for all dimensions of 3 array.
+ex: (F3$MIMA &key n) returns (values xmin xmax ...).
+use n to limit to first n rows.
+
+ ; VEQ:F3$MIMA
+ ;   [symbol]
+ ;
+ ; F3$MIMA names a compiled function:
+ ;   Lambda-list: (A0 &KEY (N (3$NUM A0)) INDS)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T) (:INDS T))
+ ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                          SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     find min and max for all dimensions of 3 array.
+ ;     ex: (F3$MIMA &key n) returns (values xmin xmax ...).
+ ;     use n to limit to first n rows.
+ ;   Source file: /data/x/veq/src/array-mima.lisp
+```
+
+#### F3$NEG
 
 ```
 broadcast for fx: -F3NEG
 macroname: F3$NEG
+ex: (F3$NEG a ...) performs (mvc #'-F3NEG a[i] ...) for every row in a.
 
-
-VEQ:F3$NEG
-  [symbol]
-
-F3$NEG names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$NEG ...).
-    see function: %F3$NEG
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$NEG
+ ;   [symbol]
+ ;
+ ; F3$NEG names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$NEG
+ ;     macro wrapper: F3$NEG
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$NEG!
+
+#### F3$NEG!
 
 ```
 broadcast for fx: -F3NEG
 macroname: F3$NEG!
+ex: (F3$NEG! a ...) performs (mvc #'-F3NEG a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$NEG!
-  [symbol]
-
-F3$NEG! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$NEG! ...).
-    see function: %F3$NEG!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$NEG!
+ ;   [symbol]
+ ;
+ ; F3$NEG! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$NEG!
+ ;     macro wrapper: F3$NEG!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$NORM
+
+#### F3$NORM
 
 ```
 broadcast for fx: -F3NORM
 macroname: F3$NORM
+ex: (F3$NORM a ...) performs (mvc #'-F3NORM a[i] ...) for every row in a.
 
-
-VEQ:F3$NORM
-  [symbol]
-
-F3$NORM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$NORM ...).
-    see function: %F3$NORM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$NORM
+ ;   [symbol]
+ ;
+ ; F3$NORM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$NORM
+ ;     macro wrapper: F3$NORM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$NORM!
+
+#### F3$NORM!
 
 ```
 broadcast for fx: -F3NORM
 macroname: F3$NORM!
+ex: (F3$NORM! a ...) performs (mvc #'-F3NORM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$NORM!
-  [symbol]
-
-F3$NORM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$NORM! ...).
-    see function: %F3$NORM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$NORM!
+ ;   [symbol]
+ ;
+ ; F3$NORM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$NORM!
+ ;     macro wrapper: F3$NORM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$ONE
 
-```
-:missing:
-
-VEQ:F3$ONE
-  [symbol]
-
-F3$ONE names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### F3$POINT
+#### F3$NUM
 
 ```
-macro wrapper: (mvc #'%F3$POINT ...).
-see function: %F3$POINT
-VEQ:F3$POINT
-  [symbol]
+number of elements in 3d array.
+typed.
 
-F3$POINT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$POINT ...).
-    see function: %F3$POINT
-  Source file: /data/x/veq/src/shapes.lisp
+ ; VEQ:F3$NUM
+ ;   [symbol]
+ ;
+ ; F3$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 3d array.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F3$SCALE
+
+#### F3$ONE
+
+```
+make 3d array of ones.
+typed.
+
+ ; VEQ:F3$ONE
+ ;   [symbol]
+ ;
+ ; F3$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d array of ones.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### F3$POINT
+
+```
+fx: %F3$POINT
+macro wrapper: F3$POINT
+
+defined via veq:def*
+
+ ; VEQ:F3$POINT
+ ;   [symbol]
+ ;
+ ; F3$POINT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$POINT
+ ;     macro wrapper: F3$POINT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### F3$SCALE
 
 ```
 broadcast for fx: -F3SCALE
 macroname: F3$SCALE
+ex: (F3$SCALE a ...) performs (mvc #'-F3SCALE a[i] ...) for every row in a.
 
-
-VEQ:F3$SCALE
-  [symbol]
-
-F3$SCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$SCALE ...).
-    see function: %F3$SCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$SCALE
+ ;   [symbol]
+ ;
+ ; F3$SCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$SCALE
+ ;     macro wrapper: F3$SCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$SCALE!
+
+#### F3$SCALE!
 
 ```
 broadcast for fx: -F3SCALE
 macroname: F3$SCALE!
+ex: (F3$SCALE! a ...) performs (mvc #'-F3SCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F3$SCALE!
-  [symbol]
-
-F3$SCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3$SCALE! ...).
-    see function: %F3$SCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F3$SCALE!
+ ;   [symbol]
+ ;
+ ; F3$SCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$SCALE!
+ ;     macro wrapper: F3$SCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F3$SUM
 
-```
-:missing:
-
-VEQ:F3$SUM
-  [symbol]
-
-F3$SUM names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T))
-                 (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
-                         &OPTIONAL))
-  Source file: /data/x/veq/src/array-reduce.lisp
-```
-### F3$TAKE
+#### F3$SUM
 
 ```
-:missing:
+sum all rows of 3d array.
 
-VEQ:F3$TAKE
-  [symbol]
-
-F3$TAKE names a compiled function:
-  Lambda-list: (A INDS &KEY RES)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) T &KEY (:RES T))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
-  Source file: /data/x/veq/src/array-take.lisp
+ ; VEQ:F3$SUM
+ ;   [symbol]
+ ;
+ ; F3$SUM names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T))
+ ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     sum all rows of 3d array.
+ ;   Source file: /data/x/veq/src/array-reduce.lisp
 ```
-### F3$VAL
 
-```
-:missing:
-
-VEQ:F3$VAL
-  [symbol]
-
-F3$VAL names a compiled function:
-  Lambda-list: (V &OPTIONAL (N 1))
-  Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### F3$WITH-ROWS
+#### F3$TAKE
 
 ```
-:missing:
+returns 3d array with rows for inds.
+use :res put result in existing array
 
-VEQ:F3$WITH-ROWS
-  [symbol]
+ ; VEQ:F3$TAKE
+ ;   [symbol]
+ ;
+ ; F3$TAKE names a compiled function:
+ ;   Lambda-list: (A INDS &KEY RES)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY SINGLE-FLOAT) SEQUENCE &KEY (:RES T))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
+ ;   Documentation:
+ ;     returns 3d array with rows for inds.
+ ;     use :res put result in existing array
+ ;   Source file: /data/x/veq/src/array-take.lisp
 ```
-### F3$ZERO
+
+#### F3$VAL
 
 ```
-:missing:
+make 3d array of val.
+typed.
 
-VEQ:F3$ZERO
-  [symbol]
-
-F3$ZERO names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:F3$VAL
+ ;   [symbol]
+ ;
+ ; F3$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d array of val.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F3*
+
+#### :context: F3$WITH-ROWS
+
+```
+make 3d
+```
+
+#### F3$ZERO
+
+```
+make 3d array of zeros.
+typed.
+
+ ; VEQ:F3$ZERO
+ ;   [symbol]
+ ;
+ ; F3$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d array of zeros.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### :context: F3\*
 
 ```
 veq context op: F3*
@@ -9750,7 +9633,8 @@ fxname: -F3*
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (* AX BX) (* AY BY) (* AZ BZ))
 ```
-### F3+
+
+#### :context: F3+
 
 ```
 veq context op: F3+
@@ -9758,7 +9642,8 @@ fxname: -F3+
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ))
 ```
-### F3-
+
+#### :context: F3-
 
 ```
 veq context op: F3-
@@ -9766,7 +9651,8 @@ fxname: -F3-
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (- AX BX) (- AY BY) (- AZ BZ))
 ```
-### F3.
+
+#### :context: F3.
 
 ```
 veq context op: F3.
@@ -9774,7 +9660,8 @@ fxname: -F3.
 args: (AX AY AZ BX BY BZ)
 body: (+ (* AX BX) (* AY BY) (* AZ BZ))
 ```
-### F3/
+
+#### :context: F3/
 
 ```
 veq context op: F3/
@@ -9782,7 +9669,8 @@ fxname: -F3/
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ))
 ```
-### F3^
+
+#### :context: F3^
 
 ```
 veq context op: F3^
@@ -9790,7 +9678,8 @@ fxname: -F3^
 args: (A B C S)
 body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S))
 ```
-### F3ABS
+
+#### :context: F3ABS
 
 ```
 veq context op: F3ABS
@@ -9798,7 +9687,8 @@ fxname: -F3ABS
 args: (A B C)
 body: (VALUES (ABS A) (ABS B) (ABS C))
 ```
-### F3CROSS
+
+#### :context: F3CROSS
 
 ```
 veq context op: F3CROSS
@@ -9806,7 +9696,8 @@ fxname: -F3CROSS
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ)) (- (* AX BY) (* AY BX)))
 ```
-### F3DST
+
+#### :context: F3DST
 
 ```
 veq context op: F3DST
@@ -9814,7 +9705,8 @@ fxname: -F3DST
 args: (AX AY AZ BX BY BZ)
 body: (SQRT (THE POS-FF (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ)))))
 ```
-### F3DST2
+
+#### :context: F3DST2
 
 ```
 veq context op: F3DST2
@@ -9822,7 +9714,8 @@ fxname: -F3DST2
 args: (AX AY AZ BX BY BZ)
 body: (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ)))
 ```
-### F3EXP
+
+#### :context: F3EXP
 
 ```
 veq context op: F3EXP
@@ -9830,7 +9723,8 @@ fxname: -F3EXP
 args: (A B C)
 body: (VALUES (EXP A) (EXP B) (EXP C))
 ```
-### F3FROM
+
+#### :context: F3FROM
 
 ```
 veq context op: F3FROM
@@ -9838,7 +9732,8 @@ fxname: -F3FROM
 args: (AX AY AZ BX BY BZ S)
 body: (-F3+ AX AY AZ (* BX S) (* BY S) (* BZ S))
 ```
-### F3I-
+
+#### :context: F3I-
 
 ```
 veq context op: F3I-
@@ -9846,7 +9741,8 @@ fxname: -F3I-
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (- BX AX) (- BY AY) (- BZ AZ))
 ```
-### F3I/
+
+#### :context: F3I/
 
 ```
 veq context op: F3I/
@@ -9854,7 +9750,8 @@ fxname: -F3I/
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ))
 ```
-### F3ISCALE
+
+#### :context: F3ISCALE
 
 ```
 veq context op: F3ISCALE
@@ -9862,7 +9759,8 @@ fxname: -F3ISCALE
 args: (A B C S)
 body: (VALUES (/ A S) (/ B S) (/ C S))
 ```
-### F3LEN
+
+#### :context: F3LEN
 
 ```
 veq context op: F3LEN
@@ -9870,7 +9768,8 @@ fxname: -F3LEN
 args: (A B C)
 body: (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F3SQUARE A B C)))))
 ```
-### F3LEN2
+
+#### :context: F3LEN2
 
 ```
 veq context op: F3LEN2
@@ -9878,7 +9777,8 @@ fxname: -F3LEN2
 args: (A B C)
 body: (THE POS-FF (MVC #'+ (-F3SQUARE A B C)))
 ```
-### F3LERP
+
+#### :context: F3LERP
 
 ```
 veq context op: F3LERP
@@ -9886,15 +9786,16 @@ fxname: -F3LERP
 args: (AX AY AZ BX BY BZ S)
 body: (-F3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S))
 ```
-### F3LET
+
+#### :context: F3LET
 
 ```
-:missing:
-
-VEQ:F3LET
-  [symbol]
+make 3d let.
+ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
+note that this behaves as native lisp let*.
 ```
-### F3MAX
+
+#### :context: F3MAX
 
 ```
 veq context op: F3MAX
@@ -9902,22 +9803,25 @@ fxname: -F3MAX
 args: (A B C)
 body: (MAX A B C)
 ```
-### F3MEYE
+
+#### F3MEYE
 
 ```
-return eye matrix for dimension
-VEQ:F3MEYE
-  [symbol]
+return 3d eye matrix.
 
-F3MEYE names a compiled function:
-  Lambda-list: (&OPTIONAL (V 1.0))
-  Derived type: (FUNCTION (&OPTIONAL SINGLE-FLOAT)
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (9)) &OPTIONAL))
-  Documentation:
-    return eye matrix for dimension
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F3MEYE
+ ;   [symbol]
+ ;
+ ; F3MEYE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (V 1.0))
+ ;   Derived type: (FUNCTION (&OPTIONAL SINGLE-FLOAT)
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (9)) &OPTIONAL))
+ ;   Documentation:
+ ;     return 3d eye matrix.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F3MID
+
+#### :context: F3MID
 
 ```
 veq context op: F3MID
@@ -9925,7 +9829,8 @@ fxname: -F3MID
 args: (AX AY AZ BX BY BZ)
 body: (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5))
 ```
-### F3MIN
+
+#### :context: F3MIN
 
 ```
 veq context op: F3MIN
@@ -9933,52 +9838,59 @@ fxname: -F3MIN
 args: (A B C)
 body: (MIN A B C)
 ```
-### F3MINV
+
+#### F3MINV
 
 ```
-invert 3x3 matrix
-VEQ:F3MINV
-  [symbol]
+invert 3x3 matrix. non-destructive.
 
-F3MINV names a compiled function:
-  Lambda-list: (A0)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Documentation:
-    invert 3x3 matrix
-  Source file: /data/x/veq/src/mat-inv.lisp
+ ; VEQ:F3MINV
+ ;   [symbol]
+ ;
+ ; F3MINV names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     invert 3x3 matrix. non-destructive.
+ ;   Source file: /data/x/veq/src/mat-inv.lisp
 ```
-### F3MM
+
+#### F3MM
 
 ```
 multiply mat * mat
 of type: FVEC
-VEQ:F3MM
-  [symbol]
 
-F3MM names a macro:
-  Lambda-list: (A*117 B*119)
-  Documentation:
-    multiply mat * mat
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F3MM
+ ;   [symbol]
+ ;
+ ; F3MM names a macro:
+ ;   Lambda-list: (A*117 B*119)
+ ;   Documentation:
+ ;     multiply mat * mat
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F3MMT
+
+#### F3MMT
 
 ```
 multiply mat * (transpose mat)
 of type: FVEC
-VEQ:F3MMT
-  [symbol]
 
-F3MMT names a macro:
-  Lambda-list: (A*175 B*177)
-  Documentation:
-    multiply mat * (transpose mat)
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F3MMT
+ ;   [symbol]
+ ;
+ ; F3MMT names a macro:
+ ;   Lambda-list: (A*175 B*177)
+ ;   Documentation:
+ ;     multiply mat * (transpose mat)
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F3MOD
+
+#### :context: F3MOD
 
 ```
 veq context op: F3MOD
@@ -9986,142 +9898,171 @@ fxname: -F3MOD
 args: (A B C S)
 body: (VALUES (MOD A S) (MOD B S) (MOD C S))
 ```
-### F3MROT
+
+#### F3MROT
 
 ```
-macro wrapper: (mvc #'%F3MROT ...).
-see function: %F3MROT
-VEQ:F3MROT
-  [symbol]
+fx: %F3MROT
+macro wrapper: F3MROT
 
-F3MROT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3MROT ...).
-    see function: %F3MROT
-  Source file: /data/x/veq/src/mat.lisp
-```
-### F3MROT*
+defined via veq:def*
 
+ ; VEQ:F3MROT
+ ;   [symbol]
+ ;
+ ; F3MROT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3MROT
+ ;     macro wrapper: F3MROT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-macro wrapper: (mvc #'%F3MROT* ...).
-see function: %F3MROT*
-VEQ:F3MROT*
-  [symbol]
 
-F3MROT* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3MROT* ...).
-    see function: %F3MROT*
-  Source file: /data/x/veq/src/mat.lisp
-```
-### F3MSCALE
+#### F3MROT\*
 
 ```
-macro wrapper: (mvc #'%F3MSCALE ...) in veq context.
-see function: %F3MSCALE
-VEQ:F3MSCALE
-  [symbol]
+fx: %F3MROT*
+macro wrapper: F3MROT*
 
-F3MSCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3MSCALE ...) in veq context.
-    see function: %F3MSCALE
-  Source file: /data/x/veq/src/mat.lisp
+defined via veq:def*
+
+ ; VEQ:F3MROT*
+ ;   [symbol]
+ ;
+ ; F3MROT* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3MROT*
+ ;     macro wrapper: F3MROT*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F3MT!
+
+#### F3MSCALE
 
 ```
-transpose matrix of type ~a in-place
-VEQ:F3MT!
-  [symbol]
+fx: %F3MSCALE
+macro wrapper: F3MSCALE
 
-F3MT! names a macro:
-  Lambda-list: (A1)
-  Documentation:
-    transpose matrix of type ~a in-place
-  Source file: /data/x/veq/src/mat.lisp
+defined via veq:fvdef*
+
+ ; VEQ:F3MSCALE
+ ;   [symbol]
+ ;
+ ; F3MSCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3MSCALE
+ ;     macro wrapper: F3MSCALE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F3MTM
+
+#### F3MT!
+
+```
+transpose 3d matrix in-place.
+
+ ; VEQ:F3MT!
+ ;   [symbol]
+ ;
+ ; F3MT! names a macro:
+ ;   Lambda-list: (A1)
+ ;   Documentation:
+ ;     transpose 3d matrix in-place.
+ ;   Source file: /data/x/veq/src/mat.lisp
+```
+
+#### F3MTM
 
 ```
 multiply (transpose mat) * mat
 of type: FVEC
-VEQ:F3MTM
-  [symbol]
 
-F3MTM names a macro:
-  Lambda-list: (A*204 B*206)
-  Documentation:
-    multiply (transpose mat) * mat
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F3MTM
+ ;   [symbol]
+ ;
+ ; F3MTM names a macro:
+ ;   Lambda-list: (A*204 B*206)
+ ;   Documentation:
+ ;     multiply (transpose mat) * mat
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F3MTMT
+
+#### F3MTMT
 
 ```
 multiply (transpose mat) * (transpose mat)
 of type: FVEC
-VEQ:F3MTMT
-  [symbol]
 
-F3MTMT names a macro:
-  Lambda-list: (A*146 B*148)
-  Documentation:
-    multiply (transpose mat) * (transpose mat)
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F3MTMT
+ ;   [symbol]
+ ;
+ ; F3MTMT names a macro:
+ ;   Lambda-list: (A*146 B*148)
+ ;   Documentation:
+ ;     multiply (transpose mat) * (transpose mat)
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F3MTRANS
 
-```
-macro wrapper: (mvc #'%F3MTRANS ...) in veq context.
-see function: %F3MTRANS
-VEQ:F3MTRANS
-  [symbol]
-
-F3MTRANS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3MTRANS ...) in veq context.
-    see function: %F3MTRANS
-  Source file: /data/x/veq/src/mat.lisp
-```
-### F3MTV
+#### F3MTRANS
 
 ```
-:missing:
+fx: %F3MTRANS
+macro wrapper: F3MTRANS
 
-VEQ:F3MTV
-  [symbol]
+defined via veq:fvdef*
 
-F3MTV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F3MTRANS
+ ;   [symbol]
+ ;
+ ; F3MTRANS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3MTRANS
+ ;     macro wrapper: F3MTRANS
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F3MV
 
-```
-:missing:
-
-VEQ:F3MV
-  [symbol]
-
-F3MV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
-```
-### F3MVB
+#### F3MTV
 
 ```
-:missing:
+transpose(mat) * v. for 3d matrix and vector.
 
-VEQ:F3MVB
-  [symbol]
+ ; VEQ:F3MTV
+ ;   [symbol]
+ ;
+ ; F3MTV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     transpose(mat) * v. for 3d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F3NEG
+
+#### F3MV
+
+```
+mat * v. for 3d matrix and vector.
+
+ ; VEQ:F3MV
+ ;   [symbol]
+ ;
+ ; F3MV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     mat * v. for 3d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
+```
+
+#### :context: F3NEG
 
 ```
 veq context op: F3NEG
@@ -10129,7 +10070,8 @@ fxname: -F3NEG
 args: (A B C)
 body: (VALUES (- A) (- B) (- C))
 ```
-### F3NORM
+
+#### :context: F3NORM
 
 ```
 veq context op: F3NORM
@@ -10137,46 +10079,52 @@ fxname: -F3NORM
 args: (A B C)
 body: (MVC #'-F3ISCALE A B C (THE POS-FF (MVC #'-F3LEN A B C)))
 ```
-### F3NSUM
+
+#### :context: F3NSUM
 
 ```
-:missing:
-
-VEQ:F3NSUM
-  [symbol]
+make 3d
 ```
-### F3PLANEX
+
+#### F3PLANEX
 
 ```
-macro wrapper: (mvc #'%F3PLANEX ...) in veq context.
-see function: %F3PLANEX
-VEQ:F3PLANEX
-  [symbol]
+fx: %F3PLANEX
+macro wrapper: F3PLANEX
 
-F3PLANEX names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F3PLANEX ...) in veq context.
-    see function: %F3PLANEX
-  Source file: /data/x/veq/src/checks.lisp
-```
-### F3REP
+defined via veq:fvdef*
 
+ ; VEQ:F3PLANEX
+ ;   [symbol]
+ ;
+ ; F3PLANEX names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3PLANEX
+ ;     macro wrapper: F3PLANEX
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/checks.lisp
 ```
-:missing:
 
-VEQ:F3REP
-  [symbol]
-```
-### F3REP*
+#### :context: F3REP
 
 ```
-:missing:
-
-VEQ:F3REP*
-  [symbol]
+make 3d rep.
+ex: (f3rep (fx))
+corresponds to
+(values (fx) (fx) (fx))
 ```
-### F3ROT
+
+#### :context: F3REP\*
+
+```
+make 3d rep*.
+ex: (f3rep (fx))
+returns (values v v v) where v = (fx)
+```
+
+#### :context: F3ROT
 
 ```
 veq context op: F3ROT
@@ -10190,7 +10138,8 @@ body: (LET ((COSA (COS A)))
        (MVC #'-F3FROM (-F3SCALE X Y Z COSA) (-F3CROSS NX NY NZ X Y Z) (SIN A))
        NX NY NZ (* (-F3. NX NY NZ X Y Z) (- 1.0 COSA))))
 ```
-### F3ROTS
+
+#### :context: F3ROTS
 
 ```
 veq context op: F3ROTS
@@ -10198,7 +10147,8 @@ fxname: -F3ROTS
 args: (X Y Z NX NY NZ A SX SY SZ)
 body: (MVC #'-F3+ (MVC #'-F3ROT (-F3- X Y Z SX SY SZ) NX NY NZ A) SX SY SZ)
 ```
-### F3SCALE
+
+#### :context: F3SCALE
 
 ```
 veq context op: F3SCALE
@@ -10206,7 +10156,8 @@ fxname: -F3SCALE
 args: (A B C S)
 body: (VALUES (* A S) (* B S) (* C S))
 ```
-### F3SQRT
+
+#### :context: F3SQRT
 
 ```
 veq context op: F3SQRT
@@ -10215,7 +10166,8 @@ args: (A B C)
 body: (VALUES (THE POS-FF (SQRT (THE POS-FF A))) (THE POS-FF (SQRT (THE POS-FF B)))
         (THE POS-FF (SQRT (THE POS-FF C))))
 ```
-### F3SQUARE
+
+#### :context: F3SQUARE
 
 ```
 veq context op: F3SQUARE
@@ -10223,644 +10175,782 @@ fxname: -F3SQUARE
 args: (A B C)
 body: (VALUES (THE POS-FF (* A A)) (THE POS-FF (* B B)) (THE POS-FF (* C C)))
 ```
-### F3VSET
+
+#### :context: F3VSET
 
 ```
-:missing:
-
-VEQ:F3VSET
-  [symbol]
+set 3d value.
+ex: (F3VSET (a) (fx ...))
+where (fx ...) returns 3 values.
 ```
-### F3~
 
-```
-:missing:
-
-VEQ:F3~
-  [symbol]
-```
-### F4
+#### :context: F3~
 
 ```
-:missing:
-
-VEQ:F4
-  [symbol]
+make 3d vector in veq context.
+coerce to type.
 ```
-### F4$
+
+#### :context: F4
 
 ```
-:missing:
-
-VEQ:F4$
-  [symbol]
+make 4d vector in veq context.
+strict.
 ```
-### F4$*
+
+#### :context: F4$
+
+```
+returns values from 4d array.
+supports multiple indices. default is 0.
+ex: (F4$ a i j ...) returns (values a[i] a[j] ...).
+note that the number of values depends on the dimension.
+```
+
+#### F4$\*
 
 ```
 broadcast for fx: -F4*
 macroname: F4$*
+ex: (F4$* a ...) performs (mvc #'-F4* a[i] ...) for every row in a.
 
-
-VEQ:F4$*
-  [symbol]
-
-F4$* names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$* ...).
-    see function: %F4$*
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$*
+ ;   [symbol]
+ ;
+ ; F4$* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$*
+ ;     macro wrapper: F4$*
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$*!
+
+#### F4$\*!
 
 ```
 broadcast for fx: -F4*
 macroname: F4$*!
+ex: (F4$*! a ...) performs (mvc #'-F4* a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$*!
-  [symbol]
-
-F4$*! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$*! ...).
-    see function: %F4$*!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$*!
+ ;   [symbol]
+ ;
+ ; F4$*! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$*!
+ ;     macro wrapper: F4$*!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$+
+
+#### F4$+
 
 ```
 broadcast for fx: -F4+
 macroname: F4$+
+ex: (F4$+ a ...) performs (mvc #'-F4+ a[i] ...) for every row in a.
 
-
-VEQ:F4$+
-  [symbol]
-
-F4$+ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$+ ...).
-    see function: %F4$+
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$+
+ ;   [symbol]
+ ;
+ ; F4$+ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$+
+ ;     macro wrapper: F4$+
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$+!
+
+#### F4$+!
 
 ```
 broadcast for fx: -F4+
 macroname: F4$+!
+ex: (F4$+! a ...) performs (mvc #'-F4+ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$+!
-  [symbol]
-
-F4$+! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$+! ...).
-    see function: %F4$+!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$+!
+ ;   [symbol]
+ ;
+ ; F4$+! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$+!
+ ;     macro wrapper: F4$+!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$-
+
+#### F4$-
 
 ```
 broadcast for fx: -F4-
 macroname: F4$-
+ex: (F4$- a ...) performs (mvc #'-F4- a[i] ...) for every row in a.
 
-
-VEQ:F4$-
-  [symbol]
-
-F4$- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$- ...).
-    see function: %F4$-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$-
+ ;   [symbol]
+ ;
+ ; F4$- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$-
+ ;     macro wrapper: F4$-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$-!
+
+#### F4$-!
 
 ```
 broadcast for fx: -F4-
 macroname: F4$-!
+ex: (F4$-! a ...) performs (mvc #'-F4- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$-!
-  [symbol]
-
-F4$-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$-! ...).
-    see function: %F4$-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$-!
+ ;   [symbol]
+ ;
+ ; F4$-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$-!
+ ;     macro wrapper: F4$-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$/
+
+#### F4$/
 
 ```
 broadcast for fx: -F4/
 macroname: F4$/
+ex: (F4$/ a ...) performs (mvc #'-F4/ a[i] ...) for every row in a.
 
-
-VEQ:F4$/
-  [symbol]
-
-F4$/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$/ ...).
-    see function: %F4$/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$/
+ ;   [symbol]
+ ;
+ ; F4$/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$/
+ ;     macro wrapper: F4$/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$/!
+
+#### F4$/!
 
 ```
 broadcast for fx: -F4/
 macroname: F4$/!
+ex: (F4$/! a ...) performs (mvc #'-F4/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$/!
-  [symbol]
-
-F4$/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$/! ...).
-    see function: %F4$/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$/!
+ ;   [symbol]
+ ;
+ ; F4$/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$/!
+ ;     macro wrapper: F4$/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$ABS
+
+#### F4$ABS
 
 ```
 broadcast for fx: -F4ABS
 macroname: F4$ABS
+ex: (F4$ABS a ...) performs (mvc #'-F4ABS a[i] ...) for every row in a.
 
-
-VEQ:F4$ABS
-  [symbol]
-
-F4$ABS names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$ABS ...).
-    see function: %F4$ABS
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$ABS
+ ;   [symbol]
+ ;
+ ; F4$ABS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$ABS
+ ;     macro wrapper: F4$ABS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$ABS!
+
+#### F4$ABS!
 
 ```
 broadcast for fx: -F4ABS
 macroname: F4$ABS!
+ex: (F4$ABS! a ...) performs (mvc #'-F4ABS a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$ABS!
-  [symbol]
-
-F4$ABS! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$ABS! ...).
-    see function: %F4$ABS!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$ABS!
+ ;   [symbol]
+ ;
+ ; F4$ABS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$ABS!
+ ;     macro wrapper: F4$ABS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$COPY
 
-```
-:missing:
-
-VEQ:F4$COPY
-  [symbol]
-```
-### F4$FROM
+#### F4$FROM
 
 ```
 broadcast for fx: -F4FROM
 macroname: F4$FROM
+ex: (F4$FROM a ...) performs (mvc #'-F4FROM a[i] ...) for every row in a.
 
-
-VEQ:F4$FROM
-  [symbol]
-
-F4$FROM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$FROM ...).
-    see function: %F4$FROM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$FROM
+ ;   [symbol]
+ ;
+ ; F4$FROM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$FROM
+ ;     macro wrapper: F4$FROM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$FROM!
+
+#### F4$FROM!
 
 ```
 broadcast for fx: -F4FROM
 macroname: F4$FROM!
+ex: (F4$FROM! a ...) performs (mvc #'-F4FROM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$FROM!
-  [symbol]
-
-F4$FROM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$FROM! ...).
-    see function: %F4$FROM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$FROM!
+ ;   [symbol]
+ ;
+ ; F4$FROM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$FROM!
+ ;     macro wrapper: F4$FROM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$FXLSPACE
+
+#### :context: F4$FXLSPACE
 
 ```
-:missing:
-
-VEQ:F4$FXLSPACE
-  [symbol]
+args: ((n a b &key (end t)) &body fx)
+for 4d points a, b.
+assumes the last form in fx is a function and does
+(mvc fx i x ...) for points between a, b.
+ex: (F4$FXLSPACE (n a b) (lambda (i (:va 4 a b)) (vpr i a b)))
 ```
-### F4$I-
+
+#### F4$I-
 
 ```
 broadcast for fx: -F4I-
 macroname: F4$I-
+ex: (F4$I- a ...) performs (mvc #'-F4I- a[i] ...) for every row in a.
 
-
-VEQ:F4$I-
-  [symbol]
-
-F4$I- names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$I- ...).
-    see function: %F4$I-
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$I-
+ ;   [symbol]
+ ;
+ ; F4$I- names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$I-
+ ;     macro wrapper: F4$I-
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$I-!
+
+#### F4$I-!
 
 ```
 broadcast for fx: -F4I-
 macroname: F4$I-!
+ex: (F4$I-! a ...) performs (mvc #'-F4I- a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$I-!
-  [symbol]
-
-F4$I-! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$I-! ...).
-    see function: %F4$I-!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$I-!
+ ;   [symbol]
+ ;
+ ; F4$I-! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$I-!
+ ;     macro wrapper: F4$I-!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$I/
+
+#### F4$I/
 
 ```
 broadcast for fx: -F4I/
 macroname: F4$I/
+ex: (F4$I/ a ...) performs (mvc #'-F4I/ a[i] ...) for every row in a.
 
-
-VEQ:F4$I/
-  [symbol]
-
-F4$I/ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$I/ ...).
-    see function: %F4$I/
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$I/
+ ;   [symbol]
+ ;
+ ; F4$I/ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$I/
+ ;     macro wrapper: F4$I/
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$I/!
+
+#### F4$I/!
 
 ```
 broadcast for fx: -F4I/
 macroname: F4$I/!
+ex: (F4$I/! a ...) performs (mvc #'-F4I/ a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$I/!
-  [symbol]
-
-F4$I/! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$I/! ...).
-    see function: %F4$I/!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$I/!
+ ;   [symbol]
+ ;
+ ; F4$I/! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$I/!
+ ;     macro wrapper: F4$I/!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$ISCALE
+
+#### F4$ISCALE
 
 ```
 broadcast for fx: -F4ISCALE
 macroname: F4$ISCALE
+ex: (F4$ISCALE a ...) performs (mvc #'-F4ISCALE a[i] ...) for every row in a.
 
-
-VEQ:F4$ISCALE
-  [symbol]
-
-F4$ISCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$ISCALE ...).
-    see function: %F4$ISCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$ISCALE
+ ;   [symbol]
+ ;
+ ; F4$ISCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$ISCALE
+ ;     macro wrapper: F4$ISCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$ISCALE!
+
+#### F4$ISCALE!
 
 ```
 broadcast for fx: -F4ISCALE
 macroname: F4$ISCALE!
+ex: (F4$ISCALE! a ...) performs (mvc #'-F4ISCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$ISCALE!
-  [symbol]
-
-F4$ISCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$ISCALE! ...).
-    see function: %F4$ISCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$ISCALE!
+ ;   [symbol]
+ ;
+ ; F4$ISCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$ISCALE!
+ ;     macro wrapper: F4$ISCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$LAST
+
+#### F4$LAST
 
 ```
-:missing:
+get last row of 4d array as (values ...)
 
-VEQ:F4$LAST
-  [symbol]
-
-F4$LAST names a compiled function:
-  Lambda-list: (A)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
-                 (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
-                         SINGLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-rows.lisp
+ ; VEQ:F4$LAST
+ ;   [symbol]
+ ;
+ ; F4$LAST names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                          SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     get last row of 4d array as (values ...)
+ ;   Source file: /data/x/veq/src/array-rows.lisp
 ```
-### F4$LEN
+
+#### F4$LEN
 
 ```
 broadcast for fx: -F4LEN
 macroname: F4$LEN
+ex: (F4$LEN a ...) performs (mvc #'-F4LEN a[i] ...) for every row in a.
 
-
-VEQ:F4$LEN
-  [symbol]
-
-F4$LEN names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$LEN ...).
-    see function: %F4$LEN
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$LEN
+ ;   [symbol]
+ ;
+ ; F4$LEN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$LEN
+ ;     macro wrapper: F4$LEN
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$LEN2
+
+#### F4$LEN2
 
 ```
 broadcast for fx: -F4LEN2
 macroname: F4$LEN2
+ex: (F4$LEN2 a ...) performs (mvc #'-F4LEN2 a[i] ...) for every row in a.
 
-
-VEQ:F4$LEN2
-  [symbol]
-
-F4$LEN2 names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$LEN2 ...).
-    see function: %F4$LEN2
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$LEN2
+ ;   [symbol]
+ ;
+ ; F4$LEN2 names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$LEN2
+ ;     macro wrapper: F4$LEN2
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$LINE
 
-```
-macro wrapper: (mvc #'%F4$LINE ...).
-see function: %F4$LINE
-VEQ:F4$LINE
-  [symbol]
-
-F4$LINE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$LINE ...).
-    see function: %F4$LINE
-  Source file: /data/x/veq/src/shapes.lisp
-```
-### F4$LSPACE
+#### F4$LINE
 
 ```
-macro wrapper: (mvc #'%F4$LSPACE ...) in veq context.
-see function: %F4$LSPACE
-VEQ:F4$LSPACE
-  [symbol]
+fx: %F4$LINE
+macro wrapper: F4$LINE
 
-F4$LSPACE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$LSPACE ...) in veq context.
-    see function: %F4$LSPACE
-  Source file: /data/x/veq/src/lspace.lisp
+defined via veq:def*
+
+ ; VEQ:F4$LINE
+ ;   [symbol]
+ ;
+ ; F4$LINE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$LINE
+ ;     macro wrapper: F4$LINE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
 ```
-### F4$MAKE
+
+#### F4$LSPACE
 
 ```
-:missing:
+fx: %F4$LSPACE
+macro wrapper: F4$LSPACE
 
-VEQ:F4$MAKE
-  [symbol]
+defined via veq:fvdef*
+
+ ; VEQ:F4$LSPACE
+ ;   [symbol]
+ ;
+ ; F4$LSPACE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$LSPACE
+ ;     macro wrapper: F4$LSPACE
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/lspace.lisp
 ```
-### F4$NEG
+
+#### F4$NEG
 
 ```
 broadcast for fx: -F4NEG
 macroname: F4$NEG
+ex: (F4$NEG a ...) performs (mvc #'-F4NEG a[i] ...) for every row in a.
 
-
-VEQ:F4$NEG
-  [symbol]
-
-F4$NEG names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$NEG ...).
-    see function: %F4$NEG
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$NEG
+ ;   [symbol]
+ ;
+ ; F4$NEG names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$NEG
+ ;     macro wrapper: F4$NEG
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$NEG!
+
+#### F4$NEG!
 
 ```
 broadcast for fx: -F4NEG
 macroname: F4$NEG!
+ex: (F4$NEG! a ...) performs (mvc #'-F4NEG a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$NEG!
-  [symbol]
-
-F4$NEG! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$NEG! ...).
-    see function: %F4$NEG!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$NEG!
+ ;   [symbol]
+ ;
+ ; F4$NEG! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$NEG!
+ ;     macro wrapper: F4$NEG!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$NORM
+
+#### F4$NORM
 
 ```
 broadcast for fx: -F4NORM
 macroname: F4$NORM
+ex: (F4$NORM a ...) performs (mvc #'-F4NORM a[i] ...) for every row in a.
 
-
-VEQ:F4$NORM
-  [symbol]
-
-F4$NORM names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$NORM ...).
-    see function: %F4$NORM
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$NORM
+ ;   [symbol]
+ ;
+ ; F4$NORM names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$NORM
+ ;     macro wrapper: F4$NORM
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$NORM!
+
+#### F4$NORM!
 
 ```
 broadcast for fx: -F4NORM
 macroname: F4$NORM!
+ex: (F4$NORM! a ...) performs (mvc #'-F4NORM a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$NORM!
-  [symbol]
-
-F4$NORM! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$NORM! ...).
-    see function: %F4$NORM!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$NORM!
+ ;   [symbol]
+ ;
+ ; F4$NORM! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$NORM!
+ ;     macro wrapper: F4$NORM!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$ONE
 
-```
-:missing:
-
-VEQ:F4$ONE
-  [symbol]
-
-F4$ONE names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### F4$POINT
+#### F4$NUM
 
 ```
-macro wrapper: (mvc #'%F4$POINT ...).
-see function: %F4$POINT
-VEQ:F4$POINT
-  [symbol]
+number of elements in 4d array.
+typed.
 
-F4$POINT names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$POINT ...).
-    see function: %F4$POINT
-  Source file: /data/x/veq/src/shapes.lisp
+ ; VEQ:F4$NUM
+ ;   [symbol]
+ ;
+ ; F4$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 4d array.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F4$SCALE
+
+#### F4$ONE
+
+```
+make 4d array of ones.
+typed.
+
+ ; VEQ:F4$ONE
+ ;   [symbol]
+ ;
+ ; F4$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d array of ones.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### F4$POINT
+
+```
+fx: %F4$POINT
+macro wrapper: F4$POINT
+
+defined via veq:def*
+
+ ; VEQ:F4$POINT
+ ;   [symbol]
+ ;
+ ; F4$POINT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$POINT
+ ;     macro wrapper: F4$POINT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### F4$SCALE
 
 ```
 broadcast for fx: -F4SCALE
 macroname: F4$SCALE
+ex: (F4$SCALE a ...) performs (mvc #'-F4SCALE a[i] ...) for every row in a.
 
-
-VEQ:F4$SCALE
-  [symbol]
-
-F4$SCALE names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$SCALE ...).
-    see function: %F4$SCALE
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$SCALE
+ ;   [symbol]
+ ;
+ ; F4$SCALE names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$SCALE
+ ;     macro wrapper: F4$SCALE
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$SCALE!
+
+#### F4$SCALE!
 
 ```
 broadcast for fx: -F4SCALE
 macroname: F4$SCALE!
+ex: (F4$SCALE! a ...) performs (mvc #'-F4SCALE a[i] ...) for every row in a.
+destructive.
 
-
-VEQ:F4$SCALE!
-  [symbol]
-
-F4$SCALE! names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%F4$SCALE! ...).
-    see function: %F4$SCALE!
-  Source file: /data/x/veq/src/array-broadcast.lisp
+ ; VEQ:F4$SCALE!
+ ;   [symbol]
+ ;
+ ; F4$SCALE! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F4$SCALE!
+ ;     macro wrapper: F4$SCALE!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
-### F4$SUM
 
-```
-:missing:
-
-VEQ:F4$SUM
-  [symbol]
-
-F4$SUM names a compiled function:
-  Lambda-list: (A &KEY N)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T))
-                 (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
-                         SINGLE-FLOAT &OPTIONAL))
-  Source file: /data/x/veq/src/array-reduce.lisp
-```
-### F4$TAKE
+#### F4$SUM
 
 ```
-:missing:
+sum all rows of 4d array.
 
-VEQ:F4$TAKE
-  [symbol]
-
-F4$TAKE names a compiled function:
-  Lambda-list: (A INDS &KEY RES)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) T &KEY (:RES T))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
-  Source file: /data/x/veq/src/array-take.lisp
+ ; VEQ:F4$SUM
+ ;   [symbol]
+ ;
+ ; F4$SUM names a compiled function:
+ ;   Lambda-list: (A &KEY N)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) &KEY (:N T))
+ ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                          SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     sum all rows of 4d array.
+ ;   Source file: /data/x/veq/src/array-reduce.lisp
 ```
-### F4$VAL
 
-```
-:missing:
-
-VEQ:F4$VAL
-  [symbol]
-
-F4$VAL names a compiled function:
-  Lambda-list: (V &OPTIONAL (N 1))
-  Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
-```
-### F4$WITH-ROWS
+#### F4$TAKE
 
 ```
-:missing:
+returns 4d array with rows for inds.
+use :res put result in existing array
 
-VEQ:F4$WITH-ROWS
-  [symbol]
+ ; VEQ:F4$TAKE
+ ;   [symbol]
+ ;
+ ; F4$TAKE names a compiled function:
+ ;   Lambda-list: (A INDS &KEY RES)
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY SINGLE-FLOAT) SEQUENCE &KEY (:RES T))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
+ ;   Documentation:
+ ;     returns 4d array with rows for inds.
+ ;     use :res put result in existing array
+ ;   Source file: /data/x/veq/src/array-take.lisp
 ```
-### F4$ZERO
+
+#### F4$VAL
 
 ```
-:missing:
+make 4d array of val.
+typed.
 
-VEQ:F4$ZERO
-  [symbol]
-
-F4$ZERO names a compiled function:
-  Lambda-list: (&OPTIONAL (N 1))
-  Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:F4$VAL
+ ;   [symbol]
+ ;
+ ; F4$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d array of val.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### F4*
+
+#### :context: F4$WITH-ROWS
+
+```
+make 4d
+```
+
+#### F4$ZERO
+
+```
+make 4d array of zeros.
+typed.
+
+ ; VEQ:F4$ZERO
+ ;   [symbol]
+ ;
+ ; F4$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d array of zeros.
+ ;     typed.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
+```
+
+#### :context: F4\*
 
 ```
 veq context op: F4*
@@ -10868,7 +10958,8 @@ fxname: -F4*
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW))
 ```
-### F4+
+
+#### :context: F4+
 
 ```
 veq context op: F4+
@@ -10876,7 +10967,8 @@ fxname: -F4+
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW))
 ```
-### F4-
+
+#### :context: F4-
 
 ```
 veq context op: F4-
@@ -10884,7 +10976,8 @@ fxname: -F4-
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW))
 ```
-### F4.
+
+#### :context: F4.
 
 ```
 veq context op: F4.
@@ -10892,7 +10985,8 @@ fxname: -F4.
 args: (AX AY AZ AW BX BY BZ BW)
 body: (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW))
 ```
-### F4/
+
+#### :context: F4/
 
 ```
 veq context op: F4/
@@ -10900,7 +10994,8 @@ fxname: -F4/
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW))
 ```
-### F4^
+
+#### :context: F4^
 
 ```
 veq context op: F4^
@@ -10908,7 +11003,8 @@ fxname: -F4^
 args: (A B C D S)
 body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S) (EXPT D S))
 ```
-### F4ABS
+
+#### :context: F4ABS
 
 ```
 veq context op: F4ABS
@@ -10916,7 +11012,8 @@ fxname: -F4ABS
 args: (A B C D)
 body: (VALUES (ABS A) (ABS B) (ABS C) (ABS D))
 ```
-### F4DST
+
+#### :context: F4DST
 
 ```
 veq context op: F4DST
@@ -10925,7 +11022,8 @@ args: (AX AY AZ AW BX BY BZ BW)
 body: (SQRT
  (THE POS-FF (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)))))
 ```
-### F4DST2
+
+#### :context: F4DST2
 
 ```
 veq context op: F4DST2
@@ -10933,7 +11031,8 @@ fxname: -F4DST2
 args: (AX AY AZ AW BX BY BZ BW)
 body: (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)))
 ```
-### F4EXP
+
+#### :context: F4EXP
 
 ```
 veq context op: F4EXP
@@ -10941,7 +11040,8 @@ fxname: -F4EXP
 args: (A B C D)
 body: (VALUES (EXP A) (EXP B) (EXP C) (EXP D))
 ```
-### F4FROM
+
+#### :context: F4FROM
 
 ```
 veq context op: F4FROM
@@ -10949,7 +11049,8 @@ fxname: -F4FROM
 args: (AX AY AZ AW BX BY BZ BW S)
 body: (-F4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S))
 ```
-### F4I-
+
+#### :context: F4I-
 
 ```
 veq context op: F4I-
@@ -10957,7 +11058,8 @@ fxname: -F4I-
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))
 ```
-### F4I/
+
+#### :context: F4I/
 
 ```
 veq context op: F4I/
@@ -10965,7 +11067,8 @@ fxname: -F4I/
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW))
 ```
-### F4ISCALE
+
+#### :context: F4ISCALE
 
 ```
 veq context op: F4ISCALE
@@ -10973,7 +11076,8 @@ fxname: -F4ISCALE
 args: (A B C D S)
 body: (VALUES (/ A S) (/ B S) (/ C S) (/ D S))
 ```
-### F4LEN
+
+#### :context: F4LEN
 
 ```
 veq context op: F4LEN
@@ -10981,7 +11085,8 @@ fxname: -F4LEN
 args: (A B C D)
 body: (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F4SQUARE A B C D)))))
 ```
-### F4LEN2
+
+#### :context: F4LEN2
 
 ```
 veq context op: F4LEN2
@@ -10989,7 +11094,8 @@ fxname: -F4LEN2
 args: (A B C D)
 body: (THE POS-FF (MVC #'+ (-F4SQUARE A B C D)))
 ```
-### F4LERP
+
+#### :context: F4LERP
 
 ```
 veq context op: F4LERP
@@ -10998,15 +11104,16 @@ args: (AX AY AZ AW BX BY BZ BW S)
 body: (-F4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
  (* (- BW AW) S))
 ```
-### F4LET
+
+#### :context: F4LET
 
 ```
-:missing:
-
-VEQ:F4LET
-  [symbol]
+make 4d let.
+ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
+note that this behaves as native lisp let*.
 ```
-### F4MAX
+
+#### :context: F4MAX
 
 ```
 veq context op: F4MAX
@@ -11014,22 +11121,25 @@ fxname: -F4MAX
 args: (A B C D)
 body: (MAX A B C D)
 ```
-### F4MEYE
+
+#### F4MEYE
 
 ```
-return eye matrix for dimension
-VEQ:F4MEYE
-  [symbol]
+return 4d eye matrix.
 
-F4MEYE names a compiled function:
-  Lambda-list: (&OPTIONAL (V 1.0))
-  Derived type: (FUNCTION (&OPTIONAL SINGLE-FLOAT)
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (16)) &OPTIONAL))
-  Documentation:
-    return eye matrix for dimension
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F4MEYE
+ ;   [symbol]
+ ;
+ ; F4MEYE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (V 1.0))
+ ;   Derived type: (FUNCTION (&OPTIONAL SINGLE-FLOAT)
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (16)) &OPTIONAL))
+ ;   Documentation:
+ ;     return 4d eye matrix.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F4MID
+
+#### :context: F4MID
 
 ```
 veq context op: F4MID
@@ -11037,7 +11147,8 @@ fxname: -F4MID
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5) (* (+ BW AW) 0.5))
 ```
-### F4MIN
+
+#### :context: F4MIN
 
 ```
 veq context op: F4MIN
@@ -11045,52 +11156,59 @@ fxname: -F4MIN
 args: (A B C D)
 body: (MIN A B C D)
 ```
-### F4MINV
+
+#### F4MINV
 
 ```
-invert 4x4 matrix
-VEQ:F4MINV
-  [symbol]
+invert 4x4 matrix. non-destructive.
 
-F4MINV names a compiled function:
-  Lambda-list: (A0)
-  Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
-                 (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
-  Documentation:
-    invert 4x4 matrix
-  Source file: /data/x/veq/src/mat-inv.lisp
+ ; VEQ:F4MINV
+ ;   [symbol]
+ ;
+ ; F4MINV names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     invert 4x4 matrix. non-destructive.
+ ;   Source file: /data/x/veq/src/mat-inv.lisp
 ```
-### F4MM
+
+#### F4MM
 
 ```
 multiply mat * mat
 of type: FVEC
-VEQ:F4MM
-  [symbol]
 
-F4MM names a macro:
-  Lambda-list: (A*233 B*235)
-  Documentation:
-    multiply mat * mat
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F4MM
+ ;   [symbol]
+ ;
+ ; F4MM names a macro:
+ ;   Lambda-list: (A*233 B*235)
+ ;   Documentation:
+ ;     multiply mat * mat
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F4MMT
+
+#### F4MMT
 
 ```
 multiply mat * (transpose mat)
 of type: FVEC
-VEQ:F4MMT
-  [symbol]
 
-F4MMT names a macro:
-  Lambda-list: (A*291 B*293)
-  Documentation:
-    multiply mat * (transpose mat)
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F4MMT
+ ;   [symbol]
+ ;
+ ; F4MMT names a macro:
+ ;   Lambda-list: (A*291 B*293)
+ ;   Documentation:
+ ;     multiply mat * (transpose mat)
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F4MOD
+
+#### :context: F4MOD
 
 ```
 veq context op: F4MOD
@@ -11098,82 +11216,87 @@ fxname: -F4MOD
 args: (A B C D S)
 body: (VALUES (MOD A S) (MOD B S) (MOD C S) (MOD D S))
 ```
-### F4MT!
+
+#### F4MT!
 
 ```
-transpose matrix of type ~a in-place
-VEQ:F4MT!
-  [symbol]
+transpose 4d matrix in-place.
 
-F4MT! names a macro:
-  Lambda-list: (A1)
-  Documentation:
-    transpose matrix of type ~a in-place
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F4MT!
+ ;   [symbol]
+ ;
+ ; F4MT! names a macro:
+ ;   Lambda-list: (A1)
+ ;   Documentation:
+ ;     transpose 4d matrix in-place.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F4MTM
+
+#### F4MTM
 
 ```
 multiply (transpose mat) * mat
 of type: FVEC
-VEQ:F4MTM
-  [symbol]
 
-F4MTM names a macro:
-  Lambda-list: (A*320 B*322)
-  Documentation:
-    multiply (transpose mat) * mat
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F4MTM
+ ;   [symbol]
+ ;
+ ; F4MTM names a macro:
+ ;   Lambda-list: (A*320 B*322)
+ ;   Documentation:
+ ;     multiply (transpose mat) * mat
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F4MTMT
+
+#### F4MTMT
 
 ```
 multiply (transpose mat) * (transpose mat)
 of type: FVEC
-VEQ:F4MTMT
-  [symbol]
 
-F4MTMT names a macro:
-  Lambda-list: (A*262 B*264)
-  Documentation:
-    multiply (transpose mat) * (transpose mat)
-    of type: FVEC
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F4MTMT
+ ;   [symbol]
+ ;
+ ; F4MTMT names a macro:
+ ;   Lambda-list: (A*262 B*264)
+ ;   Documentation:
+ ;     multiply (transpose mat) * (transpose mat)
+ ;     of type: FVEC
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F4MTV
 
-```
-:missing:
-
-VEQ:F4MTV
-  [symbol]
-
-F4MTV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
-```
-### F4MV
+#### F4MTV
 
 ```
-:missing:
+transpose(mat) * v. for 4d matrix and vector.
 
-VEQ:F4MV
-  [symbol]
-
-F4MV names a macro:
-  Lambda-list: (M1 &REST V2)
-  Source file: /data/x/veq/src/mat.lisp
+ ; VEQ:F4MTV
+ ;   [symbol]
+ ;
+ ; F4MTV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     transpose(mat) * v. for 4d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F4MVB
+
+#### F4MV
 
 ```
-:missing:
+mat * v. for 4d matrix and vector.
 
-VEQ:F4MVB
-  [symbol]
+ ; VEQ:F4MV
+ ;   [symbol]
+ ;
+ ; F4MV names a macro:
+ ;   Lambda-list: (M1 &REST V2)
+ ;   Documentation:
+ ;     mat * v. for 4d matrix and vector.
+ ;   Source file: /data/x/veq/src/mat.lisp
 ```
-### F4NEG
+
+#### :context: F4NEG
 
 ```
 veq context op: F4NEG
@@ -11181,7 +11304,8 @@ fxname: -F4NEG
 args: (A B C D)
 body: (VALUES (- A) (- B) (- C) (- D))
 ```
-### F4NORM
+
+#### :context: F4NORM
 
 ```
 veq context op: F4NORM
@@ -11189,31 +11313,31 @@ fxname: -F4NORM
 args: (A B C D)
 body: (MVC #'-F4ISCALE A B C D (THE POS-FF (MVC #'-F4LEN A B C D)))
 ```
-### F4NSUM
+
+#### :context: F4NSUM
 
 ```
-:missing:
-
-VEQ:F4NSUM
-  [symbol]
+make 4d
 ```
-### F4REP
+
+#### :context: F4REP
 
 ```
-:missing:
-
-VEQ:F4REP
-  [symbol]
+make 4d rep.
+ex: (f3rep (fx))
+corresponds to
+(values (fx) (fx) (fx))
 ```
-### F4REP*
+
+#### :context: F4REP\*
 
 ```
-:missing:
-
-VEQ:F4REP*
-  [symbol]
+make 4d rep*.
+ex: (f3rep (fx))
+returns (values v v v) where v = (fx)
 ```
-### F4SCALE
+
+#### :context: F4SCALE
 
 ```
 veq context op: F4SCALE
@@ -11221,7 +11345,8 @@ fxname: -F4SCALE
 args: (A B C D S)
 body: (VALUES (* A S) (* B S) (* C S) (* D S))
 ```
-### F4SQRT
+
+#### :context: F4SQRT
 
 ```
 veq context op: F4SQRT
@@ -11230,7 +11355,8 @@ args: (A B C D)
 body: (VALUES (THE POS-FF (SQRT (THE POS-FF A))) (THE POS-FF (SQRT (THE POS-FF B)))
         (THE POS-FF (SQRT (THE POS-FF C))) (THE POS-FF (SQRT (THE POS-FF D))))
 ```
-### F4SQUARE
+
+#### :context: F4SQUARE
 
 ```
 veq context op: F4SQUARE
@@ -11239,23 +11365,23 @@ args: (A B C D)
 body: (VALUES (THE POS-FF (* A A)) (THE POS-FF (* B B)) (THE POS-FF (* C C))
         (THE POS-FF (* D D)))
 ```
-### F4VSET
+
+#### :context: F4VSET
 
 ```
-:missing:
-
-VEQ:F4VSET
-  [symbol]
+set 4d value.
+ex: (F4VSET (a) (fx ...))
+where (fx ...) returns 4 values.
 ```
-### F4~
+
+#### :context: F4~
 
 ```
-:missing:
-
-VEQ:F4~
-  [symbol]
+make 4d vector in veq context.
+coerce to type.
 ```
-### F^
+
+#### :context: F^
 
 ```
 veq context op: F^
@@ -11263,20 +11389,23 @@ fxname: -F^
 args: (A S)
 body: (EXPT A S)
 ```
-### F_
+
+#### F_
 
 ```
 create fvec from body: (f_ '(1f0 2f0 3f0))
-VEQ:F_
-  [symbol]
 
-F_ names a macro:
-  Lambda-list: (&BODY BODY)
-  Documentation:
-    create fvec from body: (f_ '(1f0 2f0 3f0))
-  Source file: /data/x/veq/src/array-utils.lisp
+ ; VEQ:F_
+ ;   [symbol]
+ ;
+ ; F_ names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Documentation:
+ ;     create fvec from body: (f_ '(1f0 2f0 3f0))
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
-### FABS
+
+#### :context: FABS
 
 ```
 veq context op: FABS
@@ -11284,7 +11413,8 @@ fxname: -FABS
 args: (A)
 body: (ABS A)
 ```
-### FCLAMP
+
+#### :context: FCLAMP
 
 ```
 veq context op: FCLAMP
@@ -11292,7 +11422,8 @@ fxname: -FCLAMP
 args: (X)
 body: (MIN 1.0 (MAX 0.0 X))
 ```
-### FCLAMP*
+
+#### :context: FCLAMP\*
 
 ```
 veq context op: FCLAMP*
@@ -11300,7 +11431,8 @@ fxname: -FCLAMP*
 args: (X MI MA)
 body: (MIN MA (MAX MI X))
 ```
-### FCOS-SIN
+
+#### :context: FCOS-SIN
 
 ```
 veq context op: FCOS-SIN
@@ -11308,7 +11440,8 @@ fxname: -FCOS-SIN
 args: (A)
 body: (VALUES (COS A) (SIN A))
 ```
-### FDEG->RAD
+
+#### :context: FDEG->RAD
 
 ```
 veq context op: FDEG->RAD
@@ -11316,68 +11449,75 @@ fxname: -FDEG->RAD
 args: (DEG)
 body: (* FPI (/ DEG 180.0))
 ```
-### FEASE-IN-BACK
+
+#### FEASE-IN-BACK
 
 ```
 ease in:
 arg: (X &OPTIONAL (S 1.70158))
 body: (* X X (- (* (+ 1.0 S) X) S))
-VEQ:FEASE-IN-BACK
-  [symbol]
 
-FEASE-IN-BACK names a compiled function:
-  Lambda-list: (X &OPTIONAL (S 1.70158))
-  Derived type: (FUNCTION (T &OPTIONAL T)
-                 (VALUES
-                  (OR FLOAT (COMPLEX DOUBLE-FLOAT)
-                      (COMPLEX SINGLE-FLOAT))
-                  &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X &OPTIONAL (S 1.70158))
-    body: (* X X (- (* (+ 1.0 S) X) S))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-BACK
+ ;   [symbol]
+ ;
+ ; FEASE-IN-BACK names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (S 1.70158))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T)
+ ;                  (VALUES
+ ;                   (OR FLOAT (COMPLEX DOUBLE-FLOAT)
+ ;                       (COMPLEX SINGLE-FLOAT))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X &OPTIONAL (S 1.70158))
+ ;     body: (* X X (- (* (+ 1.0 S) X) S))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-CIRC
+
+#### FEASE-IN-CIRC
 
 ```
 ease in:
 arg: (X)
 body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
-VEQ:FEASE-IN-CIRC
-  [symbol]
 
-FEASE-IN-CIRC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T)
-                 (VALUES
-                  (OR (COMPLEX SINGLE-FLOAT) (SINGLE-FLOAT -0.0 1.0))
-                  &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-CIRC
+ ;   [symbol]
+ ;
+ ; FEASE-IN-CIRC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR (COMPLEX SINGLE-FLOAT) (SINGLE-FLOAT -0.0 1.0))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-CUBIC
+
+#### FEASE-IN-CUBIC
 
 ```
 ease in:
 arg: (X)
 body: (* X X X)
-VEQ:FEASE-IN-CUBIC
-  [symbol]
 
-FEASE-IN-CUBIC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (* X X X)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-CUBIC
+ ;   [symbol]
+ ;
+ ; FEASE-IN-CUBIC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (* X X X)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-ELASTIC
+
+#### FEASE-IN-ELASTIC
 
 ```
 ease in:
@@ -11386,123 +11526,135 @@ body: (LET ((S (OR S (* (ASIN 1.0) (/ P FPII)))))
         (-
          (* (EXPT 2.0 (* 10.0 (- X 1.0)))
             (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
-VEQ:FEASE-IN-ELASTIC
-  [symbol]
 
-FEASE-IN-ELASTIC names a compiled function:
-  Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
-  Derived type: (FUNCTION (T &OPTIONAL T T)
-                 (VALUES
-                  (OR FLOAT (COMPLEX SINGLE-FLOAT)
-                      (COMPLEX DOUBLE-FLOAT))
-                  &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X &OPTIONAL (P 0.3) (S NIL))
-    body: (LET ((S (OR S (* (ASIN 1.0) (/ P FPII)))))
-            (-
-             (* (EXPT 2.0 (* 10.0 (- X 1.0)))
-                (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-ELASTIC
+ ;   [symbol]
+ ;
+ ; FEASE-IN-ELASTIC names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T T)
+ ;                  (VALUES
+ ;                   (OR FLOAT (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X &OPTIONAL (P 0.3) (S NIL))
+ ;     body: (LET ((S (OR S (* (ASIN 1.0) (/ P FPII)))))
+ ;             (-
+ ;              (* (EXPT 2.0 (* 10.0 (- X 1.0)))
+ ;                 (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-EXP
+
+#### FEASE-IN-EXP
 
 ```
 ease in:
 arg: (X)
 body: (EXPT 2.0 (* 10.0 (- X 1.0)))
-VEQ:FEASE-IN-EXP
-  [symbol]
 
-FEASE-IN-EXP names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0) &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (EXPT 2.0 (* 10.0 (- X 1.0)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-EXP
+ ;   [symbol]
+ ;
+ ; FEASE-IN-EXP names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0) &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (EXPT 2.0 (* 10.0 (- X 1.0)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-LINEAR
+
+#### FEASE-IN-LINEAR
 
 ```
 ease in:
 arg: (X)
 body: X
-VEQ:FEASE-IN-LINEAR
-  [symbol]
 
-FEASE-IN-LINEAR names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: X
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-LINEAR
+ ;   [symbol]
+ ;
+ ; FEASE-IN-LINEAR names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: X
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-OUT-BACK
+
+#### FEASE-IN-OUT-BACK
 
 ```
 ease in-out:
 arg: (X &OPTIONAL (S 1.70158))
 body: (* X X (- (* (+ 1.0 S) X) S))
-VEQ:FEASE-IN-OUT-BACK
-  [symbol]
 
-FEASE-IN-OUT-BACK names a compiled function:
-  Lambda-list: (X &OPTIONAL (S 1.70158))
-  Derived type: (FUNCTION (T &OPTIONAL T)
-                 (VALUES
-                  (OR FLOAT (COMPLEX SINGLE-FLOAT)
-                      (COMPLEX DOUBLE-FLOAT))
-                  &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X &OPTIONAL (S 1.70158))
-    body: (* X X (- (* (+ 1.0 S) X) S))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-OUT-BACK
+ ;   [symbol]
+ ;
+ ; FEASE-IN-OUT-BACK names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (S 1.70158))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T)
+ ;                  (VALUES
+ ;                   (OR FLOAT (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X &OPTIONAL (S 1.70158))
+ ;     body: (* X X (- (* (+ 1.0 S) X) S))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-OUT-CIRC
+
+#### FEASE-IN-OUT-CIRC
 
 ```
 ease in-out:
 arg: (X)
 body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
-VEQ:FEASE-IN-OUT-CIRC
-  [symbol]
 
-FEASE-IN-OUT-CIRC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T)
-                 (VALUES
-                  (OR (SINGLE-FLOAT -0.0 1.0) (COMPLEX SINGLE-FLOAT))
-                  &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-OUT-CIRC
+ ;   [symbol]
+ ;
+ ; FEASE-IN-OUT-CIRC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR (SINGLE-FLOAT -0.0 1.0) (COMPLEX SINGLE-FLOAT))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-OUT-CUBIC
+
+#### FEASE-IN-OUT-CUBIC
 
 ```
 ease in-out:
 arg: (X)
 body: (* X X X)
-VEQ:FEASE-IN-OUT-CUBIC
-  [symbol]
 
-FEASE-IN-OUT-CUBIC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (* X X X)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-OUT-CUBIC
+ ;   [symbol]
+ ;
+ ; FEASE-IN-OUT-CUBIC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (* X X X)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-OUT-ELASTIC
+
+#### FEASE-IN-OUT-ELASTIC
 
 ```
 ease in-out:
@@ -11511,231 +11663,255 @@ body: (LET ((S (OR S (* (ASIN 1.0) (/ P FPII)))))
         (-
          (* (EXPT 2.0 (* 10.0 (- X 1.0)))
             (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
-VEQ:FEASE-IN-OUT-ELASTIC
-  [symbol]
 
-FEASE-IN-OUT-ELASTIC names a compiled function:
-  Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
-  Derived type: (FUNCTION (T &OPTIONAL T T)
-                 (VALUES
-                  (OR FLOAT (COMPLEX DOUBLE-FLOAT)
-                      (COMPLEX SINGLE-FLOAT))
-                  &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X &OPTIONAL (P 0.3) (S NIL))
-    body: (LET ((S (OR S (* (ASIN 1.0) (/ P FPII)))))
-            (-
-             (* (EXPT 2.0 (* 10.0 (- X 1.0)))
-                (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-OUT-ELASTIC
+ ;   [symbol]
+ ;
+ ; FEASE-IN-OUT-ELASTIC names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T T)
+ ;                  (VALUES
+ ;                   (OR FLOAT (COMPLEX DOUBLE-FLOAT)
+ ;                       (COMPLEX SINGLE-FLOAT))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X &OPTIONAL (P 0.3) (S NIL))
+ ;     body: (LET ((S (OR S (* (ASIN 1.0) (/ P FPII)))))
+ ;             (-
+ ;              (* (EXPT 2.0 (* 10.0 (- X 1.0)))
+ ;                 (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-OUT-EXP
+
+#### FEASE-IN-OUT-EXP
 
 ```
 ease in-out:
 arg: (X)
 body: (EXPT 2.0 (* 10.0 (- X 1.0)))
-VEQ:FEASE-IN-OUT-EXP
-  [symbol]
 
-FEASE-IN-OUT-EXP names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (EXPT 2.0 (* 10.0 (- X 1.0)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-OUT-EXP
+ ;   [symbol]
+ ;
+ ; FEASE-IN-OUT-EXP names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (EXPT 2.0 (* 10.0 (- X 1.0)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-OUT-LINEAR
+
+#### FEASE-IN-OUT-LINEAR
 
 ```
 ease in-out:
 arg: (X)
 body: X
-VEQ:FEASE-IN-OUT-LINEAR
-  [symbol]
 
-FEASE-IN-OUT-LINEAR names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: X
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-OUT-LINEAR
+ ;   [symbol]
+ ;
+ ; FEASE-IN-OUT-LINEAR names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: X
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-OUT-QUART
+
+#### FEASE-IN-OUT-QUART
 
 ```
 ease in-out:
 arg: (X)
 body: (EXPT X 4.0)
-VEQ:FEASE-IN-OUT-QUART
-  [symbol]
 
-FEASE-IN-OUT-QUART names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (EXPT X 4.0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-OUT-QUART
+ ;   [symbol]
+ ;
+ ; FEASE-IN-OUT-QUART names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (EXPT X 4.0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-OUT-QUINT
+
+#### FEASE-IN-OUT-QUINT
 
 ```
 ease in-out:
 arg: (X)
 body: (EXPT X 5.0)
-VEQ:FEASE-IN-OUT-QUINT
-  [symbol]
 
-FEASE-IN-OUT-QUINT names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (EXPT X 5.0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-OUT-QUINT
+ ;   [symbol]
+ ;
+ ; FEASE-IN-OUT-QUINT names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (EXPT X 5.0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-OUT-SIN
+
+#### FEASE-IN-OUT-SIN
 
 ```
 ease in-out:
 arg: (X)
 body: (- 1.0 (COS (* X FPI5)))
-VEQ:FEASE-IN-OUT-SIN
-  [symbol]
 
-FEASE-IN-OUT-SIN names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
-  Documentation:
-    ease in-out:
-    arg: (X)
-    body: (- 1.0 (COS (* X FPI5)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-OUT-SIN
+ ;   [symbol]
+ ;
+ ; FEASE-IN-OUT-SIN names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Documentation:
+ ;     ease in-out:
+ ;     arg: (X)
+ ;     body: (- 1.0 (COS (* X FPI5)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-QUART
+
+#### FEASE-IN-QUART
 
 ```
 ease in:
 arg: (X)
 body: (EXPT X 4.0)
-VEQ:FEASE-IN-QUART
-  [symbol]
 
-FEASE-IN-QUART names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (EXPT X 4.0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-QUART
+ ;   [symbol]
+ ;
+ ; FEASE-IN-QUART names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (EXPT X 4.0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-QUINT
+
+#### FEASE-IN-QUINT
 
 ```
 ease in:
 arg: (X)
 body: (EXPT X 5.0)
-VEQ:FEASE-IN-QUINT
-  [symbol]
 
-FEASE-IN-QUINT names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (EXPT X 5.0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-QUINT
+ ;   [symbol]
+ ;
+ ; FEASE-IN-QUINT names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (EXPT X 5.0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-IN-SIN
+
+#### FEASE-IN-SIN
 
 ```
 ease in:
 arg: (X)
 body: (- 1.0 (COS (* X FPI5)))
-VEQ:FEASE-IN-SIN
-  [symbol]
 
-FEASE-IN-SIN names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 2.0) &OPTIONAL))
-  Documentation:
-    ease in:
-    arg: (X)
-    body: (- 1.0 (COS (* X FPI5)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-IN-SIN
+ ;   [symbol]
+ ;
+ ; FEASE-IN-SIN names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 2.0) &OPTIONAL))
+ ;   Documentation:
+ ;     ease in:
+ ;     arg: (X)
+ ;     body: (- 1.0 (COS (* X FPI5)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-OUT-BACK
+
+#### FEASE-OUT-BACK
 
 ```
 ease out:
 arg: (X &OPTIONAL (S 1.70158))
 body: (* X X (- (* (+ 1.0 S) X) S))
-VEQ:FEASE-OUT-BACK
-  [symbol]
 
-FEASE-OUT-BACK names a compiled function:
-  Lambda-list: (X &OPTIONAL (S 1.70158))
-  Derived type: (FUNCTION (T &OPTIONAL T)
-                 (VALUES
-                  (OR FLOAT (COMPLEX DOUBLE-FLOAT)
-                      (COMPLEX SINGLE-FLOAT))
-                  &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X &OPTIONAL (S 1.70158))
-    body: (* X X (- (* (+ 1.0 S) X) S))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-OUT-BACK
+ ;   [symbol]
+ ;
+ ; FEASE-OUT-BACK names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (S 1.70158))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T)
+ ;                  (VALUES
+ ;                   (OR FLOAT (COMPLEX DOUBLE-FLOAT)
+ ;                       (COMPLEX SINGLE-FLOAT))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X &OPTIONAL (S 1.70158))
+ ;     body: (* X X (- (* (+ 1.0 S) X) S))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-OUT-CIRC
+
+#### FEASE-OUT-CIRC
 
 ```
 ease out:
 arg: (X)
 body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
-VEQ:FEASE-OUT-CIRC
-  [symbol]
 
-FEASE-OUT-CIRC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T)
-                 (VALUES
-                  (OR (COMPLEX SINGLE-FLOAT) (SINGLE-FLOAT 0.0 1.0))
-                  &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-OUT-CIRC
+ ;   [symbol]
+ ;
+ ; FEASE-OUT-CIRC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR (COMPLEX SINGLE-FLOAT) (SINGLE-FLOAT 0.0 1.0))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-OUT-CUBIC
+
+#### FEASE-OUT-CUBIC
 
 ```
 ease out:
 arg: (X)
 body: (* X X X)
-VEQ:FEASE-OUT-CUBIC
-  [symbol]
 
-FEASE-OUT-CUBIC names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (* X X X)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-OUT-CUBIC
+ ;   [symbol]
+ ;
+ ; FEASE-OUT-CUBIC names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (* X X X)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-OUT-ELASTIC
+
+#### FEASE-OUT-ELASTIC
 
 ```
 ease out:
@@ -11744,117 +11920,129 @@ body: (LET ((S (OR S (* (ASIN 1.0) (/ P FPII)))))
         (-
          (* (EXPT 2.0 (* 10.0 (- X 1.0)))
             (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
-VEQ:FEASE-OUT-ELASTIC
-  [symbol]
 
-FEASE-OUT-ELASTIC names a compiled function:
-  Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
-  Derived type: (FUNCTION (T &OPTIONAL T T)
-                 (VALUES
-                  (OR FLOAT (COMPLEX SINGLE-FLOAT)
-                      (COMPLEX DOUBLE-FLOAT))
-                  &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X &OPTIONAL (P 0.3) (S NIL))
-    body: (LET ((S (OR S (* (ASIN 1.0) (/ P FPII)))))
-            (-
-             (* (EXPT 2.0 (* 10.0 (- X 1.0)))
-                (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-OUT-ELASTIC
+ ;   [symbol]
+ ;
+ ; FEASE-OUT-ELASTIC names a compiled function:
+ ;   Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T T)
+ ;                  (VALUES
+ ;                   (OR FLOAT (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
+ ;                   &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X &OPTIONAL (P 0.3) (S NIL))
+ ;     body: (LET ((S (OR S (* (ASIN 1.0) (/ P FPII)))))
+ ;             (-
+ ;              (* (EXPT 2.0 (* 10.0 (- X 1.0)))
+ ;                 (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-OUT-EXP
+
+#### FEASE-OUT-EXP
 
 ```
 ease out:
 arg: (X)
 body: (EXPT 2.0 (* 10.0 (- X 1.0)))
-VEQ:FEASE-OUT-EXP
-  [symbol]
 
-FEASE-OUT-EXP names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT * 1.0) &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (EXPT 2.0 (* 10.0 (- X 1.0)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-OUT-EXP
+ ;   [symbol]
+ ;
+ ; FEASE-OUT-EXP names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT * 1.0) &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (EXPT 2.0 (* 10.0 (- X 1.0)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-OUT-LINEAR
+
+#### FEASE-OUT-LINEAR
 
 ```
 ease out:
 arg: (X)
 body: X
-VEQ:FEASE-OUT-LINEAR
-  [symbol]
 
-FEASE-OUT-LINEAR names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: X
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-OUT-LINEAR
+ ;   [symbol]
+ ;
+ ; FEASE-OUT-LINEAR names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: X
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-OUT-QUART
+
+#### FEASE-OUT-QUART
 
 ```
 ease out:
 arg: (X)
 body: (EXPT X 4.0)
-VEQ:FEASE-OUT-QUART
-  [symbol]
 
-FEASE-OUT-QUART names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (EXPT X 4.0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-OUT-QUART
+ ;   [symbol]
+ ;
+ ; FEASE-OUT-QUART names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (EXPT X 4.0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-OUT-QUINT
+
+#### FEASE-OUT-QUINT
 
 ```
 ease out:
 arg: (X)
 body: (EXPT X 5.0)
-VEQ:FEASE-OUT-QUINT
-  [symbol]
 
-FEASE-OUT-QUINT names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (EXPT X 5.0)
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-OUT-QUINT
+ ;   [symbol]
+ ;
+ ; FEASE-OUT-QUINT names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (EXPT X 5.0)
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEASE-OUT-SIN
+
+#### FEASE-OUT-SIN
 
 ```
 ease out:
 arg: (X)
 body: (- 1.0 (COS (* X FPI5)))
-VEQ:FEASE-OUT-SIN
-  [symbol]
 
-FEASE-OUT-SIN names a compiled function:
-  Lambda-list: (X)
-  Derived type: (FUNCTION (T)
-                 (VALUES (SINGLE-FLOAT -1.0 1.0) &OPTIONAL))
-  Documentation:
-    ease out:
-    arg: (X)
-    body: (- 1.0 (COS (* X FPI5)))
-  Source file: /data/x/veq/src/easing.lisp
+ ; VEQ:FEASE-OUT-SIN
+ ;   [symbol]
+ ;
+ ; FEASE-OUT-SIN names a compiled function:
+ ;   Lambda-list: (X)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES (SINGLE-FLOAT -1.0 1.0) &OPTIONAL))
+ ;   Documentation:
+ ;     ease out:
+ ;     arg: (X)
+ ;     body: (- 1.0 (COS (* X FPI5)))
+ ;   Source file: /data/x/veq/src/easing.lisp
 ```
-### FEXP
+
+#### :context: FEXP
 
 ```
 veq context op: FEXP
@@ -11862,49 +12050,54 @@ fxname: -FEXP
 args: (A)
 body: (VALUES (EXP A))
 ```
-### FF
+
+#### FF
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:FF
-  [symbol]
-
-FF names a macro:
-  Lambda-list: (&BODY BODY)
-  Source file: /data/x/veq/src/utils.lisp
-
-FF names a type-specifier:
-  Lambda-list: ()
-  Expansion: SINGLE-FLOAT
+ ; VEQ:FF
+ ;   [symbol]
+ ;
+ ; FF names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Source file: /data/x/veq/src/utils.lisp
+ ;
+ ; FF names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: SINGLE-FLOAT
 ```
-### FF*
 
-```
-:missing:
-
-VEQ:FF*
-  [symbol]
-
-FF* names a macro:
-  Lambda-list: (&BODY BODY)
-  Source file: /data/x/veq/src/utils.lisp
-```
-### FFL
+#### FF\*
 
 ```
-return (values (ff a) (ff b) ..) from (list a b ..)
-VEQ:FFL
-  [symbol]
+:missing:todo:
 
-FFL names a compiled function:
-  Lambda-list: (L)
-  Derived type: (FUNCTION (LIST) *)
-  Documentation:
-    return (values (ff a) (ff b) ..) from (list a b ..)
-  Source file: /data/x/veq/src/utils.lisp
+ ; VEQ:FF*
+ ;   [symbol]
+ ;
+ ; FF* names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### FFROM
+
+#### FFL
+
+```
+return (values (ff a) (ff b) ..) from (list a b ..).
+
+ ; VEQ:FFL
+ ;   [symbol]
+ ;
+ ; FFL names a compiled function:
+ ;   Lambda-list: (L)
+ ;   Derived type: (FUNCTION (LIST) *)
+ ;   Documentation:
+ ;     return (values (ff a) (ff b) ..) from (list a b ..).
+ ;   Source file: /data/x/veq/src/utils.lisp
+```
+
+#### :context: FFROM
 
 ```
 veq context op: FFROM
@@ -11912,7 +12105,8 @@ fxname: -FFROM
 args: (AX BX S)
 body: (+ AX (* BX S))
 ```
-### FI-
+
+#### :context: FI-
 
 ```
 veq context op: FI-
@@ -11920,7 +12114,8 @@ fxname: -FI-
 args: (A B)
 body: (- B A)
 ```
-### FI/
+
+#### :context: FI/
 
 ```
 veq context op: FI/
@@ -11928,7 +12123,8 @@ fxname: -FI/
 args: (A B)
 body: (/ B A)
 ```
-### FISCALE
+
+#### :context: FISCALE
 
 ```
 veq context op: FISCALE
@@ -11936,7 +12132,8 @@ fxname: -FISCALE
 args: (A S)
 body: (VALUES (/ A S))
 ```
-### FLEN
+
+#### :context: FLEN
 
 ```
 veq context op: FLEN
@@ -11944,7 +12141,8 @@ fxname: -FLEN
 args: (A)
 body: (THE POS-FF A)
 ```
-### FLEN2
+
+#### :context: FLEN2
 
 ```
 veq context op: FLEN2
@@ -11952,7 +12150,8 @@ fxname: -FLEN2
 args: (A)
 body: (THE POS-FF (MVC #'+ (-FSQUARE A)))
 ```
-### FLERP
+
+#### :context: FLERP
 
 ```
 veq context op: FLERP
@@ -11960,52 +12159,71 @@ fxname: -FLERP
 args: (AX BX S)
 body: (+ AX (* (- BX AX) S))
 ```
-### FMAKE-ORTHO-PROJ-MATRIX
+
+#### FMAKE-ORTHO-PROJ-MATRIX
 
 ```
-macro wrapper: (mvc #'%FMAKE-ORTHO-PROJ-MATRIX ...) in veq context.
-see function: %FMAKE-ORTHO-PROJ-MATRIX
-VEQ:FMAKE-ORTHO-PROJ-MATRIX
-  [symbol]
+fx: %FMAKE-ORTHO-PROJ-MATRIX
+macro wrapper: FMAKE-ORTHO-PROJ-MATRIX
 
-FMAKE-ORTHO-PROJ-MATRIX names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%FMAKE-ORTHO-PROJ-MATRIX ...) in veq context.
-    see function: %FMAKE-ORTHO-PROJ-MATRIX
-  Source file: /data/x/veq/src/mat-cam.lisp
-```
-### FMAKE-PROJ-MATRIX
+defined via veq:fvdef*
 
+ ; VEQ:FMAKE-ORTHO-PROJ-MATRIX
+ ;   [symbol]
+ ;
+ ; FMAKE-ORTHO-PROJ-MATRIX names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %FMAKE-ORTHO-PROJ-MATRIX
+ ;     macro wrapper: FMAKE-ORTHO-PROJ-MATRIX
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat-cam.lisp
 ```
-macro wrapper: (mvc #'%FMAKE-PROJ-MATRIX ...) in veq context.
-see function: %FMAKE-PROJ-MATRIX
-VEQ:FMAKE-PROJ-MATRIX
-  [symbol]
 
-FMAKE-PROJ-MATRIX names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%FMAKE-PROJ-MATRIX ...) in veq context.
-    see function: %FMAKE-PROJ-MATRIX
-  Source file: /data/x/veq/src/mat-cam.lisp
-```
-### FMAKE-VIEW-MATRIX
+#### FMAKE-PROJ-MATRIX
 
 ```
-macro wrapper: (mvc #'%FMAKE-VIEW-MATRIX ...) in veq context.
-see function: %FMAKE-VIEW-MATRIX
-VEQ:FMAKE-VIEW-MATRIX
-  [symbol]
+fx: %FMAKE-PROJ-MATRIX
+macro wrapper: FMAKE-PROJ-MATRIX
 
-FMAKE-VIEW-MATRIX names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    macro wrapper: (mvc #'%FMAKE-VIEW-MATRIX ...) in veq context.
-    see function: %FMAKE-VIEW-MATRIX
-  Source file: /data/x/veq/src/mat-cam.lisp
+defined via veq:fvdef*
+
+ ; VEQ:FMAKE-PROJ-MATRIX
+ ;   [symbol]
+ ;
+ ; FMAKE-PROJ-MATRIX names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %FMAKE-PROJ-MATRIX
+ ;     macro wrapper: FMAKE-PROJ-MATRIX
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat-cam.lisp
 ```
-### FMID
+
+#### FMAKE-VIEW-MATRIX
+
+```
+fx: %FMAKE-VIEW-MATRIX
+macro wrapper: FMAKE-VIEW-MATRIX
+
+defined via veq:fvdef*
+
+ ; VEQ:FMAKE-VIEW-MATRIX
+ ;   [symbol]
+ ;
+ ; FMAKE-VIEW-MATRIX names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %FMAKE-VIEW-MATRIX
+ ;     macro wrapper: FMAKE-VIEW-MATRIX
+ ;
+ ;     defined via veq:fvdef*
+ ;   Source file: /data/x/veq/src/mat-cam.lisp
+```
+
+#### :context: FMID
 
 ```
 veq context op: FMID
@@ -12013,7 +12231,8 @@ fxname: -FMID
 args: (AX BX)
 body: (* 0.5 (+ AX BX))
 ```
-### FMOD
+
+#### :context: FMOD
 
 ```
 veq context op: FMOD
@@ -12021,7 +12240,8 @@ fxname: -FMOD
 args: (A S)
 body: (MOD A S)
 ```
-### FNEG
+
+#### :context: FNEG
 
 ```
 veq context op: FNEG
@@ -12029,7 +12249,8 @@ fxname: -FNEG
 args: (A)
 body: (- A)
 ```
-### FNORM
+
+#### :context: FNORM
 
 ```
 veq context op: FNORM
@@ -12037,80 +12258,85 @@ fxname: -FNORM
 args: (A)
 body: (MVC #'-FISCALE A (MVC #'-FLEN A))
 ```
-### FNSUM
+
+#### :context: FNSUM
 
 ```
-:missing:
-
-VEQ:FNSUM
-  [symbol]
+make 1d
 ```
-### FPI
+
+#### FPI
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:FPI
-  [symbol]
-
-FPI names a constant variable:
-  Declared type: SINGLE-FLOAT
-  Value: 3.1415927
+ ; VEQ:FPI
+ ;   [symbol]
+ ;
+ ; FPI names a constant variable:
+ ;   Declared type: SINGLE-FLOAT
+ ;   Value: 3.1415927
 ```
-### FPI5
 
-```
-:missing:
-
-VEQ:FPI5
-  [symbol]
-
-FPI5 names a constant variable:
-  Declared type: SINGLE-FLOAT
-  Value: 1.5707964
-```
-### FPII
+#### FPI5
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:FPII
-  [symbol]
-
-FPII names a constant variable:
-  Declared type: SINGLE-FLOAT
-  Value: 6.2831855
+ ; VEQ:FPI5
+ ;   [symbol]
+ ;
+ ; FPI5 names a constant variable:
+ ;   Declared type: SINGLE-FLOAT
+ ;   Value: 1.5707964
 ```
-### FREP
 
-```
-:missing:
-
-VEQ:FREP
-  [symbol]
-```
-### FREP*
+#### FPII
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:FREP*
-  [symbol]
+ ; VEQ:FPII
+ ;   [symbol]
+ ;
+ ; FPII names a constant variable:
+ ;   Declared type: SINGLE-FLOAT
+ ;   Value: 6.2831855
 ```
-### FROM-LST
+
+#### :context: FREP
+
+```
+make 1d rep.
+ex: (f3rep (fx))
+corresponds to
+(values (fx) (fx) (fx))
+```
+
+#### :context: FREP\*
+
+```
+make 1d rep*.
+ex: (f3rep (fx))
+returns (values v v v) where v = (fx)
+```
+
+#### FROM-LST
 
 ```
 get values from list
-VEQ:FROM-LST
-  [symbol]
 
-FROM-LST names a macro:
-  Lambda-list: (L)
-  Documentation:
-    get values from list
-  Source file: /data/x/veq/src/macros.lisp
+ ; VEQ:FROM-LST
+ ;   [symbol]
+ ;
+ ; FROM-LST names a macro:
+ ;   Lambda-list: (L)
+ ;   Documentation:
+ ;     get values from list
+ ;   Source file: /data/x/veq/src/macros.lisp
 ```
-### FSCALE
+
+#### :context: FSCALE
 
 ```
 veq context op: FSCALE
@@ -12118,7 +12344,8 @@ fxname: -FSCALE
 args: (A S)
 body: (VALUES (* A S))
 ```
-### FSIN-COS
+
+#### :context: FSIN-COS
 
 ```
 veq context op: FSIN-COS
@@ -12126,7 +12353,8 @@ fxname: -FSIN-COS
 args: (A)
 body: (VALUES (SIN A) (COS A))
 ```
-### FSQRT
+
+#### :context: FSQRT
 
 ```
 veq context op: FSQRT
@@ -12134,7 +12362,8 @@ fxname: -FSQRT
 args: (A)
 body: (THE POS-FF (SQRT (THE POS-FF A)))
 ```
-### FSQUARE
+
+#### :context: FSQUARE
 
 ```
 veq context op: FSQUARE
@@ -12142,2071 +12371,472 @@ fxname: -FSQUARE
 args: (A)
 body: (* A A)
 ```
-### FVDEF
 
-```
-define function with veq enabled. see fvprogn.
-VEQ:FVDEF
-  [symbol]
-
-FVDEF names a macro:
-  Lambda-list: (FNAME &BODY BODY)
-  Documentation:
-    define function with veq enabled. see fvprogn.
-  Source file: /data/x/veq/src/macros.lisp
-```
-### FVDEF*
-
-```
-define function, and corresponding macro, with veq enabled. see fvprogn.
-     use %mname to call function outside mvc.
-VEQ:FVDEF*
-  [symbol]
-
-FVDEF* names a macro:
-  Lambda-list: (MNAME &BODY BODY)
-  Documentation:
-    define function, and corresponding macro, with veq enabled. see fvprogn.
-         use %mname to call function outside mvc.
-  Source file: /data/x/veq/src/macros.lisp
-```
-### FVEC
-
-```
-:missing:
-
-VEQ:FVEC
-  [symbol]
-
-FVEC names a type-specifier:
-  Lambda-list: ()
-  Expansion: (SIMPLE-ARRAY VEQ:FF)
-```
-### FVLET
-
-```
-:missing:
-
-VEQ:FVLET
-  [symbol]
-```
-### FVPROGN
-
-```
-enable veq inside this progn.  removes all macrolets that are not directly
-    used in body. this is faster, but will fail if macros in body introduce
-    macrolets from veq
-VEQ:FVPROGN
-  [symbol]
-
-FVPROGN names a macro:
-  Lambda-list: (&BODY BODY)
-  Documentation:
-    enable veq inside this progn.  removes all macrolets that are not directly
-        used in body. this is faster, but will fail if macros in body introduce
-        macrolets from veq
-  Source file: /data/x/veq/src/macros.lisp
-```
-### FVSET
-
-```
-:missing:
-
-VEQ:FVSET
-  [symbol]
-```
-### FW
-
-```
-macro. reorder arguments (X Y Z W) as (W), (IGNORE Z Y X).
-```
-### FWITH-ARRAYS
-
-```
-:missing:
-
-VEQ:FWITH-ARRAYS
-  [symbol]
-```
-### FWW
-
-```
-macro. reorder arguments (X Y Z W) as (W W), (IGNORE Z Y X).
-```
-### FWWW
-
-```
-macro. reorder arguments (X Y Z W) as (W W W), (IGNORE Z Y X).
-```
-### FWWWW
-
-```
-macro. reorder arguments (X Y Z W) as (W W W W), (IGNORE Z Y X).
-```
-### FWWWX
-
-```
-macro. reorder arguments (X Y Z W) as (W W W X), (IGNORE Z Y).
-```
-### FWWWY
-
-```
-macro. reorder arguments (X Y Z W) as (W W W Y), (IGNORE Z X).
-```
-### FWWWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W W W Z), (IGNORE Y X).
-```
-### FWWX
-
-```
-macro. reorder arguments (X Y Z W) as (W W X), (IGNORE Z Y).
-```
-### FWWXW
-
-```
-macro. reorder arguments (X Y Z W) as (W W X W), (IGNORE Z Y).
-```
-### FWWXX
-
-```
-macro. reorder arguments (X Y Z W) as (W W X X), (IGNORE Z Y).
-```
-### FWWXY
-
-```
-macro. reorder arguments (X Y Z W) as (W W X Y), (IGNORE Z).
-```
-### FWWXZ
-
-```
-macro. reorder arguments (X Y Z W) as (W W X Z), (IGNORE Y).
-```
-### FWWY
-
-```
-macro. reorder arguments (X Y Z W) as (W W Y), (IGNORE Z X).
-```
-### FWWYW
-
-```
-macro. reorder arguments (X Y Z W) as (W W Y W), (IGNORE Z X).
-```
-### FWWYX
-
-```
-macro. reorder arguments (X Y Z W) as (W W Y X), (IGNORE Z).
-```
-### FWWYY
-
-```
-macro. reorder arguments (X Y Z W) as (W W Y Y), (IGNORE Z X).
-```
-### FWWYZ
-
-```
-macro. reorder arguments (X Y Z W) as (W W Y Z), (IGNORE X).
-```
-### FWWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W W Z), (IGNORE Y X).
-```
-### FWWZW
-
-```
-macro. reorder arguments (X Y Z W) as (W W Z W), (IGNORE Y X).
-```
-### FWWZX
-
-```
-macro. reorder arguments (X Y Z W) as (W W Z X), (IGNORE Y).
-```
-### FWWZY
-
-```
-macro. reorder arguments (X Y Z W) as (W W Z Y), (IGNORE X).
-```
-### FWWZZ
-
-```
-macro. reorder arguments (X Y Z W) as (W W Z Z), (IGNORE Y X).
-```
-### FWX
-
-```
-macro. reorder arguments (X Y Z W) as (W X), (IGNORE Z Y).
-```
-### FWXW
-
-```
-macro. reorder arguments (X Y Z W) as (W X W), (IGNORE Z Y).
-```
-### FWXWW
-
-```
-macro. reorder arguments (X Y Z W) as (W X W W), (IGNORE Z Y).
-```
-### FWXWX
-
-```
-macro. reorder arguments (X Y Z W) as (W X W X), (IGNORE Z Y).
-```
-### FWXWY
-
-```
-macro. reorder arguments (X Y Z W) as (W X W Y), (IGNORE Z).
-```
-### FWXWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W X W Z), (IGNORE Y).
-```
-### FWXX
-
-```
-macro. reorder arguments (X Y Z W) as (W X X), (IGNORE Z Y).
-```
-### FWXXW
-
-```
-macro. reorder arguments (X Y Z W) as (W X X W), (IGNORE Z Y).
-```
-### FWXXX
-
-```
-macro. reorder arguments (X Y Z W) as (W X X X), (IGNORE Z Y).
-```
-### FWXXY
-
-```
-macro. reorder arguments (X Y Z W) as (W X X Y), (IGNORE Z).
-```
-### FWXXZ
-
-```
-macro. reorder arguments (X Y Z W) as (W X X Z), (IGNORE Y).
-```
-### FWXY
-
-```
-macro. reorder arguments (X Y Z W) as (W X Y), (IGNORE Z).
-```
-### FWXYW
-
-```
-macro. reorder arguments (X Y Z W) as (W X Y W), (IGNORE Z).
-```
-### FWXYX
-
-```
-macro. reorder arguments (X Y Z W) as (W X Y X), (IGNORE Z).
-```
-### FWXYY
-
-```
-macro. reorder arguments (X Y Z W) as (W X Y Y), (IGNORE Z).
-```
-### FWXYZ
-
-```
-macro. reorder arguments (X Y Z W) as (W X Y Z), (IGNORE).
-```
-### FWXZ
-
-```
-macro. reorder arguments (X Y Z W) as (W X Z), (IGNORE Y).
-```
-### FWXZW
-
-```
-macro. reorder arguments (X Y Z W) as (W X Z W), (IGNORE Y).
-```
-### FWXZX
-
-```
-macro. reorder arguments (X Y Z W) as (W X Z X), (IGNORE Y).
-```
-### FWXZY
-
-```
-macro. reorder arguments (X Y Z W) as (W X Z Y), (IGNORE).
-```
-### FWXZZ
-
-```
-macro. reorder arguments (X Y Z W) as (W X Z Z), (IGNORE Y).
-```
-### FWY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y), (IGNORE Z X).
-```
-### FWYW
-
-```
-macro. reorder arguments (X Y Z W) as (W Y W), (IGNORE Z X).
-```
-### FWYWW
-
-```
-macro. reorder arguments (X Y Z W) as (W Y W W), (IGNORE Z X).
-```
-### FWYWX
-
-```
-macro. reorder arguments (X Y Z W) as (W Y W X), (IGNORE Z).
-```
-### FWYWY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y W Y), (IGNORE Z X).
-```
-### FWYWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Y W Z), (IGNORE X).
-```
-### FWYX
-
-```
-macro. reorder arguments (X Y Z W) as (W Y X), (IGNORE Z).
-```
-### FWYXW
-
-```
-macro. reorder arguments (X Y Z W) as (W Y X W), (IGNORE Z).
-```
-### FWYXX
-
-```
-macro. reorder arguments (X Y Z W) as (W Y X X), (IGNORE Z).
-```
-### FWYXY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y X Y), (IGNORE Z).
-```
-### FWYXZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Y X Z), (IGNORE).
-```
-### FWYY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Y), (IGNORE Z X).
-```
-### FWYYW
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Y W), (IGNORE Z X).
-```
-### FWYYX
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Y X), (IGNORE Z).
-```
-### FWYYY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Y Y), (IGNORE Z X).
-```
-### FWYYZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Y Z), (IGNORE X).
-```
-### FWYZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Z), (IGNORE X).
-```
-### FWYZW
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Z W), (IGNORE X).
-```
-### FWYZX
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Z X), (IGNORE).
-```
-### FWYZY
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Z Y), (IGNORE X).
-```
-### FWYZZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Y Z Z), (IGNORE X).
-```
-### FWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z), (IGNORE Y X).
-```
-### FWZW
-
-```
-macro. reorder arguments (X Y Z W) as (W Z W), (IGNORE Y X).
-```
-### FWZWW
-
-```
-macro. reorder arguments (X Y Z W) as (W Z W W), (IGNORE Y X).
-```
-### FWZWX
-
-```
-macro. reorder arguments (X Y Z W) as (W Z W X), (IGNORE Y).
-```
-### FWZWY
-
-```
-macro. reorder arguments (X Y Z W) as (W Z W Y), (IGNORE X).
-```
-### FWZWZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z W Z), (IGNORE Y X).
-```
-### FWZX
-
-```
-macro. reorder arguments (X Y Z W) as (W Z X), (IGNORE Y).
-```
-### FWZXW
-
-```
-macro. reorder arguments (X Y Z W) as (W Z X W), (IGNORE Y).
-```
-### FWZXX
-
-```
-macro. reorder arguments (X Y Z W) as (W Z X X), (IGNORE Y).
-```
-### FWZXY
-
-```
-macro. reorder arguments (X Y Z W) as (W Z X Y), (IGNORE).
-```
-### FWZXZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z X Z), (IGNORE Y).
-```
-### FWZY
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Y), (IGNORE X).
-```
-### FWZYW
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Y W), (IGNORE X).
-```
-### FWZYX
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Y X), (IGNORE).
-```
-### FWZYY
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Y Y), (IGNORE X).
-```
-### FWZYZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Y Z), (IGNORE X).
-```
-### FWZZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Z), (IGNORE Y X).
-```
-### FWZZW
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Z W), (IGNORE Y X).
-```
-### FWZZX
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Z X), (IGNORE Y).
-```
-### FWZZY
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Z Y), (IGNORE X).
-```
-### FWZZZ
-
-```
-macro. reorder arguments (X Y Z W) as (W Z Z Z), (IGNORE Y X).
-```
-### FX
-
-```
-macro. reorder arguments (X Y Z W) as (X), (IGNORE W Z Y).
-```
-### FXW
-
-```
-macro. reorder arguments (X Y Z W) as (X W), (IGNORE Z Y).
-```
-### FXWW
-
-```
-macro. reorder arguments (X Y Z W) as (X W W), (IGNORE Z Y).
-```
-### FXWWW
-
-```
-macro. reorder arguments (X Y Z W) as (X W W W), (IGNORE Z Y).
-```
-### FXWWX
-
-```
-macro. reorder arguments (X Y Z W) as (X W W X), (IGNORE Z Y).
-```
-### FXWWY
-
-```
-macro. reorder arguments (X Y Z W) as (X W W Y), (IGNORE Z).
-```
-### FXWWZ
-
-```
-macro. reorder arguments (X Y Z W) as (X W W Z), (IGNORE Y).
-```
-### FXWX
-
-```
-macro. reorder arguments (X Y Z W) as (X W X), (IGNORE Z Y).
-```
-### FXWXW
-
-```
-macro. reorder arguments (X Y Z W) as (X W X W), (IGNORE Z Y).
-```
-### FXWXX
-
-```
-macro. reorder arguments (X Y Z W) as (X W X X), (IGNORE Z Y).
-```
-### FXWXY
-
-```
-macro. reorder arguments (X Y Z W) as (X W X Y), (IGNORE Z).
-```
-### FXWXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X W X Z), (IGNORE Y).
-```
-### FXWY
-
-```
-macro. reorder arguments (X Y Z W) as (X W Y), (IGNORE Z).
-```
-### FXWYW
-
-```
-macro. reorder arguments (X Y Z W) as (X W Y W), (IGNORE Z).
-```
-### FXWYX
-
-```
-macro. reorder arguments (X Y Z W) as (X W Y X), (IGNORE Z).
-```
-### FXWYY
-
-```
-macro. reorder arguments (X Y Z W) as (X W Y Y), (IGNORE Z).
-```
-### FXWYZ
-
-```
-macro. reorder arguments (X Y Z W) as (X W Y Z), (IGNORE).
-```
-### FXWZ
-
-```
-macro. reorder arguments (X Y Z W) as (X W Z), (IGNORE Y).
-```
-### FXWZW
-
-```
-macro. reorder arguments (X Y Z W) as (X W Z W), (IGNORE Y).
-```
-### FXWZX
-
-```
-macro. reorder arguments (X Y Z W) as (X W Z X), (IGNORE Y).
-```
-### FXWZY
-
-```
-macro. reorder arguments (X Y Z W) as (X W Z Y), (IGNORE).
-```
-### FXWZZ
-
-```
-macro. reorder arguments (X Y Z W) as (X W Z Z), (IGNORE Y).
-```
-### FXX
-
-```
-macro. reorder arguments (X Y Z W) as (X X), (IGNORE W Z Y).
-```
-### FXXW
-
-```
-macro. reorder arguments (X Y Z W) as (X X W), (IGNORE Z Y).
-```
-### FXXWW
-
-```
-macro. reorder arguments (X Y Z W) as (X X W W), (IGNORE Z Y).
-```
-### FXXWX
-
-```
-macro. reorder arguments (X Y Z W) as (X X W X), (IGNORE Z Y).
-```
-### FXXWY
-
-```
-macro. reorder arguments (X Y Z W) as (X X W Y), (IGNORE Z).
-```
-### FXXWZ
-
-```
-macro. reorder arguments (X Y Z W) as (X X W Z), (IGNORE Y).
-```
-### FXXX
-
-```
-macro. reorder arguments (X Y Z W) as (X X X), (IGNORE W Z Y).
-```
-### FXXXW
-
-```
-macro. reorder arguments (X Y Z W) as (X X X W), (IGNORE Z Y).
-```
-### FXXXX
-
-```
-macro. reorder arguments (X Y Z W) as (X X X X), (IGNORE W Z Y).
-```
-### FXXXY
-
-```
-macro. reorder arguments (X Y Z W) as (X X X Y), (IGNORE W Z).
-```
-### FXXXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X X X Z), (IGNORE W Y).
-```
-### FXXY
-
-```
-macro. reorder arguments (X Y Z W) as (X X Y), (IGNORE W Z).
-```
-### FXXYW
-
-```
-macro. reorder arguments (X Y Z W) as (X X Y W), (IGNORE Z).
-```
-### FXXYX
-
-```
-macro. reorder arguments (X Y Z W) as (X X Y X), (IGNORE W Z).
-```
-### FXXYY
-
-```
-macro. reorder arguments (X Y Z W) as (X X Y Y), (IGNORE W Z).
-```
-### FXXYZ
-
-```
-macro. reorder arguments (X Y Z W) as (X X Y Z), (IGNORE W).
-```
-### FXXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X X Z), (IGNORE W Y).
-```
-### FXXZW
-
-```
-macro. reorder arguments (X Y Z W) as (X X Z W), (IGNORE Y).
-```
-### FXXZX
-
-```
-macro. reorder arguments (X Y Z W) as (X X Z X), (IGNORE W Y).
-```
-### FXXZY
-
-```
-macro. reorder arguments (X Y Z W) as (X X Z Y), (IGNORE W).
-```
-### FXXZZ
-
-```
-macro. reorder arguments (X Y Z W) as (X X Z Z), (IGNORE W Y).
-```
-### FXY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y), (IGNORE W Z).
-```
-### FXYW
-
-```
-macro. reorder arguments (X Y Z W) as (X Y W), (IGNORE Z).
-```
-### FXYWW
-
-```
-macro. reorder arguments (X Y Z W) as (X Y W W), (IGNORE Z).
-```
-### FXYWX
-
-```
-macro. reorder arguments (X Y Z W) as (X Y W X), (IGNORE Z).
-```
-### FXYWY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y W Y), (IGNORE Z).
-```
-### FXYWZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Y W Z), (IGNORE).
-```
-### FXYX
-
-```
-macro. reorder arguments (X Y Z W) as (X Y X), (IGNORE W Z).
-```
-### FXYXW
-
-```
-macro. reorder arguments (X Y Z W) as (X Y X W), (IGNORE Z).
-```
-### FXYXX
-
-```
-macro. reorder arguments (X Y Z W) as (X Y X X), (IGNORE W Z).
-```
-### FXYXY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y X Y), (IGNORE W Z).
-```
-### FXYXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Y X Z), (IGNORE W).
-```
-### FXYY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Y), (IGNORE W Z).
-```
-### FXYYW
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Y W), (IGNORE Z).
-```
-### FXYYX
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Y X), (IGNORE W Z).
-```
-### FXYYY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Y Y), (IGNORE W Z).
-```
-### FXYYZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Y Z), (IGNORE W).
-```
-### FXYZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Z), (IGNORE W).
-```
-### FXYZW
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Z W), (IGNORE).
-```
-### FXYZX
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Z X), (IGNORE W).
-```
-### FXYZY
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Z Y), (IGNORE W).
-```
-### FXYZZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Y Z Z), (IGNORE W).
-```
-### FXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z), (IGNORE W Y).
-```
-### FXZW
-
-```
-macro. reorder arguments (X Y Z W) as (X Z W), (IGNORE Y).
-```
-### FXZWW
-
-```
-macro. reorder arguments (X Y Z W) as (X Z W W), (IGNORE Y).
-```
-### FXZWX
-
-```
-macro. reorder arguments (X Y Z W) as (X Z W X), (IGNORE Y).
-```
-### FXZWY
-
-```
-macro. reorder arguments (X Y Z W) as (X Z W Y), (IGNORE).
-```
-### FXZWZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z W Z), (IGNORE Y).
-```
-### FXZX
-
-```
-macro. reorder arguments (X Y Z W) as (X Z X), (IGNORE W Y).
-```
-### FXZXW
-
-```
-macro. reorder arguments (X Y Z W) as (X Z X W), (IGNORE Y).
-```
-### FXZXX
-
-```
-macro. reorder arguments (X Y Z W) as (X Z X X), (IGNORE W Y).
-```
-### FXZXY
-
-```
-macro. reorder arguments (X Y Z W) as (X Z X Y), (IGNORE W).
-```
-### FXZXZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z X Z), (IGNORE W Y).
-```
-### FXZY
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Y), (IGNORE W).
-```
-### FXZYW
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Y W), (IGNORE).
-```
-### FXZYX
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Y X), (IGNORE W).
-```
-### FXZYY
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Y Y), (IGNORE W).
-```
-### FXZYZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Y Z), (IGNORE W).
-```
-### FXZZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Z), (IGNORE W Y).
-```
-### FXZZW
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Z W), (IGNORE Y).
-```
-### FXZZX
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Z X), (IGNORE W Y).
-```
-### FXZZY
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Z Y), (IGNORE W).
-```
-### FXZZZ
-
-```
-macro. reorder arguments (X Y Z W) as (X Z Z Z), (IGNORE W Y).
-```
-### FY
-
-```
-macro. reorder arguments (X Y Z W) as (Y), (IGNORE W Z X).
-```
-### FYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W), (IGNORE Z X).
-```
-### FYWW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W W), (IGNORE Z X).
-```
-### FYWWW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W W W), (IGNORE Z X).
-```
-### FYWWX
-
-```
-macro. reorder arguments (X Y Z W) as (Y W W X), (IGNORE Z).
-```
-### FYWWY
-
-```
-macro. reorder arguments (X Y Z W) as (Y W W Y), (IGNORE Z X).
-```
-### FYWWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y W W Z), (IGNORE X).
-```
-### FYWX
-
-```
-macro. reorder arguments (X Y Z W) as (Y W X), (IGNORE Z).
-```
-### FYWXW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W X W), (IGNORE Z).
-```
-### FYWXX
-
-```
-macro. reorder arguments (X Y Z W) as (Y W X X), (IGNORE Z).
-```
-### FYWXY
-
-```
-macro. reorder arguments (X Y Z W) as (Y W X Y), (IGNORE Z).
-```
-### FYWXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y W X Z), (IGNORE).
-```
-### FYWY
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Y), (IGNORE Z X).
-```
-### FYWYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Y W), (IGNORE Z X).
-```
-### FYWYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Y X), (IGNORE Z).
-```
-### FYWYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Y Y), (IGNORE Z X).
-```
-### FYWYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Y Z), (IGNORE X).
-```
-### FYWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Z), (IGNORE X).
-```
-### FYWZW
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Z W), (IGNORE X).
-```
-### FYWZX
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Z X), (IGNORE).
-```
-### FYWZY
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Z Y), (IGNORE X).
-```
-### FYWZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y W Z Z), (IGNORE X).
-```
-### FYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X), (IGNORE W Z).
-```
-### FYXW
-
-```
-macro. reorder arguments (X Y Z W) as (Y X W), (IGNORE Z).
-```
-### FYXWW
-
-```
-macro. reorder arguments (X Y Z W) as (Y X W W), (IGNORE Z).
-```
-### FYXWX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X W X), (IGNORE Z).
-```
-### FYXWY
-
-```
-macro. reorder arguments (X Y Z W) as (Y X W Y), (IGNORE Z).
-```
-### FYXWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y X W Z), (IGNORE).
-```
-### FYXX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X X), (IGNORE W Z).
-```
-### FYXXW
-
-```
-macro. reorder arguments (X Y Z W) as (Y X X W), (IGNORE Z).
-```
-### FYXXX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X X X), (IGNORE W Z).
-```
-### FYXXY
-
-```
-macro. reorder arguments (X Y Z W) as (Y X X Y), (IGNORE W Z).
-```
-### FYXXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y X X Z), (IGNORE W).
-```
-### FYXY
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Y), (IGNORE W Z).
-```
-### FYXYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Y W), (IGNORE Z).
-```
-### FYXYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Y X), (IGNORE W Z).
-```
-### FYXYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Y Y), (IGNORE W Z).
-```
-### FYXYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Y Z), (IGNORE W).
-```
-### FYXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Z), (IGNORE W).
-```
-### FYXZW
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Z W), (IGNORE).
-```
-### FYXZX
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Z X), (IGNORE W).
-```
-### FYXZY
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Z Y), (IGNORE W).
-```
-### FYXZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y X Z Z), (IGNORE W).
-```
-### FYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y), (IGNORE W Z X).
-```
-### FYYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y W), (IGNORE Z X).
-```
-### FYYWW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y W W), (IGNORE Z X).
-```
-### FYYWX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y W X), (IGNORE Z).
-```
-### FYYWY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y W Y), (IGNORE Z X).
-```
-### FYYWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y W Z), (IGNORE X).
-```
-### FYYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y X), (IGNORE W Z).
-```
-### FYYXW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y X W), (IGNORE Z).
-```
-### FYYXX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y X X), (IGNORE W Z).
-```
-### FYYXY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y X Y), (IGNORE W Z).
-```
-### FYYXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y X Z), (IGNORE W).
-```
-### FYYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Y), (IGNORE W Z X).
-```
-### FYYYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Y W), (IGNORE Z X).
-```
-### FYYYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Y X), (IGNORE W Z).
-```
-### FYYYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Y Y), (IGNORE W Z X).
-```
-### FYYYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Y Z), (IGNORE W X).
-```
-### FYYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Z), (IGNORE W X).
-```
-### FYYZW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Z W), (IGNORE X).
-```
-### FYYZX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Z X), (IGNORE W).
-```
-### FYYZY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Z Y), (IGNORE W X).
-```
-### FYYZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Y Z Z), (IGNORE W X).
-```
-### FYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z), (IGNORE W X).
-```
-### FYZW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z W), (IGNORE X).
-```
-### FYZWW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z W W), (IGNORE X).
-```
-### FYZWX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z W X), (IGNORE).
-```
-### FYZWY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z W Y), (IGNORE X).
-```
-### FYZWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z W Z), (IGNORE X).
-```
-### FYZX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z X), (IGNORE W).
-```
-### FYZXW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z X W), (IGNORE).
-```
-### FYZXX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z X X), (IGNORE W).
-```
-### FYZXY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z X Y), (IGNORE W).
-```
-### FYZXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z X Z), (IGNORE W).
-```
-### FYZY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Y), (IGNORE W X).
-```
-### FYZYW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Y W), (IGNORE X).
-```
-### FYZYX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Y X), (IGNORE W).
-```
-### FYZYY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Y Y), (IGNORE W X).
-```
-### FYZYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Y Z), (IGNORE W X).
-```
-### FYZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Z), (IGNORE W X).
-```
-### FYZZW
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Z W), (IGNORE X).
-```
-### FYZZX
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Z X), (IGNORE W).
-```
-### FYZZY
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Z Y), (IGNORE W X).
-```
-### FYZZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Y Z Z Z), (IGNORE W X).
-```
-### FZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z), (IGNORE W Y X).
-```
-### FZW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W), (IGNORE Y X).
-```
-### FZWW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W W), (IGNORE Y X).
-```
-### FZWWW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W W W), (IGNORE Y X).
-```
-### FZWWX
-
-```
-macro. reorder arguments (X Y Z W) as (Z W W X), (IGNORE Y).
-```
-### FZWWY
-
-```
-macro. reorder arguments (X Y Z W) as (Z W W Y), (IGNORE X).
-```
-### FZWWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z W W Z), (IGNORE Y X).
-```
-### FZWX
-
-```
-macro. reorder arguments (X Y Z W) as (Z W X), (IGNORE Y).
-```
-### FZWXW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W X W), (IGNORE Y).
-```
-### FZWXX
-
-```
-macro. reorder arguments (X Y Z W) as (Z W X X), (IGNORE Y).
-```
-### FZWXY
-
-```
-macro. reorder arguments (X Y Z W) as (Z W X Y), (IGNORE).
-```
-### FZWXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z W X Z), (IGNORE Y).
-```
-### FZWY
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Y), (IGNORE X).
-```
-### FZWYW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Y W), (IGNORE X).
-```
-### FZWYX
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Y X), (IGNORE).
-```
-### FZWYY
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Y Y), (IGNORE X).
-```
-### FZWYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Y Z), (IGNORE X).
-```
-### FZWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Z), (IGNORE Y X).
-```
-### FZWZW
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Z W), (IGNORE Y X).
-```
-### FZWZX
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Z X), (IGNORE Y).
-```
-### FZWZY
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Z Y), (IGNORE X).
-```
-### FZWZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z W Z Z), (IGNORE Y X).
-```
-### FZX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X), (IGNORE W Y).
-```
-### FZXW
-
-```
-macro. reorder arguments (X Y Z W) as (Z X W), (IGNORE Y).
-```
-### FZXWW
-
-```
-macro. reorder arguments (X Y Z W) as (Z X W W), (IGNORE Y).
-```
-### FZXWX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X W X), (IGNORE Y).
-```
-### FZXWY
-
-```
-macro. reorder arguments (X Y Z W) as (Z X W Y), (IGNORE).
-```
-### FZXWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z X W Z), (IGNORE Y).
-```
-### FZXX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X X), (IGNORE W Y).
-```
-### FZXXW
-
-```
-macro. reorder arguments (X Y Z W) as (Z X X W), (IGNORE Y).
-```
-### FZXXX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X X X), (IGNORE W Y).
-```
-### FZXXY
-
-```
-macro. reorder arguments (X Y Z W) as (Z X X Y), (IGNORE W).
-```
-### FZXXZ
+#### FVDEF
 
 ```
-macro. reorder arguments (X Y Z W) as (Z X X Z), (IGNORE W Y).
-```
-### FZXY
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Y), (IGNORE W).
-```
-### FZXYW
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Y W), (IGNORE).
-```
-### FZXYX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Y X), (IGNORE W).
-```
-### FZXYY
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Y Y), (IGNORE W).
-```
-### FZXYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Y Z), (IGNORE W).
-```
-### FZXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Z), (IGNORE W Y).
-```
-### FZXZW
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Z W), (IGNORE Y).
-```
-### FZXZX
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Z X), (IGNORE W Y).
-```
-### FZXZY
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Z Y), (IGNORE W).
-```
-### FZXZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z X Z Z), (IGNORE W Y).
-```
-### FZY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y), (IGNORE W X).
-```
-### FZYW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y W), (IGNORE X).
-```
-### FZYWW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y W W), (IGNORE X).
-```
-### FZYWX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y W X), (IGNORE).
-```
-### FZYWY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y W Y), (IGNORE X).
-```
-### FZYWZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y W Z), (IGNORE X).
-```
-### FZYX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y X), (IGNORE W).
-```
-### FZYXW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y X W), (IGNORE).
-```
-### FZYXX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y X X), (IGNORE W).
-```
-### FZYXY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y X Y), (IGNORE W).
-```
-### FZYXZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y X Z), (IGNORE W).
-```
-### FZYY
+define function with veq context enabled. uses fvprogn.
 
+ ; VEQ:FVDEF
+ ;   [symbol]
+ ;
+ ; FVDEF names a macro:
+ ;   Lambda-list: (FNAME &BODY BODY)
+ ;   Documentation:
+ ;     define function with veq context enabled. uses fvprogn.
+ ;   Source file: /data/x/veq/src/macros.lisp
 ```
-macro. reorder arguments (X Y Z W) as (Z Y Y), (IGNORE W X).
-```
-### FZYYW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Y W), (IGNORE X).
-```
-### FZYYX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Y X), (IGNORE W).
-```
-### FZYYY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Y Y), (IGNORE W X).
-```
-### FZYYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Y Z), (IGNORE W X).
-```
-### FZYZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Z), (IGNORE W X).
-```
-### FZYZW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Z W), (IGNORE X).
-```
-### FZYZX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Z X), (IGNORE W).
-```
-### FZYZY
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Z Y), (IGNORE W X).
-```
-### FZYZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Y Z Z), (IGNORE W X).
-```
-### FZZ
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z), (IGNORE W Y X).
-```
-### FZZW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z W), (IGNORE Y X).
-```
-### FZZWW
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z W W), (IGNORE Y X).
-```
-### FZZWX
-
-```
-macro. reorder arguments (X Y Z W) as (Z Z W X), (IGNORE Y).
-```
-### FZZWY
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z W Y), (IGNORE X).
-```
-### FZZWZ
+#### FVDEF\*
 
 ```
-macro. reorder arguments (X Y Z W) as (Z Z W Z), (IGNORE Y X).
-```
-### FZZX
+defines a function named: %fx
+and a wrapper macro named: fx
+veq context is enabled. uses fvprogn.
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z X), (IGNORE W Y).
-```
-### FZZXW
+the wrapper macro ensures every call to this function is done as
+(mvc #'%fx ...).
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z X W), (IGNORE Y).
+ ; VEQ:FVDEF*
+ ;   [symbol]
+ ;
+ ; FVDEF* names a macro:
+ ;   Lambda-list: (MNAME &BODY BODY)
+ ;   Documentation:
+ ;     defines a function named: %fx
+ ;     and a wrapper macro named: fx
+ ;     veq context is enabled. uses fvprogn.
+ ;
+ ;     the wrapper macro ensures every call to this function is done as
+ ;     (mvc #'%fx ...).
+ ;   Source file: /data/x/veq/src/macros.lisp
 ```
-### FZZXX
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z X X), (IGNORE W Y).
-```
-### FZZXY
+#### FVEC
 
 ```
-macro. reorder arguments (X Y Z W) as (Z Z X Y), (IGNORE W).
-```
-### FZZXZ
+:missing:todo:
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z X Z), (IGNORE W Y).
+ ; VEQ:FVEC
+ ;   [symbol]
+ ;
+ ; FVEC names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (SIMPLE-ARRAY VEQ:FF)
 ```
-### FZZY
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Y), (IGNORE W X).
-```
-### FZZYW
+#### FVLET
 
 ```
-macro. reorder arguments (X Y Z W) as (Z Z Y W), (IGNORE X).
-```
-### FZZYX
+:missing:todo:
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Y X), (IGNORE W).
+ ; VEQ:FVLET
+ ;   [symbol]
 ```
-### FZZYY
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Y Y), (IGNORE W X).
-```
-### FZZYZ
+#### FVPROGN
 
 ```
-macro. reorder arguments (X Y Z W) as (Z Z Y Z), (IGNORE W X).
-```
-### FZZZ
+enable veq context inside this progn.
+    handles propagation and resolution of uses of (varg d var) and (vref var i).
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Z), (IGNORE W Y X).
-```
-### FZZZW
+    works the same way as vprogn. but removes all macrolets that are not
+    directly used in body. this is faster, but may fail in some cases where
+    body is complex. in the event of errors try vprogn instead.
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Z W), (IGNORE Y X).
+ ; VEQ:FVPROGN
+ ;   [symbol]
+ ;
+ ; FVPROGN names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Documentation:
+ ;     enable veq context inside this progn.
+ ;         handles propagation and resolution of uses of (varg d var) and (vref var i).
+ ;
+ ;         works the same way as vprogn. but removes all macrolets that are not
+ ;         directly used in body. this is faster, but may fail in some cases where
+ ;         body is complex. in the event of errors try vprogn instead.
+ ;   Source file: /data/x/veq/src/macros.lisp
 ```
-### FZZZX
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Z X), (IGNORE W Y).
-```
-### FZZZY
+#### :context: FVSET
 
 ```
-macro. reorder arguments (X Y Z W) as (Z Z Z Y), (IGNORE W X).
+set 1d value.
+ex: (FVSET (a) (fx ...))
+where (fx ...) returns 1 values.
 ```
-### FZZZZ
 
-```
-macro. reorder arguments (X Y Z W) as (Z Z Z Z), (IGNORE W Y X).
-```
-### F~
+#### :context: FWITH-ARRAYS
 
 ```
-:missing:
+args: (&key (n 0) inds (start 0) itr cnt arr fxs exs nxs)
 
-VEQ:F~
-  [symbol]
-```
-### I?
+n is the number of iterations
+start is the first index. then n-1 more.
+inds is indices to iterate. replaces n/start
+arr is the arrays to be defined/referenced
+itr is the symbol representing indices
+cnt is the symbol representing iterations from 0
+fxs is the labels
+exs is the expressions assigned to array
+nxs is the expressions with no assignment
+
+ex:
+
+(fwith-arrays (:n 7 :itr k ; k will be 0, 1, ..., 6
+  ; the third form in elements of arr can be empty, a form that will be
+  ; executed, or a symbol that refers to an array defined outside of
+  ; with-arrays
+  :arr ((a 3 (f3$one 7)) ; init a as (f3$one 7)
+        (b 3) (c 3)) ; init b,c as (f3$zero 7)
+  ; define functions to use in fxs
+  :fxs ((cross ((varg 3 v w)) (f3cross v w))
+        (init1 (i) (f3~ (1+ i) (* 2 i) (+ 2 i)))
+        (init2 (i) (f3~ (+ 2 i) (1+ i) (* 2 i))))
+  ; perform the calculations
+  :exs ((a k (init1 k)) ; init row k of a with init1
+        (b k (init2 k)) ; init row k of b with init2
+        (c k (cross a b)))) ; set row k of c to (cross a b)
+  ; use the arrays. the last form is returned, as in a progn
+  (vpr c))
+```
+
+#### :context: F~
+
+```
+make 1d vector in veq context.
+coerce to type.
+```
+
+#### I?
 
 ```
 inspect argument
-VEQ:I?
-  [symbol]
 
-I? names a compiled function:
-  Lambda-list: (F)
-  Derived type: (FUNCTION (T) (VALUES &OPTIONAL))
-  Documentation:
-    inspect argument
-  Source file: /data/x/veq/src/utils.lisp
+ ; VEQ:I?
+ ;   [symbol]
+ ;
+ ; I? names a compiled function:
+ ;   Lambda-list: (F)
+ ;   Derived type: (FUNCTION (T) (VALUES &OPTIONAL))
+ ;   Documentation:
+ ;     inspect argument
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### IN
 
-```
-:missing:
-
-VEQ:IN
-  [symbol]
-
-IN names a macro:
-  Lambda-list: (&BODY BODY)
-  Source file: /data/x/veq/src/utils.lisp
-
-IN names a type-specifier:
-  Lambda-list: ()
-  Expansion: FIXNUM
-```
-### IN*
+#### IN
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:IN*
-  [symbol]
-
-IN* names a macro:
-  Lambda-list: (&BODY BODY)
-  Source file: /data/x/veq/src/utils.lisp
+ ; VEQ:IN
+ ;   [symbol]
+ ;
+ ; IN names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Source file: /data/x/veq/src/utils.lisp
+ ;
+ ; IN names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: FIXNUM
 ```
-### IVEC
+
+#### IN\*
 
 ```
-:missing:
+:missing:todo:
 
-VEQ:IVEC
-  [symbol]
-
-IVEC names a type-specifier:
-  Lambda-list: ()
-  Expansion: (SIMPLE-ARRAY VEQ:IN)
+ ; VEQ:IN*
+ ;   [symbol]
+ ;
+ ; IN* names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### LST
+
+#### IVEC
+
+```
+:missing:todo:
+
+ ; VEQ:IVEC
+ ;   [symbol]
+ ;
+ ; IVEC names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (SIMPLE-ARRAY VEQ:IN)
+```
+
+#### LST
 
 ```
 wrap (values ..) in (list ..)
-VEQ:LST
-  [symbol]
 
-LST names a macro:
-  Lambda-list: (&BODY BODY)
-  Documentation:
-    wrap (values ..) in (list ..)
-  Source file: /data/x/veq/src/macros.lisp
+ ; VEQ:LST
+ ;   [symbol]
+ ;
+ ; LST names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Documentation:
+ ;     wrap (values ..) in (list ..)
+ ;   Source file: /data/x/veq/src/macros.lisp
 ```
-### MAC
 
-```
-:missing:
-
-VEQ:MAC
-  [symbol]
-
-MAC names a macro:
-  Lambda-list: (EXPR)
-  Source file: /data/x/veq/src/utils.lisp
-```
-### MAC*
+#### MAC
 
 ```
-:missing:
+expand macro.
 
-VEQ:MAC*
-  [symbol]
-
-MAC* names a macro:
-  Lambda-list: (EXPR)
-  Source file: /data/x/veq/src/utils.lisp
+ ; VEQ:MAC
+ ;   [symbol]
+ ;
+ ; MAC names a macro:
+ ;   Lambda-list: (EXPR)
+ ;   Documentation:
+ ;     expand macro.
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### MVB
 
-```
-:missing:
-
-VEQ:MVB
-  [symbol]
-
-MVB names a macro:
-  Lambda-list: (&REST ARGS)
-  Source file: /data/x/veq/src/utils.lisp
-```
-### MVC
+#### MAC\*
 
 ```
-:missing:
+expand macro all.
 
-VEQ:MVC
-  [symbol]
-
-MVC names a macro:
-  Lambda-list: (&REST ARGS)
-  Source file: /data/x/veq/src/utils.lisp
+ ; VEQ:MAC*
+ ;   [symbol]
+ ;
+ ; MAC* names a macro:
+ ;   Lambda-list: (EXPR)
+ ;   Documentation:
+ ;     expand macro all.
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### MVCWRAP
+
+#### MVB
 
 ```
-wrap fx in a macro, m, so that fx will be called via mvc
-VEQ:MVCWRAP
-  [symbol]
+:missing:todo:
 
-MVCWRAP names a macro:
-  Lambda-list: (M FX)
-  Documentation:
-    wrap fx in a macro, m, so that fx will be called via mvc
-  Source file: /data/x/veq/src/extra.lisp
+ ; VEQ:MVB
+ ;   [symbol]
+ ;
+ ; MVB names a macro:
+ ;   Lambda-list: (&REST ARGS)
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### V?
+
+#### MVC
+
+```
+:missing:todo:
+
+ ; VEQ:MVC
+ ;   [symbol]
+ ;
+ ; MVC names a macro:
+ ;   Lambda-list: (&REST ARGS)
+ ;   Source file: /data/x/veq/src/utils.lisp
+```
+
+#### MVCWRAP
+
+```
+wrap fx in a macro, m, so that fx will be called via mvc.
+
+ ; VEQ:MVCWRAP
+ ;   [symbol]
+ ;
+ ; MVCWRAP names a macro:
+ ;   Lambda-list: (M FX)
+ ;   Documentation:
+ ;     wrap fx in a macro, m, so that fx will be called via mvc.
+ ;   Source file: /data/x/veq/src/utils.lisp
+```
+
+#### V?
 
 ```
 get version. use silent to surpress stdout
-VEQ:V?
-  [symbol]
 
-V? names a compiled function:
-  Lambda-list: (&OPTIONAL (SILENT T))
-  Derived type: (FUNCTION (&OPTIONAL T) (VALUES T &OPTIONAL))
-  Documentation:
-    get version. use silent to surpress stdout
-  Source file: /data/x/veq/src/utils.lisp
+ ; VEQ:V?
+ ;   [symbol]
+ ;
+ ; V? names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (SILENT T))
+ ;   Derived type: (FUNCTION (&OPTIONAL T) (VALUES T &OPTIONAL))
+ ;   Documentation:
+ ;     get version. use silent to surpress stdout
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### VARG
 
-```
-use (veq:varg n a b ...) or (:vr n a b ...) to represent vectors a,b 
-of dim n in fvdef*, vdef*, def*. see replace-varg for details
-```
-### VDEF
+#### :context: VARG
 
 ```
-define function with veq enabled. see vprogn.
-VEQ:VDEF
-  [symbol]
-
-VDEF names a macro:
-  Lambda-list: (FNAME &BODY BODY)
-  Documentation:
-    define function with veq enabled. see vprogn.
-  Source file: /data/x/veq/src/macros.lisp
+use (veq:varg n a b ...) or (:vr n a b ...) to represent n dim
+vectors a,b of dim n in fvdef*, vdef*, def*. see replace-varg
+for details
 ```
-### VDEF*
+
+#### VDEF
 
 ```
-define function, and corresponding macro, with veq enabled.
-     use %mname to call function outside mvc.
-VEQ:VDEF*
-  [symbol]
+define function with veq context enabled. uses vprogn.
 
-VDEF* names a macro:
-  Lambda-list: (MNAME &BODY BODY)
-  Documentation:
-    define function, and corresponding macro, with veq enabled.
-         use %mname to call function outside mvc.
-  Source file: /data/x/veq/src/macros.lisp
+ ; VEQ:VDEF
+ ;   [symbol]
+ ;
+ ; VDEF names a macro:
+ ;   Lambda-list: (FNAME &BODY BODY)
+ ;   Documentation:
+ ;     define function with veq context enabled. uses vprogn.
+ ;   Source file: /data/x/veq/src/macros.lisp
 ```
-### VGRP-MVC
+
+#### VDEF\*
 
 ```
-do (multiple-value-call fx g) where g is groups
-   of size dim over the (values ...) returned by body
-   
-VEQ:VGRP-MVC
-  [symbol]
+defines a function named: %fx
+and a wrapper macro named: fx
+veq context is enabled. uses vprogn.
 
-VGRP-MVC names a macro:
-  Lambda-list: ((DIM FX) &BODY BODY)
-  Documentation:
-    do (multiple-value-call fx g) where g is groups
-       of size dim over the (values ...) returned by body
+the wrapper macro ensures every call to this function is done as
+(mvc #'%fx ...).
 
-  Source file: /data/x/veq/src/utils.lisp
+ ; VEQ:VDEF*
+ ;   [symbol]
+ ;
+ ; VDEF* names a macro:
+ ;   Lambda-list: (MNAME &BODY BODY)
+ ;   Documentation:
+ ;     defines a function named: %fx
+ ;     and a wrapper macro named: fx
+ ;     veq context is enabled. uses vprogn.
+ ;
+ ;     the wrapper macro ensures every call to this function is done as
+ ;     (mvc #'%fx ...).
+ ;   Source file: /data/x/veq/src/macros.lisp
 ```
-### VLABELS
+
+#### VGRP-MVC
+
+```
+do (multiple-value-call fx g) where g is groups of size dim over (values ...) returned by body.
+
+ ; VEQ:VGRP-MVC
+ ;   [symbol]
+ ;
+ ; VGRP-MVC names a macro:
+ ;   Lambda-list: ((DIM FX) &BODY BODY)
+ ;   Documentation:
+ ;     do (multiple-value-call fx g) where g is groups of size dim over (values ...) returned by body.
+ ;   Source file: /data/x/veq/src/utils.lisp
+```
+
+#### VLABELS
 
 ```
 wraps labels so that it can be used with implicit multiple value call (mvc).
    that is, all labels are defined as if with vdef* or fvdef*
    use %labelname to call the function directly, not via mvc.
-VEQ:VLABELS
-  [symbol]
 
-VLABELS names a macro:
-  Lambda-list: ((&REST LABS) &BODY BODY)
-  Documentation:
-    wraps labels so that it can be used with implicit multiple value call (mvc).
-       that is, all labels are defined as if with vdef* or fvdef*
-       use %labelname to call the function directly, not via mvc.
-  Source file: /data/x/veq/src/macros.lisp
+ ; VEQ:VLABELS
+ ;   [symbol]
+ ;
+ ; VLABELS names a macro:
+ ;   Lambda-list: ((&REST LABS) &BODY BODY)
+ ;   Documentation:
+ ;     wraps labels so that it can be used with implicit multiple value call (mvc).
+ ;        that is, all labels are defined as if with vdef* or fvdef*
+ ;        use %labelname to call the function directly, not via mvc.
+ ;   Source file: /data/x/veq/src/macros.lisp
 ```
-### VPR
 
-```
-print (mvc #'list rest) and return (mvc #'values rest)
-VEQ:VPR
-  [symbol]
-
-VPR names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    print (mvc #'list rest) and return (mvc #'values rest)
-  Source file: /data/x/veq/src/extra.lisp
-```
-### VPROD
+#### VPR
 
 ```
-:missing:
+print (mvc #'list rest) and return (mvc #'values rest).
 
-VEQ:VPROD
-  [symbol]
-
-VPROD names a macro:
-  Lambda-list: (&REST ARGS)
-  Source file: /data/x/veq/src/extra.lisp
+ ; VEQ:VPR
+ ;   [symbol]
+ ;
+ ; VPR names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     print (mvc #'list rest) and return (mvc #'values rest).
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### VPROGN
+
+#### VPROD
 
 ```
-enable veq inside this progn
-VEQ:VPROGN
-  [symbol]
+(mvc #'* ...)
 
-VPROGN names a macro:
-  Lambda-list: (&BODY BODY)
-  Documentation:
-    enable veq inside this progn
-  Source file: /data/x/veq/src/macros.lisp
+ ; VEQ:VPROD
+ ;   [symbol]
+ ;
+ ; VPROD names a macro:
+ ;   Lambda-list: (&REST ARGS)
+ ;   Documentation:
+ ;     (mvc #'* ...)
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### VREF
+
+#### VPROGN
+
+```
+enable veq context inside this progn.
+    handles propagation and resolution of uses of (varg d var) and (vref var i).
+
+    fvprogn is faster, but has some limitations.
+
+ ; VEQ:VPROGN
+ ;   [symbol]
+ ;
+ ; VPROGN names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Documentation:
+ ;     enable veq context inside this progn.
+ ;         handles propagation and resolution of uses of (varg d var) and (vref var i).
+ ;
+ ;         fvprogn is faster, but has some limitations.
+ ;   Source file: /data/x/veq/src/macros.lisp
+```
+
+#### :context: VREF
 
 ```
 use (veq:vref s x) or (:vr s x) to get dim x of symbol s
-in fvdef*, vdef*, def*. see replace-varg for details
+in fvdef*, vdef*, def*. see replace-varg for implementation details
 ```
-### VSUM
+
+#### VSUM
 
 ```
-:missing:
+(mvc #'+ ...)
 
-VEQ:VSUM
-  [symbol]
-
-VSUM names a macro:
-  Lambda-list: (&REST ARGS)
-  Source file: /data/x/veq/src/extra.lisp
+ ; VEQ:VSUM
+ ;   [symbol]
+ ;
+ ; VSUM names a macro:
+ ;   Lambda-list: (&REST ARGS)
+ ;   Documentation:
+ ;     (mvc #'+ ...)
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
-### ~
+
+#### ~
 
 ```
 wraps arguments in (mvc #'values ...)
-VEQ:~
-  [symbol]
 
-~ names a macro:
-  Lambda-list: (&REST REST)
-  Documentation:
-    wraps arguments in (mvc #'values ...)
-  Source file: /data/x/veq/src/macros.lisp
+ ; VEQ:~
+ ;   [symbol]
+ ;
+ ; ~ names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     wraps arguments in (mvc #'values ...)
+ ;   Source file: /data/x/veq/src/macros.lisp
 ```
+

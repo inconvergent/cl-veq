@@ -12,6 +12,7 @@
        (export ',fxname)
        (fvdef ,fxname (a &key n)
        (declare (,(arrtype type) a))
+       ,(format nil "sum all rows of ~ad array." dim)
        (let ((n (if n n (,(veqsymb dim nil "$NUM") a))))
           (declare (pos-int n))
           (,vlet ((res ,dim (,(veqsymb dim type "REP*") (coerce 0 ',type))))

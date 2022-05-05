@@ -36,50 +36,71 @@ did you load :veq multiple times?~%")
   (when dupes (error *duperr* names dupes))
 
   (defmacro vprogn (&body body)
-    "enable veq inside this progn"
+    "enable veq context inside this progn.
+    handles propagation and resolution of uses of (varg d var) and (vref var i).
+
+    fvprogn is faster, but has some limitations."
     `(macrolet ,symbols-map (progn ,@(replace-varg body))))
 
   (defmacro fvprogn (&body body)
-    "enable veq inside this progn.  removes all macrolets that are not directly
-    used in body. this is faster, but will fail if macros in body introduce
-    macrolets from veq"
+    "enable veq context inside this progn.
+    handles propagation and resolution of uses of (varg d var) and (vref var i).
+
+    works the same way as vprogn. but removes all macrolets that are not
+    directly used in body. this is faster, but may fail in some cases where
+    body is complex. in the event of errors try vprogn instead."
     `(macrolet ,(filter-macrolets symbols-map body)
        (progn ,@(replace-varg body))))
 
   (defmacro vdef (fname &body body)
-    "define function with veq enabled. see vprogn."
+    "define function with veq context enabled. uses vprogn."
     `(vprogn (defun ,fname ,@body)))
 
   (defmacro fvdef (fname &body body)
-    "define function with veq enabled. see fvprogn."
+    "define function with veq context enabled. uses fvprogn."
     `(fvprogn (defun ,fname ,@body)))
 
   (defmacro vdef* (mname &body body)
-    "define function, and corresponding macro, with veq enabled.
-     use %mname to call function outside mvc."
+    "defines a function named: %fx
+and a wrapper macro named: fx
+veq context is enabled. uses vprogn.
+
+the wrapper macro ensures every call to this function is done as
+(mvc #'%fx ...)."
     (let ((fname (symb "%" mname)))
       `(vprogn ; replace internal references to mname
                (defun ,fname ,@(subst fname mname body))
                (defmacro ,mname (&rest rest)
-                 ,(format nil "macro wrapper: (mvc #'~a ...) in veq context.~%see function: ~0a" fname fname)
+                  ,(format nil "fx: ~a~%macro wrapper: ~a~%
+defined veq:vdef*" fname mname)
                  `(mvc #',',fname ,@rest)))))
 
   (defmacro fvdef* (mname &body body)
-    "define function, and corresponding macro, with veq enabled. see fvprogn.
-     use %mname to call function outside mvc."
+    "defines a function named: %fx
+and a wrapper macro named: fx
+veq context is enabled. uses fvprogn.
+
+the wrapper macro ensures every call to this function is done as
+(mvc #'%fx ...)."
     (let ((fname (symb "%" mname)))
       `(fvprogn ; replace internal references to mname
                 (defun ,fname ,@(subst fname mname body))
                 (defmacro ,mname (&rest rest)
-                  ,(format nil "macro wrapper: (mvc #'~a ...) in veq context.~%see function: ~0a" fname fname)
+                  ,(format nil "fx: ~a~%macro wrapper: ~a~%
+defined via veq:fvdef*" fname mname)
                   `(mvc #',',fname ,@rest)))))
 
   (defmacro def* (mname &body body)
-    "define function, and corresponding macro, without veq enabled."
+    "defines a function named: %fx
+and a wrapper macro named: fx
+
+the wrapper macro ensures every call to this function is done as
+(mvc #'%fx ...)."
     (let ((fname (symb "%" mname)))
       `(progn (defun ,fname ,@body)
               (defmacro ,mname (&rest rest)
-                ,(format nil "macro wrapper: (mvc #'~a ...).~%see function: ~0a" fname fname)
+                  ,(format nil "fx: ~a~%macro wrapper: ~a~%
+defined via veq:def*" fname mname)
                 `(mvc #',',fname ,@rest)))))))
 
 
@@ -99,6 +120,17 @@ did you load :veq multiple times?~%")
 
 
 ;;;;;;;;;;;;;;;;;; MACRO UTILS
+
+(map-docstring 'vref
+  "use (veq:vref s x) or (:vr s x) to get dim x of symbol s
+in fvdef*, vdef*, def*. see replace-varg for implementation details
+" :nodesc :context)
+
+(map-docstring 'varg
+  "use (veq:varg n a b ...) or (:vr n a b ...) to represent n dim
+vectors a,b of dim n in fvdef*, vdef*, def*. see replace-varg
+for details
+" :nodesc :context)
 
 (defun replace-varg (body &optional (root-rmap (list)))
   "this is used to replace instances of varg/:varg/:va and vref/:vref/vr with
@@ -160,6 +192,7 @@ did you load :veq multiple times?~%")
                         (walk (cdr root) rmap)))))))
     (walk body root-rmap)))
 
+
 ;;;;;;;;;;;;;;;;;; VMVB
 
 (defun -vmvb (type dim arg expr body &key (repvarg t))
@@ -169,6 +202,16 @@ did you load :veq multiple times?~%")
                     ,@body)))
     (if repvarg (replace-varg body) body)))
 
+; (defmacro map-mvb (dim type)
+;   (let* ((mname (veqsymb dim type "mvb"))
+;          (docs (format nil "make ~ad mvb.~%ex: (f3mvb ((:va 3 x)) (fx ...) ...)
+; assumes (fx ...) returns three values and assigns them to x." dim)))
+;     `(progn (map-docstring ',mname ,docs :nodesc :context)
+;             (map-symbol `(,',mname
+;                            (arg expr &body body) ,,docs
+;                            (-vmvb ',',type ,,dim arg expr body))))))
+; (map-mvb 1 ff) (map-mvb 2 ff) (map-mvb 3 ff) (map-mvb 4 ff)
+; (map-mvb 1 df) (map-mvb 2 df) (map-mvb 3 df) (map-mvb 4 df)
 
 ;;;;;;;;;;;;;;;;;; VLET
 
@@ -189,6 +232,25 @@ did you load :veq multiple times?~%")
           for (arg dim expr) of-type (symbol fixnum cons) in (reverse all-args)
           do (setf body (list (-vmvb type dim arg expr body :repvarg nil)))
           finally (return (replace-varg `(progn ,@body))))))
+
+
+; TODO: escape all variables that can cause capture in all these macros
+
+(mapcar #'map-symbol
+  `((dvlet (all-args &body body) (-vlet* 'df all-args body))
+    (fvlet (all-args &body body) (-vlet* 'ff all-args body))))
+
+(defmacro map-vlet (dim type)
+  (let* ((mname (veqsymb dim type "let"))
+         (docs (format nil "make ~ad let.~%ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
+note that this behaves as native lisp let*." dim)))
+    `(progn (map-docstring ',mname ,docs :nodesc :context)
+            (map-symbol `(,',mname
+                           (all-args &body body) ,,docs
+                           (-vlet ',',type ,,dim all-args body))))))
+(map-vlet 2 ff) (map-vlet 3 ff) (map-vlet 4 ff)
+(map-vlet 2 df) (map-vlet 3 df) (map-vlet 4 df)
+
 
 (defun dim? (a dim &key type &aux (l (length a)))
   (unless (= l dim)
@@ -217,143 +279,65 @@ did you load :veq multiple times?~%")
            ,@body)))))
 
 
-;;;;;;;;;;;;;;;;;; PAIRS
+;;;;;;;;;;;;;;;;;; (d2 ...)
 
-(mapcar #'map-symbol
-  `((d (&body body) `(~ ,@(ddim? body 1)))
-    (f (&body body) `(~ ,@(fdim? body 1)))
-    (d2 (&body body) `(~ ,@(ddim? body 2)))
-    (f2 (&body body) `(~ ,@(fdim? body 2)))
-    (d3 (&body body) `(~ ,@(ddim? body 3)))
-    (f3 (&body body) `(~ ,@(fdim? body 3)))
-    (d4 (&body body) `(~ ,@(ddim? body 4)))
-    (f4 (&body body) `(~ ,@(fdim? body 4)))
+(defmacro map-td (dim type)
+  (let* ((mname (veqsymb dim type ""))
+         (docs (format nil "make ~ad vector in veq context.~%strict." dim)))
+    `(progn (map-docstring ',mname ,docs :nodesc :context)
+            (map-symbol `(,',mname
+                           (&body body) ,,docs
+                           `(~ ,@(dim? body ',',dim :type ',',type)))))))
+(map-td 1 ff) (map-td 2 ff) (map-td 3 ff) (map-td 4 ff)
+(map-td 1 df) (map-td 2 df) (map-td 3 df) (map-td 4 df)
 
-    (d~ (&body body) `(~ (df* ,@(dim? body 1))))
-    (f~ (&body body) `(~ (ff* ,@(dim? body 1))))
-    (d2~ (&body body) `(~ (df* ,@(dim? body 2))))
-    (f2~ (&body body) `(~ (ff* ,@(dim? body 2))))
-    (d3~ (&body body) `(~ (df* ,@(dim? body 3))))
-    (f3~ (&body body) `(~ (ff* ,@(dim? body 3))))
-    (d4~ (&body body) `(~ (df* ,@(dim? body 4))))
-    (f4~ (&body body) `(~ (ff* ,@(dim? body 4))))
 
-    (d2mvb (arg expr &body body) (-vmvb 'df 2 arg expr body))
-    (d3mvb (arg expr &body body) (-vmvb 'df 3 arg expr body))
-    (d4mvb (arg expr &body body) (-vmvb 'df 4 arg expr body))
-    (f2mvb (arg expr &body body) (-vmvb 'ff 2 arg expr body))
-    (f3mvb (arg expr &body body) (-vmvb 'ff 3 arg expr body))
-    (f4mvb (arg expr &body body) (-vmvb 'ff 4 arg expr body))
+;;;;;;;;;;;;;;;;;; (d2~ ...)
 
-    (dvlet (all-args &body body) (-vlet* 'df all-args body))
-    (fvlet (all-args &body body) (-vlet* 'ff all-args body))
+(defmacro map-td~ (dim type)
+  (let* ((mname (veqsymb dim type "~"))
+         (docs (format nil "make ~ad vector in veq context.~%coerce to type." dim)))
+    `(progn (map-docstring ',mname ,docs :nodesc :context)
+            (map-symbol `(,',mname
+                           (&body body) ,,docs
+                           `(~ (,',',(symb type "*")
+                                 ,@(dim? body ',',dim :type ',',type))))))))
+(map-td~ 1 ff) (map-td~ 2 ff) (map-td~ 3 ff) (map-td~ 4 ff)
+(map-td~ 1 df) (map-td~ 2 df) (map-td~ 3 df) (map-td~ 4 df)
 
-    (d2let (all-args &body body) (-vlet 'df 2 all-args body))
-    (d3let (all-args &body body) (-vlet 'df 3 all-args body))
-    (d4let (all-args &body body) (-vlet 'df 4 all-args body))
-    (f2let (all-args &body body) (-vlet 'ff 2 all-args body))
-    (f3let (all-args &body body) (-vlet 'ff 3 all-args body))
-    (f4let (all-args &body body) (-vlet 'ff 4 all-args body))
+;;;;;;;;;;;;;;;;;; (d2rep ...)
 
-    ; this is a bit hacky. but we need it for easy generaliziation in
-    ; array-reduce
-    (drep (expr) `(,@expr)) (drep* (expr) `(,@expr))
-    (frep (expr) `(,@expr)) (frep* (expr) `(,@expr))
+(defmacro map-rep (dim type)
+  (let* ((mname (veqsymb dim type "rep"))
+         (docs (format nil "make ~ad rep.~%ex: (f3rep (fx))~%corresponds to
+(values (fx) (fx) (fx))" dim)))
+    `(progn (map-docstring ',mname ,docs :nodesc :context)
+            (map-symbol `(,',mname
+                           ( expr ) ,,docs
+                           `(values
+                              ,@(loop repeat ',',dim
+                                      collect expr of-type ',',type)))))))
+(map-rep 1 ff) (map-rep 2 ff) (map-rep 3 ff) (map-rep 4 ff)
+(map-rep 1 df) (map-rep 2 df) (map-rep 3 df) (map-rep 4 df)
 
-    (d2rep (expr) `(values ,@(loop repeat 2 collect expr of-type df)))
-    (d2rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (df ,e)) (values ,e ,e))))
-    (f2rep (expr) `(values ,@(loop repeat 2 collect expr of-type ff)))
-    (f2rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (ff ,e)) (values ,e ,e))))
+;;;;;;;;;;;;;;;;;; (d2rep* ...)
 
-    (d3rep (expr) `(values ,@(loop repeat 3 collect expr of-type df)))
-    (d3rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (df ,e)) (values ,e ,e ,e))))
-    (f3rep (expr) `(values ,@(loop repeat 3 collect expr of-type ff)))
-    (f3rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (ff ,e)) (values ,e ,e ,e))))
+(defmacro map-rep* (dim type)
+  (awg (e)
+  (let ((mname (veqsymb dim type "rep*"))
+        (docs (format nil "make ~ad rep*.~%ex: (f3rep (fx))
+returns (values v v v) where v = (fx)" dim))
+        (vals `(values ,@(loop repeat dim collect e))))
+    `(progn (map-docstring ',mname ,docs :nodesc :context)
+            (map-symbol `(,',mname
+                           ( expr ) ,,docs
+                           `(let ((,',',e ,expr))
+                                   (declare (,',',type ,',',e))
+                                   ,',',vals)))))))
+(map-rep* 1 ff) (map-rep* 2 ff) (map-rep* 3 ff) (map-rep* 4 ff)
+(map-rep* 1 df) (map-rep* 2 df) (map-rep* 3 df) (map-rep* 4 df)
 
-    (d4rep (expr) `(values ,@(loop repeat 4 collect expr of-type df)))
-    (d4rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (df ,e)) (values ,e ,e ,e ,e))))
-    (f4rep (expr) `(values ,@(loop repeat 4 collect expr of-type ff)))
-    (f4rep* (expr) (awg (e) `(let ((,e ,expr)) (declare (ff ,e)) (values ,e ,e ,e ,e))))
-
-    (fvset ((&rest symbs) &rest expr) `(-vset 1 ,symbs (progn ,@expr)))
-    (dvset ((&rest symbs) &rest expr) `(-vset 1 ,symbs (progn ,@expr)))
-
-    (f2vset ((&rest symbs) &rest expr) `(-vset 2 ,symbs (progn ,@expr)))
-    (d2vset ((&rest symbs) &rest expr) `(-vset 2 ,symbs (progn ,@expr)))
-
-    (f3vset ((&rest symbs) &rest expr) `(-vset 3 ,symbs (progn ,@expr)))
-    (d3vset ((&rest symbs) &rest expr) `(-vset 3 ,symbs (progn ,@expr)))
-
-    (f4vset ((&rest symbs) &rest expr) `(-vset 4 ,symbs (progn ,@expr)))
-    (d4vset ((&rest symbs) &rest expr) `(-vset 4 ,symbs (progn ,@expr)))
-
-    (fnsum ((n) &body body) (-nsum 1 'ff n body))
-    (f2nsum ((n) &body body) (-nsum 2 'ff n body))
-    (f3nsum ((n) &body body) (-nsum 3 'ff n body))
-    (f4nsum ((n) &body body) (-nsum 4 'ff n body))
-
-    (dnsum ((n) &body body) (-nsum 1 'df n body))
-    (d2nsum ((n) &body body) (-nsum 2 'df n body))
-    (d3nsum ((n) &body body) (-nsum 3 'df n body))
-    (d4nsum ((n) &body body) (-nsum 4 'df n body))
-
-    (f$ (a &rest inds) (-ind-to-val 'ff 1 a inds))
-    (f2$ (a &rest inds) (-ind-to-val 'ff 2 a inds))
-    (f3$ (a &rest inds) (-ind-to-val 'ff 3 a inds))
-    (f4$ (a &rest inds) (-ind-to-val 'ff 4 a inds))
-    (d$ (a &rest inds) (-ind-to-val 'df 1 a inds))
-    (d2$ (a &rest inds) (-ind-to-val 'df 2 a inds))
-    (d3$ (a &rest inds) (-ind-to-val 'df 3 a inds))
-    (d4$ (a &rest inds) (-ind-to-val 'df 4 a inds))
-
-    ($vset ((a i) &rest expr) `(-vaset (,a 1 ,i) ,@expr))
-    (2$vset ((a i) &rest expr) `(-vaset (,a 2 ,i) ,@expr))
-    (3$vset ((a i) &rest expr) `(-vaset (,a 3 ,i) ,@expr))
-    (4$vset ((a i) &rest expr) `(-vaset (,a 4 ,i) ,@expr))
-
-    (f$fxlspace ((n a b &key (end t)) &body body)
-      (-fxlspace n a b body :end end :dim 1 :type 'ff))
-    (f2$fxlspace ((n a b &key (end t)) &body body)
-      (-fxlspace n a b body :end end :dim 2 :type 'ff))
-    (f3$fxlspace ((n a b &key (end t)) &body body)
-      (-fxlspace n a b body :end end :dim 3 :type 'ff))
-    (f4$fxlspace ((n a b &key (end t)) &body body)
-      (-fxlspace n a b body :end end :dim 4 :type 'ff))
-
-    (d$fxlspace ((n a b &key (end t)) &body body)
-      (-fxlspace n a b body :end end :dim 1 :type 'df))
-    (d2$fxlspace ((n a b &key (end t)) &body body)
-      (-fxlspace n a b body :end end :dim 2 :type 'df))
-    (d3$fxlspace ((n a b &key (end t)) &body body)
-      (-fxlspace n a b body :end end :dim 3 :type 'df))
-    (d4$fxlspace ((n a b &key (end t)) &body body)
-      (-fxlspace n a b body :end end :dim 4 :type 'df))
-
-    (f$with-rows ((n &rest arrs) &body expr) (-with-rows n arrs expr :dim 1 :type 'ff))
-    (f2$with-rows ((n &rest arrs) &body expr) (-with-rows n arrs expr :dim 2 :type 'ff))
-    (f3$with-rows ((n &rest arrs) &body expr) (-with-rows n arrs expr :dim 3 :type 'ff))
-    (f4$with-rows ((n &rest arrs) &body expr) (-with-rows n arrs expr :dim 4 :type 'ff))
-
-    (d$with-rows ((n &rest arrs) &body expr) (-with-rows n arrs expr :dim 1 :type 'df))
-    (d2$with-rows ((n &rest arrs) &body expr) (-with-rows n arrs expr :dim 2 :type 'df))
-    (d3$with-rows ((n &rest arrs) &body expr) (-with-rows n arrs expr :dim 3 :type 'df))
-    (d4$with-rows ((n &rest arrs) &body expr) (-with-rows n arrs expr :dim 4 :type 'df))
-
-    (dwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr
-                         fxs exs nxs)
-                    &body body)
-      `(-with-arrays (:type 'df :n ,n ,@(when inds? `(:inds ,inds))
-                      :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs :nxs ,nxs
-                      :exs ,exs :start ,start)
-                     ,@body))
-    (fwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr
-                         fxs exs nxs)
-                   &body body)
-      `(-with-arrays (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
-                      :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs :nxs ,nxs
-                      :exs ,exs :start ,start)
-                     ,@body))))
-
-; define vlet/vprogn with current symbols-map
+; define vlet/vprogn with current symbols-map.
+; depends on several preceeding ; files
 (define-env-macros *symbols-map*)
 

@@ -6,7 +6,7 @@
     `(progn (export ',exportname)
        (defun ,exportname (a)
          (declare #.*opt* (,(arrtype type) a))
-         "invert 2x2 matrix"
+         "invert 2x2 matrix. non-destructive."
          (let ((inv (/ (- (* (aref a 0) (aref a 3))
                           (* (aref a 1) (aref a 2))))))
            (declare (,type inv))
@@ -22,7 +22,7 @@
       `(progn (export ',exportname)
          (defun ,exportname (,a)
            (declare #.*opt* (,(arrtype type) ,a))
-           "invert 3x3 matrix"
+           "invert 3x3 matrix. non-destructive."
            (let* ((,a00 (aref ,a 0)) (,a01 (aref ,a 1)) (,a02 (aref ,a 2))
                   (,a10 (aref ,a 3)) (,a11 (aref ,a 4)) (,a12 (aref ,a 5))
                   (,a20 (aref ,a 6)) (,a21 (aref ,a 7)) (,a22 (aref ,a 8))
@@ -51,7 +51,7 @@
       `(progn (export ',exportname)
          (defun ,exportname (,a)
            (declare #.*opt* (,(arrtype type) ,a))
-           "invert 4x4 matrix"
+           "invert 4x4 matrix. non-destructive."
            (let* ((,a00 (aref ,a 0)) (,a01 (aref ,a 1)) (,a02 (aref ,a 2)) (,a03 (aref ,a 3))
                   (,a10 (aref ,a 4)) (,a11 (aref ,a 5)) (,a12 (aref ,a 6)) (,a13 (aref ,a 7))
                   (,a20 (aref ,a 8)) (,a21 (aref ,a 9)) (,a22 (aref ,a 10)) (,a23 (aref ,a 11))

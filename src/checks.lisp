@@ -124,11 +124,13 @@
   (declare (fvec shape) (ff pt))
   (let ((n (2$num shape)))
     (mvb (minx maxx miny maxy) (f2$mima shape :n n)
+      (declare (ff minx maxx miny maxy))
       (unless (f2in-bbox minx miny maxx maxy pt) ; pt outside bbox -> outside shape
               (return-from %f2in-concave nil))
       (let* ((c 0)
              (width (- maxx minx))
              (shift (- (vref pt 0) (* 2f0 width))))
+        (declare (pos-int c) (ff width shift))
         (f2$with-rows (n shape)
           (lambda (i (varg 2 a))
             (declare (optimize speed) (ff a))

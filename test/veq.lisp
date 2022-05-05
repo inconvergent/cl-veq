@@ -7,6 +7,9 @@
 (subtest "2d double ops"
   (veq:fvprogn
 
+    (is (veq:lst (veq:d2 1d0 2d0)) '(1d0 2d0))
+    (is (veq:lst (veq:d2~ 1 2d0)) '(1d0 2d0))
+
     (is (veq:lst (veq:d2+ 1d0 2d0 (veq:d2 1d0 3d0))) '(2d0 5d0))
     (is (veq:lst (veq:d2* 1d0 2d0 (veq:d2 1d0 3d0))) '(1d0 6d0))
     (is (veq:lst (veq:d2- 1d0 2d0 (veq:d2 1d0 3d0))) '(0d0 -1d0))
@@ -46,6 +49,9 @@
 
 (subtest "2d single ops"
   (veq:fvprogn
+
+    (is (veq:lst (veq:f2 1f0 2f0)) '(1f0 2f0))
+    (is (veq:lst (veq:f2~ 1 2)) '(1f0 2f0))
 
     (is (veq:lst (veq:f2+ 1f0 2f0 (veq:f2 1f0 3f0))) '(2f0 5f0))
     (is (veq:lst (veq:f2* 1f0 2f0 (veq:f2 1f0 3f0))) '(1f0 6f0))

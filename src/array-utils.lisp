@@ -3,11 +3,13 @@
 
 ;;;;;;;;;;;;;;;;;; GENERIC INIT ARRAY OF VEC
 
+(export 'f$make)
 (defmacro f$make (&key (dim 1) (n 1) (v 0f0))
   " create array with size (n dim), and initial value v"
   `(make-array (the pos-int (* ,dim ,n))
                :initial-element ,v :element-type 'ff :adjustable nil))
 
+(export 'd$make)
 (defmacro d$make (&key (dim 1) (n 1) (v 0d0))
   " create array with size (n dim), and initial value v"
   `(make-array (the pos-int (* ,dim ,n))
@@ -15,47 +17,58 @@
 
 ;;;;;;;;;;;;;;;;;; COPY ARRAY
 
+(export 'd$copy)
 (defun d$copy (a)
   (declare #.*opt* (dvec a))
+  "copy array"
   (make-array (length a) :initial-contents a :element-type 'df :adjustable nil))
 
+(export 'f$copy)
 (defun f$copy (a)
   (declare #.*opt* (fvec a))
+  "copy array"
   (make-array (length a) :initial-contents a :element-type 'ff :adjustable nil))
+
 
 ;;;;;;;;;;;;;;;;;; INIT ARRAY OF VEC
 
-(defun $num (a) (declare #.*opt* (simple-array a)) (the pos-int (length a)))
-(defun d$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 1 :n n :v 1d0))
-(defun d$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 1 :n n :v v))
-(defun d$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 1 :n n))
-(defun f$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 1 :n n :v 1f0))
-(defun f$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 1 :n n :v v))
-(defun f$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 1 :n n))
+(defmacro make-arr-num (dim)
+  (labels ((nm (n) (veqsymb dim nil n)))
+    (awg (a)
+      `(progn
+         (export ',(nm "$num"))
+         (defun ,(nm "$num") (,a)
+           (declare #.*opt* (simple-array ,a))
+           ,(format nil "number of elements in ~ad array.~%untyped." dim)
+           (the pos-int (/ (length ,a) ,dim)))))))
+(make-arr-num 1) (make-arr-num 2) (make-arr-num 3) (make-arr-num 4)
 
-(defun 2$num (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 2)))
-(defun d2$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n :v 1d0))
-(defun d2$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n :v v))
-(defun d2$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 2 :n n))
-(defun f2$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 2 :n n :v 1f0))
-(defun f2$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 2 :n n :v v))
-(defun f2$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 2 :n n))
-
-(defun 3$num (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 3)))
-(defun d3$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 3 :n n :v 1d0))
-(defun d3$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 3 :n n :v v))
-(defun d3$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 3 :n n))
-(defun f3$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 3 :n n :v 1f0))
-(defun f3$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 3 :n n :v v))
-(defun f3$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 3 :n n))
-
-(defun 4$num (a) (declare #.*opt* (simple-array a)) (the pos-int (/ (length a) 4)))
-(defun d4$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 4 :n n :v 1d0))
-(defun d4$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 4 :n n :v v))
-(defun d4$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (d$make :dim 4 :n n))
-(defun f4$one (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 4 :n n :v 1f0))
-(defun f4$val (v &optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 4 :n n :v v))
-(defun f4$zero (&optional (n 1)) (declare #.*opt* (pos-int n)) (f$make :dim 4 :n n))
+(defmacro make-arr-util ( dim type )
+  (labels ((nm (n) (veqsymb dim type n)))
+    (awg (a n)
+      `(progn
+         (export ',(nm "$num"))
+         (defun ,(nm "$num") (,a)
+           (declare #.*opt* (,(arrtype type) ,a))
+           ,(format nil "number of elements in ~ad array.~%typed." dim)
+           (the pos-int (/ (length ,a) ,dim)))
+         (export ',(nm "$one"))
+         (defun ,(nm "$one") (&optional (,n 1))
+           (declare #.*opt* (pos-int ,n))
+           ,(format nil "make ~ad array of ones.~%typed." dim)
+           (,(veqsymb 1 type "$make") :dim ,dim :n ,n :v ,(coerce 1 type)))
+         (export ',(nm "$val"))
+         (defun ,(nm "$val") (v &optional (,n 1))
+           (declare #.*opt* (pos-int ,n))
+           ,(format nil "make ~ad array of val.~%typed." dim)
+           (,(veqsymb 1 type "$make") :dim ,dim :n ,n :v v))
+         (export ',(nm "$zero"))
+         (defun ,(nm "$zero") (&optional (,n 1))
+           (declare #.*opt* (pos-int ,n))
+           ,(format nil "make ~ad array of zeros.~%typed." dim)
+           (,(veqsymb 1 type "$make") :dim ,dim :n ,n))))))
+(make-arr-util 1 ff) (make-arr-util 2 ff) (make-arr-util 3 ff) (make-arr-util 4 ff)
+(make-arr-util 1 df) (make-arr-util 2 df) (make-arr-util 3 df) (make-arr-util 4 df)
 
 ;;;;;;;;;;;;;;;;;;;;; INIT FROM EXPR
 

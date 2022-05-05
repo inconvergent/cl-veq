@@ -14,8 +14,9 @@
   (awg (arr arr-out)
     (labels ((fxarg (s) (and (symbolp s) (not (eq s :va))))
              (-varg (l) (remove-if-not #'fxarg (awf l))))
-    (let ((docs (format nil "broadcast for fx: ~a~%macroname: ~a~%~%"
-                 (mkstr fxname) (mkstr exportname))))
+    (let ((docs (format nil "broadcast for fx: ~a~%macroname: ~a
+ex: (~a a ...) performs (mvc #'~a a[i] ...) for every row in a.
+~:[~&destructive.~;~]" fxname  exportname  exportname  fxname out)))
       `(fvprogn (export ',exportname)
           (map-docstring ',exportname ,docs)
           (def* ,exportname (,arr ,@br-arg)
