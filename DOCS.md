@@ -37,7 +37,9 @@ Symbols postfixed with `!` are destructive or in-place.
 #### $
 
 ```
+1d vector array setter and getter.
 use (setf ($ a i) (list x)) to set a[i].
+use ($ a i j ...) to return (values a[i] a[j] ...)
 
  ; VEQ:$
  ;   [symbol]
@@ -45,7 +47,9 @@ use (setf ($ a i) (list x)) to set a[i].
  ; (SETF $) has a complex setf-expansion:
  ;   Lambda-list: (A &OPTIONAL (I 0))
  ;   Documentation:
+ ;     1d vector array setter and getter.
  ;     use (setf ($ a i) (list x)) to set a[i].
+ ;     use ($ a i j ...) to return (values a[i] a[j] ...)
  ;   Source file: /data/x/veq/src/vset.lisp
 ```
 
@@ -129,7 +133,9 @@ use ($vset (a i) (values ...)) to set a[i] of 1d array.
 #### 2$
 
 ```
-use (setf (2$ a i) (list x y)) to set a[i].
+2d vector array setter and getter.
+use (setf (2$ a i) (list x)) to set a[i].
+use (2$ a i j ...) to return (values a[i] a[j] ...)
 
  ; VEQ:2$
  ;   [symbol]
@@ -137,7 +143,9 @@ use (setf (2$ a i) (list x y)) to set a[i].
  ; (SETF 2$) has a complex setf-expansion:
  ;   Lambda-list: (A &OPTIONAL (I 0))
  ;   Documentation:
- ;     use (setf (2$ a i) (list x y)) to set a[i].
+ ;     2d vector array setter and getter.
+ ;     use (setf (2$ a i) (list x)) to set a[i].
+ ;     use (2$ a i j ...) to return (values a[i] a[j] ...)
  ;   Source file: /data/x/veq/src/vset.lisp
 ```
 
@@ -201,7 +209,9 @@ use (2$vset (a i) (values ...)) to set a[i] of 2d array.
 #### 3$
 
 ```
-use (setf (3$ a i) (list x y z)) to set a[i].
+3d vector array setter and getter.
+use (setf (3$ a i) (list x)) to set a[i].
+use (3$ a i j ...) to return (values a[i] a[j] ...)
 
  ; VEQ:3$
  ;   [symbol]
@@ -209,7 +219,9 @@ use (setf (3$ a i) (list x y z)) to set a[i].
  ; (SETF 3$) has a complex setf-expansion:
  ;   Lambda-list: (A &OPTIONAL (I 0))
  ;   Documentation:
- ;     use (setf (3$ a i) (list x y z)) to set a[i].
+ ;     3d vector array setter and getter.
+ ;     use (setf (3$ a i) (list x)) to set a[i].
+ ;     use (3$ a i j ...) to return (values a[i] a[j] ...)
  ;   Source file: /data/x/veq/src/vset.lisp
 ```
 
@@ -273,7 +285,9 @@ use (3$vset (a i) (values ...)) to set a[i] of 3d array.
 #### 4$
 
 ```
-use (setf (4$ a i) (list x y z w)) to set a[i].
+4d vector array setter and getter.
+use (setf (4$ a i) (list x)) to set a[i].
+use (4$ a i j ...) to return (values a[i] a[j] ...)
 
  ; VEQ:4$
  ;   [symbol]
@@ -281,7 +295,9 @@ use (setf (4$ a i) (list x y z w)) to set a[i].
  ; (SETF 4$) has a complex setf-expansion:
  ;   Lambda-list: (A &OPTIONAL (I 0))
  ;   Documentation:
- ;     use (setf (4$ a i) (list x y z w)) to set a[i].
+ ;     4d vector array setter and getter.
+ ;     use (setf (4$ a i) (list x)) to set a[i].
+ ;     use (4$ a i j ...) to return (values a[i] a[j] ...)
  ;   Source file: /data/x/veq/src/vset.lisp
 ```
 
@@ -2290,7 +2306,7 @@ body: (-D2+ AX AY (* (- BX AX) S) (* (- BY AY) S))
 ```
 make 2d let.
 ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
-note that this behaves as native lisp let*.
+note that this behaves like native lisp let*.
 ```
 
 #### :context: D2MAX
@@ -2623,18 +2639,16 @@ body: (VALUES (- B) A)
 #### :context: D2REP
 
 ```
-make 2d rep.
-ex: (f3rep (fx))
-corresponds to
-(values (fx) (fx) (fx))
+repeat argument 2d times as values.
+ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 ```
 
 #### :context: D2REP\*
 
 ```
-make 2d rep*.
-ex: (f3rep (fx))
-returns (values v v v) where v = (fx)
+repeat the evaluated argument 2d times as values.
+ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
+fx is evaluated exactly once.
 ```
 
 #### :context: D2ROT
@@ -3652,7 +3666,7 @@ body: (-D3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S))
 ```
 make 3d let.
 ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
-note that this behaves as native lisp let*.
+note that this behaves like native lisp let*.
 ```
 
 #### :context: D3MAX
@@ -3949,18 +3963,16 @@ make 3d
 #### :context: D3REP
 
 ```
-make 3d rep.
-ex: (f3rep (fx))
-corresponds to
-(values (fx) (fx) (fx))
+repeat argument 3d times as values.
+ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 ```
 
 #### :context: D3REP\*
 
 ```
-make 3d rep*.
-ex: (f3rep (fx))
-returns (values v v v) where v = (fx)
+repeat the evaluated argument 3d times as values.
+ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
+fx is evaluated exactly once.
 ```
 
 #### :context: D3ROT
@@ -4949,7 +4961,7 @@ body: (-D4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
 ```
 make 4d let.
 ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
-note that this behaves as native lisp let*.
+note that this behaves like native lisp let*.
 ```
 
 #### :context: D4MAX
@@ -5163,18 +5175,16 @@ make 4d
 #### :context: D4REP
 
 ```
-make 4d rep.
-ex: (f3rep (fx))
-corresponds to
-(values (fx) (fx) (fx))
+repeat argument 4d times as values.
+ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 ```
 
 #### :context: D4REP\*
 
 ```
-make 4d rep*.
-ex: (f3rep (fx))
-returns (values v v v) where v = (fx)
+repeat the evaluated argument 4d times as values.
+ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
+fx is evaluated exactly once.
 ```
 
 #### :context: D4SCALE
@@ -6116,18 +6126,16 @@ make 1d
 #### :context: DREP
 
 ```
-make 1d rep.
-ex: (f3rep (fx))
-corresponds to
-(values (fx) (fx) (fx))
+repeat argument 1d times as values.
+ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 ```
 
 #### :context: DREP\*
 
 ```
-make 1d rep*.
-ex: (f3rep (fx))
-returns (values v v v) where v = (fx)
+repeat the evaluated argument 1d times as values.
+ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
+fx is evaluated exactly once.
 ```
 
 #### DSB
@@ -6239,7 +6247,8 @@ ex:
   ; perform the calculations
   :exs ((a k (init1 k)) ; init row k of a with init1
         (b k (init2 k)) ; init row k of b with init2
-        (c k (cross a b)))) ; set row k of c to (cross a b)
+        (c k (cross a b))) ; set row k of c to (cross a b)
+  :nxs ((cross a b))); executes the function, but does not assign res anywhere
   ; use the arrays. the last form is returned, as in a progn
   (vpr c))
 ```
@@ -8367,7 +8376,7 @@ body: (-F2+ AX AY (* (- BX AX) S) (* (- BY AY) S))
 ```
 make 2d let.
 ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
-note that this behaves as native lisp let*.
+note that this behaves like native lisp let*.
 ```
 
 #### F2LSEGX
@@ -8721,18 +8730,16 @@ body: (VALUES (- B) A)
 #### :context: F2REP
 
 ```
-make 2d rep.
-ex: (f3rep (fx))
-corresponds to
-(values (fx) (fx) (fx))
+repeat argument 2d times as values.
+ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 ```
 
 #### :context: F2REP\*
 
 ```
-make 2d rep*.
-ex: (f3rep (fx))
-returns (values v v v) where v = (fx)
+repeat the evaluated argument 2d times as values.
+ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
+fx is evaluated exactly once.
 ```
 
 #### :context: F2ROT
@@ -9792,7 +9799,7 @@ body: (-F3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S))
 ```
 make 3d let.
 ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
-note that this behaves as native lisp let*.
+note that this behaves like native lisp let*.
 ```
 
 #### :context: F3MAX
@@ -10110,18 +10117,16 @@ defined via veq:fvdef*
 #### :context: F3REP
 
 ```
-make 3d rep.
-ex: (f3rep (fx))
-corresponds to
-(values (fx) (fx) (fx))
+repeat argument 3d times as values.
+ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 ```
 
 #### :context: F3REP\*
 
 ```
-make 3d rep*.
-ex: (f3rep (fx))
-returns (values v v v) where v = (fx)
+repeat the evaluated argument 3d times as values.
+ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
+fx is evaluated exactly once.
 ```
 
 #### :context: F3ROT
@@ -11110,7 +11115,7 @@ body: (-F4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
 ```
 make 4d let.
 ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
-note that this behaves as native lisp let*.
+note that this behaves like native lisp let*.
 ```
 
 #### :context: F4MAX
@@ -11323,18 +11328,16 @@ make 4d
 #### :context: F4REP
 
 ```
-make 4d rep.
-ex: (f3rep (fx))
-corresponds to
-(values (fx) (fx) (fx))
+repeat argument 4d times as values.
+ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 ```
 
 #### :context: F4REP\*
 
 ```
-make 4d rep*.
-ex: (f3rep (fx))
-returns (values v v v) where v = (fx)
+repeat the evaluated argument 4d times as values.
+ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
+fx is evaluated exactly once.
 ```
 
 #### :context: F4SCALE
@@ -12307,24 +12310,22 @@ make 1d
 #### :context: FREP
 
 ```
-make 1d rep.
-ex: (f3rep (fx))
-corresponds to
-(values (fx) (fx) (fx))
+repeat argument 1d times as values.
+ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 ```
 
 #### :context: FREP\*
 
 ```
-make 1d rep*.
-ex: (f3rep (fx))
-returns (values v v v) where v = (fx)
+repeat the evaluated argument 1d times as values.
+ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
+fx is evaluated exactly once.
 ```
 
 #### FROM-LST
 
 ```
-get values from list
+get values from list. equivalent to values-list.
 
  ; VEQ:FROM-LST
  ;   [symbol]
@@ -12332,8 +12333,8 @@ get values from list
  ; FROM-LST names a macro:
  ;   Lambda-list: (L)
  ;   Documentation:
- ;     get values from list
- ;   Source file: /data/x/veq/src/macros.lisp
+ ;     get values from list. equivalent to values-list.
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
 
 #### :context: FSCALE
@@ -12497,7 +12498,8 @@ ex:
   ; perform the calculations
   :exs ((a k (init1 k)) ; init row k of a with init1
         (b k (init2 k)) ; init row k of b with init2
-        (c k (cross a b)))) ; set row k of c to (cross a b)
+        (c k (cross a b))) ; set row k of c to (cross a b)
+  :nxs ((cross a b))); executes the function, but does not assign res anywhere
   ; use the arrays. the last form is returned, as in a progn
   (vpr c))
 ```
@@ -12571,7 +12573,8 @@ inspect argument
 #### LST
 
 ```
-wrap (values ..) in (list ..)
+wrap (values ..) in (list ..).
+almost like multuple-values-list, except it handles multuple arguments.
 
  ; VEQ:LST
  ;   [symbol]
@@ -12579,8 +12582,9 @@ wrap (values ..) in (list ..)
  ; LST names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     wrap (values ..) in (list ..)
- ;   Source file: /data/x/veq/src/macros.lisp
+ ;     wrap (values ..) in (list ..).
+ ;     almost like multuple-values-list, except it handles multuple arguments.
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
 
 #### MAC
@@ -12673,9 +12677,9 @@ get version. use silent to surpress stdout
 #### :context: VARG
 
 ```
-use (veq:varg n a b ...) or (:vr n a b ...) to represent n dim
-vectors a,b of dim n in fvdef*, vdef*, def*. see replace-varg
-for details
+use (veq:varg n a b ...) or (:vr n a b ...) to represent n dim vectors a,b
+of dim n in vprogn, fvprog, fvdef*, vdef*, def*.
+see replace-varg for implementation details.
 ```
 
 #### VDEF
@@ -12736,9 +12740,9 @@ do (multiple-value-call fx g) where g is groups of size dim over (values ...) re
 #### VLABELS
 
 ```
-wraps labels so that it can be used with implicit multiple value call (mvc).
-   that is, all labels are defined as if with vdef* or fvdef*
-   use %labelname to call the function directly, not via mvc.
+wraps labels so that it can be used with implicit mvc. that is,
+all labels are defined as if with def*, vdef* or fvdef*
+use %labelname to call the function directly, not via mvc.
 
  ; VEQ:VLABELS
  ;   [symbol]
@@ -12746,10 +12750,10 @@ wraps labels so that it can be used with implicit multiple value call (mvc).
  ; VLABELS names a macro:
  ;   Lambda-list: ((&REST LABS) &BODY BODY)
  ;   Documentation:
- ;     wraps labels so that it can be used with implicit multiple value call (mvc).
- ;        that is, all labels are defined as if with vdef* or fvdef*
- ;        use %labelname to call the function directly, not via mvc.
- ;   Source file: /data/x/veq/src/macros.lisp
+ ;     wraps labels so that it can be used with implicit mvc. that is,
+ ;     all labels are defined as if with def*, vdef* or fvdef*
+ ;     use %labelname to call the function directly, not via mvc.
+ ;   Source file: /data/x/veq/src/lets.lisp
 ```
 
 #### VPR
@@ -12787,7 +12791,6 @@ print (mvc #'list rest) and return (mvc #'values rest).
 ```
 enable veq context inside this progn.
     handles propagation and resolution of uses of (varg d var) and (vref var i).
-
     fvprogn is faster, but has some limitations.
 
  ; VEQ:VPROGN
@@ -12798,7 +12801,6 @@ enable veq context inside this progn.
  ;   Documentation:
  ;     enable veq context inside this progn.
  ;         handles propagation and resolution of uses of (varg d var) and (vref var i).
- ;
  ;         fvprogn is faster, but has some limitations.
  ;   Source file: /data/x/veq/src/macros.lisp
 ```
@@ -12806,8 +12808,9 @@ enable veq context inside this progn.
 #### :context: VREF
 
 ```
-use (veq:vref s x) or (:vr s x) to get dim x of symbol s
-in fvdef*, vdef*, def*. see replace-varg for implementation details
+use (veq:vref s x) or (:vr s x) to get dim x of symbol s in vprogn, fvprogn,
+fvdef*, vdef*, def*.
+see replace-varg for implementation details.
 ```
 
 #### VSUM
@@ -12828,7 +12831,7 @@ in fvdef*, vdef*, def*. see replace-varg for implementation details
 #### ~
 
 ```
-wraps arguments in (mvc #'values ...)
+wraps arguments in (mvc #'values ...).
 
  ; VEQ:~
  ;   [symbol]
@@ -12836,7 +12839,7 @@ wraps arguments in (mvc #'values ...)
  ; ~ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     wraps arguments in (mvc #'values ...)
- ;   Source file: /data/x/veq/src/macros.lisp
+ ;     wraps arguments in (mvc #'values ...).
+ ;   Source file: /data/x/veq/src/utils.lisp
 ```
 

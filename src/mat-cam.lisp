@@ -16,7 +16,7 @@
     (veq:f_ (list (/ n right) 0f0 0f0 0f0
                   0f0 (/ n top) 0f0 0f0
                   0f0 0f0 (- (/ (+ f n) (- f n))) (- (/ (* f 2n) (- f n)))
-                  0d0 0f0 -1f0 0f0))))
+                  0f0 0f0 -1f0 0f0))))
 
 (export 'fmake-ortho-proj-matrix)
 (veq:fvdef* fmake-ortho-proj-matrix (&optional (w 1f0) (h w) (n 0.1) (f 100f0))
@@ -28,7 +28,7 @@
     (veq:f_ (list (/ right) 0f0 0f0 0f0
                   0f0 (/ top) 0f0 0f0
                   0f0 0f0 (/ -2f0 (- f n)) (- (/ (+ f n) (- f n)))
-                  0d0 0f0 0f0 1f0))))
+                  0f0 0f0 0f0 1f0))))
 
 (export 'fmake-view-matrix)
 (veq:fvdef* fmake-view-matrix ((:va 3 cam target up))

@@ -155,9 +155,8 @@ eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
   `(veq:fvprogn
      (labels ((,gsfx (&rest ,rest)
        (apply #'values
-         (awf
-           (loop for ((:va  ,dim ,x)) in (group ,rest ,dim)
-                 collect (veq:lst (veq:mvc ,fx ,x)))))))
+         (awf (loop for ((:va  ,dim ,x)) in (group ,rest ,dim)
+                    collect (veq:lst (veq:mvc ,fx ,x)))))))
        (mvc #',gsfx ,@body)))))
 
 
@@ -175,4 +174,17 @@ eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
     `(let ((,res (lst ,@rest)))
        (format t "~& ; ~_~{~a | ~}~&~{ > ~a | ~}~&--~&" ',rest ,res)
        (apply #'values ,res))))
+
+; NOTE: using (lst ...) makes things slower in some cases.  because of the
+; consing or because the number of values is unknown?. avoid when possible.
+(defmacro lst (&body body)
+  "wrap (values ..) in (list ..).
+almost like multuple-values-list, except it handles multuple arguments."
+  `(mvc #'list ,@body))
+(defmacro from-lst (l)
+  "get values from list. equivalent to values-list."
+  `(values-list ,l))
+(defmacro ~ (&rest rest)
+  "wraps arguments in (mvc #'values ...)."
+  `(mvc #'values ,@rest))
 

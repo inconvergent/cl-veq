@@ -102,12 +102,11 @@ note that the number of values depends on the dimension." dim mname)))
          (let ,(mapcar #'(lambda (v) (apply #'init-let v)) arr)
            (declare (,(arrtype (cadr type)) ,@(mapcar #'car arr)))
            (labels ,fxs
-
-             ,@(loop for ex in exs collect
-                 (progn (unless (= (length ex) 3)
-                          (error "with arrays error. incorrect exs: ~a " ex))
-                        (dsb (a i expr) ex (vaset-loop-body a i expr))))
-
+             ,@(loop for ex in exs
+                     collect (progn
+                               (unless (= (length ex) 3)
+                                 (error "with arrays error. incorrect exs: ~a " ex))
+                               (dsb (a i expr) ex (vaset-loop-body a i expr))))
              ,@(loop for ex in nxs collect (no-set-loop-body ex)))
            ,@body))))))
 
@@ -139,7 +138,8 @@ ex:
   ; perform the calculations
   :exs ((a k (init1 k)) ; init row k of a with init1
         (b k (init2 k)) ; init row k of b with init2
-        (c k (cross a b)))) ; set row k of c to (cross a b)
+        (c k (cross a b))) ; set row k of c to (cross a b)
+  :nxs ((cross a b))); executes the function, but does not assign res anywhere
   ; use the arrays. the last form is returned, as in a progn
   (vpr c))" n))
 

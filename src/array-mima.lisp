@@ -16,9 +16,7 @@
            (indref (veqsymb dim type "$"))
            (docs (format nil "find min and max for all dimensions of ~d array.
 ex: (~a &key n) returns (values xmin xmax ...).
-use n to limit to first n rows." dim exportname))
-
-          )
+use n to limit to first n rows." dim exportname)))
       `(progn (export ',exportname)
        (fvdef ,exportname (,a &key (n (,(veqsymb dim nil "$NUM") ,a)) inds)
           (declare (,(arrtype type) ,a))

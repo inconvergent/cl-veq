@@ -3,7 +3,7 @@
 
 (defparameter *vset-error* "-------------- vset error:")
 
-(defmacro -vset (dim symbs expr &aux (gs (list)))
+(defmacro -vset (dim symbs expr)
   (declare (pos-int dim) (cons expr))
   (unless (every #'symbolp symbs)
     (error "~a ~%symbs: ~a~%expr: ~a. arg symbs is not symbols"
@@ -11,12 +11,13 @@
   (unless (= dim (length symbs))
     (error "~a ~%incorrect number of symbols ~a for dim: ~a"
            *vset-error* symbs dim))
-  (labels ((mkgs () (let ((g (gensym (mkstr "TMP"))))
-                      (push g gs)
-                      g)))
-    (let ((res (apply #'concatenate 'list (loop for s in symbs
-                                                collect `(,s ,(mkgs))))))
-      `(mvb ,(reverse gs) ,expr (setf ,@res)))))
+  ; i didnt know about multiple-value-setq when i wrote this:
+  ; is the commented code faster if we introduce type declares?
+  ; (labels ((mkgs () (push* (gensym "TMP") gs)))
+  ;   (let ((res (apply #'concatenate 'list (loop for s in symbs
+  ;                                               collect `(,s ,(mkgs))))))
+  ;     `(mvb ,(reverse gs) ,expr (setf ,@res))))
+  `(multiple-value-setq ,symbs ,expr))
 
 (defmacro map-vset (dim type)
   (let* ((mname (veqsymb dim type "vset"))
@@ -33,9 +34,7 @@ where (fx ...) returns ~a values." dim mname dim)))
 (defmacro -vaset ((arr dim i) &rest expr &aux (gs (list)))
   (declare (symbol arr) (pos-int dim))
   (awg (ii)
-    (labels ((mkgs () (let ((g (gensym "TMP")))
-                        (push g gs)
-                        g)))
+    (labels ((mkgs () (push* (gensym "VASET") gs)))
       (let ((res (apply #'concatenate 'list
                    (loop for j of-type pos-int from 0 below dim
                          collect `((aref ,arr (+ ,ii ,j))
@@ -47,16 +46,24 @@ where (fx ...) returns ~a values." dim mname dim)))
 ; makes it possible to do: (setf (3$ a 3) (list 9f0 9f0 9f0))
 ; TODO: can we write this so new does not need to be a list?
 (defsetf $ (a &optional (i 0)) (new)
-  "use (setf ($ a i) (list x)) to set a[i]."
+  "1d vector array setter and getter.
+use (setf ($ a i) (list x)) to set a[i].
+use ($ a i j ...) to return (values a[i] a[j] ...)"
   `(-vaset (,a 1 ,i) (apply #'values ,new)))
 (defsetf 2$ (a &optional (i 0)) (new)
-  "use (setf (2$ a i) (list x y)) to set a[i]."
+  "2d vector array setter and getter.
+use (setf (2$ a i) (list x)) to set a[i].
+use (2$ a i j ...) to return (values a[i] a[j] ...)"
   `(-vaset (,a 2 ,i) (apply #'values ,new)))
 (defsetf 3$ (a &optional (i 0)) (new)
-  "use (setf (3$ a i) (list x y z)) to set a[i]."
+  "3d vector array setter and getter.
+use (setf (3$ a i) (list x)) to set a[i].
+use (3$ a i j ...) to return (values a[i] a[j] ...)"
   `(-vaset (,a 3 ,i) (apply #'values ,new)))
 (defsetf 4$ (a &optional (i 0)) (new)
-  "use (setf (4$ a i) (list x y z w)) to set a[i]."
+  "4d vector array setter and getter.
+use (setf (4$ a i) (list x)) to set a[i].
+use (4$ a i j ...) to return (values a[i] a[j] ...)"
   `(-vaset (,a 4 ,i) (apply #'values ,new)))
 
 (map-docstring '$vset "use ($vset (a i) (values ...)) to set a[i] of 1d array." :context :nodesc)

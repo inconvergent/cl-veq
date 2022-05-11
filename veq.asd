@@ -2,7 +2,7 @@
 (asdf:defsystem #:veq
   :description "reasonably fast operations for 1-4d vectors, matrices, and
                 arrays of vectors."
-  :version "2.2.0"
+  :version "2.2.1"
   :author "anders hoff / @inconvergent / inconvergent@gmail.com"
   :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))
@@ -23,9 +23,12 @@
                (:file "ops-3" :depends-on ("veq-ops"))
                (:file "ops-4" :depends-on ("veq-ops"))
                (:file "fxlspace" :depends-on ("veq-ops"))
+               (:file "lets" :depends-on ("utils"))
+               (:file "macros-helpers" :depends-on ("utils" "lets"))
                (:file "macros"
-                :depends-on ("veq-ops" "array-rows" "vset" "fxlspace" "nsum"
-                             "ops-1" "ops-2" "ops-3" "ops-4"))
+                :depends-on ("macros-helpers" "veq-ops" "array-rows"
+                             "vset" "fxlspace" "nsum" "ops-1" "ops-2"
+                             "ops-3" "ops-4"))
                (:file "array-take" :depends-on ("macros"))
                (:file "easing" :depends-on ("macros"))
                (:file "select-dim" :depends-on ("macros"))

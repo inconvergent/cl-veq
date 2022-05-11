@@ -1,10 +1,9 @@
 #!/bin/bash
 
 set -e
-touch ./veq.asd
 sbcl --quit \
      --eval '(load "~/quicklisp/setup.lisp")'\
-     --eval '(ql:quickload :veq)'\
+     --eval '(ql:quickload :veq :silent t)'\
      --eval '(handler-case (veq:ext-symbols? :pretty)
                            (error (c) (print c) (sb-ext:quit :unix-status 2)))'\
   >DOCS.md.tmp 2>&1
@@ -48,5 +47,5 @@ Symbols postfixed with \`!\` are destructive or in-place.
 
 EOF
 
-tail -n +18 DOCS.md.tmp >> DOCS.md
+tail -n +8 DOCS.md.tmp >> DOCS.md
 sed -i 's/[[:space:]]*$//' DOCS.md
