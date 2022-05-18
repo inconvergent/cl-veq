@@ -83,7 +83,7 @@
                                 `(* (aref ,a ,(if ta (matind k i) (matind i k)))
                                     (aref ,b ,(if tb (matind j k) (matind k j)))))))
       (let ((exportname (veqsymb dim type (format nil "m~:[~;t~]m~:[~;t~]" ta tb))))
-        `(fvprogn (export ',exportname)
+        `(progn (export ',exportname)
            (defmacro ,exportname (,a* ,b*)
              ,(format nil
                 "multiply ~:[mat~;(transpose mat)~] * ~:[mat~;(transpose mat)~]~%of type: ~a"

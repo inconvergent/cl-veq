@@ -92,6 +92,19 @@
 ; from on lisp by pg
 (defun symb (&rest args) (values (intern (apply #'mkstr args))))
 
+;https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
+(defun psymb (package &rest args) (values (intern (apply #'mkstr args) package)))
+
+;https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
+(defmacro with-struct ((name . fields) struct &body body)
+  (let ((gs (gensym "STRUCT")))
+    `(let ((,gs ,struct))
+       (let ,(mapcar #'(lambda (f)
+                         `(,f (,(psymb (symbol-package name) name f) ,gs)))
+                     fields)
+         ,@body))))
+
+
 ; from on lisp by pg
 (defun reread (&rest args) (values (read-from-string (apply #'mkstr args))))
 

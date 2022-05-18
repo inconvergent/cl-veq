@@ -2,7 +2,7 @@
 (in-package :veq)
 
 
-(defmacro make-last ( dim type )
+(defmacro make-last (dim type)
   (awg (a)
     `(progn
        (export ',(veqsymb dim type "$last"))
@@ -34,6 +34,27 @@ note that the number of values depends on the dimension." dim mname)))
                            (-ind-to-val ',',type ,,dim a inds))))))
 (map-ind 1 ff) (map-ind 2 ff) (map-ind 3 ff) (map-ind 4 ff)
 (map-ind 1 df) (map-ind 2 df) (map-ind 3 df) (map-ind 4 df)
+
+; TODO: protect c
+(defun -struct-fields (dim type s c slots)
+  `(with-struct
+     (,s ,@(mapcar #'symb (remove-if-not #'keywordp slots))) ,c
+     (~ ,@(mapcar (lambda (o) (if (not (keywordp o)) o
+                                `(,(veqsymb dim type "$") ,(symb o))))
+                  slots))))
+(defmacro struct-fields (dim type)
+  (let* ((mname (veqsymb dim type "$s"))
+         (docs (format nil "get vector array struct fields as (values ...)
+use :keword as field names. other symbols, values pass through directly.
+ex :  (~a structname- c :a :b val)
+returns (values a ... adim b ... bdim val)
+assuming c is a structname, and a,b are ~a of dim ~a" mname (arrtype type) dim)))
+    `(progn (map-docstring ',mname ,docs :nodesc :context)
+            (map-symbol `(,',mname
+                           (s c &rest rest) ,,docs
+                           (-struct-fields ,,dim ',',type s c rest))))))
+(struct-fields 1 ff) (struct-fields 2 ff) (struct-fields 3 ff) (struct-fields 4 ff)
+(struct-fields 1 df) (struct-fields 2 df) (struct-fields 3 df) (struct-fields 4 df)
 
 
 ; TODO: with-op; simpler version of with-rows that takes input arrays and

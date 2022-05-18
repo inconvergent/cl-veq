@@ -2,7 +2,7 @@
 (asdf:defsystem #:veq
   :description "reasonably fast operations for 1-4d vectors, matrices, and
                 arrays of vectors."
-  :version "2.2.1"
+  :version "2.2.2"
   :author "anders hoff / @inconvergent / inconvergent@gmail.com"
   :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))
@@ -39,7 +39,8 @@
                (:file "array-print" :depends-on ("macros"))
                (:file "array-mima" :depends-on ("macros"))
                (:file "checks" :depends-on ("array-mima"))
-               (:file "array-broadcast" :depends-on ("macros"))
+               (:file "array-broadcast-util" :depends-on ("macros"))
+               (:file "array-broadcast" :depends-on ("array-broadcast-util"))
                (:file "array-reduce" :depends-on ("macros"))
                (:file "shapes" :depends-on ("array-mima" "array-broadcast"))))
 

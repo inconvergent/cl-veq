@@ -1101,6 +1101,16 @@ defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+#### :context: D$S
+
+```
+get vector array struct fields as (values ...)
+use :keword as field names. other symbols, values pass through directly.
+ex :  (D$S structname- c :a :b val)
+returns (values a ... adim b ... bdim val)
+assuming c is a structname, and a,b are DVEC of dim 1
+```
+
 #### D$SCALE
 
 ```
@@ -1997,6 +2007,16 @@ destructive.
  ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
+```
+
+#### :context: D2$S
+
+```
+get vector array struct fields as (values ...)
+use :keword as field names. other symbols, values pass through directly.
+ex :  (D2$S structname- c :a :b val)
+returns (values a ... adim b ... bdim val)
+assuming c is a structname, and a,b are DVEC of dim 2
 ```
 
 #### D2$SCALE
@@ -3376,6 +3396,98 @@ defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+#### D3$ROT
+
+```
+broadcast for fx: -D3ROT
+macroname: D3$ROT
+ex: (D3$ROT a ...) performs (mvc #'-D3ROT a[i] ...) for every row in a.
+
+ ; VEQ:D3$ROT
+ ;   [symbol]
+ ;
+ ; D3$ROT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$ROT
+ ;     macro wrapper: D3$ROT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
+```
+
+#### D3$ROT!
+
+```
+broadcast for fx: -D3ROT
+macroname: D3$ROT!
+ex: (D3$ROT! a ...) performs (mvc #'-D3ROT a[i] ...) for every row in a.
+destructive.
+
+ ; VEQ:D3$ROT!
+ ;   [symbol]
+ ;
+ ; D3$ROT! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$ROT!
+ ;     macro wrapper: D3$ROT!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
+```
+
+#### D3$ROTS
+
+```
+broadcast for fx: -D3ROTS
+macroname: D3$ROTS
+ex: (D3$ROTS a ...) performs (mvc #'-D3ROTS a[i] ...) for every row in a.
+
+ ; VEQ:D3$ROTS
+ ;   [symbol]
+ ;
+ ; D3$ROTS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$ROTS
+ ;     macro wrapper: D3$ROTS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
+```
+
+#### D3$ROTS!
+
+```
+broadcast for fx: -D3ROTS
+macroname: D3$ROTS!
+ex: (D3$ROTS! a ...) performs (mvc #'-D3ROTS a[i] ...) for every row in a.
+destructive.
+
+ ; VEQ:D3$ROTS!
+ ;   [symbol]
+ ;
+ ; D3$ROTS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %D3$ROTS!
+ ;     macro wrapper: D3$ROTS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
+```
+
+#### :context: D3$S
+
+```
+get vector array struct fields as (values ...)
+use :keword as field names. other symbols, values pass through directly.
+ex :  (D3$S structname- c :a :b val)
+returns (values a ... adim b ... bdim val)
+assuming c is a structname, and a,b are DVEC of dim 3
+```
+
 #### D3$SCALE
 
 ```
@@ -4676,6 +4788,16 @@ defined via veq:def*
  ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### :context: D4$S
+
+```
+get vector array struct fields as (values ...)
+use :keword as field names. other symbols, values pass through directly.
+ex :  (D4$S structname- c :a :b val)
+returns (values a ... adim b ... bdim val)
+assuming c is a structname, and a,b are DVEC of dim 4
 ```
 
 #### D4$SCALE
@@ -7003,6 +7125,16 @@ defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+#### :context: F$S
+
+```
+get vector array struct fields as (values ...)
+use :keword as field names. other symbols, values pass through directly.
+ex :  (F$S structname- c :a :b val)
+returns (values a ... adim b ... bdim val)
+assuming c is a structname, and a,b are FVEC of dim 1
+```
+
 #### F$SCALE
 
 ```
@@ -7388,7 +7520,7 @@ destructive.
 fx: %F2$CENTER
 macro wrapper: F2$CENTER
 
-defined via veq:fvdef*
+defined via veq:def*
 
  ; VEQ:F2$CENTER
  ;   [symbol]
@@ -7399,7 +7531,7 @@ defined via veq:fvdef*
  ;     fx: %F2$CENTER
  ;     macro wrapper: F2$CENTER
  ;
- ;     defined via veq:fvdef*
+ ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
@@ -7409,7 +7541,7 @@ defined via veq:fvdef*
 fx: %F2$CIRC
 macro wrapper: F2$CIRC
 
-defined via veq:fvdef*
+defined via veq:def*
 
  ; VEQ:F2$CIRC
  ;   [symbol]
@@ -7420,7 +7552,7 @@ defined via veq:fvdef*
  ;     fx: %F2$CIRC
  ;     macro wrapper: F2$CIRC
  ;
- ;     defined via veq:fvdef*
+ ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
@@ -7867,7 +7999,7 @@ defined via veq:def*
 fx: %F2$POLYGON
 macro wrapper: F2$POLYGON
 
-defined via veq:fvdef*
+defined via veq:def*
 
  ; VEQ:F2$POLYGON
  ;   [symbol]
@@ -7878,7 +8010,7 @@ defined via veq:fvdef*
  ;     fx: %F2$POLYGON
  ;     macro wrapper: F2$POLYGON
  ;
- ;     defined via veq:fvdef*
+ ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
@@ -7888,7 +8020,7 @@ defined via veq:fvdef*
 fx: %F2$RECT
 macro wrapper: F2$RECT
 
-defined via veq:fvdef*
+defined via veq:def*
 
  ; VEQ:F2$RECT
  ;   [symbol]
@@ -7899,7 +8031,7 @@ defined via veq:fvdef*
  ;     fx: %F2$RECT
  ;     macro wrapper: F2$RECT
  ;
- ;     defined via veq:fvdef*
+ ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
@@ -7983,6 +8115,16 @@ destructive.
  ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
+```
+
+#### :context: F2$S
+
+```
+get vector array struct fields as (values ...)
+use :keword as field names. other symbols, values pass through directly.
+ex :  (F2$S structname- c :a :b val)
+returns (values a ... adim b ... bdim val)
+assuming c is a structname, and a,b are FVEC of dim 2
 ```
 
 #### F2$SCALE
@@ -9509,6 +9651,98 @@ defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+#### F3$ROT
+
+```
+broadcast for fx: -F3ROT
+macroname: F3$ROT
+ex: (F3$ROT a ...) performs (mvc #'-F3ROT a[i] ...) for every row in a.
+
+ ; VEQ:F3$ROT
+ ;   [symbol]
+ ;
+ ; F3$ROT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$ROT
+ ;     macro wrapper: F3$ROT
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
+```
+
+#### F3$ROT!
+
+```
+broadcast for fx: -F3ROT
+macroname: F3$ROT!
+ex: (F3$ROT! a ...) performs (mvc #'-F3ROT a[i] ...) for every row in a.
+destructive.
+
+ ; VEQ:F3$ROT!
+ ;   [symbol]
+ ;
+ ; F3$ROT! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$ROT!
+ ;     macro wrapper: F3$ROT!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
+```
+
+#### F3$ROTS
+
+```
+broadcast for fx: -F3ROTS
+macroname: F3$ROTS
+ex: (F3$ROTS a ...) performs (mvc #'-F3ROTS a[i] ...) for every row in a.
+
+ ; VEQ:F3$ROTS
+ ;   [symbol]
+ ;
+ ; F3$ROTS names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$ROTS
+ ;     macro wrapper: F3$ROTS
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
+```
+
+#### F3$ROTS!
+
+```
+broadcast for fx: -F3ROTS
+macroname: F3$ROTS!
+ex: (F3$ROTS! a ...) performs (mvc #'-F3ROTS a[i] ...) for every row in a.
+destructive.
+
+ ; VEQ:F3$ROTS!
+ ;   [symbol]
+ ;
+ ; F3$ROTS! names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F3$ROTS!
+ ;     macro wrapper: F3$ROTS!
+ ;
+ ;     defined via veq:def*
+ ;   Source file: /data/x/veq/src/array-broadcast.lisp
+```
+
+#### :context: F3$S
+
+```
+get vector array struct fields as (values ...)
+use :keword as field names. other symbols, values pass through directly.
+ex :  (F3$S structname- c :a :b val)
+returns (values a ... adim b ... bdim val)
+assuming c is a structname, and a,b are FVEC of dim 3
+```
+
 #### F3$SCALE
 
 ```
@@ -10830,6 +11064,16 @@ defined via veq:def*
  ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+#### :context: F4$S
+
+```
+get vector array struct fields as (values ...)
+use :keword as field names. other symbols, values pass through directly.
+ex :  (F4$S structname- c :a :b val)
+returns (values a ... adim b ... bdim val)
+assuming c is a structname, and a,b are FVEC of dim 4
 ```
 
 #### F4$SCALE
