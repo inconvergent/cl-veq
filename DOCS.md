@@ -127,7 +127,7 @@ use ($vset (a i) (values ...)) to set a[i] of 1d array.
  ;
  ; *EPS* names a special variable:
  ;   Declared type: SINGLE-FLOAT
- ;   Value: 1.7881396e-7
+ ;   Value: 5.960465e-8
 ```
 
 #### 2$

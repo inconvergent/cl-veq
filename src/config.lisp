@@ -3,7 +3,7 @@
 
 (declaim (single-float *eps*) (boolean *dev*) (cons *opt*))
 
-(defparameter *eps* (* 3f0 single-float-epsilon))
+(defparameter *eps* #.(* 1f0 single-float-epsilon))
 
 
 ; from: http://cl-cookbook.sourceforge.net/os.html
