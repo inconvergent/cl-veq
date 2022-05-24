@@ -24,4 +24,4 @@
     (format t "~&---------!!!!! VEQ DEVMODE !!!!!---------~%"))
   (progn
     (defparameter *dev* nil)
-    (defparameter *opt* '(optimize (safety 1) speed (debug 2) space))))
+    (defparameter *opt* '(optimize (safety 0) speed (debug 2) space))))

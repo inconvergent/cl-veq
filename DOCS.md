@@ -404,10 +404,11 @@ ex: (D$* a ...) performs (mvc #'-D* a[i] ...) for every row in a.
  ; D$* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$*
- ;     macro wrapper: D$*
+ ;     docstring for %D$*
+ ;     broadcast for fx: -D*
+ ;     macroname: D$*
+ ;     ex: (D$* a ...) performs (mvc #'-D* a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -425,10 +426,12 @@ destructive.
  ; D$*! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$*!
- ;     macro wrapper: D$*!
+ ;     docstring for %D$*!
+ ;     broadcast for fx: -D*
+ ;     macroname: D$*!
+ ;     ex: (D$*! a ...) performs (mvc #'-D* a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -445,10 +448,11 @@ ex: (D$+ a ...) performs (mvc #'-D+ a[i] ...) for every row in a.
  ; D$+ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$+
- ;     macro wrapper: D$+
+ ;     docstring for %D$+
+ ;     broadcast for fx: -D+
+ ;     macroname: D$+
+ ;     ex: (D$+ a ...) performs (mvc #'-D+ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -466,10 +470,12 @@ destructive.
  ; D$+! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$+!
- ;     macro wrapper: D$+!
+ ;     docstring for %D$+!
+ ;     broadcast for fx: -D+
+ ;     macroname: D$+!
+ ;     ex: (D$+! a ...) performs (mvc #'-D+ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -486,10 +492,11 @@ ex: (D$- a ...) performs (mvc #'-D- a[i] ...) for every row in a.
  ; D$- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$-
- ;     macro wrapper: D$-
+ ;     docstring for %D$-
+ ;     broadcast for fx: -D-
+ ;     macroname: D$-
+ ;     ex: (D$- a ...) performs (mvc #'-D- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -507,10 +514,12 @@ destructive.
  ; D$-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$-!
- ;     macro wrapper: D$-!
+ ;     docstring for %D$-!
+ ;     broadcast for fx: -D-
+ ;     macroname: D$-!
+ ;     ex: (D$-! a ...) performs (mvc #'-D- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -527,10 +536,11 @@ ex: (D$/ a ...) performs (mvc #'-D/ a[i] ...) for every row in a.
  ; D$/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$/
- ;     macro wrapper: D$/
+ ;     docstring for %D$/
+ ;     broadcast for fx: -D/
+ ;     macroname: D$/
+ ;     ex: (D$/ a ...) performs (mvc #'-D/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -548,10 +558,12 @@ destructive.
  ; D$/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$/!
- ;     macro wrapper: D$/!
+ ;     docstring for %D$/!
+ ;     broadcast for fx: -D/
+ ;     macroname: D$/!
+ ;     ex: (D$/! a ...) performs (mvc #'-D/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -585,10 +597,11 @@ ex: (D$ABS a ...) performs (mvc #'-DABS a[i] ...) for every row in a.
  ; D$ABS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$ABS
- ;     macro wrapper: D$ABS
+ ;     docstring for %D$ABS
+ ;     broadcast for fx: -DABS
+ ;     macroname: D$ABS
+ ;     ex: (D$ABS a ...) performs (mvc #'-DABS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -606,10 +619,12 @@ destructive.
  ; D$ABS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$ABS!
- ;     macro wrapper: D$ABS!
+ ;     docstring for %D$ABS!
+ ;     broadcast for fx: -DABS
+ ;     macroname: D$ABS!
+ ;     ex: (D$ABS! a ...) performs (mvc #'-DABS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -643,10 +658,11 @@ ex: (D$COS-SIN a ...) performs (mvc #'-DCOS-SIN a[i] ...) for every row in a.
  ; D$COS-SIN names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$COS-SIN
- ;     macro wrapper: D$COS-SIN
+ ;     docstring for %D$COS-SIN
+ ;     broadcast for fx: -DCOS-SIN
+ ;     macroname: D$COS-SIN
+ ;     ex: (D$COS-SIN a ...) performs (mvc #'-DCOS-SIN a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -663,10 +679,11 @@ ex: (D$FROM a ...) performs (mvc #'-DFROM a[i] ...) for every row in a.
  ; D$FROM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$FROM
- ;     macro wrapper: D$FROM
+ ;     docstring for %D$FROM
+ ;     broadcast for fx: -DFROM
+ ;     macroname: D$FROM
+ ;     ex: (D$FROM a ...) performs (mvc #'-DFROM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -684,10 +701,12 @@ destructive.
  ; D$FROM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$FROM!
- ;     macro wrapper: D$FROM!
+ ;     docstring for %D$FROM!
+ ;     broadcast for fx: -DFROM
+ ;     macroname: D$FROM!
+ ;     ex: (D$FROM! a ...) performs (mvc #'-DFROM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -714,10 +733,11 @@ ex: (D$I- a ...) performs (mvc #'-DI- a[i] ...) for every row in a.
  ; D$I- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$I-
- ;     macro wrapper: D$I-
+ ;     docstring for %D$I-
+ ;     broadcast for fx: -DI-
+ ;     macroname: D$I-
+ ;     ex: (D$I- a ...) performs (mvc #'-DI- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -735,10 +755,12 @@ destructive.
  ; D$I-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$I-!
- ;     macro wrapper: D$I-!
+ ;     docstring for %D$I-!
+ ;     broadcast for fx: -DI-
+ ;     macroname: D$I-!
+ ;     ex: (D$I-! a ...) performs (mvc #'-DI- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -755,10 +777,11 @@ ex: (D$I/ a ...) performs (mvc #'-DI/ a[i] ...) for every row in a.
  ; D$I/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$I/
- ;     macro wrapper: D$I/
+ ;     docstring for %D$I/
+ ;     broadcast for fx: -DI/
+ ;     macroname: D$I/
+ ;     ex: (D$I/ a ...) performs (mvc #'-DI/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -776,10 +799,12 @@ destructive.
  ; D$I/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$I/!
- ;     macro wrapper: D$I/!
+ ;     docstring for %D$I/!
+ ;     broadcast for fx: -DI/
+ ;     macroname: D$I/!
+ ;     ex: (D$I/! a ...) performs (mvc #'-DI/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -796,10 +821,11 @@ ex: (D$ISCALE a ...) performs (mvc #'-DISCALE a[i] ...) for every row in a.
  ; D$ISCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$ISCALE
- ;     macro wrapper: D$ISCALE
+ ;     docstring for %D$ISCALE
+ ;     broadcast for fx: -DISCALE
+ ;     macroname: D$ISCALE
+ ;     ex: (D$ISCALE a ...) performs (mvc #'-DISCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -817,10 +843,12 @@ destructive.
  ; D$ISCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$ISCALE!
- ;     macro wrapper: D$ISCALE!
+ ;     docstring for %D$ISCALE!
+ ;     broadcast for fx: -DISCALE
+ ;     macroname: D$ISCALE!
+ ;     ex: (D$ISCALE! a ...) performs (mvc #'-DISCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -854,10 +882,11 @@ ex: (D$LEN a ...) performs (mvc #'-DLEN a[i] ...) for every row in a.
  ; D$LEN names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$LEN
- ;     macro wrapper: D$LEN
+ ;     docstring for %D$LEN
+ ;     broadcast for fx: -DLEN
+ ;     macroname: D$LEN
+ ;     ex: (D$LEN a ...) performs (mvc #'-DLEN a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -874,10 +903,11 @@ ex: (D$LEN2 a ...) performs (mvc #'-DLEN2 a[i] ...) for every row in a.
  ; D$LEN2 names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$LEN2
- ;     macro wrapper: D$LEN2
+ ;     docstring for %D$LEN2
+ ;     broadcast for fx: -DLEN2
+ ;     macroname: D$LEN2
+ ;     ex: (D$LEN2 a ...) performs (mvc #'-DLEN2 a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -886,7 +916,6 @@ ex: (D$LEN2 a ...) performs (mvc #'-DLEN2 a[i] ...) for every row in a.
 ```
 fx: %D$LINE
 macro wrapper: D$LINE
-
 defined via veq:def*
 
  ; VEQ:D$LINE
@@ -897,7 +926,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %D$LINE
  ;     macro wrapper: D$LINE
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -907,7 +935,6 @@ defined via veq:def*
 ```
 fx: %D$LSPACE
 macro wrapper: D$LSPACE
-
 defined via veq:fvdef*
 
  ; VEQ:D$LSPACE
@@ -918,7 +945,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %D$LSPACE
  ;     macro wrapper: D$LSPACE
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/lspace.lisp
 ```
@@ -973,10 +999,11 @@ ex: (D$NEG a ...) performs (mvc #'-DNEG a[i] ...) for every row in a.
  ; D$NEG names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$NEG
- ;     macro wrapper: D$NEG
+ ;     docstring for %D$NEG
+ ;     broadcast for fx: -DNEG
+ ;     macroname: D$NEG
+ ;     ex: (D$NEG a ...) performs (mvc #'-DNEG a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -994,10 +1021,12 @@ destructive.
  ; D$NEG! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$NEG!
- ;     macro wrapper: D$NEG!
+ ;     docstring for %D$NEG!
+ ;     broadcast for fx: -DNEG
+ ;     macroname: D$NEG!
+ ;     ex: (D$NEG! a ...) performs (mvc #'-DNEG a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1014,10 +1043,11 @@ ex: (D$NORM a ...) performs (mvc #'-DNORM a[i] ...) for every row in a.
  ; D$NORM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$NORM
- ;     macro wrapper: D$NORM
+ ;     docstring for %D$NORM
+ ;     broadcast for fx: -DNORM
+ ;     macroname: D$NORM
+ ;     ex: (D$NORM a ...) performs (mvc #'-DNORM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1035,10 +1065,12 @@ destructive.
  ; D$NORM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$NORM!
- ;     macro wrapper: D$NORM!
+ ;     docstring for %D$NORM!
+ ;     broadcast for fx: -DNORM
+ ;     macroname: D$NORM!
+ ;     ex: (D$NORM! a ...) performs (mvc #'-DNORM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1085,7 +1117,6 @@ typed.
 ```
 fx: %D$POINT
 macro wrapper: D$POINT
-
 defined via veq:def*
 
  ; VEQ:D$POINT
@@ -1096,7 +1127,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %D$POINT
  ;     macro wrapper: D$POINT
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -1124,10 +1154,11 @@ ex: (D$SCALE a ...) performs (mvc #'-DSCALE a[i] ...) for every row in a.
  ; D$SCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$SCALE
- ;     macro wrapper: D$SCALE
+ ;     docstring for %D$SCALE
+ ;     broadcast for fx: -DSCALE
+ ;     macroname: D$SCALE
+ ;     ex: (D$SCALE a ...) performs (mvc #'-DSCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1145,10 +1176,12 @@ destructive.
  ; D$SCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$SCALE!
- ;     macro wrapper: D$SCALE!
+ ;     docstring for %D$SCALE!
+ ;     broadcast for fx: -DSCALE
+ ;     macroname: D$SCALE!
+ ;     ex: (D$SCALE! a ...) performs (mvc #'-DSCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1298,10 +1331,11 @@ ex: (D2$* a ...) performs (mvc #'-D2* a[i] ...) for every row in a.
  ; D2$* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$*
- ;     macro wrapper: D2$*
+ ;     docstring for %D2$*
+ ;     broadcast for fx: -D2*
+ ;     macroname: D2$*
+ ;     ex: (D2$* a ...) performs (mvc #'-D2* a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1319,10 +1353,12 @@ destructive.
  ; D2$*! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$*!
- ;     macro wrapper: D2$*!
+ ;     docstring for %D2$*!
+ ;     broadcast for fx: -D2*
+ ;     macroname: D2$*!
+ ;     ex: (D2$*! a ...) performs (mvc #'-D2* a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1339,10 +1375,11 @@ ex: (D2$+ a ...) performs (mvc #'-D2+ a[i] ...) for every row in a.
  ; D2$+ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$+
- ;     macro wrapper: D2$+
+ ;     docstring for %D2$+
+ ;     broadcast for fx: -D2+
+ ;     macroname: D2$+
+ ;     ex: (D2$+ a ...) performs (mvc #'-D2+ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1360,10 +1397,12 @@ destructive.
  ; D2$+! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$+!
- ;     macro wrapper: D2$+!
+ ;     docstring for %D2$+!
+ ;     broadcast for fx: -D2+
+ ;     macroname: D2$+!
+ ;     ex: (D2$+! a ...) performs (mvc #'-D2+ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1380,10 +1419,11 @@ ex: (D2$- a ...) performs (mvc #'-D2- a[i] ...) for every row in a.
  ; D2$- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$-
- ;     macro wrapper: D2$-
+ ;     docstring for %D2$-
+ ;     broadcast for fx: -D2-
+ ;     macroname: D2$-
+ ;     ex: (D2$- a ...) performs (mvc #'-D2- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1401,10 +1441,12 @@ destructive.
  ; D2$-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$-!
- ;     macro wrapper: D2$-!
+ ;     docstring for %D2$-!
+ ;     broadcast for fx: -D2-
+ ;     macroname: D2$-!
+ ;     ex: (D2$-! a ...) performs (mvc #'-D2- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1421,10 +1463,11 @@ ex: (D2$/ a ...) performs (mvc #'-D2/ a[i] ...) for every row in a.
  ; D2$/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$/
- ;     macro wrapper: D2$/
+ ;     docstring for %D2$/
+ ;     broadcast for fx: -D2/
+ ;     macroname: D2$/
+ ;     ex: (D2$/ a ...) performs (mvc #'-D2/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1442,10 +1485,12 @@ destructive.
  ; D2$/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$/!
- ;     macro wrapper: D2$/!
+ ;     docstring for %D2$/!
+ ;     broadcast for fx: -D2/
+ ;     macroname: D2$/!
+ ;     ex: (D2$/! a ...) performs (mvc #'-D2/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1462,10 +1507,11 @@ ex: (D2$ABS a ...) performs (mvc #'-D2ABS a[i] ...) for every row in a.
  ; D2$ABS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$ABS
- ;     macro wrapper: D2$ABS
+ ;     docstring for %D2$ABS
+ ;     broadcast for fx: -D2ABS
+ ;     macroname: D2$ABS
+ ;     ex: (D2$ABS a ...) performs (mvc #'-D2ABS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1483,10 +1529,12 @@ destructive.
  ; D2$ABS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$ABS!
- ;     macro wrapper: D2$ABS!
+ ;     docstring for %D2$ABS!
+ ;     broadcast for fx: -D2ABS
+ ;     macroname: D2$ABS!
+ ;     ex: (D2$ABS! a ...) performs (mvc #'-D2ABS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1503,10 +1551,11 @@ ex: (D2$FROM a ...) performs (mvc #'-D2FROM a[i] ...) for every row in a.
  ; D2$FROM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$FROM
- ;     macro wrapper: D2$FROM
+ ;     docstring for %D2$FROM
+ ;     broadcast for fx: -D2FROM
+ ;     macroname: D2$FROM
+ ;     ex: (D2$FROM a ...) performs (mvc #'-D2FROM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1524,10 +1573,12 @@ destructive.
  ; D2$FROM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$FROM!
- ;     macro wrapper: D2$FROM!
+ ;     docstring for %D2$FROM!
+ ;     broadcast for fx: -D2FROM
+ ;     macroname: D2$FROM!
+ ;     ex: (D2$FROM! a ...) performs (mvc #'-D2FROM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1554,10 +1605,11 @@ ex: (D2$I- a ...) performs (mvc #'-D2I- a[i] ...) for every row in a.
  ; D2$I- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$I-
- ;     macro wrapper: D2$I-
+ ;     docstring for %D2$I-
+ ;     broadcast for fx: -D2I-
+ ;     macroname: D2$I-
+ ;     ex: (D2$I- a ...) performs (mvc #'-D2I- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1575,10 +1627,12 @@ destructive.
  ; D2$I-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$I-!
- ;     macro wrapper: D2$I-!
+ ;     docstring for %D2$I-!
+ ;     broadcast for fx: -D2I-
+ ;     macroname: D2$I-!
+ ;     ex: (D2$I-! a ...) performs (mvc #'-D2I- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1595,10 +1649,11 @@ ex: (D2$I/ a ...) performs (mvc #'-D2I/ a[i] ...) for every row in a.
  ; D2$I/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$I/
- ;     macro wrapper: D2$I/
+ ;     docstring for %D2$I/
+ ;     broadcast for fx: -D2I/
+ ;     macroname: D2$I/
+ ;     ex: (D2$I/ a ...) performs (mvc #'-D2I/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1616,10 +1671,12 @@ destructive.
  ; D2$I/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$I/!
- ;     macro wrapper: D2$I/!
+ ;     docstring for %D2$I/!
+ ;     broadcast for fx: -D2I/
+ ;     macroname: D2$I/!
+ ;     ex: (D2$I/! a ...) performs (mvc #'-D2I/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1636,10 +1693,11 @@ ex: (D2$ISCALE a ...) performs (mvc #'-D2ISCALE a[i] ...) for every row in a.
  ; D2$ISCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$ISCALE
- ;     macro wrapper: D2$ISCALE
+ ;     docstring for %D2$ISCALE
+ ;     broadcast for fx: -D2ISCALE
+ ;     macroname: D2$ISCALE
+ ;     ex: (D2$ISCALE a ...) performs (mvc #'-D2ISCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1657,10 +1715,12 @@ destructive.
  ; D2$ISCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$ISCALE!
- ;     macro wrapper: D2$ISCALE!
+ ;     docstring for %D2$ISCALE!
+ ;     broadcast for fx: -D2ISCALE
+ ;     macroname: D2$ISCALE!
+ ;     ex: (D2$ISCALE! a ...) performs (mvc #'-D2ISCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1694,10 +1754,11 @@ ex: (D2$LEN a ...) performs (mvc #'-D2LEN a[i] ...) for every row in a.
  ; D2$LEN names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$LEN
- ;     macro wrapper: D2$LEN
+ ;     docstring for %D2$LEN
+ ;     broadcast for fx: -D2LEN
+ ;     macroname: D2$LEN
+ ;     ex: (D2$LEN a ...) performs (mvc #'-D2LEN a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1714,10 +1775,11 @@ ex: (D2$LEN2 a ...) performs (mvc #'-D2LEN2 a[i] ...) for every row in a.
  ; D2$LEN2 names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$LEN2
- ;     macro wrapper: D2$LEN2
+ ;     docstring for %D2$LEN2
+ ;     broadcast for fx: -D2LEN2
+ ;     macroname: D2$LEN2
+ ;     ex: (D2$LEN2 a ...) performs (mvc #'-D2LEN2 a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1726,7 +1788,6 @@ ex: (D2$LEN2 a ...) performs (mvc #'-D2LEN2 a[i] ...) for every row in a.
 ```
 fx: %D2$LINE
 macro wrapper: D2$LINE
-
 defined via veq:def*
 
  ; VEQ:D2$LINE
@@ -1737,7 +1798,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %D2$LINE
  ;     macro wrapper: D2$LINE
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -1747,7 +1807,6 @@ defined via veq:def*
 ```
 fx: %D2$LSPACE
 macro wrapper: D2$LSPACE
-
 defined via veq:fvdef*
 
  ; VEQ:D2$LSPACE
@@ -1758,7 +1817,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %D2$LSPACE
  ;     macro wrapper: D2$LSPACE
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/lspace.lisp
 ```
@@ -1799,10 +1857,11 @@ ex: (D2$NEG a ...) performs (mvc #'-D2NEG a[i] ...) for every row in a.
  ; D2$NEG names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$NEG
- ;     macro wrapper: D2$NEG
+ ;     docstring for %D2$NEG
+ ;     broadcast for fx: -D2NEG
+ ;     macroname: D2$NEG
+ ;     ex: (D2$NEG a ...) performs (mvc #'-D2NEG a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1820,10 +1879,12 @@ destructive.
  ; D2$NEG! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$NEG!
- ;     macro wrapper: D2$NEG!
+ ;     docstring for %D2$NEG!
+ ;     broadcast for fx: -D2NEG
+ ;     macroname: D2$NEG!
+ ;     ex: (D2$NEG! a ...) performs (mvc #'-D2NEG a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1840,10 +1901,11 @@ ex: (D2$NORM a ...) performs (mvc #'-D2NORM a[i] ...) for every row in a.
  ; D2$NORM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$NORM
- ;     macro wrapper: D2$NORM
+ ;     docstring for %D2$NORM
+ ;     broadcast for fx: -D2NORM
+ ;     macroname: D2$NORM
+ ;     ex: (D2$NORM a ...) performs (mvc #'-D2NORM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1861,10 +1923,12 @@ destructive.
  ; D2$NORM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$NORM!
- ;     macro wrapper: D2$NORM!
+ ;     docstring for %D2$NORM!
+ ;     broadcast for fx: -D2NORM
+ ;     macroname: D2$NORM!
+ ;     ex: (D2$NORM! a ...) performs (mvc #'-D2NORM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1911,7 +1975,6 @@ typed.
 ```
 fx: %D2$POINT
 macro wrapper: D2$POINT
-
 defined via veq:def*
 
  ; VEQ:D2$POINT
@@ -1922,7 +1985,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %D2$POINT
  ;     macro wrapper: D2$POINT
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -1940,10 +2002,11 @@ ex: (D2$ROT a ...) performs (mvc #'-D2ROT a[i] ...) for every row in a.
  ; D2$ROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$ROT
- ;     macro wrapper: D2$ROT
+ ;     docstring for %D2$ROT
+ ;     broadcast for fx: -D2ROT
+ ;     macroname: D2$ROT
+ ;     ex: (D2$ROT a ...) performs (mvc #'-D2ROT a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1961,10 +2024,12 @@ destructive.
  ; D2$ROT! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$ROT!
- ;     macro wrapper: D2$ROT!
+ ;     docstring for %D2$ROT!
+ ;     broadcast for fx: -D2ROT
+ ;     macroname: D2$ROT!
+ ;     ex: (D2$ROT! a ...) performs (mvc #'-D2ROT a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -1981,10 +2046,11 @@ ex: (D2$ROTS a ...) performs (mvc #'-D2ROTS a[i] ...) for every row in a.
  ; D2$ROTS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$ROTS
- ;     macro wrapper: D2$ROTS
+ ;     docstring for %D2$ROTS
+ ;     broadcast for fx: -D2ROTS
+ ;     macroname: D2$ROTS
+ ;     ex: (D2$ROTS a ...) performs (mvc #'-D2ROTS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2002,10 +2068,12 @@ destructive.
  ; D2$ROTS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$ROTS!
- ;     macro wrapper: D2$ROTS!
+ ;     docstring for %D2$ROTS!
+ ;     broadcast for fx: -D2ROTS
+ ;     macroname: D2$ROTS!
+ ;     ex: (D2$ROTS! a ...) performs (mvc #'-D2ROTS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2032,10 +2100,11 @@ ex: (D2$SCALE a ...) performs (mvc #'-D2SCALE a[i] ...) for every row in a.
  ; D2$SCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$SCALE
- ;     macro wrapper: D2$SCALE
+ ;     docstring for %D2$SCALE
+ ;     broadcast for fx: -D2SCALE
+ ;     macroname: D2$SCALE
+ ;     ex: (D2$SCALE a ...) performs (mvc #'-D2SCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2053,10 +2122,12 @@ destructive.
  ; D2$SCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$SCALE!
- ;     macro wrapper: D2$SCALE!
+ ;     docstring for %D2$SCALE!
+ ;     broadcast for fx: -D2SCALE
+ ;     macroname: D2$SCALE!
+ ;     ex: (D2$SCALE! a ...) performs (mvc #'-D2SCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2436,10 +2507,8 @@ body: (VALUES (MOD A S) (MOD B S))
 #### D2MROT
 
 ```
-fx: %D2MROT
-macro wrapper: D2MROT
-
-defined via veq:def*
+docstring for %D2MROT
+make 2d rotation matrix for rotating a rads
 
  ; VEQ:D2MROT
  ;   [symbol]
@@ -2447,20 +2516,16 @@ defined via veq:def*
  ; D2MROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2MROT
- ;     macro wrapper: D2MROT
- ;
- ;     defined via veq:def*
+ ;     docstring for %D2MROT
+ ;     make 2d rotation matrix for rotating a rads
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
 #### D2MROT\*
 
 ```
-fx: %D2MROT*
-macro wrapper: D2MROT*
-
-defined via veq:def*
+docstring for %D2MROT*
+make 2d rotation matrix for rotating a rads
 
  ; VEQ:D2MROT*
  ;   [symbol]
@@ -2468,20 +2533,16 @@ defined via veq:def*
  ; D2MROT* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2MROT*
- ;     macro wrapper: D2MROT*
- ;
- ;     defined via veq:def*
+ ;     docstring for %D2MROT*
+ ;     make 2d rotation matrix for rotating a rads
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
 #### D2MSCALE
 
 ```
-fx: %D2MSCALE
-macro wrapper: D2MSCALE
-
-defined via veq:fvdef*
+docstring for %D2MSCALE
+make 2d matrix for scaling by x
 
  ; VEQ:D2MSCALE
  ;   [symbol]
@@ -2489,10 +2550,8 @@ defined via veq:fvdef*
  ; D2MSCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2MSCALE
- ;     macro wrapper: D2MSCALE
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %D2MSCALE
+ ;     make 2d matrix for scaling by x
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
@@ -2548,10 +2607,8 @@ of type: DVEC
 #### D2MTRANS
 
 ```
-fx: %D2MTRANS
-macro wrapper: D2MTRANS
-
-defined via veq:fvdef*
+docstring for %D2MTRANS
+make 2d transpose matrix for moving by x
 
  ; VEQ:D2MTRANS
  ;   [symbol]
@@ -2559,10 +2616,8 @@ defined via veq:fvdef*
  ; D2MTRANS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2MTRANS
- ;     macro wrapper: D2MTRANS
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %D2MTRANS
+ ;     make 2d transpose matrix for moving by x
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
@@ -2678,11 +2733,11 @@ veq context op: D2ROT
 fxname: -D2ROT
 args: (X Y A)
 body: (LET ((COSA (COS A)) (SINA (SIN A)))
-  (DECLARE
-   (DF
-     COSA
-     SINA))
-  (VALUES (- (* X COSA) (* Y SINA)) (+ (* X SINA) (* Y COSA))))
+        (DECLARE
+         (DF
+           COSA
+           SINA))
+        (VALUES (- (* X COSA) (* Y SINA)) (+ (* X SINA) (* Y COSA))))
 ```
 
 #### :context: D2ROTS
@@ -2709,7 +2764,8 @@ body: (VALUES (* A S) (* B S))
 veq context op: D2SQRT
 fxname: -D2SQRT
 args: (A B)
-body: (VALUES (THE POS-DF (SQRT (THE POS-DF A))) (THE POS-DF (SQRT (THE POS-DF B))))
+body: (VALUES (THE POS-DF (SQRT (THE POS-DF A)))
+              (THE POS-DF (SQRT (THE POS-DF B))))
 ```
 
 #### :context: D2SQUARE
@@ -2765,10 +2821,11 @@ ex: (D3$* a ...) performs (mvc #'-D3* a[i] ...) for every row in a.
  ; D3$* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$*
- ;     macro wrapper: D3$*
+ ;     docstring for %D3$*
+ ;     broadcast for fx: -D3*
+ ;     macroname: D3$*
+ ;     ex: (D3$* a ...) performs (mvc #'-D3* a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2786,10 +2843,12 @@ destructive.
  ; D3$*! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$*!
- ;     macro wrapper: D3$*!
+ ;     docstring for %D3$*!
+ ;     broadcast for fx: -D3*
+ ;     macroname: D3$*!
+ ;     ex: (D3$*! a ...) performs (mvc #'-D3* a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2806,10 +2865,11 @@ ex: (D3$+ a ...) performs (mvc #'-D3+ a[i] ...) for every row in a.
  ; D3$+ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$+
- ;     macro wrapper: D3$+
+ ;     docstring for %D3$+
+ ;     broadcast for fx: -D3+
+ ;     macroname: D3$+
+ ;     ex: (D3$+ a ...) performs (mvc #'-D3+ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2827,10 +2887,12 @@ destructive.
  ; D3$+! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$+!
- ;     macro wrapper: D3$+!
+ ;     docstring for %D3$+!
+ ;     broadcast for fx: -D3+
+ ;     macroname: D3$+!
+ ;     ex: (D3$+! a ...) performs (mvc #'-D3+ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2847,10 +2909,11 @@ ex: (D3$- a ...) performs (mvc #'-D3- a[i] ...) for every row in a.
  ; D3$- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$-
- ;     macro wrapper: D3$-
+ ;     docstring for %D3$-
+ ;     broadcast for fx: -D3-
+ ;     macroname: D3$-
+ ;     ex: (D3$- a ...) performs (mvc #'-D3- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2868,10 +2931,12 @@ destructive.
  ; D3$-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$-!
- ;     macro wrapper: D3$-!
+ ;     docstring for %D3$-!
+ ;     broadcast for fx: -D3-
+ ;     macroname: D3$-!
+ ;     ex: (D3$-! a ...) performs (mvc #'-D3- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2888,10 +2953,11 @@ ex: (D3$/ a ...) performs (mvc #'-D3/ a[i] ...) for every row in a.
  ; D3$/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$/
- ;     macro wrapper: D3$/
+ ;     docstring for %D3$/
+ ;     broadcast for fx: -D3/
+ ;     macroname: D3$/
+ ;     ex: (D3$/ a ...) performs (mvc #'-D3/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2909,10 +2975,12 @@ destructive.
  ; D3$/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$/!
- ;     macro wrapper: D3$/!
+ ;     docstring for %D3$/!
+ ;     broadcast for fx: -D3/
+ ;     macroname: D3$/!
+ ;     ex: (D3$/! a ...) performs (mvc #'-D3/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2929,10 +2997,11 @@ ex: (D3$ABS a ...) performs (mvc #'-D3ABS a[i] ...) for every row in a.
  ; D3$ABS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$ABS
- ;     macro wrapper: D3$ABS
+ ;     docstring for %D3$ABS
+ ;     broadcast for fx: -D3ABS
+ ;     macroname: D3$ABS
+ ;     ex: (D3$ABS a ...) performs (mvc #'-D3ABS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2950,10 +3019,12 @@ destructive.
  ; D3$ABS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$ABS!
- ;     macro wrapper: D3$ABS!
+ ;     docstring for %D3$ABS!
+ ;     broadcast for fx: -D3ABS
+ ;     macroname: D3$ABS!
+ ;     ex: (D3$ABS! a ...) performs (mvc #'-D3ABS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2970,10 +3041,11 @@ ex: (D3$FROM a ...) performs (mvc #'-D3FROM a[i] ...) for every row in a.
  ; D3$FROM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$FROM
- ;     macro wrapper: D3$FROM
+ ;     docstring for %D3$FROM
+ ;     broadcast for fx: -D3FROM
+ ;     macroname: D3$FROM
+ ;     ex: (D3$FROM a ...) performs (mvc #'-D3FROM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -2991,10 +3063,12 @@ destructive.
  ; D3$FROM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$FROM!
- ;     macro wrapper: D3$FROM!
+ ;     docstring for %D3$FROM!
+ ;     broadcast for fx: -D3FROM
+ ;     macroname: D3$FROM!
+ ;     ex: (D3$FROM! a ...) performs (mvc #'-D3FROM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3021,10 +3095,11 @@ ex: (D3$I- a ...) performs (mvc #'-D3I- a[i] ...) for every row in a.
  ; D3$I- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$I-
- ;     macro wrapper: D3$I-
+ ;     docstring for %D3$I-
+ ;     broadcast for fx: -D3I-
+ ;     macroname: D3$I-
+ ;     ex: (D3$I- a ...) performs (mvc #'-D3I- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3042,10 +3117,12 @@ destructive.
  ; D3$I-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$I-!
- ;     macro wrapper: D3$I-!
+ ;     docstring for %D3$I-!
+ ;     broadcast for fx: -D3I-
+ ;     macroname: D3$I-!
+ ;     ex: (D3$I-! a ...) performs (mvc #'-D3I- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3062,10 +3139,11 @@ ex: (D3$I/ a ...) performs (mvc #'-D3I/ a[i] ...) for every row in a.
  ; D3$I/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$I/
- ;     macro wrapper: D3$I/
+ ;     docstring for %D3$I/
+ ;     broadcast for fx: -D3I/
+ ;     macroname: D3$I/
+ ;     ex: (D3$I/ a ...) performs (mvc #'-D3I/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3083,10 +3161,12 @@ destructive.
  ; D3$I/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$I/!
- ;     macro wrapper: D3$I/!
+ ;     docstring for %D3$I/!
+ ;     broadcast for fx: -D3I/
+ ;     macroname: D3$I/!
+ ;     ex: (D3$I/! a ...) performs (mvc #'-D3I/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3103,10 +3183,11 @@ ex: (D3$ISCALE a ...) performs (mvc #'-D3ISCALE a[i] ...) for every row in a.
  ; D3$ISCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$ISCALE
- ;     macro wrapper: D3$ISCALE
+ ;     docstring for %D3$ISCALE
+ ;     broadcast for fx: -D3ISCALE
+ ;     macroname: D3$ISCALE
+ ;     ex: (D3$ISCALE a ...) performs (mvc #'-D3ISCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3124,10 +3205,12 @@ destructive.
  ; D3$ISCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$ISCALE!
- ;     macro wrapper: D3$ISCALE!
+ ;     docstring for %D3$ISCALE!
+ ;     broadcast for fx: -D3ISCALE
+ ;     macroname: D3$ISCALE!
+ ;     ex: (D3$ISCALE! a ...) performs (mvc #'-D3ISCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3162,10 +3245,11 @@ ex: (D3$LEN a ...) performs (mvc #'-D3LEN a[i] ...) for every row in a.
  ; D3$LEN names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$LEN
- ;     macro wrapper: D3$LEN
+ ;     docstring for %D3$LEN
+ ;     broadcast for fx: -D3LEN
+ ;     macroname: D3$LEN
+ ;     ex: (D3$LEN a ...) performs (mvc #'-D3LEN a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3182,10 +3266,11 @@ ex: (D3$LEN2 a ...) performs (mvc #'-D3LEN2 a[i] ...) for every row in a.
  ; D3$LEN2 names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$LEN2
- ;     macro wrapper: D3$LEN2
+ ;     docstring for %D3$LEN2
+ ;     broadcast for fx: -D3LEN2
+ ;     macroname: D3$LEN2
+ ;     ex: (D3$LEN2 a ...) performs (mvc #'-D3LEN2 a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3194,7 +3279,6 @@ ex: (D3$LEN2 a ...) performs (mvc #'-D3LEN2 a[i] ...) for every row in a.
 ```
 fx: %D3$LINE
 macro wrapper: D3$LINE
-
 defined via veq:def*
 
  ; VEQ:D3$LINE
@@ -3205,7 +3289,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %D3$LINE
  ;     macro wrapper: D3$LINE
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -3215,7 +3298,6 @@ defined via veq:def*
 ```
 fx: %D3$LSPACE
 macro wrapper: D3$LSPACE
-
 defined via veq:fvdef*
 
  ; VEQ:D3$LSPACE
@@ -3226,7 +3308,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %D3$LSPACE
  ;     macro wrapper: D3$LSPACE
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/lspace.lisp
 ```
@@ -3268,10 +3349,11 @@ ex: (D3$NEG a ...) performs (mvc #'-D3NEG a[i] ...) for every row in a.
  ; D3$NEG names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$NEG
- ;     macro wrapper: D3$NEG
+ ;     docstring for %D3$NEG
+ ;     broadcast for fx: -D3NEG
+ ;     macroname: D3$NEG
+ ;     ex: (D3$NEG a ...) performs (mvc #'-D3NEG a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3289,10 +3371,12 @@ destructive.
  ; D3$NEG! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$NEG!
- ;     macro wrapper: D3$NEG!
+ ;     docstring for %D3$NEG!
+ ;     broadcast for fx: -D3NEG
+ ;     macroname: D3$NEG!
+ ;     ex: (D3$NEG! a ...) performs (mvc #'-D3NEG a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3309,10 +3393,11 @@ ex: (D3$NORM a ...) performs (mvc #'-D3NORM a[i] ...) for every row in a.
  ; D3$NORM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$NORM
- ;     macro wrapper: D3$NORM
+ ;     docstring for %D3$NORM
+ ;     broadcast for fx: -D3NORM
+ ;     macroname: D3$NORM
+ ;     ex: (D3$NORM a ...) performs (mvc #'-D3NORM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3330,10 +3415,12 @@ destructive.
  ; D3$NORM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$NORM!
- ;     macro wrapper: D3$NORM!
+ ;     docstring for %D3$NORM!
+ ;     broadcast for fx: -D3NORM
+ ;     macroname: D3$NORM!
+ ;     ex: (D3$NORM! a ...) performs (mvc #'-D3NORM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3380,7 +3467,6 @@ typed.
 ```
 fx: %D3$POINT
 macro wrapper: D3$POINT
-
 defined via veq:def*
 
  ; VEQ:D3$POINT
@@ -3391,7 +3477,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %D3$POINT
  ;     macro wrapper: D3$POINT
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -3409,10 +3494,11 @@ ex: (D3$ROT a ...) performs (mvc #'-D3ROT a[i] ...) for every row in a.
  ; D3$ROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$ROT
- ;     macro wrapper: D3$ROT
+ ;     docstring for %D3$ROT
+ ;     broadcast for fx: -D3ROT
+ ;     macroname: D3$ROT
+ ;     ex: (D3$ROT a ...) performs (mvc #'-D3ROT a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3430,10 +3516,12 @@ destructive.
  ; D3$ROT! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$ROT!
- ;     macro wrapper: D3$ROT!
+ ;     docstring for %D3$ROT!
+ ;     broadcast for fx: -D3ROT
+ ;     macroname: D3$ROT!
+ ;     ex: (D3$ROT! a ...) performs (mvc #'-D3ROT a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3450,10 +3538,11 @@ ex: (D3$ROTS a ...) performs (mvc #'-D3ROTS a[i] ...) for every row in a.
  ; D3$ROTS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$ROTS
- ;     macro wrapper: D3$ROTS
+ ;     docstring for %D3$ROTS
+ ;     broadcast for fx: -D3ROTS
+ ;     macroname: D3$ROTS
+ ;     ex: (D3$ROTS a ...) performs (mvc #'-D3ROTS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3471,10 +3560,12 @@ destructive.
  ; D3$ROTS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$ROTS!
- ;     macro wrapper: D3$ROTS!
+ ;     docstring for %D3$ROTS!
+ ;     broadcast for fx: -D3ROTS
+ ;     macroname: D3$ROTS!
+ ;     ex: (D3$ROTS! a ...) performs (mvc #'-D3ROTS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3501,10 +3592,11 @@ ex: (D3$SCALE a ...) performs (mvc #'-D3SCALE a[i] ...) for every row in a.
  ; D3$SCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$SCALE
- ;     macro wrapper: D3$SCALE
+ ;     docstring for %D3$SCALE
+ ;     broadcast for fx: -D3SCALE
+ ;     macroname: D3$SCALE
+ ;     ex: (D3$SCALE a ...) performs (mvc #'-D3SCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3522,10 +3614,12 @@ destructive.
  ; D3$SCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$SCALE!
- ;     macro wrapper: D3$SCALE!
+ ;     docstring for %D3$SCALE!
+ ;     broadcast for fx: -D3SCALE
+ ;     macroname: D3$SCALE!
+ ;     ex: (D3$SCALE! a ...) performs (mvc #'-D3SCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -3680,7 +3774,8 @@ body: (VALUES (ABS A) (ABS B) (ABS C))
 veq context op: D3CROSS
 fxname: -D3CROSS
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ)) (- (* AX BY) (* AY BX)))
+body: (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
+              (- (* AX BY) (* AY BX)))
 ```
 
 #### :context: D3DST
@@ -3888,10 +3983,8 @@ body: (VALUES (MOD A S) (MOD B S) (MOD C S))
 #### D3MROT
 
 ```
-fx: %D3MROT
-macro wrapper: D3MROT
-
-defined via veq:def*
+docstring for %D3MROT
+make 3d rotation matrix for rotating a rad around unit vector (x y z)
 
  ; VEQ:D3MROT
  ;   [symbol]
@@ -3899,20 +3992,16 @@ defined via veq:def*
  ; D3MROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3MROT
- ;     macro wrapper: D3MROT
- ;
- ;     defined via veq:def*
+ ;     docstring for %D3MROT
+ ;     make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
 #### D3MROT\*
 
 ```
-fx: %D3MROT*
-macro wrapper: D3MROT*
-
-defined via veq:def*
+docstring for %D3MROT*
+make 3d rotation matrix for rotating a rad around unit vector (x y z)
 
  ; VEQ:D3MROT*
  ;   [symbol]
@@ -3920,20 +4009,16 @@ defined via veq:def*
  ; D3MROT* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3MROT*
- ;     macro wrapper: D3MROT*
- ;
- ;     defined via veq:def*
+ ;     docstring for %D3MROT*
+ ;     make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
 #### D3MSCALE
 
 ```
-fx: %D3MSCALE
-macro wrapper: D3MSCALE
-
-defined via veq:fvdef*
+docstring for %D3MSCALE
+make 3d matrix for scaling by x
 
  ; VEQ:D3MSCALE
  ;   [symbol]
@@ -3941,10 +4026,8 @@ defined via veq:fvdef*
  ; D3MSCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3MSCALE
- ;     macro wrapper: D3MSCALE
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %D3MSCALE
+ ;     make 3d matrix for scaling by x
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
@@ -4000,10 +4083,8 @@ of type: DVEC
 #### D3MTRANS
 
 ```
-fx: %D3MTRANS
-macro wrapper: D3MTRANS
-
-defined via veq:fvdef*
+docstring for %D3MTRANS
+make 3d transpose matrix for moving by x
 
  ; VEQ:D3MTRANS
  ;   [symbol]
@@ -4011,10 +4092,8 @@ defined via veq:fvdef*
  ; D3MTRANS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3MTRANS
- ;     macro wrapper: D3MTRANS
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %D3MTRANS
+ ;     make 3d transpose matrix for moving by x
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
@@ -4094,12 +4173,13 @@ veq context op: D3ROT
 fxname: -D3ROT
 args: (X Y Z NX NY NZ A)
 body: (LET ((COSA (COS A)))
-  (DECLARE
-   (DF
-     COSA))
-  (MVC #'-D3FROM
-       (MVC #'-D3FROM (-D3SCALE X Y Z COSA) (-D3CROSS NX NY NZ X Y Z) (SIN A))
-       NX NY NZ (* (-D3. NX NY NZ X Y Z) (- 1.0d0 COSA))))
+        (DECLARE
+         (DF
+           COSA))
+        (MVC #'-D3FROM
+             (MVC #'-D3FROM (-D3SCALE X Y Z COSA) (-D3CROSS NX NY NZ X Y Z)
+                  (SIN A))
+             NX NY NZ (* (-D3. NX NY NZ X Y Z) (- 1.0d0 COSA))))
 ```
 
 #### :context: D3ROTS
@@ -4126,8 +4206,9 @@ body: (VALUES (* A S) (* B S) (* C S))
 veq context op: D3SQRT
 fxname: -D3SQRT
 args: (A B C)
-body: (VALUES (THE POS-DF (SQRT (THE POS-DF A))) (THE POS-DF (SQRT (THE POS-DF B)))
-        (THE POS-DF (SQRT (THE POS-DF C))))
+body: (VALUES (THE POS-DF (SQRT (THE POS-DF A)))
+              (THE POS-DF (SQRT (THE POS-DF B)))
+              (THE POS-DF (SQRT (THE POS-DF C))))
 ```
 
 #### :context: D3SQUARE
@@ -4183,10 +4264,11 @@ ex: (D4$* a ...) performs (mvc #'-D4* a[i] ...) for every row in a.
  ; D4$* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$*
- ;     macro wrapper: D4$*
+ ;     docstring for %D4$*
+ ;     broadcast for fx: -D4*
+ ;     macroname: D4$*
+ ;     ex: (D4$* a ...) performs (mvc #'-D4* a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4204,10 +4286,12 @@ destructive.
  ; D4$*! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$*!
- ;     macro wrapper: D4$*!
+ ;     docstring for %D4$*!
+ ;     broadcast for fx: -D4*
+ ;     macroname: D4$*!
+ ;     ex: (D4$*! a ...) performs (mvc #'-D4* a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4224,10 +4308,11 @@ ex: (D4$+ a ...) performs (mvc #'-D4+ a[i] ...) for every row in a.
  ; D4$+ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$+
- ;     macro wrapper: D4$+
+ ;     docstring for %D4$+
+ ;     broadcast for fx: -D4+
+ ;     macroname: D4$+
+ ;     ex: (D4$+ a ...) performs (mvc #'-D4+ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4245,10 +4330,12 @@ destructive.
  ; D4$+! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$+!
- ;     macro wrapper: D4$+!
+ ;     docstring for %D4$+!
+ ;     broadcast for fx: -D4+
+ ;     macroname: D4$+!
+ ;     ex: (D4$+! a ...) performs (mvc #'-D4+ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4265,10 +4352,11 @@ ex: (D4$- a ...) performs (mvc #'-D4- a[i] ...) for every row in a.
  ; D4$- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$-
- ;     macro wrapper: D4$-
+ ;     docstring for %D4$-
+ ;     broadcast for fx: -D4-
+ ;     macroname: D4$-
+ ;     ex: (D4$- a ...) performs (mvc #'-D4- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4286,10 +4374,12 @@ destructive.
  ; D4$-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$-!
- ;     macro wrapper: D4$-!
+ ;     docstring for %D4$-!
+ ;     broadcast for fx: -D4-
+ ;     macroname: D4$-!
+ ;     ex: (D4$-! a ...) performs (mvc #'-D4- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4306,10 +4396,11 @@ ex: (D4$/ a ...) performs (mvc #'-D4/ a[i] ...) for every row in a.
  ; D4$/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$/
- ;     macro wrapper: D4$/
+ ;     docstring for %D4$/
+ ;     broadcast for fx: -D4/
+ ;     macroname: D4$/
+ ;     ex: (D4$/ a ...) performs (mvc #'-D4/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4327,10 +4418,12 @@ destructive.
  ; D4$/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$/!
- ;     macro wrapper: D4$/!
+ ;     docstring for %D4$/!
+ ;     broadcast for fx: -D4/
+ ;     macroname: D4$/!
+ ;     ex: (D4$/! a ...) performs (mvc #'-D4/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4347,10 +4440,11 @@ ex: (D4$ABS a ...) performs (mvc #'-D4ABS a[i] ...) for every row in a.
  ; D4$ABS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$ABS
- ;     macro wrapper: D4$ABS
+ ;     docstring for %D4$ABS
+ ;     broadcast for fx: -D4ABS
+ ;     macroname: D4$ABS
+ ;     ex: (D4$ABS a ...) performs (mvc #'-D4ABS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4368,10 +4462,12 @@ destructive.
  ; D4$ABS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$ABS!
- ;     macro wrapper: D4$ABS!
+ ;     docstring for %D4$ABS!
+ ;     broadcast for fx: -D4ABS
+ ;     macroname: D4$ABS!
+ ;     ex: (D4$ABS! a ...) performs (mvc #'-D4ABS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4388,10 +4484,11 @@ ex: (D4$FROM a ...) performs (mvc #'-D4FROM a[i] ...) for every row in a.
  ; D4$FROM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$FROM
- ;     macro wrapper: D4$FROM
+ ;     docstring for %D4$FROM
+ ;     broadcast for fx: -D4FROM
+ ;     macroname: D4$FROM
+ ;     ex: (D4$FROM a ...) performs (mvc #'-D4FROM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4409,10 +4506,12 @@ destructive.
  ; D4$FROM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$FROM!
- ;     macro wrapper: D4$FROM!
+ ;     docstring for %D4$FROM!
+ ;     broadcast for fx: -D4FROM
+ ;     macroname: D4$FROM!
+ ;     ex: (D4$FROM! a ...) performs (mvc #'-D4FROM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4439,10 +4538,11 @@ ex: (D4$I- a ...) performs (mvc #'-D4I- a[i] ...) for every row in a.
  ; D4$I- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$I-
- ;     macro wrapper: D4$I-
+ ;     docstring for %D4$I-
+ ;     broadcast for fx: -D4I-
+ ;     macroname: D4$I-
+ ;     ex: (D4$I- a ...) performs (mvc #'-D4I- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4460,10 +4560,12 @@ destructive.
  ; D4$I-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$I-!
- ;     macro wrapper: D4$I-!
+ ;     docstring for %D4$I-!
+ ;     broadcast for fx: -D4I-
+ ;     macroname: D4$I-!
+ ;     ex: (D4$I-! a ...) performs (mvc #'-D4I- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4480,10 +4582,11 @@ ex: (D4$I/ a ...) performs (mvc #'-D4I/ a[i] ...) for every row in a.
  ; D4$I/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$I/
- ;     macro wrapper: D4$I/
+ ;     docstring for %D4$I/
+ ;     broadcast for fx: -D4I/
+ ;     macroname: D4$I/
+ ;     ex: (D4$I/ a ...) performs (mvc #'-D4I/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4501,10 +4604,12 @@ destructive.
  ; D4$I/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$I/!
- ;     macro wrapper: D4$I/!
+ ;     docstring for %D4$I/!
+ ;     broadcast for fx: -D4I/
+ ;     macroname: D4$I/!
+ ;     ex: (D4$I/! a ...) performs (mvc #'-D4I/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4521,10 +4626,11 @@ ex: (D4$ISCALE a ...) performs (mvc #'-D4ISCALE a[i] ...) for every row in a.
  ; D4$ISCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$ISCALE
- ;     macro wrapper: D4$ISCALE
+ ;     docstring for %D4$ISCALE
+ ;     broadcast for fx: -D4ISCALE
+ ;     macroname: D4$ISCALE
+ ;     ex: (D4$ISCALE a ...) performs (mvc #'-D4ISCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4542,10 +4648,12 @@ destructive.
  ; D4$ISCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$ISCALE!
- ;     macro wrapper: D4$ISCALE!
+ ;     docstring for %D4$ISCALE!
+ ;     broadcast for fx: -D4ISCALE
+ ;     macroname: D4$ISCALE!
+ ;     ex: (D4$ISCALE! a ...) performs (mvc #'-D4ISCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4580,10 +4688,11 @@ ex: (D4$LEN a ...) performs (mvc #'-D4LEN a[i] ...) for every row in a.
  ; D4$LEN names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$LEN
- ;     macro wrapper: D4$LEN
+ ;     docstring for %D4$LEN
+ ;     broadcast for fx: -D4LEN
+ ;     macroname: D4$LEN
+ ;     ex: (D4$LEN a ...) performs (mvc #'-D4LEN a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4600,10 +4709,11 @@ ex: (D4$LEN2 a ...) performs (mvc #'-D4LEN2 a[i] ...) for every row in a.
  ; D4$LEN2 names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$LEN2
- ;     macro wrapper: D4$LEN2
+ ;     docstring for %D4$LEN2
+ ;     broadcast for fx: -D4LEN2
+ ;     macroname: D4$LEN2
+ ;     ex: (D4$LEN2 a ...) performs (mvc #'-D4LEN2 a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4612,7 +4722,6 @@ ex: (D4$LEN2 a ...) performs (mvc #'-D4LEN2 a[i] ...) for every row in a.
 ```
 fx: %D4$LINE
 macro wrapper: D4$LINE
-
 defined via veq:def*
 
  ; VEQ:D4$LINE
@@ -4623,7 +4732,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %D4$LINE
  ;     macro wrapper: D4$LINE
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -4633,7 +4741,6 @@ defined via veq:def*
 ```
 fx: %D4$LSPACE
 macro wrapper: D4$LSPACE
-
 defined via veq:fvdef*
 
  ; VEQ:D4$LSPACE
@@ -4644,7 +4751,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %D4$LSPACE
  ;     macro wrapper: D4$LSPACE
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/lspace.lisp
 ```
@@ -4662,10 +4768,11 @@ ex: (D4$NEG a ...) performs (mvc #'-D4NEG a[i] ...) for every row in a.
  ; D4$NEG names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$NEG
- ;     macro wrapper: D4$NEG
+ ;     docstring for %D4$NEG
+ ;     broadcast for fx: -D4NEG
+ ;     macroname: D4$NEG
+ ;     ex: (D4$NEG a ...) performs (mvc #'-D4NEG a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4683,10 +4790,12 @@ destructive.
  ; D4$NEG! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$NEG!
- ;     macro wrapper: D4$NEG!
+ ;     docstring for %D4$NEG!
+ ;     broadcast for fx: -D4NEG
+ ;     macroname: D4$NEG!
+ ;     ex: (D4$NEG! a ...) performs (mvc #'-D4NEG a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4703,10 +4812,11 @@ ex: (D4$NORM a ...) performs (mvc #'-D4NORM a[i] ...) for every row in a.
  ; D4$NORM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$NORM
- ;     macro wrapper: D4$NORM
+ ;     docstring for %D4$NORM
+ ;     broadcast for fx: -D4NORM
+ ;     macroname: D4$NORM
+ ;     ex: (D4$NORM a ...) performs (mvc #'-D4NORM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4724,10 +4834,12 @@ destructive.
  ; D4$NORM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$NORM!
- ;     macro wrapper: D4$NORM!
+ ;     docstring for %D4$NORM!
+ ;     broadcast for fx: -D4NORM
+ ;     macroname: D4$NORM!
+ ;     ex: (D4$NORM! a ...) performs (mvc #'-D4NORM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4774,7 +4886,6 @@ typed.
 ```
 fx: %D4$POINT
 macro wrapper: D4$POINT
-
 defined via veq:def*
 
  ; VEQ:D4$POINT
@@ -4785,7 +4896,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %D4$POINT
  ;     macro wrapper: D4$POINT
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -4813,10 +4923,11 @@ ex: (D4$SCALE a ...) performs (mvc #'-D4SCALE a[i] ...) for every row in a.
  ; D4$SCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$SCALE
- ;     macro wrapper: D4$SCALE
+ ;     docstring for %D4$SCALE
+ ;     broadcast for fx: -D4SCALE
+ ;     macroname: D4$SCALE
+ ;     ex: (D4$SCALE a ...) performs (mvc #'-D4SCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4834,10 +4945,12 @@ destructive.
  ; D4$SCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$SCALE!
- ;     macro wrapper: D4$SCALE!
+ ;     docstring for %D4$SCALE!
+ ;     broadcast for fx: -D4SCALE
+ ;     macroname: D4$SCALE!
+ ;     ex: (D4$SCALE! a ...) performs (mvc #'-D4SCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -4993,7 +5106,8 @@ veq context op: D4DST
 fxname: -D4DST
 args: (AX AY AZ AW BX BY BZ BW)
 body: (SQRT
- (THE POS-DF (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)))))
+       (THE POS-DF
+            (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)))))
 ```
 
 #### :context: D4DST2
@@ -5075,7 +5189,7 @@ veq context op: D4LERP
 fxname: -D4LERP
 args: (AX AY AZ AW BX BY BZ BW S)
 body: (-D4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
- (* (- BW AW) S))
+       (* (- BW AW) S))
 ```
 
 #### :context: D4LET
@@ -5119,7 +5233,7 @@ veq context op: D4MID
 fxname: -D4MID
 args: (AX AY AZ AW BX BY BZ BW)
 body: (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)
-        (* (+ BW AW) 0.5d0))
+              (* (+ BW AW) 0.5d0))
 ```
 
 #### :context: D4MIN
@@ -5324,8 +5438,10 @@ body: (VALUES (* A S) (* B S) (* C S) (* D S))
 veq context op: D4SQRT
 fxname: -D4SQRT
 args: (A B C D)
-body: (VALUES (THE POS-DF (SQRT (THE POS-DF A))) (THE POS-DF (SQRT (THE POS-DF B)))
-        (THE POS-DF (SQRT (THE POS-DF C))) (THE POS-DF (SQRT (THE POS-DF D))))
+body: (VALUES (THE POS-DF (SQRT (THE POS-DF A)))
+              (THE POS-DF (SQRT (THE POS-DF B)))
+              (THE POS-DF (SQRT (THE POS-DF C)))
+              (THE POS-DF (SQRT (THE POS-DF D))))
 ```
 
 #### :context: D4SQUARE
@@ -5335,7 +5451,7 @@ veq context op: D4SQUARE
 fxname: -D4SQUARE
 args: (A B C D)
 body: (VALUES (THE POS-DF (* A A)) (THE POS-DF (* B B)) (THE POS-DF (* C C))
-        (THE POS-DF (* D D)))
+              (THE POS-DF (* D D)))
 ```
 
 #### :context: D4VSET
@@ -6428,10 +6544,11 @@ ex: (F$* a ...) performs (mvc #'-F* a[i] ...) for every row in a.
  ; F$* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$*
- ;     macro wrapper: F$*
+ ;     docstring for %F$*
+ ;     broadcast for fx: -F*
+ ;     macroname: F$*
+ ;     ex: (F$* a ...) performs (mvc #'-F* a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6449,10 +6566,12 @@ destructive.
  ; F$*! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$*!
- ;     macro wrapper: F$*!
+ ;     docstring for %F$*!
+ ;     broadcast for fx: -F*
+ ;     macroname: F$*!
+ ;     ex: (F$*! a ...) performs (mvc #'-F* a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6469,10 +6588,11 @@ ex: (F$+ a ...) performs (mvc #'-F+ a[i] ...) for every row in a.
  ; F$+ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$+
- ;     macro wrapper: F$+
+ ;     docstring for %F$+
+ ;     broadcast for fx: -F+
+ ;     macroname: F$+
+ ;     ex: (F$+ a ...) performs (mvc #'-F+ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6490,10 +6610,12 @@ destructive.
  ; F$+! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$+!
- ;     macro wrapper: F$+!
+ ;     docstring for %F$+!
+ ;     broadcast for fx: -F+
+ ;     macroname: F$+!
+ ;     ex: (F$+! a ...) performs (mvc #'-F+ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6510,10 +6632,11 @@ ex: (F$- a ...) performs (mvc #'-F- a[i] ...) for every row in a.
  ; F$- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$-
- ;     macro wrapper: F$-
+ ;     docstring for %F$-
+ ;     broadcast for fx: -F-
+ ;     macroname: F$-
+ ;     ex: (F$- a ...) performs (mvc #'-F- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6531,10 +6654,12 @@ destructive.
  ; F$-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$-!
- ;     macro wrapper: F$-!
+ ;     docstring for %F$-!
+ ;     broadcast for fx: -F-
+ ;     macroname: F$-!
+ ;     ex: (F$-! a ...) performs (mvc #'-F- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6551,10 +6676,11 @@ ex: (F$/ a ...) performs (mvc #'-F/ a[i] ...) for every row in a.
  ; F$/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$/
- ;     macro wrapper: F$/
+ ;     docstring for %F$/
+ ;     broadcast for fx: -F/
+ ;     macroname: F$/
+ ;     ex: (F$/ a ...) performs (mvc #'-F/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6572,10 +6698,12 @@ destructive.
  ; F$/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$/!
- ;     macro wrapper: F$/!
+ ;     docstring for %F$/!
+ ;     broadcast for fx: -F/
+ ;     macroname: F$/!
+ ;     ex: (F$/! a ...) performs (mvc #'-F/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6609,10 +6737,11 @@ ex: (F$ABS a ...) performs (mvc #'-FABS a[i] ...) for every row in a.
  ; F$ABS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$ABS
- ;     macro wrapper: F$ABS
+ ;     docstring for %F$ABS
+ ;     broadcast for fx: -FABS
+ ;     macroname: F$ABS
+ ;     ex: (F$ABS a ...) performs (mvc #'-FABS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6630,10 +6759,12 @@ destructive.
  ; F$ABS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$ABS!
- ;     macro wrapper: F$ABS!
+ ;     docstring for %F$ABS!
+ ;     broadcast for fx: -FABS
+ ;     macroname: F$ABS!
+ ;     ex: (F$ABS! a ...) performs (mvc #'-FABS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6667,10 +6798,11 @@ ex: (F$COS-SIN a ...) performs (mvc #'-FCOS-SIN a[i] ...) for every row in a.
  ; F$COS-SIN names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$COS-SIN
- ;     macro wrapper: F$COS-SIN
+ ;     docstring for %F$COS-SIN
+ ;     broadcast for fx: -FCOS-SIN
+ ;     macroname: F$COS-SIN
+ ;     ex: (F$COS-SIN a ...) performs (mvc #'-FCOS-SIN a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6687,10 +6819,11 @@ ex: (F$FROM a ...) performs (mvc #'-FFROM a[i] ...) for every row in a.
  ; F$FROM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$FROM
- ;     macro wrapper: F$FROM
+ ;     docstring for %F$FROM
+ ;     broadcast for fx: -FFROM
+ ;     macroname: F$FROM
+ ;     ex: (F$FROM a ...) performs (mvc #'-FFROM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6708,10 +6841,12 @@ destructive.
  ; F$FROM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$FROM!
- ;     macro wrapper: F$FROM!
+ ;     docstring for %F$FROM!
+ ;     broadcast for fx: -FFROM
+ ;     macroname: F$FROM!
+ ;     ex: (F$FROM! a ...) performs (mvc #'-FFROM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6738,10 +6873,11 @@ ex: (F$I- a ...) performs (mvc #'-FI- a[i] ...) for every row in a.
  ; F$I- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$I-
- ;     macro wrapper: F$I-
+ ;     docstring for %F$I-
+ ;     broadcast for fx: -FI-
+ ;     macroname: F$I-
+ ;     ex: (F$I- a ...) performs (mvc #'-FI- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6759,10 +6895,12 @@ destructive.
  ; F$I-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$I-!
- ;     macro wrapper: F$I-!
+ ;     docstring for %F$I-!
+ ;     broadcast for fx: -FI-
+ ;     macroname: F$I-!
+ ;     ex: (F$I-! a ...) performs (mvc #'-FI- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6779,10 +6917,11 @@ ex: (F$I/ a ...) performs (mvc #'-FI/ a[i] ...) for every row in a.
  ; F$I/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$I/
- ;     macro wrapper: F$I/
+ ;     docstring for %F$I/
+ ;     broadcast for fx: -FI/
+ ;     macroname: F$I/
+ ;     ex: (F$I/ a ...) performs (mvc #'-FI/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6800,10 +6939,12 @@ destructive.
  ; F$I/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$I/!
- ;     macro wrapper: F$I/!
+ ;     docstring for %F$I/!
+ ;     broadcast for fx: -FI/
+ ;     macroname: F$I/!
+ ;     ex: (F$I/! a ...) performs (mvc #'-FI/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6820,10 +6961,11 @@ ex: (F$ISCALE a ...) performs (mvc #'-FISCALE a[i] ...) for every row in a.
  ; F$ISCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$ISCALE
- ;     macro wrapper: F$ISCALE
+ ;     docstring for %F$ISCALE
+ ;     broadcast for fx: -FISCALE
+ ;     macroname: F$ISCALE
+ ;     ex: (F$ISCALE a ...) performs (mvc #'-FISCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6841,10 +6983,12 @@ destructive.
  ; F$ISCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$ISCALE!
- ;     macro wrapper: F$ISCALE!
+ ;     docstring for %F$ISCALE!
+ ;     broadcast for fx: -FISCALE
+ ;     macroname: F$ISCALE!
+ ;     ex: (F$ISCALE! a ...) performs (mvc #'-FISCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6878,10 +7022,11 @@ ex: (F$LEN a ...) performs (mvc #'-FLEN a[i] ...) for every row in a.
  ; F$LEN names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$LEN
- ;     macro wrapper: F$LEN
+ ;     docstring for %F$LEN
+ ;     broadcast for fx: -FLEN
+ ;     macroname: F$LEN
+ ;     ex: (F$LEN a ...) performs (mvc #'-FLEN a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6898,10 +7043,11 @@ ex: (F$LEN2 a ...) performs (mvc #'-FLEN2 a[i] ...) for every row in a.
  ; F$LEN2 names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$LEN2
- ;     macro wrapper: F$LEN2
+ ;     docstring for %F$LEN2
+ ;     broadcast for fx: -FLEN2
+ ;     macroname: F$LEN2
+ ;     ex: (F$LEN2 a ...) performs (mvc #'-FLEN2 a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -6910,7 +7056,6 @@ ex: (F$LEN2 a ...) performs (mvc #'-FLEN2 a[i] ...) for every row in a.
 ```
 fx: %F$LINE
 macro wrapper: F$LINE
-
 defined via veq:def*
 
  ; VEQ:F$LINE
@@ -6921,7 +7066,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %F$LINE
  ;     macro wrapper: F$LINE
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -6931,7 +7075,6 @@ defined via veq:def*
 ```
 fx: %F$LSPACE
 macro wrapper: F$LSPACE
-
 defined via veq:fvdef*
 
  ; VEQ:F$LSPACE
@@ -6942,7 +7085,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %F$LSPACE
  ;     macro wrapper: F$LSPACE
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/lspace.lisp
 ```
@@ -6997,10 +7139,11 @@ ex: (F$NEG a ...) performs (mvc #'-FNEG a[i] ...) for every row in a.
  ; F$NEG names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$NEG
- ;     macro wrapper: F$NEG
+ ;     docstring for %F$NEG
+ ;     broadcast for fx: -FNEG
+ ;     macroname: F$NEG
+ ;     ex: (F$NEG a ...) performs (mvc #'-FNEG a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7018,10 +7161,12 @@ destructive.
  ; F$NEG! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$NEG!
- ;     macro wrapper: F$NEG!
+ ;     docstring for %F$NEG!
+ ;     broadcast for fx: -FNEG
+ ;     macroname: F$NEG!
+ ;     ex: (F$NEG! a ...) performs (mvc #'-FNEG a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7038,10 +7183,11 @@ ex: (F$NORM a ...) performs (mvc #'-FNORM a[i] ...) for every row in a.
  ; F$NORM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$NORM
- ;     macro wrapper: F$NORM
+ ;     docstring for %F$NORM
+ ;     broadcast for fx: -FNORM
+ ;     macroname: F$NORM
+ ;     ex: (F$NORM a ...) performs (mvc #'-FNORM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7059,10 +7205,12 @@ destructive.
  ; F$NORM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$NORM!
- ;     macro wrapper: F$NORM!
+ ;     docstring for %F$NORM!
+ ;     broadcast for fx: -FNORM
+ ;     macroname: F$NORM!
+ ;     ex: (F$NORM! a ...) performs (mvc #'-FNORM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7109,7 +7257,6 @@ typed.
 ```
 fx: %F$POINT
 macro wrapper: F$POINT
-
 defined via veq:def*
 
  ; VEQ:F$POINT
@@ -7120,7 +7267,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %F$POINT
  ;     macro wrapper: F$POINT
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -7148,10 +7294,11 @@ ex: (F$SCALE a ...) performs (mvc #'-FSCALE a[i] ...) for every row in a.
  ; F$SCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$SCALE
- ;     macro wrapper: F$SCALE
+ ;     docstring for %F$SCALE
+ ;     broadcast for fx: -FSCALE
+ ;     macroname: F$SCALE
+ ;     ex: (F$SCALE a ...) performs (mvc #'-FSCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7169,10 +7316,12 @@ destructive.
  ; F$SCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$SCALE!
- ;     macro wrapper: F$SCALE!
+ ;     docstring for %F$SCALE!
+ ;     broadcast for fx: -FSCALE
+ ;     macroname: F$SCALE!
+ ;     ex: (F$SCALE! a ...) performs (mvc #'-FSCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7322,10 +7471,11 @@ ex: (F2$* a ...) performs (mvc #'-F2* a[i] ...) for every row in a.
  ; F2$* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$*
- ;     macro wrapper: F2$*
+ ;     docstring for %F2$*
+ ;     broadcast for fx: -F2*
+ ;     macroname: F2$*
+ ;     ex: (F2$* a ...) performs (mvc #'-F2* a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7343,10 +7493,12 @@ destructive.
  ; F2$*! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$*!
- ;     macro wrapper: F2$*!
+ ;     docstring for %F2$*!
+ ;     broadcast for fx: -F2*
+ ;     macroname: F2$*!
+ ;     ex: (F2$*! a ...) performs (mvc #'-F2* a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7363,10 +7515,11 @@ ex: (F2$+ a ...) performs (mvc #'-F2+ a[i] ...) for every row in a.
  ; F2$+ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$+
- ;     macro wrapper: F2$+
+ ;     docstring for %F2$+
+ ;     broadcast for fx: -F2+
+ ;     macroname: F2$+
+ ;     ex: (F2$+ a ...) performs (mvc #'-F2+ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7384,10 +7537,12 @@ destructive.
  ; F2$+! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$+!
- ;     macro wrapper: F2$+!
+ ;     docstring for %F2$+!
+ ;     broadcast for fx: -F2+
+ ;     macroname: F2$+!
+ ;     ex: (F2$+! a ...) performs (mvc #'-F2+ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7404,10 +7559,11 @@ ex: (F2$- a ...) performs (mvc #'-F2- a[i] ...) for every row in a.
  ; F2$- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$-
- ;     macro wrapper: F2$-
+ ;     docstring for %F2$-
+ ;     broadcast for fx: -F2-
+ ;     macroname: F2$-
+ ;     ex: (F2$- a ...) performs (mvc #'-F2- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7425,10 +7581,12 @@ destructive.
  ; F2$-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$-!
- ;     macro wrapper: F2$-!
+ ;     docstring for %F2$-!
+ ;     broadcast for fx: -F2-
+ ;     macroname: F2$-!
+ ;     ex: (F2$-! a ...) performs (mvc #'-F2- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7445,10 +7603,11 @@ ex: (F2$/ a ...) performs (mvc #'-F2/ a[i] ...) for every row in a.
  ; F2$/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$/
- ;     macro wrapper: F2$/
+ ;     docstring for %F2$/
+ ;     broadcast for fx: -F2/
+ ;     macroname: F2$/
+ ;     ex: (F2$/ a ...) performs (mvc #'-F2/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7466,10 +7625,12 @@ destructive.
  ; F2$/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$/!
- ;     macro wrapper: F2$/!
+ ;     docstring for %F2$/!
+ ;     broadcast for fx: -F2/
+ ;     macroname: F2$/!
+ ;     ex: (F2$/! a ...) performs (mvc #'-F2/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7486,10 +7647,11 @@ ex: (F2$ABS a ...) performs (mvc #'-F2ABS a[i] ...) for every row in a.
  ; F2$ABS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$ABS
- ;     macro wrapper: F2$ABS
+ ;     docstring for %F2$ABS
+ ;     broadcast for fx: -F2ABS
+ ;     macroname: F2$ABS
+ ;     ex: (F2$ABS a ...) performs (mvc #'-F2ABS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7507,20 +7669,20 @@ destructive.
  ; F2$ABS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$ABS!
- ;     macro wrapper: F2$ABS!
+ ;     docstring for %F2$ABS!
+ ;     broadcast for fx: -F2ABS
+ ;     macroname: F2$ABS!
+ ;     ex: (F2$ABS! a ...) performs (mvc #'-F2ABS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
 #### F2$CENTER
 
 ```
-fx: %F2$CENTER
-macro wrapper: F2$CENTER
-
-defined via veq:def*
+docstring for %F2$CENTER
+center 2d array according to n points in array. n is optional.
 
  ; VEQ:F2$CENTER
  ;   [symbol]
@@ -7528,20 +7690,16 @@ defined via veq:def*
  ; F2$CENTER names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$CENTER
- ;     macro wrapper: F2$CENTER
- ;
- ;     defined via veq:def*
+ ;     docstring for %F2$CENTER
+ ;     center 2d array according to n points in array. n is optional.
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
 #### F2$CIRC
 
 ```
-fx: %F2$CIRC
-macro wrapper: F2$CIRC
-
-defined via veq:def*
+docstring for %F2$CIRC
+return circle of size rad. (rs 0.5) is vertex density.
 
  ; VEQ:F2$CIRC
  ;   [symbol]
@@ -7549,10 +7707,8 @@ defined via veq:def*
  ; F2$CIRC names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$CIRC
- ;     macro wrapper: F2$CIRC
- ;
- ;     defined via veq:def*
+ ;     docstring for %F2$CIRC
+ ;     return circle of size rad. (rs 0.5) is vertex density.
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
@@ -7569,10 +7725,11 @@ ex: (F2$FROM a ...) performs (mvc #'-F2FROM a[i] ...) for every row in a.
  ; F2$FROM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$FROM
- ;     macro wrapper: F2$FROM
+ ;     docstring for %F2$FROM
+ ;     broadcast for fx: -F2FROM
+ ;     macroname: F2$FROM
+ ;     ex: (F2$FROM a ...) performs (mvc #'-F2FROM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7590,10 +7747,12 @@ destructive.
  ; F2$FROM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$FROM!
- ;     macro wrapper: F2$FROM!
+ ;     docstring for %F2$FROM!
+ ;     broadcast for fx: -F2FROM
+ ;     macroname: F2$FROM!
+ ;     ex: (F2$FROM! a ...) performs (mvc #'-F2FROM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7620,10 +7779,11 @@ ex: (F2$I- a ...) performs (mvc #'-F2I- a[i] ...) for every row in a.
  ; F2$I- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$I-
- ;     macro wrapper: F2$I-
+ ;     docstring for %F2$I-
+ ;     broadcast for fx: -F2I-
+ ;     macroname: F2$I-
+ ;     ex: (F2$I- a ...) performs (mvc #'-F2I- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7641,10 +7801,12 @@ destructive.
  ; F2$I-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$I-!
- ;     macro wrapper: F2$I-!
+ ;     docstring for %F2$I-!
+ ;     broadcast for fx: -F2I-
+ ;     macroname: F2$I-!
+ ;     ex: (F2$I-! a ...) performs (mvc #'-F2I- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7661,10 +7823,11 @@ ex: (F2$I/ a ...) performs (mvc #'-F2I/ a[i] ...) for every row in a.
  ; F2$I/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$I/
- ;     macro wrapper: F2$I/
+ ;     docstring for %F2$I/
+ ;     broadcast for fx: -F2I/
+ ;     macroname: F2$I/
+ ;     ex: (F2$I/ a ...) performs (mvc #'-F2I/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7682,10 +7845,12 @@ destructive.
  ; F2$I/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$I/!
- ;     macro wrapper: F2$I/!
+ ;     docstring for %F2$I/!
+ ;     broadcast for fx: -F2I/
+ ;     macroname: F2$I/!
+ ;     ex: (F2$I/! a ...) performs (mvc #'-F2I/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7702,10 +7867,11 @@ ex: (F2$ISCALE a ...) performs (mvc #'-F2ISCALE a[i] ...) for every row in a.
  ; F2$ISCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$ISCALE
- ;     macro wrapper: F2$ISCALE
+ ;     docstring for %F2$ISCALE
+ ;     broadcast for fx: -F2ISCALE
+ ;     macroname: F2$ISCALE
+ ;     ex: (F2$ISCALE a ...) performs (mvc #'-F2ISCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7723,10 +7889,12 @@ destructive.
  ; F2$ISCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$ISCALE!
- ;     macro wrapper: F2$ISCALE!
+ ;     docstring for %F2$ISCALE!
+ ;     broadcast for fx: -F2ISCALE
+ ;     macroname: F2$ISCALE!
+ ;     ex: (F2$ISCALE! a ...) performs (mvc #'-F2ISCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7760,10 +7928,11 @@ ex: (F2$LEN a ...) performs (mvc #'-F2LEN a[i] ...) for every row in a.
  ; F2$LEN names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$LEN
- ;     macro wrapper: F2$LEN
+ ;     docstring for %F2$LEN
+ ;     broadcast for fx: -F2LEN
+ ;     macroname: F2$LEN
+ ;     ex: (F2$LEN a ...) performs (mvc #'-F2LEN a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7780,10 +7949,11 @@ ex: (F2$LEN2 a ...) performs (mvc #'-F2LEN2 a[i] ...) for every row in a.
  ; F2$LEN2 names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$LEN2
- ;     macro wrapper: F2$LEN2
+ ;     docstring for %F2$LEN2
+ ;     broadcast for fx: -F2LEN2
+ ;     macroname: F2$LEN2
+ ;     ex: (F2$LEN2 a ...) performs (mvc #'-F2LEN2 a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7792,7 +7962,6 @@ ex: (F2$LEN2 a ...) performs (mvc #'-F2LEN2 a[i] ...) for every row in a.
 ```
 fx: %F2$LINE
 macro wrapper: F2$LINE
-
 defined via veq:def*
 
  ; VEQ:F2$LINE
@@ -7803,7 +7972,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %F2$LINE
  ;     macro wrapper: F2$LINE
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -7813,7 +7981,6 @@ defined via veq:def*
 ```
 fx: %F2$LSPACE
 macro wrapper: F2$LSPACE
-
 defined via veq:fvdef*
 
  ; VEQ:F2$LSPACE
@@ -7824,7 +7991,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %F2$LSPACE
  ;     macro wrapper: F2$LSPACE
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/lspace.lisp
 ```
@@ -7865,10 +8031,11 @@ ex: (F2$NEG a ...) performs (mvc #'-F2NEG a[i] ...) for every row in a.
  ; F2$NEG names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$NEG
- ;     macro wrapper: F2$NEG
+ ;     docstring for %F2$NEG
+ ;     broadcast for fx: -F2NEG
+ ;     macroname: F2$NEG
+ ;     ex: (F2$NEG a ...) performs (mvc #'-F2NEG a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7886,10 +8053,12 @@ destructive.
  ; F2$NEG! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$NEG!
- ;     macro wrapper: F2$NEG!
+ ;     docstring for %F2$NEG!
+ ;     broadcast for fx: -F2NEG
+ ;     macroname: F2$NEG!
+ ;     ex: (F2$NEG! a ...) performs (mvc #'-F2NEG a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7906,10 +8075,11 @@ ex: (F2$NORM a ...) performs (mvc #'-F2NORM a[i] ...) for every row in a.
  ; F2$NORM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$NORM
- ;     macro wrapper: F2$NORM
+ ;     docstring for %F2$NORM
+ ;     broadcast for fx: -F2NORM
+ ;     macroname: F2$NORM
+ ;     ex: (F2$NORM a ...) performs (mvc #'-F2NORM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7927,10 +8097,12 @@ destructive.
  ; F2$NORM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$NORM!
- ;     macro wrapper: F2$NORM!
+ ;     docstring for %F2$NORM!
+ ;     broadcast for fx: -F2NORM
+ ;     macroname: F2$NORM!
+ ;     ex: (F2$NORM! a ...) performs (mvc #'-F2NORM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -7977,7 +8149,6 @@ typed.
 ```
 fx: %F2$POINT
 macro wrapper: F2$POINT
-
 defined via veq:def*
 
  ; VEQ:F2$POINT
@@ -7988,7 +8159,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %F2$POINT
  ;     macro wrapper: F2$POINT
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -7996,10 +8166,8 @@ defined via veq:def*
 #### F2$POLYGON
 
 ```
-fx: %F2$POLYGON
-macro wrapper: F2$POLYGON
-
-defined via veq:def*
+docstring for %F2$POLYGON
+return n-polygon of size rad. rotate by (rot 0)
 
  ; VEQ:F2$POLYGON
  ;   [symbol]
@@ -8007,10 +8175,8 @@ defined via veq:def*
  ; F2$POLYGON names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$POLYGON
- ;     macro wrapper: F2$POLYGON
- ;
- ;     defined via veq:def*
+ ;     docstring for %F2$POLYGON
+ ;     return n-polygon of size rad. rotate by (rot 0)
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
@@ -8019,7 +8185,6 @@ defined via veq:def*
 ```
 fx: %F2$RECT
 macro wrapper: F2$RECT
-
 defined via veq:def*
 
  ; VEQ:F2$RECT
@@ -8030,7 +8195,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %F2$RECT
  ;     macro wrapper: F2$RECT
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -8048,10 +8212,11 @@ ex: (F2$ROT a ...) performs (mvc #'-F2ROT a[i] ...) for every row in a.
  ; F2$ROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$ROT
- ;     macro wrapper: F2$ROT
+ ;     docstring for %F2$ROT
+ ;     broadcast for fx: -F2ROT
+ ;     macroname: F2$ROT
+ ;     ex: (F2$ROT a ...) performs (mvc #'-F2ROT a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -8069,10 +8234,12 @@ destructive.
  ; F2$ROT! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$ROT!
- ;     macro wrapper: F2$ROT!
+ ;     docstring for %F2$ROT!
+ ;     broadcast for fx: -F2ROT
+ ;     macroname: F2$ROT!
+ ;     ex: (F2$ROT! a ...) performs (mvc #'-F2ROT a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -8089,10 +8256,11 @@ ex: (F2$ROTS a ...) performs (mvc #'-F2ROTS a[i] ...) for every row in a.
  ; F2$ROTS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$ROTS
- ;     macro wrapper: F2$ROTS
+ ;     docstring for %F2$ROTS
+ ;     broadcast for fx: -F2ROTS
+ ;     macroname: F2$ROTS
+ ;     ex: (F2$ROTS a ...) performs (mvc #'-F2ROTS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -8110,10 +8278,12 @@ destructive.
  ; F2$ROTS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$ROTS!
- ;     macro wrapper: F2$ROTS!
+ ;     docstring for %F2$ROTS!
+ ;     broadcast for fx: -F2ROTS
+ ;     macroname: F2$ROTS!
+ ;     ex: (F2$ROTS! a ...) performs (mvc #'-F2ROTS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -8140,10 +8310,11 @@ ex: (F2$SCALE a ...) performs (mvc #'-F2SCALE a[i] ...) for every row in a.
  ; F2$SCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$SCALE
- ;     macro wrapper: F2$SCALE
+ ;     docstring for %F2$SCALE
+ ;     broadcast for fx: -F2SCALE
+ ;     macroname: F2$SCALE
+ ;     ex: (F2$SCALE a ...) performs (mvc #'-F2SCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -8161,10 +8332,12 @@ destructive.
  ; F2$SCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$SCALE!
- ;     macro wrapper: F2$SCALE!
+ ;     docstring for %F2$SCALE!
+ ;     broadcast for fx: -F2SCALE
+ ;     macroname: F2$SCALE!
+ ;     ex: (F2$SCALE! a ...) performs (mvc #'-F2SCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -8173,7 +8346,6 @@ destructive.
 ```
 fx: %F2$SQUARE
 macro wrapper: F2$SQUARE
-
 defined via veq:def*
 
  ; VEQ:F2$SQUARE
@@ -8184,7 +8356,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %F2$SQUARE
  ;     macro wrapper: F2$SQUARE
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -8419,7 +8590,6 @@ body: (VALUES (/ BX AX) (/ BY AY))
 ```
 fx: %F2IN-BBOX
 macro wrapper: F2IN-BBOX
-
 defined via veq:fvdef*
 
  ; VEQ:F2IN-BBOX
@@ -8430,7 +8600,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %F2IN-BBOX
  ;     macro wrapper: F2IN-BBOX
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/checks.lisp
 ```
@@ -8440,7 +8609,6 @@ defined via veq:fvdef*
 ```
 fx: %F2IN-CONCAVE
 macro wrapper: F2IN-CONCAVE
-
 defined via veq:fvdef*
 
  ; VEQ:F2IN-CONCAVE
@@ -8451,7 +8619,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %F2IN-CONCAVE
  ;     macro wrapper: F2IN-CONCAVE
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/checks.lisp
 ```
@@ -8461,7 +8628,6 @@ defined via veq:fvdef*
 ```
 fx: %F2IN-TRIANGLE
 macro wrapper: F2IN-TRIANGLE
-
 defined via veq:fvdef*
 
  ; VEQ:F2IN-TRIANGLE
@@ -8472,7 +8638,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %F2IN-TRIANGLE
  ;     macro wrapper: F2IN-TRIANGLE
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/checks.lisp
 ```
@@ -8524,10 +8689,13 @@ note that this behaves like native lisp let*.
 #### F2LSEGX
 
 ```
-fx: %F2LSEGX
-macro wrapper: F2LSEGX
+docstring for %F2LSEGX
+lines = #( #(ax ay bx by) ... )
 
-defined via veq:fvdef*
+   not entirely slow line-line intersection for all lines. this is faster than
+   comparing all lines when lines are short relative to the area that the lines
+   cover. it can be improved further by using binary search tree to store
+   current state.
 
  ; VEQ:F2LSEGX
  ;   [symbol]
@@ -8535,10 +8703,13 @@ defined via veq:fvdef*
  ; F2LSEGX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2LSEGX
- ;     macro wrapper: F2LSEGX
+ ;     docstring for %F2LSEGX
+ ;     lines = #( #(ax ay bx by) ... )
  ;
- ;     defined via veq:fvdef*
+ ;        not entirely slow line-line intersection for all lines. this is faster than
+ ;        comparing all lines when lines are short relative to the area that the lines
+ ;        cover. it can be improved further by using binary search tree to store
+ ;        current state.
  ;   Source file: /data/x/veq/src/checks.lisp
 ```
 
@@ -8649,10 +8820,8 @@ body: (VALUES (MOD A S) (MOD B S))
 #### F2MROT
 
 ```
-fx: %F2MROT
-macro wrapper: F2MROT
-
-defined via veq:def*
+docstring for %F2MROT
+make 2d rotation matrix for rotating a rads
 
  ; VEQ:F2MROT
  ;   [symbol]
@@ -8660,20 +8829,16 @@ defined via veq:def*
  ; F2MROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2MROT
- ;     macro wrapper: F2MROT
- ;
- ;     defined via veq:def*
+ ;     docstring for %F2MROT
+ ;     make 2d rotation matrix for rotating a rads
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
 #### F2MROT\*
 
 ```
-fx: %F2MROT*
-macro wrapper: F2MROT*
-
-defined via veq:def*
+docstring for %F2MROT*
+make 2d rotation matrix for rotating a rads
 
  ; VEQ:F2MROT*
  ;   [symbol]
@@ -8681,20 +8846,16 @@ defined via veq:def*
  ; F2MROT* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2MROT*
- ;     macro wrapper: F2MROT*
- ;
- ;     defined via veq:def*
+ ;     docstring for %F2MROT*
+ ;     make 2d rotation matrix for rotating a rads
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
 #### F2MSCALE
 
 ```
-fx: %F2MSCALE
-macro wrapper: F2MSCALE
-
-defined via veq:fvdef*
+docstring for %F2MSCALE
+make 2d matrix for scaling by x
 
  ; VEQ:F2MSCALE
  ;   [symbol]
@@ -8702,10 +8863,8 @@ defined via veq:fvdef*
  ; F2MSCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2MSCALE
- ;     macro wrapper: F2MSCALE
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %F2MSCALE
+ ;     make 2d matrix for scaling by x
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
@@ -8761,10 +8920,8 @@ of type: FVEC
 #### F2MTRANS
 
 ```
-fx: %F2MTRANS
-macro wrapper: F2MTRANS
-
-defined via veq:fvdef*
+docstring for %F2MTRANS
+make 2d transpose matrix for moving by x
 
  ; VEQ:F2MTRANS
  ;   [symbol]
@@ -8772,10 +8929,8 @@ defined via veq:fvdef*
  ; F2MTRANS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2MTRANS
- ;     macro wrapper: F2MTRANS
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %F2MTRANS
+ ;     make 2d transpose matrix for moving by x
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
@@ -8891,11 +9046,11 @@ veq context op: F2ROT
 fxname: -F2ROT
 args: (X Y A)
 body: (LET ((COSA (COS A)) (SINA (SIN A)))
-  (DECLARE
-   (FF
-     COSA
-     SINA))
-  (VALUES (- (* X COSA) (* Y SINA)) (+ (* X SINA) (* Y COSA))))
+        (DECLARE
+         (FF
+           COSA
+           SINA))
+        (VALUES (- (* X COSA) (* Y SINA)) (+ (* X SINA) (* Y COSA))))
 ```
 
 #### :context: F2ROTS
@@ -8921,7 +9076,6 @@ body: (VALUES (* A S) (* B S))
 ```
 fx: %F2SEGDST
 macro wrapper: F2SEGDST
-
 defined via veq:fvdef*
 
  ; VEQ:F2SEGDST
@@ -8932,7 +9086,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %F2SEGDST
  ;     macro wrapper: F2SEGDST
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/checks.lisp
 ```
@@ -8940,10 +9093,10 @@ defined via veq:fvdef*
 #### F2SEGX
 
 ```
-fx: %F2SEGX
-macro wrapper: F2SEGX
-
-defined via veq:fvdef*
+docstring for %F2SEGX
+find intersection between lines (a1 a2), (b1 b2).
+   returns isect? p q where p and q is the distance along each line to the
+   intersection point
 
  ; VEQ:F2SEGX
  ;   [symbol]
@@ -8951,10 +9104,10 @@ defined via veq:fvdef*
  ; F2SEGX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2SEGX
- ;     macro wrapper: F2SEGX
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %F2SEGX
+ ;     find intersection between lines (a1 a2), (b1 b2).
+ ;        returns isect? p q where p and q is the distance along each line to the
+ ;        intersection point
  ;   Source file: /data/x/veq/src/checks.lisp
 ```
 
@@ -8964,7 +9117,8 @@ defined via veq:fvdef*
 veq context op: F2SQRT
 fxname: -F2SQRT
 args: (A B)
-body: (VALUES (THE POS-FF (SQRT (THE POS-FF A))) (THE POS-FF (SQRT (THE POS-FF B))))
+body: (VALUES (THE POS-FF (SQRT (THE POS-FF A)))
+              (THE POS-FF (SQRT (THE POS-FF B))))
 ```
 
 #### :context: F2SQUARE
@@ -9020,10 +9174,11 @@ ex: (F3$* a ...) performs (mvc #'-F3* a[i] ...) for every row in a.
  ; F3$* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$*
- ;     macro wrapper: F3$*
+ ;     docstring for %F3$*
+ ;     broadcast for fx: -F3*
+ ;     macroname: F3$*
+ ;     ex: (F3$* a ...) performs (mvc #'-F3* a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9041,10 +9196,12 @@ destructive.
  ; F3$*! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$*!
- ;     macro wrapper: F3$*!
+ ;     docstring for %F3$*!
+ ;     broadcast for fx: -F3*
+ ;     macroname: F3$*!
+ ;     ex: (F3$*! a ...) performs (mvc #'-F3* a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9061,10 +9218,11 @@ ex: (F3$+ a ...) performs (mvc #'-F3+ a[i] ...) for every row in a.
  ; F3$+ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$+
- ;     macro wrapper: F3$+
+ ;     docstring for %F3$+
+ ;     broadcast for fx: -F3+
+ ;     macroname: F3$+
+ ;     ex: (F3$+ a ...) performs (mvc #'-F3+ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9082,10 +9240,12 @@ destructive.
  ; F3$+! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$+!
- ;     macro wrapper: F3$+!
+ ;     docstring for %F3$+!
+ ;     broadcast for fx: -F3+
+ ;     macroname: F3$+!
+ ;     ex: (F3$+! a ...) performs (mvc #'-F3+ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9102,10 +9262,11 @@ ex: (F3$- a ...) performs (mvc #'-F3- a[i] ...) for every row in a.
  ; F3$- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$-
- ;     macro wrapper: F3$-
+ ;     docstring for %F3$-
+ ;     broadcast for fx: -F3-
+ ;     macroname: F3$-
+ ;     ex: (F3$- a ...) performs (mvc #'-F3- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9123,10 +9284,12 @@ destructive.
  ; F3$-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$-!
- ;     macro wrapper: F3$-!
+ ;     docstring for %F3$-!
+ ;     broadcast for fx: -F3-
+ ;     macroname: F3$-!
+ ;     ex: (F3$-! a ...) performs (mvc #'-F3- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9143,10 +9306,11 @@ ex: (F3$/ a ...) performs (mvc #'-F3/ a[i] ...) for every row in a.
  ; F3$/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$/
- ;     macro wrapper: F3$/
+ ;     docstring for %F3$/
+ ;     broadcast for fx: -F3/
+ ;     macroname: F3$/
+ ;     ex: (F3$/ a ...) performs (mvc #'-F3/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9164,10 +9328,12 @@ destructive.
  ; F3$/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$/!
- ;     macro wrapper: F3$/!
+ ;     docstring for %F3$/!
+ ;     broadcast for fx: -F3/
+ ;     macroname: F3$/!
+ ;     ex: (F3$/! a ...) performs (mvc #'-F3/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9184,10 +9350,11 @@ ex: (F3$ABS a ...) performs (mvc #'-F3ABS a[i] ...) for every row in a.
  ; F3$ABS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$ABS
- ;     macro wrapper: F3$ABS
+ ;     docstring for %F3$ABS
+ ;     broadcast for fx: -F3ABS
+ ;     macroname: F3$ABS
+ ;     ex: (F3$ABS a ...) performs (mvc #'-F3ABS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9205,10 +9372,12 @@ destructive.
  ; F3$ABS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$ABS!
- ;     macro wrapper: F3$ABS!
+ ;     docstring for %F3$ABS!
+ ;     broadcast for fx: -F3ABS
+ ;     macroname: F3$ABS!
+ ;     ex: (F3$ABS! a ...) performs (mvc #'-F3ABS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9225,10 +9394,11 @@ ex: (F3$FROM a ...) performs (mvc #'-F3FROM a[i] ...) for every row in a.
  ; F3$FROM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$FROM
- ;     macro wrapper: F3$FROM
+ ;     docstring for %F3$FROM
+ ;     broadcast for fx: -F3FROM
+ ;     macroname: F3$FROM
+ ;     ex: (F3$FROM a ...) performs (mvc #'-F3FROM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9246,10 +9416,12 @@ destructive.
  ; F3$FROM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$FROM!
- ;     macro wrapper: F3$FROM!
+ ;     docstring for %F3$FROM!
+ ;     broadcast for fx: -F3FROM
+ ;     macroname: F3$FROM!
+ ;     ex: (F3$FROM! a ...) performs (mvc #'-F3FROM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9276,10 +9448,11 @@ ex: (F3$I- a ...) performs (mvc #'-F3I- a[i] ...) for every row in a.
  ; F3$I- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$I-
- ;     macro wrapper: F3$I-
+ ;     docstring for %F3$I-
+ ;     broadcast for fx: -F3I-
+ ;     macroname: F3$I-
+ ;     ex: (F3$I- a ...) performs (mvc #'-F3I- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9297,10 +9470,12 @@ destructive.
  ; F3$I-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$I-!
- ;     macro wrapper: F3$I-!
+ ;     docstring for %F3$I-!
+ ;     broadcast for fx: -F3I-
+ ;     macroname: F3$I-!
+ ;     ex: (F3$I-! a ...) performs (mvc #'-F3I- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9317,10 +9492,11 @@ ex: (F3$I/ a ...) performs (mvc #'-F3I/ a[i] ...) for every row in a.
  ; F3$I/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$I/
- ;     macro wrapper: F3$I/
+ ;     docstring for %F3$I/
+ ;     broadcast for fx: -F3I/
+ ;     macroname: F3$I/
+ ;     ex: (F3$I/ a ...) performs (mvc #'-F3I/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9338,10 +9514,12 @@ destructive.
  ; F3$I/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$I/!
- ;     macro wrapper: F3$I/!
+ ;     docstring for %F3$I/!
+ ;     broadcast for fx: -F3I/
+ ;     macroname: F3$I/!
+ ;     ex: (F3$I/! a ...) performs (mvc #'-F3I/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9358,10 +9536,11 @@ ex: (F3$ISCALE a ...) performs (mvc #'-F3ISCALE a[i] ...) for every row in a.
  ; F3$ISCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$ISCALE
- ;     macro wrapper: F3$ISCALE
+ ;     docstring for %F3$ISCALE
+ ;     broadcast for fx: -F3ISCALE
+ ;     macroname: F3$ISCALE
+ ;     ex: (F3$ISCALE a ...) performs (mvc #'-F3ISCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9379,10 +9558,12 @@ destructive.
  ; F3$ISCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$ISCALE!
- ;     macro wrapper: F3$ISCALE!
+ ;     docstring for %F3$ISCALE!
+ ;     broadcast for fx: -F3ISCALE
+ ;     macroname: F3$ISCALE!
+ ;     ex: (F3$ISCALE! a ...) performs (mvc #'-F3ISCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9417,10 +9598,11 @@ ex: (F3$LEN a ...) performs (mvc #'-F3LEN a[i] ...) for every row in a.
  ; F3$LEN names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$LEN
- ;     macro wrapper: F3$LEN
+ ;     docstring for %F3$LEN
+ ;     broadcast for fx: -F3LEN
+ ;     macroname: F3$LEN
+ ;     ex: (F3$LEN a ...) performs (mvc #'-F3LEN a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9437,10 +9619,11 @@ ex: (F3$LEN2 a ...) performs (mvc #'-F3LEN2 a[i] ...) for every row in a.
  ; F3$LEN2 names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$LEN2
- ;     macro wrapper: F3$LEN2
+ ;     docstring for %F3$LEN2
+ ;     broadcast for fx: -F3LEN2
+ ;     macroname: F3$LEN2
+ ;     ex: (F3$LEN2 a ...) performs (mvc #'-F3LEN2 a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9449,7 +9632,6 @@ ex: (F3$LEN2 a ...) performs (mvc #'-F3LEN2 a[i] ...) for every row in a.
 ```
 fx: %F3$LINE
 macro wrapper: F3$LINE
-
 defined via veq:def*
 
  ; VEQ:F3$LINE
@@ -9460,7 +9642,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %F3$LINE
  ;     macro wrapper: F3$LINE
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -9470,7 +9651,6 @@ defined via veq:def*
 ```
 fx: %F3$LSPACE
 macro wrapper: F3$LSPACE
-
 defined via veq:fvdef*
 
  ; VEQ:F3$LSPACE
@@ -9481,7 +9661,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %F3$LSPACE
  ;     macro wrapper: F3$LSPACE
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/lspace.lisp
 ```
@@ -9523,10 +9702,11 @@ ex: (F3$NEG a ...) performs (mvc #'-F3NEG a[i] ...) for every row in a.
  ; F3$NEG names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$NEG
- ;     macro wrapper: F3$NEG
+ ;     docstring for %F3$NEG
+ ;     broadcast for fx: -F3NEG
+ ;     macroname: F3$NEG
+ ;     ex: (F3$NEG a ...) performs (mvc #'-F3NEG a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9544,10 +9724,12 @@ destructive.
  ; F3$NEG! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$NEG!
- ;     macro wrapper: F3$NEG!
+ ;     docstring for %F3$NEG!
+ ;     broadcast for fx: -F3NEG
+ ;     macroname: F3$NEG!
+ ;     ex: (F3$NEG! a ...) performs (mvc #'-F3NEG a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9564,10 +9746,11 @@ ex: (F3$NORM a ...) performs (mvc #'-F3NORM a[i] ...) for every row in a.
  ; F3$NORM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$NORM
- ;     macro wrapper: F3$NORM
+ ;     docstring for %F3$NORM
+ ;     broadcast for fx: -F3NORM
+ ;     macroname: F3$NORM
+ ;     ex: (F3$NORM a ...) performs (mvc #'-F3NORM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9585,10 +9768,12 @@ destructive.
  ; F3$NORM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$NORM!
- ;     macro wrapper: F3$NORM!
+ ;     docstring for %F3$NORM!
+ ;     broadcast for fx: -F3NORM
+ ;     macroname: F3$NORM!
+ ;     ex: (F3$NORM! a ...) performs (mvc #'-F3NORM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9635,7 +9820,6 @@ typed.
 ```
 fx: %F3$POINT
 macro wrapper: F3$POINT
-
 defined via veq:def*
 
  ; VEQ:F3$POINT
@@ -9646,7 +9830,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %F3$POINT
  ;     macro wrapper: F3$POINT
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -9664,10 +9847,11 @@ ex: (F3$ROT a ...) performs (mvc #'-F3ROT a[i] ...) for every row in a.
  ; F3$ROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$ROT
- ;     macro wrapper: F3$ROT
+ ;     docstring for %F3$ROT
+ ;     broadcast for fx: -F3ROT
+ ;     macroname: F3$ROT
+ ;     ex: (F3$ROT a ...) performs (mvc #'-F3ROT a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9685,10 +9869,12 @@ destructive.
  ; F3$ROT! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$ROT!
- ;     macro wrapper: F3$ROT!
+ ;     docstring for %F3$ROT!
+ ;     broadcast for fx: -F3ROT
+ ;     macroname: F3$ROT!
+ ;     ex: (F3$ROT! a ...) performs (mvc #'-F3ROT a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9705,10 +9891,11 @@ ex: (F3$ROTS a ...) performs (mvc #'-F3ROTS a[i] ...) for every row in a.
  ; F3$ROTS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$ROTS
- ;     macro wrapper: F3$ROTS
+ ;     docstring for %F3$ROTS
+ ;     broadcast for fx: -F3ROTS
+ ;     macroname: F3$ROTS
+ ;     ex: (F3$ROTS a ...) performs (mvc #'-F3ROTS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9726,10 +9913,12 @@ destructive.
  ; F3$ROTS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$ROTS!
- ;     macro wrapper: F3$ROTS!
+ ;     docstring for %F3$ROTS!
+ ;     broadcast for fx: -F3ROTS
+ ;     macroname: F3$ROTS!
+ ;     ex: (F3$ROTS! a ...) performs (mvc #'-F3ROTS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9756,10 +9945,11 @@ ex: (F3$SCALE a ...) performs (mvc #'-F3SCALE a[i] ...) for every row in a.
  ; F3$SCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$SCALE
- ;     macro wrapper: F3$SCALE
+ ;     docstring for %F3$SCALE
+ ;     broadcast for fx: -F3SCALE
+ ;     macroname: F3$SCALE
+ ;     ex: (F3$SCALE a ...) performs (mvc #'-F3SCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9777,10 +9967,12 @@ destructive.
  ; F3$SCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$SCALE!
- ;     macro wrapper: F3$SCALE!
+ ;     docstring for %F3$SCALE!
+ ;     broadcast for fx: -F3SCALE
+ ;     macroname: F3$SCALE!
+ ;     ex: (F3$SCALE! a ...) performs (mvc #'-F3SCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -9935,7 +10127,8 @@ body: (VALUES (ABS A) (ABS B) (ABS C))
 veq context op: F3CROSS
 fxname: -F3CROSS
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ)) (- (* AX BY) (* AY BX)))
+body: (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
+              (- (* AX BY) (* AY BX)))
 ```
 
 #### :context: F3DST
@@ -10143,10 +10336,8 @@ body: (VALUES (MOD A S) (MOD B S) (MOD C S))
 #### F3MROT
 
 ```
-fx: %F3MROT
-macro wrapper: F3MROT
-
-defined via veq:def*
+docstring for %F3MROT
+make 3d rotation matrix for rotating a rad around unit vector (x y z)
 
  ; VEQ:F3MROT
  ;   [symbol]
@@ -10154,20 +10345,16 @@ defined via veq:def*
  ; F3MROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3MROT
- ;     macro wrapper: F3MROT
- ;
- ;     defined via veq:def*
+ ;     docstring for %F3MROT
+ ;     make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
 #### F3MROT\*
 
 ```
-fx: %F3MROT*
-macro wrapper: F3MROT*
-
-defined via veq:def*
+docstring for %F3MROT*
+make 3d rotation matrix for rotating a rad around unit vector (x y z)
 
  ; VEQ:F3MROT*
  ;   [symbol]
@@ -10175,20 +10362,16 @@ defined via veq:def*
  ; F3MROT* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3MROT*
- ;     macro wrapper: F3MROT*
- ;
- ;     defined via veq:def*
+ ;     docstring for %F3MROT*
+ ;     make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
 #### F3MSCALE
 
 ```
-fx: %F3MSCALE
-macro wrapper: F3MSCALE
-
-defined via veq:fvdef*
+docstring for %F3MSCALE
+make 3d matrix for scaling by x
 
  ; VEQ:F3MSCALE
  ;   [symbol]
@@ -10196,10 +10379,8 @@ defined via veq:fvdef*
  ; F3MSCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3MSCALE
- ;     macro wrapper: F3MSCALE
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %F3MSCALE
+ ;     make 3d matrix for scaling by x
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
@@ -10255,10 +10436,8 @@ of type: FVEC
 #### F3MTRANS
 
 ```
-fx: %F3MTRANS
-macro wrapper: F3MTRANS
-
-defined via veq:fvdef*
+docstring for %F3MTRANS
+make 3d transpose matrix for moving by x
 
  ; VEQ:F3MTRANS
  ;   [symbol]
@@ -10266,10 +10445,8 @@ defined via veq:fvdef*
  ; F3MTRANS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3MTRANS
- ;     macro wrapper: F3MTRANS
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %F3MTRANS
+ ;     make 3d transpose matrix for moving by x
  ;   Source file: /data/x/veq/src/mat.lisp
 ```
 
@@ -10330,10 +10507,8 @@ make 3d
 #### F3PLANEX
 
 ```
-fx: %F3PLANEX
-macro wrapper: F3PLANEX
-
-defined via veq:fvdef*
+docstring for %F3PLANEX
+intersection of plane (n:normal, p:point) and line (a b)
 
  ; VEQ:F3PLANEX
  ;   [symbol]
@@ -10341,10 +10516,8 @@ defined via veq:fvdef*
  ; F3PLANEX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3PLANEX
- ;     macro wrapper: F3PLANEX
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %F3PLANEX
+ ;     intersection of plane (n:normal, p:point) and line (a b)
  ;   Source file: /data/x/veq/src/checks.lisp
 ```
 
@@ -10370,12 +10543,13 @@ veq context op: F3ROT
 fxname: -F3ROT
 args: (X Y Z NX NY NZ A)
 body: (LET ((COSA (COS A)))
-  (DECLARE
-   (FF
-     COSA))
-  (MVC #'-F3FROM
-       (MVC #'-F3FROM (-F3SCALE X Y Z COSA) (-F3CROSS NX NY NZ X Y Z) (SIN A))
-       NX NY NZ (* (-F3. NX NY NZ X Y Z) (- 1.0 COSA))))
+        (DECLARE
+         (FF
+           COSA))
+        (MVC #'-F3FROM
+             (MVC #'-F3FROM (-F3SCALE X Y Z COSA) (-F3CROSS NX NY NZ X Y Z)
+                  (SIN A))
+             NX NY NZ (* (-F3. NX NY NZ X Y Z) (- 1.0 COSA))))
 ```
 
 #### :context: F3ROTS
@@ -10402,8 +10576,9 @@ body: (VALUES (* A S) (* B S) (* C S))
 veq context op: F3SQRT
 fxname: -F3SQRT
 args: (A B C)
-body: (VALUES (THE POS-FF (SQRT (THE POS-FF A))) (THE POS-FF (SQRT (THE POS-FF B)))
-        (THE POS-FF (SQRT (THE POS-FF C))))
+body: (VALUES (THE POS-FF (SQRT (THE POS-FF A)))
+              (THE POS-FF (SQRT (THE POS-FF B)))
+              (THE POS-FF (SQRT (THE POS-FF C))))
 ```
 
 #### :context: F3SQUARE
@@ -10459,10 +10634,11 @@ ex: (F4$* a ...) performs (mvc #'-F4* a[i] ...) for every row in a.
  ; F4$* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$*
- ;     macro wrapper: F4$*
+ ;     docstring for %F4$*
+ ;     broadcast for fx: -F4*
+ ;     macroname: F4$*
+ ;     ex: (F4$* a ...) performs (mvc #'-F4* a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10480,10 +10656,12 @@ destructive.
  ; F4$*! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$*!
- ;     macro wrapper: F4$*!
+ ;     docstring for %F4$*!
+ ;     broadcast for fx: -F4*
+ ;     macroname: F4$*!
+ ;     ex: (F4$*! a ...) performs (mvc #'-F4* a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10500,10 +10678,11 @@ ex: (F4$+ a ...) performs (mvc #'-F4+ a[i] ...) for every row in a.
  ; F4$+ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$+
- ;     macro wrapper: F4$+
+ ;     docstring for %F4$+
+ ;     broadcast for fx: -F4+
+ ;     macroname: F4$+
+ ;     ex: (F4$+ a ...) performs (mvc #'-F4+ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10521,10 +10700,12 @@ destructive.
  ; F4$+! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$+!
- ;     macro wrapper: F4$+!
+ ;     docstring for %F4$+!
+ ;     broadcast for fx: -F4+
+ ;     macroname: F4$+!
+ ;     ex: (F4$+! a ...) performs (mvc #'-F4+ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10541,10 +10722,11 @@ ex: (F4$- a ...) performs (mvc #'-F4- a[i] ...) for every row in a.
  ; F4$- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$-
- ;     macro wrapper: F4$-
+ ;     docstring for %F4$-
+ ;     broadcast for fx: -F4-
+ ;     macroname: F4$-
+ ;     ex: (F4$- a ...) performs (mvc #'-F4- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10562,10 +10744,12 @@ destructive.
  ; F4$-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$-!
- ;     macro wrapper: F4$-!
+ ;     docstring for %F4$-!
+ ;     broadcast for fx: -F4-
+ ;     macroname: F4$-!
+ ;     ex: (F4$-! a ...) performs (mvc #'-F4- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10582,10 +10766,11 @@ ex: (F4$/ a ...) performs (mvc #'-F4/ a[i] ...) for every row in a.
  ; F4$/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$/
- ;     macro wrapper: F4$/
+ ;     docstring for %F4$/
+ ;     broadcast for fx: -F4/
+ ;     macroname: F4$/
+ ;     ex: (F4$/ a ...) performs (mvc #'-F4/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10603,10 +10788,12 @@ destructive.
  ; F4$/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$/!
- ;     macro wrapper: F4$/!
+ ;     docstring for %F4$/!
+ ;     broadcast for fx: -F4/
+ ;     macroname: F4$/!
+ ;     ex: (F4$/! a ...) performs (mvc #'-F4/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10623,10 +10810,11 @@ ex: (F4$ABS a ...) performs (mvc #'-F4ABS a[i] ...) for every row in a.
  ; F4$ABS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$ABS
- ;     macro wrapper: F4$ABS
+ ;     docstring for %F4$ABS
+ ;     broadcast for fx: -F4ABS
+ ;     macroname: F4$ABS
+ ;     ex: (F4$ABS a ...) performs (mvc #'-F4ABS a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10644,10 +10832,12 @@ destructive.
  ; F4$ABS! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$ABS!
- ;     macro wrapper: F4$ABS!
+ ;     docstring for %F4$ABS!
+ ;     broadcast for fx: -F4ABS
+ ;     macroname: F4$ABS!
+ ;     ex: (F4$ABS! a ...) performs (mvc #'-F4ABS a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10664,10 +10854,11 @@ ex: (F4$FROM a ...) performs (mvc #'-F4FROM a[i] ...) for every row in a.
  ; F4$FROM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$FROM
- ;     macro wrapper: F4$FROM
+ ;     docstring for %F4$FROM
+ ;     broadcast for fx: -F4FROM
+ ;     macroname: F4$FROM
+ ;     ex: (F4$FROM a ...) performs (mvc #'-F4FROM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10685,10 +10876,12 @@ destructive.
  ; F4$FROM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$FROM!
- ;     macro wrapper: F4$FROM!
+ ;     docstring for %F4$FROM!
+ ;     broadcast for fx: -F4FROM
+ ;     macroname: F4$FROM!
+ ;     ex: (F4$FROM! a ...) performs (mvc #'-F4FROM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10715,10 +10908,11 @@ ex: (F4$I- a ...) performs (mvc #'-F4I- a[i] ...) for every row in a.
  ; F4$I- names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$I-
- ;     macro wrapper: F4$I-
+ ;     docstring for %F4$I-
+ ;     broadcast for fx: -F4I-
+ ;     macroname: F4$I-
+ ;     ex: (F4$I- a ...) performs (mvc #'-F4I- a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10736,10 +10930,12 @@ destructive.
  ; F4$I-! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$I-!
- ;     macro wrapper: F4$I-!
+ ;     docstring for %F4$I-!
+ ;     broadcast for fx: -F4I-
+ ;     macroname: F4$I-!
+ ;     ex: (F4$I-! a ...) performs (mvc #'-F4I- a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10756,10 +10952,11 @@ ex: (F4$I/ a ...) performs (mvc #'-F4I/ a[i] ...) for every row in a.
  ; F4$I/ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$I/
- ;     macro wrapper: F4$I/
+ ;     docstring for %F4$I/
+ ;     broadcast for fx: -F4I/
+ ;     macroname: F4$I/
+ ;     ex: (F4$I/ a ...) performs (mvc #'-F4I/ a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10777,10 +10974,12 @@ destructive.
  ; F4$I/! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$I/!
- ;     macro wrapper: F4$I/!
+ ;     docstring for %F4$I/!
+ ;     broadcast for fx: -F4I/
+ ;     macroname: F4$I/!
+ ;     ex: (F4$I/! a ...) performs (mvc #'-F4I/ a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10797,10 +10996,11 @@ ex: (F4$ISCALE a ...) performs (mvc #'-F4ISCALE a[i] ...) for every row in a.
  ; F4$ISCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$ISCALE
- ;     macro wrapper: F4$ISCALE
+ ;     docstring for %F4$ISCALE
+ ;     broadcast for fx: -F4ISCALE
+ ;     macroname: F4$ISCALE
+ ;     ex: (F4$ISCALE a ...) performs (mvc #'-F4ISCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10818,10 +11018,12 @@ destructive.
  ; F4$ISCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$ISCALE!
- ;     macro wrapper: F4$ISCALE!
+ ;     docstring for %F4$ISCALE!
+ ;     broadcast for fx: -F4ISCALE
+ ;     macroname: F4$ISCALE!
+ ;     ex: (F4$ISCALE! a ...) performs (mvc #'-F4ISCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10856,10 +11058,11 @@ ex: (F4$LEN a ...) performs (mvc #'-F4LEN a[i] ...) for every row in a.
  ; F4$LEN names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$LEN
- ;     macro wrapper: F4$LEN
+ ;     docstring for %F4$LEN
+ ;     broadcast for fx: -F4LEN
+ ;     macroname: F4$LEN
+ ;     ex: (F4$LEN a ...) performs (mvc #'-F4LEN a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10876,10 +11079,11 @@ ex: (F4$LEN2 a ...) performs (mvc #'-F4LEN2 a[i] ...) for every row in a.
  ; F4$LEN2 names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$LEN2
- ;     macro wrapper: F4$LEN2
+ ;     docstring for %F4$LEN2
+ ;     broadcast for fx: -F4LEN2
+ ;     macroname: F4$LEN2
+ ;     ex: (F4$LEN2 a ...) performs (mvc #'-F4LEN2 a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10888,7 +11092,6 @@ ex: (F4$LEN2 a ...) performs (mvc #'-F4LEN2 a[i] ...) for every row in a.
 ```
 fx: %F4$LINE
 macro wrapper: F4$LINE
-
 defined via veq:def*
 
  ; VEQ:F4$LINE
@@ -10899,7 +11102,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %F4$LINE
  ;     macro wrapper: F4$LINE
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -10909,7 +11111,6 @@ defined via veq:def*
 ```
 fx: %F4$LSPACE
 macro wrapper: F4$LSPACE
-
 defined via veq:fvdef*
 
  ; VEQ:F4$LSPACE
@@ -10920,7 +11121,6 @@ defined via veq:fvdef*
  ;   Documentation:
  ;     fx: %F4$LSPACE
  ;     macro wrapper: F4$LSPACE
- ;
  ;     defined via veq:fvdef*
  ;   Source file: /data/x/veq/src/lspace.lisp
 ```
@@ -10938,10 +11138,11 @@ ex: (F4$NEG a ...) performs (mvc #'-F4NEG a[i] ...) for every row in a.
  ; F4$NEG names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$NEG
- ;     macro wrapper: F4$NEG
+ ;     docstring for %F4$NEG
+ ;     broadcast for fx: -F4NEG
+ ;     macroname: F4$NEG
+ ;     ex: (F4$NEG a ...) performs (mvc #'-F4NEG a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10959,10 +11160,12 @@ destructive.
  ; F4$NEG! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$NEG!
- ;     macro wrapper: F4$NEG!
+ ;     docstring for %F4$NEG!
+ ;     broadcast for fx: -F4NEG
+ ;     macroname: F4$NEG!
+ ;     ex: (F4$NEG! a ...) performs (mvc #'-F4NEG a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -10979,10 +11182,11 @@ ex: (F4$NORM a ...) performs (mvc #'-F4NORM a[i] ...) for every row in a.
  ; F4$NORM names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$NORM
- ;     macro wrapper: F4$NORM
+ ;     docstring for %F4$NORM
+ ;     broadcast for fx: -F4NORM
+ ;     macroname: F4$NORM
+ ;     ex: (F4$NORM a ...) performs (mvc #'-F4NORM a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -11000,10 +11204,12 @@ destructive.
  ; F4$NORM! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$NORM!
- ;     macro wrapper: F4$NORM!
+ ;     docstring for %F4$NORM!
+ ;     broadcast for fx: -F4NORM
+ ;     macroname: F4$NORM!
+ ;     ex: (F4$NORM! a ...) performs (mvc #'-F4NORM a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -11050,7 +11256,6 @@ typed.
 ```
 fx: %F4$POINT
 macro wrapper: F4$POINT
-
 defined via veq:def*
 
  ; VEQ:F4$POINT
@@ -11061,7 +11266,6 @@ defined via veq:def*
  ;   Documentation:
  ;     fx: %F4$POINT
  ;     macro wrapper: F4$POINT
- ;
  ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
@@ -11089,10 +11293,11 @@ ex: (F4$SCALE a ...) performs (mvc #'-F4SCALE a[i] ...) for every row in a.
  ; F4$SCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$SCALE
- ;     macro wrapper: F4$SCALE
+ ;     docstring for %F4$SCALE
+ ;     broadcast for fx: -F4SCALE
+ ;     macroname: F4$SCALE
+ ;     ex: (F4$SCALE a ...) performs (mvc #'-F4SCALE a[i] ...) for every row in a.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -11110,10 +11315,12 @@ destructive.
  ; F4$SCALE! names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$SCALE!
- ;     macro wrapper: F4$SCALE!
+ ;     docstring for %F4$SCALE!
+ ;     broadcast for fx: -F4SCALE
+ ;     macroname: F4$SCALE!
+ ;     ex: (F4$SCALE! a ...) performs (mvc #'-F4SCALE a[i] ...) for every row in a.
+ ;     destructive.
  ;
- ;     defined via veq:def*
  ;   Source file: /data/x/veq/src/array-broadcast.lisp
 ```
 
@@ -11269,7 +11476,8 @@ veq context op: F4DST
 fxname: -F4DST
 args: (AX AY AZ AW BX BY BZ BW)
 body: (SQRT
- (THE POS-FF (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)))))
+       (THE POS-FF
+            (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)))))
 ```
 
 #### :context: F4DST2
@@ -11351,7 +11559,7 @@ veq context op: F4LERP
 fxname: -F4LERP
 args: (AX AY AZ AW BX BY BZ BW S)
 body: (-F4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
- (* (- BW AW) S))
+       (* (- BW AW) S))
 ```
 
 #### :context: F4LET
@@ -11394,7 +11602,8 @@ return 4d eye matrix.
 veq context op: F4MID
 fxname: -F4MID
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5) (* (+ BW AW) 0.5))
+body: (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)
+              (* (+ BW AW) 0.5))
 ```
 
 #### :context: F4MIN
@@ -11599,8 +11808,10 @@ body: (VALUES (* A S) (* B S) (* C S) (* D S))
 veq context op: F4SQRT
 fxname: -F4SQRT
 args: (A B C D)
-body: (VALUES (THE POS-FF (SQRT (THE POS-FF A))) (THE POS-FF (SQRT (THE POS-FF B)))
-        (THE POS-FF (SQRT (THE POS-FF C))) (THE POS-FF (SQRT (THE POS-FF D))))
+body: (VALUES (THE POS-FF (SQRT (THE POS-FF A)))
+              (THE POS-FF (SQRT (THE POS-FF B)))
+              (THE POS-FF (SQRT (THE POS-FF C)))
+              (THE POS-FF (SQRT (THE POS-FF D))))
 ```
 
 #### :context: F4SQUARE
@@ -11610,7 +11821,7 @@ veq context op: F4SQUARE
 fxname: -F4SQUARE
 args: (A B C D)
 body: (VALUES (THE POS-FF (* A A)) (THE POS-FF (* B B)) (THE POS-FF (* C C))
-        (THE POS-FF (* D D)))
+              (THE POS-FF (* D D)))
 ```
 
 #### :context: F4VSET
@@ -12410,10 +12621,8 @@ body: (+ AX (* (- BX AX) S))
 #### FMAKE-ORTHO-PROJ-MATRIX
 
 ```
-fx: %FMAKE-ORTHO-PROJ-MATRIX
-macro wrapper: FMAKE-ORTHO-PROJ-MATRIX
-
-defined via veq:fvdef*
+docstring for %FMAKE-ORTHO-PROJ-MATRIX
+make orthogonal projection matrix
 
  ; VEQ:FMAKE-ORTHO-PROJ-MATRIX
  ;   [symbol]
@@ -12421,20 +12630,16 @@ defined via veq:fvdef*
  ; FMAKE-ORTHO-PROJ-MATRIX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %FMAKE-ORTHO-PROJ-MATRIX
- ;     macro wrapper: FMAKE-ORTHO-PROJ-MATRIX
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %FMAKE-ORTHO-PROJ-MATRIX
+ ;     make orthogonal projection matrix
  ;   Source file: /data/x/veq/src/mat-cam.lisp
 ```
 
 #### FMAKE-PROJ-MATRIX
 
 ```
-fx: %FMAKE-PROJ-MATRIX
-macro wrapper: FMAKE-PROJ-MATRIX
-
-defined via veq:fvdef*
+docstring for %FMAKE-PROJ-MATRIX
+make projection matrix for width, height, near, far
 
  ; VEQ:FMAKE-PROJ-MATRIX
  ;   [symbol]
@@ -12442,20 +12647,16 @@ defined via veq:fvdef*
  ; FMAKE-PROJ-MATRIX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %FMAKE-PROJ-MATRIX
- ;     macro wrapper: FMAKE-PROJ-MATRIX
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %FMAKE-PROJ-MATRIX
+ ;     make projection matrix for width, height, near, far
  ;   Source file: /data/x/veq/src/mat-cam.lisp
 ```
 
 #### FMAKE-VIEW-MATRIX
 
 ```
-fx: %FMAKE-VIEW-MATRIX
-macro wrapper: FMAKE-VIEW-MATRIX
-
-defined via veq:fvdef*
+docstring for %FMAKE-VIEW-MATRIX
+make view matrix for cam (w/up) looking at target
 
  ; VEQ:FMAKE-VIEW-MATRIX
  ;   [symbol]
@@ -12463,10 +12664,8 @@ defined via veq:fvdef*
  ; FMAKE-VIEW-MATRIX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %FMAKE-VIEW-MATRIX
- ;     macro wrapper: FMAKE-VIEW-MATRIX
- ;
- ;     defined via veq:fvdef*
+ ;     docstring for %FMAKE-VIEW-MATRIX
+ ;     make view matrix for cam (w/up) looking at target
  ;   Source file: /data/x/veq/src/mat-cam.lisp
 ```
 

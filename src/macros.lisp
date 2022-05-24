@@ -43,12 +43,14 @@ veq context is enabled. uses vprogn.
 
 the wrapper macro ensures every call to this function is done as
 (mvc #'%fx ...)."
-    (let ((fname (symb "%" mname)))
+    (let ((fname (symb "%" mname))
+          (docs (typecase (third body) (string (third body)) (t nil))))
       `(vprogn ; replace internal references to mname
                (defun ,fname ,@(subst fname mname body))
                (defmacro ,mname (&rest rest)
-                  ,(format nil "fx: ~a~%macro wrapper: ~a~%
-defined veq:vdef*" fname mname)
+                  ,(if docs (format nil "docstring for ~a~%~a" fname docs)
+                            (format nil "fx: ~a~%macro wrapper: ~a
+defined via veq:vdef*" fname mname))
                  `(mvc #',',fname ,@rest))))))
 (define-vdef*)
 
@@ -60,12 +62,14 @@ veq context is enabled. uses fvprogn.
 
 the wrapper macro ensures every call to this function is done as
 (mvc #'%fx ...)."
-    (let ((fname (symb "%" mname)))
+    (let ((fname (symb "%" mname))
+          (docs (typecase (third body) (string (third body)) (t nil))))
       `(fvprogn ; replace internal references to mname
                 (defun ,fname ,@(subst fname mname body))
                 (defmacro ,mname (&rest rest)
-                  ,(format nil "fx: ~a~%macro wrapper: ~a~%
-defined via veq:fvdef*" fname mname)
+                  ,(if docs (format nil "docstring for ~a~%~a" fname docs)
+                            (format nil "fx: ~a~%macro wrapper: ~a
+defined via veq:fvdef*" fname mname))
                   `(mvc #',',fname ,@rest))))))
 (define-fvdef*)
 
@@ -76,11 +80,13 @@ and a wrapper macro named: fx
 
 the wrapper macro ensures every call to this function is done as
 (mvc #'%fx ...)."
-    (let ((fname (symb "%" mname)))
+    (let ((fname (symb "%" mname))
+          (docs (typecase (third body) (string (third body)) (t nil))))
       `(progn (defun ,fname ,@body)
               (defmacro ,mname (&rest rest)
-                  ,(format nil "fx: ~a~%macro wrapper: ~a~%
-defined via veq:def*" fname mname)
+                ,(if docs (format nil "docstring for ~a~%~a" fname docs)
+                          (format nil "fx: ~a~%macro wrapper: ~a
+defined via veq:def*" fname mname))
                 `(mvc #',',fname ,@rest))))))
 (define-def*)
 

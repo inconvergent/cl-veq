@@ -26,7 +26,7 @@
   (let* ((declares `(,(optype mname) ,@args))
          (fname (symb "-" mname))
          (docs (format nil "veq context op: ~a~%fxname: ~a~%args: ~a~%body: ~a~%"
-                (mkstr mname) (mkstr fname)  (mkstr args ) (mkstr (car body)))))
+                 mname fname args (car body))))
     `(progn (map-symbol `(,',mname (&body body)
                             `(mvc #',',',fname ,@body)))
             (map-docstring ',mname ,docs :nodesc :context)
