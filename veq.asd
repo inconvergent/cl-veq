@@ -2,7 +2,7 @@
 (asdf:defsystem #:veq
   :description "reasonably fast operations for 1-4d vectors, matrices, and
                 arrays of vectors."
-  :version "2.2.2"
+  :version "2.3.0"
   :author "anders hoff / @inconvergent / inconvergent@gmail.com"
   :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))
@@ -10,7 +10,8 @@
   :serial nil
   :depends-on (#:alexandria #+SBCL #:sb-cltl2 #:prove #:str)
   :components ((:file "packages")
-               (:file "config" :depends-on ("packages"))
+               (:file "init" :depends-on ("packages"))
+               (:file "config" :depends-on ("init"))
                (:file "utils" :depends-on ("config"))
                (:file "array-utils" :depends-on ("utils"))
                (:file "docs" :depends-on ("utils"))

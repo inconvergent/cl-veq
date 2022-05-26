@@ -141,14 +141,13 @@ eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
         collect (gensym (format nil "~a-~a-" name x))))
 
 
-(declaim (inline lst>n))
+(declaim (inline lst>n last*))
 (defun lst>n (l n)
   (declare (list l) (pos-int n))
   "is list longer than n?"
   (consp (nthcdr n l)))
-
-(declaim (inline last*))
 (defun last* (a)
+  (declare (list a))
   "last element of list."
   (first (last a)))
 
@@ -157,29 +156,35 @@ eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
   (declare (list lst))
   "finds duplicates in list."
   (cond ((null lst) '())
-        ((member (car lst) (cdr lst) :test #'equal) (cons (car lst)
-                                                      (dupes (cdr lst))))
+        ((member (car lst) (cdr lst) :test #'equal)
+           (cons (car lst) (dupes (cdr lst))))
         (t (dupes (cdr lst)))))
 
 
 (defmacro vgrp-mvc ((dim fx) &body body)
-  "do (multiple-value-call fx g) where g is groups of size dim over (values ...) returned by body."
+  "call fx on body in groups of dim.
+ex: (labels ((fx ((:va 3 x)) (veq:fxy x)))
+      (veq:vpr (veq:vgrp-mvc (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
+returns: (values 1f0 2f0 4f0 5f0)
+ex: (labels ((fx ((:va 3 x)) (veq:fxz x)))
+      (veq:vpr (veq:vgrp-mvc (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
+returns: (values 1f0 3f0 4f0 6f0)"
   (awg (gsfx rest x)
-  `(veq:fvprogn
-     (labels ((,gsfx (&rest ,rest)
-       (apply #'values
-         (awf (loop for ((:va  ,dim ,x)) in (group ,rest ,dim)
-                    collect (veq:lst (veq:mvc ,fx ,x)))))))
-       (mvc #',gsfx ,@body)))))
+    `(veq:fvprogn
+       (labels ((,gsfx (&rest ,rest)
+         (apply #'values
+           (awf (loop for ((:va  ,dim ,x)) in (group ,rest ,dim)
+                      collect (veq:lst (veq:mvc ,fx ,x)))))))
+         (mvc #',gsfx ,@body)))))
 
 
 (defmacro mvcwrap (m fx)
-  "wrap fx in a macro, m, so that fx will be called via mvc."
+  "define a macro named m so that (m a ...) is equivalent to (mvc #'fx a ...)"
   `(defmacro ,m (&rest args)
     ,(format nil "(mvc #'~a ...)" fx)
     `(mvc #',',fx ,@args)))
-(mvcwrap vprod *) ; (* a b c)
-(mvcwrap vsum +) ; (+ a b c)
+(mvcwrap vprod *) ; (* a b c ...)
+(mvcwrap vsum +) ; (+ a b c ...)
 
 (defmacro vpr (&rest rest)
   "print (mvc #'list rest) and return (mvc #'values rest)."
@@ -191,11 +196,11 @@ eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
 ; NOTE: using (lst ...) makes things slower in some cases.  because of the
 ; consing or because the number of values is unknown?. avoid when possible.
 (defmacro lst (&body body)
-  "wrap (values ..) in (list ..).
-almost like multuple-values-list, except it handles multuple arguments."
+  "get all values in body as a list.
+almost like multuple-values-list, except it handles multiple arguments."
   `(mvc #'list ,@body))
 (defmacro from-lst (l)
-  "get values from list. equivalent to values-list."
+  "get values from list. equivalent to (values-list ...)."
   `(values-list ,l))
 (defmacro ~ (&rest rest)
   "wraps arguments in (mvc #'values ...)."

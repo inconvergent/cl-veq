@@ -36,5 +36,7 @@
     #:f2segdst #:f2lsegx #:f2segx
     #:f3planex
 
+    #:f$ #:d$ #:f2$ #:d2$ #:f3$ #:d3$ #:f4$ #:d4$
+
     #:vprod #:vsum))
 

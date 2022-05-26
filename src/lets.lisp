@@ -1,7 +1,7 @@
 
 (in-package :veq)
 
-;;;;;;;;;;;;;;;;;; VMVB
+;;;;;;;;;;;;;;;;;; VMVB/VLET
 
 (defun -vmvb (type dim arg expr body &key (repvarg t))
   (declare (symbol arg) (list expr) (fixnum dim))
@@ -9,19 +9,6 @@
                     (declare (,type ,arg))
                     ,@body)))
     (if repvarg (replace-varg body) body)))
-
-; (defmacro map-mvb (dim type)
-;   (let* ((mname (veqsymb dim type "mvb"))
-;          (docs (format nil "make ~ad mvb.~%ex: (f3mvb ((:va 3 x)) (fx ...) ...)
-; assumes (fx ...) returns three values and assigns them to x." dim)))
-;     `(progn (map-docstring ',mname ,docs :nodesc :context)
-;             (map-symbol `(,',mname
-;                            (arg expr &body body) ,,docs
-;                            (-vmvb ',',type ,,dim arg expr body))))))
-; (map-mvb 1 ff) (map-mvb 2 ff) (map-mvb 3 ff) (map-mvb 4 ff)
-; (map-mvb 1 df) (map-mvb 2 df) (map-mvb 3 df) (map-mvb 4 df)
-
-;;;;;;;;;;;;;;;;;; VLET
 
 (defun -vlet (type dim all-args body)
   (let ((sme (some (lambda (a) (not (= (length a) 2))) all-args)))
@@ -48,16 +35,15 @@
   `((dvlet (all-args &body body) (-vlet* 'df all-args body))
     (fvlet (all-args &body body) (-vlet* 'ff all-args body))))
 
-(defmacro map-vlet (dim type)
+(defmacro define-vlet (dim type)
   (let* ((mname (veqsymb dim type "let"))
          (docs (format nil "make ~ad let.~%ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
 note that this behaves like native lisp let*." dim)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
-            (map-symbol `(,',mname
-                           (all-args &body body) ,,docs
-                           (-vlet ',',type ,,dim all-args body))))))
-(map-vlet 2 ff) (map-vlet 3 ff) (map-vlet 4 ff)
-(map-vlet 2 df) (map-vlet 3 df) (map-vlet 4 df)
+            (map-symbol `(,',mname (all-args &body body) ,,docs
+                                   (-vlet ',',type ,,dim all-args body))))))
+(define-vlet 2 ff) (define-vlet 3 ff) (define-vlet 4 ff)
+(define-vlet 2 df) (define-vlet 3 df) (define-vlet 4 df)
 
 
 (defun dim? (a dim &key type &aux (l (length a)))
@@ -86,63 +72,53 @@ use %labelname to call the function directly, not via mvc."
          (labels (,@(mapcar #'ffx labnames))
            ,@body)))))
 
+;;;;;;;;;;;;;;;;;; MAKE VECTOR
 
-;;;;;;;;;;;;;;;;;; (d2 ...)
-
-(defmacro map-td (dim type)
+(defmacro define-td (dim type)
   (let* ((mname (veqsymb dim type ""))
          (docs (format nil "make ~ad vector in veq context.~%strict." dim)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
-            (map-symbol `(,',mname
-                           (&body body) ,,docs
-                           `(~ ,@(dim? body ',',dim :type ',',type)))))))
-(map-td 1 ff) (map-td 2 ff) (map-td 3 ff) (map-td 4 ff)
-(map-td 1 df) (map-td 2 df) (map-td 3 df) (map-td 4 df)
+            (map-symbol `(,',mname (&body body) ,,docs
+                                   `(~ ,@(dim? body ',',dim :type ',',type)))))))
+(define-td 1 ff) (define-td 2 ff) (define-td 3 ff) (define-td 4 ff)
+(define-td 1 df) (define-td 2 df) (define-td 3 df) (define-td 4 df)
 
+;;;;;;;;;;;;;;;;;; ~ (TILDE)
 
-;;;;;;;;;;;;;;;;;; (d2~ ...)
-
-(defmacro map-td~ (dim type)
+(defmacro define-td~ (dim type)
   (let* ((mname (veqsymb dim type "~"))
          (docs (format nil "make ~ad vector in veq context.~%coerce to type." dim)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
-            (map-symbol `(,',mname
-                           (&body body) ,,docs
-                           `(~ (,',',(symb type "*")
-                                 ,@(dim? body ',',dim :type ',',type))))))))
-(map-td~ 1 ff) (map-td~ 2 ff) (map-td~ 3 ff) (map-td~ 4 ff)
-(map-td~ 1 df) (map-td~ 2 df) (map-td~ 3 df) (map-td~ 4 df)
+            (map-symbol `(,',mname (&body body) ,,docs
+                                     `(~ (,',',(symb type "*")
+                                           ,@(dim? body ',',dim :type ',',type))))))))
+(define-td~ 1 ff) (define-td~ 2 ff) (define-td~ 3 ff) (define-td~ 4 ff)
+(define-td~ 1 df) (define-td~ 2 df) (define-td~ 3 df) (define-td~ 4 df)
 
-;;;;;;;;;;;;;;;;;; (d2rep ...)
+;;;;;;;;;;;;;;;;;; REP/REP*
 
-(defmacro map-rep (dim type)
+(defmacro define-rep (dim type)
   (let* ((mname (veqsymb dim type "rep"))
          (docs (format nil "repeat argument ~ad times as values.
 ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx))." dim)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
-            (map-symbol `(,',mname
-                           (expr) ,,docs
-                           `(values
-                              ,@(loop repeat ',',dim
-                                      collect expr of-type ',',type)))))))
-(map-rep 1 ff) (map-rep 2 ff) (map-rep 3 ff) (map-rep 4 ff)
-(map-rep 1 df) (map-rep 2 df) (map-rep 3 df) (map-rep 4 df)
+            (map-symbol `(,',mname (expr) ,,docs
+                                   `(values ,@(loop repeat ',',dim
+                                                    collect expr of-type ',',type)))))))
+(define-rep 1 ff) (define-rep 2 ff) (define-rep 3 ff) (define-rep 4 ff)
+(define-rep 1 df) (define-rep 2 df) (define-rep 3 df) (define-rep 4 df)
 
-;;;;;;;;;;;;;;;;;; (d2rep* ...)
-
-(defmacro map-rep* (dim type)
+(defmacro define-rep* (dim type)
   (awg (e)
-  (let ((mname (veqsymb dim type "rep*"))
-        (docs (format nil "repeat the evaluated argument ~ad times as values.
-ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
-fx is evaluated exactly once." dim))
-        (vals `(values ,@(loop repeat dim collect e))))
-    `(progn (map-docstring ',mname ,docs :nodesc :context)
-            (map-symbol `(,',mname
-                           (expr) ,,docs
-                           `(let ((,',',e ,expr))
-                                   (declare (,',',type ,',',e))
-                                   ,',',vals)))))))
-(map-rep* 1 ff) (map-rep* 2 ff) (map-rep* 3 ff) (map-rep* 4 ff)
-(map-rep* 1 df) (map-rep* 2 df) (map-rep* 3 df) (map-rep* 4 df)
+    (let ((mname (veqsymb dim type "rep*"))
+          (vals `(values ,@(loop repeat dim collect e)))
+          (docs (format nil "repeat the evaluated argument ~a times as values.
+ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v))." dim)))
+      `(progn (map-docstring ',mname ,docs :nodesc :context)
+              (map-symbol `(,',mname (expr) ,,docs
+                                     `(let ((,',',e ,expr))
+                                        (declare (,',',type ,',',e))
+                                        ,',',vals)))))))
+(define-rep* 1 ff) (define-rep* 2 ff) (define-rep* 3 ff) (define-rep* 4 ff)
+(define-rep* 1 df) (define-rep* 2 df) (define-rep* 3 df) (define-rep* 4 df)
 

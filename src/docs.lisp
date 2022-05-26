@@ -7,14 +7,14 @@
 
 (defmacro context? ()
   "list all macrolets in veq context. that is ops available inside vprog,
-  fvprogn, vdef, fvdef defined contexts/functions."
+fvprogn, vdef, fvdef defined contexts/functions."
   (awg (s)
     `(list (sort (mapcar (lambda (,s) (describe (list ,s)) (mkstr (car ,s)))
                          *symbols-map*)
                  #'string-lessp))))
 
 (defun desc (sym)
-  (declare #.*opt* (symbol sym))
+  (declare (symbol sym))
   (let ((d (with-output-to-string (*standard-output*)
              (describe sym))))
     (apply #'mkstr (mapcar (lambda (s) (mkstr " ; " s #\Newline))
@@ -28,7 +28,7 @@
 
 
 (defun select-docs (sym)
-  (declare #.*opt* (symbol sym))
+  (declare (symbol sym))
   (let* ((docs (find-if (lambda (c) (eq sym c)) *docstring-map* :key #'car))
          (idocs (docstrings sym))
          (skip (find :skip docs))
@@ -50,8 +50,8 @@
            #'string-lessp :key #'car)))
 
 (defmacro ext-symbols? (&optional mode)
-  "list all external symbols in veq. use :verbose to inlcude docstring.  use
-  :pretty to print verbose output to stdout in a readable form."
+  "list all external symbols in veq. use :verbose to inlcude docstring.
+use :pretty to print verbose output to stdout in a readable form."
   (awg (str sym doc skip context)
     (case mode
       (:pretty
@@ -66,10 +66,9 @@
       (otherwise `(loop for (,str ,sym) in (pckgs) collect ,str)))))
 
 (defun map-docstring (&rest rest)
-  (declare #.*opt* (list rest))
-  "register docs info associated with symbol (car rest)."
+  (declare (list rest))
+  "register docs info associated with symbol (car rest). internal."
   (setf *docstring-map* (remove-if (lambda (cand) (eq (car cand) (car rest)))
                                    *docstring-map*))
   (push rest *docstring-map*))
-
 

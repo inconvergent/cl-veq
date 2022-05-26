@@ -4,36 +4,14 @@
 
 (defmacro make-last (dim type)
   (awg (a)
-    `(progn
-       (export ',(veqsymb dim type "$last"))
-       (defun ,(veqsymb dim type "$last") (,a)
-         (declare #.*opt* (,(arrtype type) ,a))
-         ,(format nil "get last row of ~ad array as (values ...)" dim)
-       (,(veqsymb dim type "$" :pref "-") ,a
-          (1- (the pos-int (,(veqsymb dim nil "$num") ,a))))))))
+    `(progn (export ',(veqsymb dim type "$last"))
+            (defun ,(veqsymb dim type "$last") (,a)
+              (declare #.*opt* (,(arrtype type) ,a))
+              ,(format nil "get last row of ~ad array as (values ...)" dim)
+            (,(veqsymb dim type "$") ,a
+               (1- (the pos-int (,(veqsymb dim nil "$num") ,a))))))))
 (make-last 1 ff) (make-last 2 ff) (make-last 3 ff) (make-last 4 ff)
 (make-last 1 df) (make-last 2 df) (make-last 3 df) (make-last 4 df)
-
-
-(defun -ind-to-val (type dim a inds)
-  (unless inds (setf inds `(0))) ; defaults to (0)
-  (awg (a*) `(let ((,a* ,a))
-               (declare (,(arrtype type) ,a*))
-               (~ ,@(loop for ind in inds
-                          collect `(,(veqsymb dim type "$" :pref "-")
-                                     ,a* ,ind))))))
-(defmacro map-ind (dim type)
-  (let* ((mname (veqsymb dim type "$"))
-         (docs (format nil "returns values from ~ad array.
-supports multiple indices. default is 0.
-ex: (~a a i j ...) returns (values a[i] a[j] ...).
-note that the number of values depends on the dimension." dim mname)))
-    `(progn (map-docstring ',mname ,docs :nodesc :context)
-            (map-symbol `(,',mname
-                           (a &rest inds) ,,docs
-                           (-ind-to-val ',',type ,,dim a inds))))))
-(map-ind 1 ff) (map-ind 2 ff) (map-ind 3 ff) (map-ind 4 ff)
-(map-ind 1 df) (map-ind 2 df) (map-ind 3 df) (map-ind 4 df)
 
 ; TODO: protect c
 (defun -struct-fields (dim type s c slots)

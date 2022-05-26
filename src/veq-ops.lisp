@@ -20,21 +20,28 @@
   (cdr (assoc (char (string-upcase (mkstr symb)) 0)
               `((#\D . df) (#\F . ff) (#\I . in)))))
 
+(defun body-len (a b) (= a (length b)))
+
 (defmacro op ((mname args) &body body)
   (declare (symbol mname) (list args))
   "build an op. see ops-1.lisp, ops-2.lisp, ..."
   (let* ((declares `(,(optype mname) ,@args))
          (fname (symb "-" mname))
+         (macroname (symb "_" mname))
          (docs (format nil "veq context op: ~a~%fxname: ~a~%args: ~a~%body: ~a~%"
                  mname fname args (car body))))
-    `(progn (map-symbol `(,',mname (&body body)
-                            `(mvc #',',',fname ,@body)))
+    `(progn (map-symbol `(,',mname (&body mbody)
+                            `(,@(if (body-len ,,(length args) mbody)
+                                  `(,',',fname)
+                                  `(mvc #',',',fname))
+                               ,@mbody)))
             (map-docstring ',mname ,docs :nodesc :context)
             (export ',mname)
             ,@(unless #.*dev* `((declaim (inline ,fname))))
             (defun ,fname ,args (declare ,*opt* ,declares)
               ,docs
               (progn ,@body)))))
+
 
 (defun type-placeholder (root type)
   (labels ((repl (symb type)

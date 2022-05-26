@@ -362,7 +362,7 @@ use (4$vset (a i) (values ...)) to set a[i] of 4d array.
 
 ```
 list all macrolets in veq context. that is ops available inside vprog,
-  fvprogn, vdef, fvdef defined contexts/functions.
+fvprogn, vdef, fvdef defined contexts/functions.
 
  ; VEQ:CONTEXT?
  ;   [symbol]
@@ -371,7 +371,7 @@ list all macrolets in veq context. that is ops available inside vprog,
  ;   Lambda-list: ()
  ;   Documentation:
  ;     list all macrolets in veq context. that is ops available inside vprog,
- ;       fvprogn, vdef, fvdef defined contexts/functions.
+ ;     fvprogn, vdef, fvdef defined contexts/functions.
  ;   Source file: /data/x/veq/src/docs.lisp
 ```
 
@@ -382,13 +382,23 @@ make 1d vector in veq context.
 strict.
 ```
 
-#### :context: D$
+#### D$
 
 ```
-returns values from 1d array.
-supports multiple indices. default is 0.
-ex: (D$ a i j ...) returns (values a[i] a[j] ...).
+returns indices (default 0) from 1d vector array as values.
+ex: (D$ a i j ...) returns (values a[i] .. a[j] .. ...).
 note that the number of values depends on the dimension.
+
+ ; VEQ:D$
+ ;   [symbol]
+ ;
+ ; D$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Documentation:
+ ;     returns indices (default 0) from 1d vector array as values.
+ ;     ex: (D$ a i j ...) returns (values a[i] .. a[j] .. ...).
+ ;     note that the number of values depends on the dimension.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
 #### D$\*
@@ -570,8 +580,9 @@ destructive.
 #### D$_
 
 ```
-create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
-   or: ($_ '((1d0 2d0) (1d0 2d0)))
+create vector array (dvec) from body. wherebody is a list of lists.
+ex: ($_ (loop repeat 2 collect `(1d0 2d0)))
+ex: ($_ '((1d0 2d0) (1d0 2d0))).
 
  ; VEQ:D$_
  ;   [symbol]
@@ -579,8 +590,9 @@ create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
  ; D$_ names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
- ;        or: ($_ '((1d0 2d0) (1d0 2d0)))
+ ;     create vector array (dvec) from body. wherebody is a list of lists.
+ ;     ex: ($_ (loop repeat 2 collect `(1d0 2d0)))
+ ;     ex: ($_ '((1d0 2d0) (1d0 2d0))).
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
@@ -631,7 +643,7 @@ destructive.
 #### D$COPY
 
 ```
-copy array
+copy vector array (dvec).
 
  ; VEQ:D$COPY
  ;   [symbol]
@@ -641,7 +653,7 @@ copy array
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     copy array
+ ;     copy vector array (dvec).
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
@@ -952,7 +964,7 @@ defined via veq:fvdef*
 #### D$MAKE
 
 ```
- create array with size (n dim), and initial value v
+create array with size (n dim), and initial value v.
 
  ; VEQ:D$MAKE
  ;   [symbol]
@@ -960,7 +972,7 @@ defined via veq:fvdef*
  ; D$MAKE names a macro:
  ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0.0d0))
  ;   Documentation:
- ;      create array with size (n dim), and initial value v
+ ;     create array with size (n dim), and initial value v.
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
@@ -1250,7 +1262,7 @@ make 1d
 #### D$ZERO
 
 ```
-make 1d array of zeros.
+make 1d vector array of zeros.
 typed.
 
  ; VEQ:D$ZERO
@@ -1261,7 +1273,7 @@ typed.
  ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     make 1d array of zeros.
+ ;     make 1d vector array of zeros.
  ;     typed.
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
@@ -1309,13 +1321,23 @@ make 2d vector in veq context.
 strict.
 ```
 
-#### :context: D2$
+#### D2$
 
 ```
-returns values from 2d array.
-supports multiple indices. default is 0.
-ex: (D2$ a i j ...) returns (values a[i] a[j] ...).
+returns indices (default 0) from 2d vector array as values.
+ex: (D2$ a i j ...) returns (values a[i] .. a[j] .. ...).
 note that the number of values depends on the dimension.
+
+ ; VEQ:D2$
+ ;   [symbol]
+ ;
+ ; D2$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Documentation:
+ ;     returns indices (default 0) from 2d vector array as values.
+ ;     ex: (D2$ a i j ...) returns (values a[i] .. a[j] .. ...).
+ ;     note that the number of values depends on the dimension.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
 #### D2$\*
@@ -2196,7 +2218,7 @@ make 2d
 #### D2$ZERO
 
 ```
-make 2d array of zeros.
+make 2d vector array of zeros.
 typed.
 
  ; VEQ:D2$ZERO
@@ -2207,7 +2229,7 @@ typed.
  ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     make 2d array of zeros.
+ ;     make 2d vector array of zeros.
  ;     typed.
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
@@ -2721,9 +2743,8 @@ ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 #### :context: D2REP\*
 
 ```
-repeat the evaluated argument 2d times as values.
-ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
-fx is evaluated exactly once.
+repeat the evaluated argument 2 times as values.
+ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 
 #### :context: D2ROT
@@ -2799,13 +2820,23 @@ make 3d vector in veq context.
 strict.
 ```
 
-#### :context: D3$
+#### D3$
 
 ```
-returns values from 3d array.
-supports multiple indices. default is 0.
-ex: (D3$ a i j ...) returns (values a[i] a[j] ...).
+returns indices (default 0) from 3d vector array as values.
+ex: (D3$ a i j ...) returns (values a[i] .. a[j] .. ...).
 note that the number of values depends on the dimension.
+
+ ; VEQ:D3$
+ ;   [symbol]
+ ;
+ ; D3$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Documentation:
+ ;     returns indices (default 0) from 3d vector array as values.
+ ;     ex: (D3$ a i j ...) returns (values a[i] .. a[j] .. ...).
+ ;     note that the number of values depends on the dimension.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
 #### D3$\*
@@ -3689,7 +3720,7 @@ make 3d
 #### D3$ZERO
 
 ```
-make 3d array of zeros.
+make 3d vector array of zeros.
 typed.
 
  ; VEQ:D3$ZERO
@@ -3700,7 +3731,7 @@ typed.
  ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     make 3d array of zeros.
+ ;     make 3d vector array of zeros.
  ;     typed.
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
@@ -4161,9 +4192,8 @@ ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 #### :context: D3REP\*
 
 ```
-repeat the evaluated argument 3d times as values.
-ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
-fx is evaluated exactly once.
+repeat the evaluated argument 3 times as values.
+ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 
 #### :context: D3ROT
@@ -4242,13 +4272,23 @@ make 4d vector in veq context.
 strict.
 ```
 
-#### :context: D4$
+#### D4$
 
 ```
-returns values from 4d array.
-supports multiple indices. default is 0.
-ex: (D4$ a i j ...) returns (values a[i] a[j] ...).
+returns indices (default 0) from 4d vector array as values.
+ex: (D4$ a i j ...) returns (values a[i] .. a[j] .. ...).
 note that the number of values depends on the dimension.
+
+ ; VEQ:D4$
+ ;   [symbol]
+ ;
+ ; D4$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Documentation:
+ ;     returns indices (default 0) from 4d vector array as values.
+ ;     ex: (D4$ a i j ...) returns (values a[i] .. a[j] .. ...).
+ ;     note that the number of values depends on the dimension.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
 #### D4$\*
@@ -5020,7 +5060,7 @@ make 4d
 #### D4$ZERO
 
 ```
-make 4d array of zeros.
+make 4d vector array of zeros.
 typed.
 
  ; VEQ:D4$ZERO
@@ -5031,7 +5071,7 @@ typed.
  ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     make 4d array of zeros.
+ ;     make 4d vector array of zeros.
  ;     typed.
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
@@ -5418,9 +5458,8 @@ ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 #### :context: D4REP\*
 
 ```
-repeat the evaluated argument 4d times as values.
-ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
-fx is evaluated exactly once.
+repeat the evaluated argument 4 times as values.
+ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 
 #### :context: D4SCALE
@@ -5497,7 +5536,7 @@ body: (EXPT A S)
 #### D_
 
 ```
-create dvec from body: (d_ '(1d0 2d0 3d0))
+create vector array (dvec) from body: (d_ '(1d0 2d0 3d0)).
 
  ; VEQ:D_
  ;   [symbol]
@@ -5505,7 +5544,7 @@ create dvec from body: (d_ '(1d0 2d0 3d0))
  ; D_ names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     create dvec from body: (d_ '(1d0 2d0 3d0))
+ ;     create vector array (dvec) from body: (d_ '(1d0 2d0 3d0)).
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
@@ -6371,9 +6410,8 @@ ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 #### :context: DREP\*
 
 ```
-repeat the evaluated argument 1d times as values.
-ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
-fx is evaluated exactly once.
+repeat the evaluated argument 1 times as values.
+ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 
 #### DSB
@@ -6501,8 +6539,8 @@ coerce to type.
 #### EXT-SYMBOLS?
 
 ```
-list all external symbols in veq. use :verbose to inlcude docstring.  use
-  :pretty to print verbose output to stdout in a readable form.
+list all external symbols in veq. use :verbose to inlcude docstring.
+use :pretty to print verbose output to stdout in a readable form.
 
  ; VEQ:EXT-SYMBOLS?
  ;   [symbol]
@@ -6510,8 +6548,8 @@ list all external symbols in veq. use :verbose to inlcude docstring.  use
  ; EXT-SYMBOLS? names a macro:
  ;   Lambda-list: (&OPTIONAL MODE)
  ;   Documentation:
- ;     list all external symbols in veq. use :verbose to inlcude docstring.  use
- ;       :pretty to print verbose output to stdout in a readable form.
+ ;     list all external symbols in veq. use :verbose to inlcude docstring.
+ ;     use :pretty to print verbose output to stdout in a readable form.
  ;   Source file: /data/x/veq/src/docs.lisp
 ```
 
@@ -6522,13 +6560,23 @@ make 1d vector in veq context.
 strict.
 ```
 
-#### :context: F$
+#### F$
 
 ```
-returns values from 1d array.
-supports multiple indices. default is 0.
-ex: (F$ a i j ...) returns (values a[i] a[j] ...).
+returns indices (default 0) from 1d vector array as values.
+ex: (F$ a i j ...) returns (values a[i] .. a[j] .. ...).
 note that the number of values depends on the dimension.
+
+ ; VEQ:F$
+ ;   [symbol]
+ ;
+ ; F$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Documentation:
+ ;     returns indices (default 0) from 1d vector array as values.
+ ;     ex: (F$ a i j ...) returns (values a[i] .. a[j] .. ...).
+ ;     note that the number of values depends on the dimension.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
 #### F$\*
@@ -6710,8 +6758,9 @@ destructive.
 #### F$_
 
 ```
-create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
-   or: ($_ '((1d0 2d0) (1d0 2d0)))
+create vector array (fvec) from body. where body is a list of lists.
+ex: ($_ (loop repeat 2 collect `(1f0 2f0)))
+ex: ($_ '((1f0 2f0) (1f0 2f0))).
 
  ; VEQ:F$_
  ;   [symbol]
@@ -6719,8 +6768,9 @@ create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
  ; F$_ names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     create array from body. use either: ($_ (loop repeat 2 collect `(1d0 2d0)))
- ;        or: ($_ '((1d0 2d0) (1d0 2d0)))
+ ;     create vector array (fvec) from body. where body is a list of lists.
+ ;     ex: ($_ (loop repeat 2 collect `(1f0 2f0)))
+ ;     ex: ($_ '((1f0 2f0) (1f0 2f0))).
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
@@ -6771,7 +6821,7 @@ destructive.
 #### F$COPY
 
 ```
-copy array
+copy vector array (fvec).
 
  ; VEQ:F$COPY
  ;   [symbol]
@@ -6781,7 +6831,7 @@ copy array
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     copy array
+ ;     copy vector array (fvec).
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
@@ -7092,7 +7142,7 @@ defined via veq:fvdef*
 #### F$MAKE
 
 ```
- create array with size (n dim), and initial value v
+create array with size (n dim), and initial value v.
 
  ; VEQ:F$MAKE
  ;   [symbol]
@@ -7100,7 +7150,7 @@ defined via veq:fvdef*
  ; F$MAKE names a macro:
  ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0.0))
  ;   Documentation:
- ;      create array with size (n dim), and initial value v
+ ;     create array with size (n dim), and initial value v.
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
@@ -7390,7 +7440,7 @@ make 1d
 #### F$ZERO
 
 ```
-make 1d array of zeros.
+make 1d vector array of zeros.
 typed.
 
  ; VEQ:F$ZERO
@@ -7401,7 +7451,7 @@ typed.
  ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     make 1d array of zeros.
+ ;     make 1d vector array of zeros.
  ;     typed.
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
@@ -7449,13 +7499,23 @@ make 2d vector in veq context.
 strict.
 ```
 
-#### :context: F2$
+#### F2$
 
 ```
-returns values from 2d array.
-supports multiple indices. default is 0.
-ex: (F2$ a i j ...) returns (values a[i] a[j] ...).
+returns indices (default 0) from 2d vector array as values.
+ex: (F2$ a i j ...) returns (values a[i] .. a[j] .. ...).
 note that the number of values depends on the dimension.
+
+ ; VEQ:F2$
+ ;   [symbol]
+ ;
+ ; F2$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Documentation:
+ ;     returns indices (default 0) from 2d vector array as values.
+ ;     ex: (F2$ a i j ...) returns (values a[i] .. a[j] .. ...).
+ ;     note that the number of values depends on the dimension.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
 #### F2$\*
@@ -8425,7 +8485,7 @@ make 2d
 #### F2$ZERO
 
 ```
-make 2d array of zeros.
+make 2d vector array of zeros.
 typed.
 
  ; VEQ:F2$ZERO
@@ -8436,7 +8496,7 @@ typed.
  ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     make 2d array of zeros.
+ ;     make 2d vector array of zeros.
  ;     typed.
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
@@ -9034,9 +9094,8 @@ ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 #### :context: F2REP\*
 
 ```
-repeat the evaluated argument 2d times as values.
-ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
-fx is evaluated exactly once.
+repeat the evaluated argument 2 times as values.
+ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 
 #### :context: F2ROT
@@ -9152,13 +9211,23 @@ make 3d vector in veq context.
 strict.
 ```
 
-#### :context: F3$
+#### F3$
 
 ```
-returns values from 3d array.
-supports multiple indices. default is 0.
-ex: (F3$ a i j ...) returns (values a[i] a[j] ...).
+returns indices (default 0) from 3d vector array as values.
+ex: (F3$ a i j ...) returns (values a[i] .. a[j] .. ...).
 note that the number of values depends on the dimension.
+
+ ; VEQ:F3$
+ ;   [symbol]
+ ;
+ ; F3$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Documentation:
+ ;     returns indices (default 0) from 3d vector array as values.
+ ;     ex: (F3$ a i j ...) returns (values a[i] .. a[j] .. ...).
+ ;     note that the number of values depends on the dimension.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
 #### F3$\*
@@ -10042,7 +10111,7 @@ make 3d
 #### F3$ZERO
 
 ```
-make 3d array of zeros.
+make 3d vector array of zeros.
 typed.
 
  ; VEQ:F3$ZERO
@@ -10053,7 +10122,7 @@ typed.
  ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     make 3d array of zeros.
+ ;     make 3d vector array of zeros.
  ;     typed.
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
@@ -10531,9 +10600,8 @@ ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 #### :context: F3REP\*
 
 ```
-repeat the evaluated argument 3d times as values.
-ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
-fx is evaluated exactly once.
+repeat the evaluated argument 3 times as values.
+ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 
 #### :context: F3ROT
@@ -10612,13 +10680,23 @@ make 4d vector in veq context.
 strict.
 ```
 
-#### :context: F4$
+#### F4$
 
 ```
-returns values from 4d array.
-supports multiple indices. default is 0.
-ex: (F4$ a i j ...) returns (values a[i] a[j] ...).
+returns indices (default 0) from 4d vector array as values.
+ex: (F4$ a i j ...) returns (values a[i] .. a[j] .. ...).
 note that the number of values depends on the dimension.
+
+ ; VEQ:F4$
+ ;   [symbol]
+ ;
+ ; F4$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Documentation:
+ ;     returns indices (default 0) from 4d vector array as values.
+ ;     ex: (F4$ a i j ...) returns (values a[i] .. a[j] .. ...).
+ ;     note that the number of values depends on the dimension.
+ ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
 #### F4$\*
@@ -11390,7 +11468,7 @@ make 4d
 #### F4$ZERO
 
 ```
-make 4d array of zeros.
+make 4d vector array of zeros.
 typed.
 
  ; VEQ:F4$ZERO
@@ -11401,7 +11479,7 @@ typed.
  ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     make 4d array of zeros.
+ ;     make 4d vector array of zeros.
  ;     typed.
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
@@ -11788,9 +11866,8 @@ ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 #### :context: F4REP\*
 
 ```
-repeat the evaluated argument 4d times as values.
-ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
-fx is evaluated exactly once.
+repeat the evaluated argument 4 times as values.
+ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 
 #### :context: F4SCALE
@@ -11851,7 +11928,7 @@ body: (EXPT A S)
 #### F_
 
 ```
-create fvec from body: (f_ '(1f0 2f0 3f0))
+create vector array (fvec) from body: (f_ '(1f0 2f0 3f0)).
 
  ; VEQ:F_
  ;   [symbol]
@@ -11859,7 +11936,7 @@ create fvec from body: (f_ '(1f0 2f0 3f0))
  ; F_ names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     create fvec from body: (f_ '(1f0 2f0 3f0))
+ ;     create vector array (fvec) from body: (f_ '(1f0 2f0 3f0)).
  ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
@@ -12760,15 +12837,14 @@ ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx)).
 #### :context: FREP\*
 
 ```
-repeat the evaluated argument 1d times as values.
-ex: (f3rep (fx)) corresponds to (values v v v) where v = (fx).
-fx is evaluated exactly once.
+repeat the evaluated argument 1 times as values.
+ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 
 #### FROM-LST
 
 ```
-get values from list. equivalent to values-list.
+get values from list. equivalent to (values-list ...).
 
  ; VEQ:FROM-LST
  ;   [symbol]
@@ -12776,7 +12852,7 @@ get values from list. equivalent to values-list.
  ; FROM-LST names a macro:
  ;   Lambda-list: (L)
  ;   Documentation:
- ;     get values from list. equivalent to values-list.
+ ;     get values from list. equivalent to (values-list ...).
  ;   Source file: /data/x/veq/src/utils.lisp
 ```
 
@@ -13016,8 +13092,8 @@ inspect argument
 #### LST
 
 ```
-wrap (values ..) in (list ..).
-almost like multuple-values-list, except it handles multuple arguments.
+get all values in body as a list.
+almost like multuple-values-list, except it handles multiple arguments.
 
  ; VEQ:LST
  ;   [symbol]
@@ -13025,8 +13101,8 @@ almost like multuple-values-list, except it handles multuple arguments.
  ; LST names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     wrap (values ..) in (list ..).
- ;     almost like multuple-values-list, except it handles multuple arguments.
+ ;     get all values in body as a list.
+ ;     almost like multuple-values-list, except it handles multiple arguments.
  ;   Source file: /data/x/veq/src/utils.lisp
 ```
 
@@ -13089,7 +13165,7 @@ expand macro all.
 #### MVCWRAP
 
 ```
-wrap fx in a macro, m, so that fx will be called via mvc.
+define a macro named m so that (m a ...) is equivalent to (mvc #'fx a ...)
 
  ; VEQ:MVCWRAP
  ;   [symbol]
@@ -13097,7 +13173,7 @@ wrap fx in a macro, m, so that fx will be called via mvc.
  ; MVCWRAP names a macro:
  ;   Lambda-list: (M FX)
  ;   Documentation:
- ;     wrap fx in a macro, m, so that fx will be called via mvc.
+ ;     define a macro named m so that (m a ...) is equivalent to (mvc #'fx a ...)
  ;   Source file: /data/x/veq/src/utils.lisp
 ```
 
@@ -13168,7 +13244,13 @@ the wrapper macro ensures every call to this function is done as
 #### VGRP-MVC
 
 ```
-do (multiple-value-call fx g) where g is groups of size dim over (values ...) returned by body.
+call fx on body in groups of dim.
+ex: (labels ((fx ((:va 3 x)) (veq:fxy x)))
+      (veq:vpr (veq:vgrp-mvc (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
+returns: (values 1f0 2f0 4f0 5f0)
+ex: (labels ((fx ((:va 3 x)) (veq:fxz x)))
+      (veq:vpr (veq:vgrp-mvc (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
+returns: (values 1f0 3f0 4f0 6f0)
 
  ; VEQ:VGRP-MVC
  ;   [symbol]
@@ -13176,7 +13258,13 @@ do (multiple-value-call fx g) where g is groups of size dim over (values ...) re
  ; VGRP-MVC names a macro:
  ;   Lambda-list: ((DIM FX) &BODY BODY)
  ;   Documentation:
- ;     do (multiple-value-call fx g) where g is groups of size dim over (values ...) returned by body.
+ ;     call fx on body in groups of dim.
+ ;     ex: (labels ((fx ((:va 3 x)) (veq:fxy x)))
+ ;           (veq:vpr (veq:vgrp-mvc (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
+ ;     returns: (values 1f0 2f0 4f0 5f0)
+ ;     ex: (labels ((fx ((:va 3 x)) (veq:fxz x)))
+ ;           (veq:vpr (veq:vgrp-mvc (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
+ ;     returns: (values 1f0 3f0 4f0 6f0)
  ;   Source file: /data/x/veq/src/utils.lisp
 ```
 
