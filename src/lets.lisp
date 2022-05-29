@@ -45,14 +45,6 @@ note that this behaves like native lisp let*." dim)))
 (define-vlet 2 ff) (define-vlet 3 ff) (define-vlet 4 ff)
 (define-vlet 2 df) (define-vlet 3 df) (define-vlet 4 df)
 
-
-(defun dim? (a dim &key type &aux (l (length a)))
-  (unless (= l dim)
-          (error "incorrect dim. got: ~a expected: ~a. ~% expr: ~% ~a" l dim a))
-  (if type (mapcar (lambda (v) (if (numberp v) (coerce v type) v)) a) a))
-(defun ddim? (a dim) (dim? a dim :type 'df))
-(defun fdim? (a dim) (dim? a dim :type 'ff))
-
 ;;;;;;;;;;;;;;;;;; VLABELS
 
 (defmacro vlabels ((&rest labs) &body body)
@@ -74,24 +66,30 @@ use %labelname to call the function directly, not via mvc."
 
 ;;;;;;;;;;;;;;;;;; MAKE VECTOR
 
+
+(defun dim? (a dim &key type &aux (l (length a)))
+  (unless (= l dim)
+          (error "incorrect dim. got: ~a expected: ~a. ~% expr: ~% ~a" l dim a))
+  (if type (mapcar (lambda (v) (if (numberp v) (coerce v type) v)) a) a))
+
 (defmacro define-td (dim type)
   (let* ((mname (veqsymb dim type ""))
-         (docs (format nil "make ~ad vector in veq context.~%strict." dim)))
+         (docs (format nil "strict make ~ad vector in veq context." dim)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
             (map-symbol `(,',mname (&body body) ,,docs
-                                   `(~ ,@(dim? body ',',dim :type ',',type)))))))
+                                   `(values ,@(dim? body ',',dim :type ',',type)))))))
 (define-td 1 ff) (define-td 2 ff) (define-td 3 ff) (define-td 4 ff)
 (define-td 1 df) (define-td 2 df) (define-td 3 df) (define-td 4 df)
 
-;;;;;;;;;;;;;;;;;; ~ (TILDE)
-
 (defmacro define-td~ (dim type)
   (let* ((mname (veqsymb dim type "~"))
-         (docs (format nil "make ~ad vector in veq context.~%coerce to type." dim)))
+         (dimtype `(,dim ,type))
+         (docs (format nil "make ~ad vector in veq context.
+wraps body in mvc so that (f3~~ 1 (f2~~ 2f0 3))
+returns (values 1f0 2f0 3f0)" dim)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
             (map-symbol `(,',mname (&body body) ,,docs
-                                     `(~ (,',',(symb type "*")
-                                           ,@(dim? body ',',dim :type ',',type))))))))
+                                   `(mvcmap ,',',dimtype ,@body))))))
 (define-td~ 1 ff) (define-td~ 2 ff) (define-td~ 3 ff) (define-td~ 4 ff)
 (define-td~ 1 df) (define-td~ 2 df) (define-td~ 3 df) (define-td~ 4 df)
 

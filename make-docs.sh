@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -e
 sbcl --quit \
      --eval '(load "~/quicklisp/setup.lisp")'\
      --eval '(ql:quickload :veq :silent t)'\
@@ -48,4 +47,6 @@ Symbols postfixed with \`!\` are destructive or in-place.
 EOF
 
 tail -n +8 DOCS.md.tmp >> DOCS.md
-sed -i 's/[[:space:]]*$//' DOCS.md
+sed -i 's/[[:space:]]*$//g' DOCS.md
+sed -i 's:/data/x/veq/::g' DOCS.md
+rm  DOCS.md.tmp

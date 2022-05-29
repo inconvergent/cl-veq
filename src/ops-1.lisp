@@ -29,5 +29,6 @@
   (@cos-sin (a)) (values (cos a) (sin a))
   (@sin-cos (a)) (values (sin a) (cos a))
 
+  ; (@deg (a)) (values (/ a 360))
   (@deg->rad (deg)) (* @pi (/ deg 180)))
 

@@ -116,7 +116,7 @@ ex: ($_ '((1d0 2d0) (1d0 2d0)))."
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
-(defmacro -$ (dim a &key inds type)
+(defmacro -$ (dim a &key inds atype)
   (declare (pos-int dim))
   (unless inds (setf inds '(0)))
   (awg (a*)
@@ -128,7 +128,7 @@ ex: ($_ '((1d0 2d0) (1d0 2d0)))."
                                           collect `(+ ,gs ,i)))))))
     `(let ((,a* ,a)
            ,@(loop for ss in lets collect (car ss)))
-       (declare ,@(when type `((,(arrtype type) ,a*)))
+       (declare ,@(when atype `((,atype ,a*)))
                 (pos-int ,@(loop for ss in lets collect (caar ss))))
        (values ,@(loop with res = (list)
                        for ss in lets
@@ -139,12 +139,12 @@ ex: ($_ '((1d0 2d0) (1d0 2d0)))."
   `(progn ,@(loop for (dim type)
                   in (group '(1 ff 2 ff 3 ff 4 ff 1 df 2 df 3 df 4 df) 2)
                   collect (let* ((name (veqsymb dim type "$"))
+                                 (at (arrtype type))
                                  (docs (format nil
-"returns indices (default 0) from ~ad vector array as values.
+"returns indices (default 0) from ~ad vector array (~a) as values.
 ex: (~a a i j ...) returns (values a[i] .. a[j] .. ...).
-note that the number of values depends on the dimension." dim name)))
-                            `(defmacro ,name (a &rest rest)
-                               ,docs
-                               `(-$ ,,dim ,a :inds ,rest :type ,',type))))))
+note that the number of values depends on the dimension." dim at name)))
+                            `(defmacro ,name (a &rest rest) ,docs
+                               `(-$ ,,dim ,a :inds ,rest :atype ,',at))))))
 (define-$)
 

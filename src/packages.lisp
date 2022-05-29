@@ -3,13 +3,12 @@
   (:use #:common-lisp)
   (:export
     #:*eps* #:dpi #:dpi5 #:dpii #:fpi #:fpi5 #:fpii
+    #:mac #:mac* #:v? #:d? #:i? #:context? #:ext-symbols?
 
-    #:mac #:mac*
-    #:v? #:d? #:i? #:context?  #:ext-symbols?
+    #:from-lst #:lst #:mvb #:dsb
+    #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~
 
-    #:ffl #:dfl #:~
-    #:from-lst #:lst #:mvb #:mvc #:mvcwrap #:dsb #:vgrp-mvc
-
+    #:ffl #:dfl
     #:df #:df* #:dvec #:ff #:ff* #:fvec #:in #:in* #:ivec
 
     #:vdef #:vdef* #:def* #:fvdef* #:fvdef #:vlabels
@@ -17,8 +16,7 @@
 
     #:d2let #:d3let #:d4let #:f2let #:f3let #:f4let
 
-    #:d$_ #:d_ #:f$_ #:f_
-    #:$ #:2$ #:3$ #:4$
+    #:d$_ #:d_ #:f$_ #:f_ #:$ #:2$ #:3$ #:4$
 
     #:$print #:2$print #:3$print #:4$print #:vpr
     #:$num #:2$num #:3$num

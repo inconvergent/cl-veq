@@ -1,13 +1,11 @@
 
 (in-package :veq)
 
-
 (defun filter-macrolets (symbols-map body)
   "remove macrolet tuples that are not present in body. this speeds up
-  compilation time considerably, and makes it easier to read output code.
+compilation time considerably, and makes it easier to read output code.
 
-  it may cause errors in in cases with nested macros?
-  can it cause problems when imported in a different env?"
+note: it can cause errors in in cases with nested macros."
   (declare #.*opt* (list symbols-map body))
   (let ((macrolet-symbols-in-body
           (remove-duplicates (remove-if-not #'symbolp (awf body)))))
@@ -16,27 +14,24 @@
                                (member s macrolet-symbols-in-body))
                    symbols-map :key #'car)))
 
-
 (map-docstring 'vref
-  "use (veq:vref s x) or (:vr s x) to get dim x of symbol s in vprogn, fvprogn,
-fvdef*, vdef*, def*.
-see replace-varg for implementation details.
-" :nodesc :context)
+  "use (veq:vref s x) or (:vr s x) to get dim x of symbol s in vprogn,
+fvprogn, fvdef*, vdef*, def*.
+see replace-varg for implementation details." :nodesc :context)
 
 (map-docstring 'varg
-  "use (veq:varg n a b ...) or (:vr n a b ...) to represent n dim vectors a,b
-of dim n in vprogn, fvprog, fvdef*, vdef*, def*.
-see replace-varg for implementation details.
-" :nodesc :context)
+  "use (veq:varg n a b ...) or (:vr n a b ...) to represent n dim vectors
+a,b of dim n in vprogn, fvprog, fvdef*, vdef*, def*.
+see replace-varg for implementation details." :nodesc :context)
 
 (defun replace-varg (body &optional (root-rmap (list)))
   "replace instances of varg/:varg/:va and vref/:vref/vr with
-  approprite symbols for the dimension.
+approprite symbols for the dimension.
 
-  local maps vref/varg maps are propagated forwards in the list so a given
-  arg/ref should be available under it's scope.
-  it seems to work for all cases i have tested. but i'm mot sure if this
-  propagation will eventually break somewhere."
+local maps vref/varg maps are propagated forwards in the list so a given
+arg/ref should be available under it's scope.
+it seems to work for all cases i have tested. but i'm mot sure if this
+propagation will eventually break somewhere."
   (labels
     ((is-varg (v) (and (listp v) (member (car v) '(varg :varg :va) :test #'eq)))
      (is-vref (root) (and (listp root) (listp (car root))
@@ -62,28 +57,23 @@ see replace-varg for implementation details.
          ; this breaks eg when root contains a dotted pair: '(:a :b . :c)
          (error (e) (declare (ignore e)) (values root rmap))))
      (get-car-rmap (root rmap)
-       (if (listp root) (-safe-do-list root rmap)
-                        (values root rmap)))
+       (if (listp root) (-safe-do-list root rmap) (values root rmap)))
      (do-vref (root rmap)
        ; replace-varg can encounter vrefs that have no match in rmap (eg
        ; in -vmvb). so we need to ignore missing matches for vref.
        ; these vrefs will be replaced at a later time (eg. in the call
        ; to replace-varg in -vlet)
        (aif (assoc (cadr root) rmap) ; if ref in rmap
-            (mapcar (lambda (i)
-                      (nth (the pos-int i) (cdr it))) ; (cdr it) == symbs
+            (mapcar (lambda (i) (nth (the pos-int i) (cdr it))) ; (cdr it) == symbs
                     (cddr root)) ; inds
             (list root))) ; do nothing
      (walk (root rmap)
        (cond ((atom root) root)
-             ((is-vref root)
-               `(,@(do-vref (car root) rmap)
-                 ,@(walk (cdr root) rmap)))
-
+             ((is-vref root) `(,@(do-vref (car root) rmap)
+                               ,@(walk (cdr root) rmap)))
              ((and (listp root) (assoc (car root) rmap))
                `(,@(cdr (assoc (car root) rmap))
                  ,@(walk (cdr root) rmap)))
-
              (t (mvb (car* rmap) (get-car-rmap (car root) rmap)
                   (cons (walk car* rmap)
                         (walk (cdr root) rmap)))))))

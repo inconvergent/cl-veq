@@ -7,7 +7,7 @@
     `(progn (export ',(veqsymb dim type "$last"))
             (defun ,(veqsymb dim type "$last") (,a)
               (declare #.*opt* (,(arrtype type) ,a))
-              ,(format nil "get last row of ~ad array as (values ...)" dim)
+              ,(format nil "return values from last row of ~ad vector array." dim)
             (,(veqsymb dim type "$") ,a
                (1- (the pos-int (,(veqsymb dim nil "$num") ,a))))))))
 (make-last 1 ff) (make-last 2 ff) (make-last 3 ff) (make-last 4 ff)
@@ -28,9 +28,8 @@ ex :  (~a structname- c :a :b val)
 returns (values a ... adim b ... bdim val)
 assuming c is a structname, and a,b are ~a of dim ~a" mname (arrtype type) dim)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
-            (map-symbol `(,',mname
-                           (s c &rest rest) ,,docs
-                           (-struct-fields ,,dim ',',type s c rest))))))
+            (map-symbol `(,',mname (s c &rest rest) ,,docs
+                                   (-struct-fields ,,dim ',',type s c rest))))))
 (struct-fields 1 ff) (struct-fields 2 ff) (struct-fields 3 ff) (struct-fields 4 ff)
 (struct-fields 1 df) (struct-fields 2 df) (struct-fields 3 df) (struct-fields 4 df)
 
@@ -183,7 +182,7 @@ ex:
   (awg (fx itr)
     (replace-varg ; < -- need this because of the (varg ...) below
       `(-with-arrays
-         (:type (quote ,type) :n ,n :itr ,itr :start 0
+         (:type ',type :n ,n :itr ,itr :start 0
           :arr (,@(mapcar (lambda (a) (list a dim a)) arrs))
           :fxs ,(let ((arr-gensyms (mapcar ; <-- this is because of the bugfix
                                      (lambda (x) (gensym (mkstr x)))

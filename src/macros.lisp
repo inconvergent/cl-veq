@@ -5,19 +5,19 @@
 (defmacro define-vprogn ()
   `(defmacro vprogn (&body body)
     "enable veq context inside this progn.
-    handles propagation and resolution of uses of (varg d var) and (vref var i).
-    fvprogn is faster, but has some limitations."
+handles propagation and resolution of uses of (varg d var) and (vref var i).
+fvprogn is faster, but has some limitations."
     `(macrolet ,',*symbols-map* (progn ,@(replace-varg body)))))
 (define-vprogn)
 
 (defmacro define-fvprogn ()
   `(defmacro fvprogn (&body body)
     "enable veq context inside this progn.
-    handles propagation and resolution of uses of (varg d var) and (vref var i).
+handles propagation and resolution of uses of (varg d var) and (vref var i).
 
-    works the same way as vprogn. but removes all macrolets that are not
-    directly used in body. this is faster, but may fail in some cases where
-    body is complex. in the event of errors try vprogn instead."
+works the same way as vprogn. but removes all macrolets that are not
+directly used in body. this is faster, but may fail in some cases where
+body is complex. in the event of errors try vprogn instead."
     `(macrolet ,(filter-macrolets *symbols-map* body)
        (progn ,@(replace-varg body)))))
 (define-fvprogn)
@@ -48,7 +48,7 @@ the wrapper macro ensures every call to this function is done as
       `(vprogn ; replace internal references to mname
                (defun ,fname ,@(subst fname mname body))
                (defmacro ,mname (&rest rest)
-                  ,(if docs (format nil "docstring for ~a~%~a" fname docs)
+                  ,(if docs (format nil "DOCSTRING for ~a;~%~a" fname docs)
                             (format nil "fx: ~a~%macro wrapper: ~a
 defined via veq:vdef*" fname mname))
                  `(mvc #',',fname ,@rest))))))
@@ -67,7 +67,7 @@ the wrapper macro ensures every call to this function is done as
       `(fvprogn ; replace internal references to mname
                 (defun ,fname ,@(subst fname mname body))
                 (defmacro ,mname (&rest rest)
-                  ,(if docs (format nil "docstring for ~a~%~a" fname docs)
+                  ,(if docs (format nil "DOCSTRING for ~a;~%~a" fname docs)
                             (format nil "fx: ~a~%macro wrapper: ~a
 defined via veq:fvdef*" fname mname))
                   `(mvc #',',fname ,@rest))))))
@@ -84,7 +84,7 @@ the wrapper macro ensures every call to this function is done as
           (docs (typecase (third body) (string (third body)) (t nil))))
       `(progn (defun ,fname ,@body)
               (defmacro ,mname (&rest rest)
-                ,(if docs (format nil "docstring for ~a~%~a" fname docs)
+                ,(if docs (format nil "DOCSTRING for ~a;~%~a" fname docs)
                           (format nil "fx: ~a~%macro wrapper: ~a
 defined via veq:def*" fname mname))
                 `(mvc #',',fname ,@rest))))))

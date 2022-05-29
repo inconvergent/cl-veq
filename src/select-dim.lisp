@@ -10,21 +10,18 @@
            (vals `(values ,@symb))
            (ign `(ignore ,@(set-difference '(x y z w) symb)))
            (typ `(,type ,@symb))
-           (docs (format nil "macro. reorder arguments (X Y Z W) as ~a, ~a.~%" symb ign)))
+           (docs (format nil "macro. reorder arguments (X Y Z W) as ~a, ~a."
+                         symb ign)))
       `(progn (export ',exportname)
               (map-docstring ',exportname ,docs :skip)
-              (defmacro ,exportname (&rest ,rest)
-                ,docs
+              (defmacro ,exportname (&rest ,rest) ,docs
                 `(mvb (x y z w) (mvc #'values ,@,rest)
                    (declare ,',typ ,',ign)
                    ,',vals))))))
 
-
 (defmacro make-swizzle (type)
-  "
-  build all selector macros for combinations of xyzw. so that
-  (xyxw (values 1f0 2f0 3f0 4f0)) -> (values 1f0 2f0 1f0 4f0).
-  "
+  "build all selector macros for combinations of xyzw. so that
+(xyxw (values 1f0 2f0 3f0 4f0)) -> (values 1f0 2f0 1f0 4f0)."
   (labels
     ((rec-swizzle-gen (symbs &aux (res))
        (labels ((acc (a &optional (b "")) (push* (symb a b) res)) ; -> (symb a b)
@@ -41,9 +38,4 @@
 
 (make-swizzle ff)
 (make-swizzle df)
-
-; (defun id (&rest rest) (apply #'values rest))
-; (defun idx (x &rest rest) x)
-; (defun idxy (x y &rest rest) x y)
-; (defun idxyz (x y &rest rest) x y z)
 

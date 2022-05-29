@@ -49,6 +49,8 @@ fvprogn, vdef, fvdef defined contexts/functions."
                  collect (list (mkstr ,sym) ,sym))
            #'string-lessp :key #'car)))
 
+(defun -md-sanitize (s) (str:replace-all "*" "\\*" s))
+
 (defmacro ext-symbols? (&optional mode)
   "list all external symbols in veq. use :verbose to inlcude docstring.
 use :pretty to print verbose output to stdout in a readable form."
@@ -57,9 +59,10 @@ use :pretty to print verbose output to stdout in a readable form."
       (:pretty
         `(loop for (,str ,sym) in (pckgs)
                do (mvb (,doc ,skip ,context) (select-docs ,sym)
-                       (unless ,skip (format t "~&#### ~:[~;:context: ~]~a~%~%~a~&~%"
+                       (unless ,skip
+                         (format t "~&#### ~:[~;:context: ~]~a~%~%~a~&~%"
                                              ,context
-                                             (str:replace-all "\*" "\\*" ,str)
+                                             (-md-sanitize ,str)
                                              ,doc)))))
       (:pairs `(loop for (,str ,sym) in (pckgs)
                      collect (list ,str (select-docs ,sym))))

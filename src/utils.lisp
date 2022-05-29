@@ -135,7 +135,7 @@ eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
 
 (defun -gensyms (name n)
   (declare (symbol name) (fixnum n))
-  (loop with name = (string name)
+  (loop with name = (string-upcase (string name))
         repeat n
         for x across "XYZWUVPQR"
         collect (gensym (format nil "~a-~a-" name x))))
@@ -155,19 +155,19 @@ eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
 (defun dupes (lst)
   (declare (list lst))
   "finds duplicates in list."
-  (cond ((null lst) '())
+  (cond ((null lst) (list))
         ((member (car lst) (cdr lst) :test #'equal)
            (cons (car lst) (dupes (cdr lst))))
         (t (dupes (cdr lst)))))
 
 
-(defmacro vgrp-mvc ((dim fx) &body body)
+(defmacro mvcgrp ((dim fx) &body body)
   "call fx on body in groups of dim.
 ex: (labels ((fx ((:va 3 x)) (veq:fxy x)))
-      (veq:vpr (veq:vgrp-mvc (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
+      (vpr (mvcgrp (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
 returns: (values 1f0 2f0 4f0 5f0)
 ex: (labels ((fx ((:va 3 x)) (veq:fxz x)))
-      (veq:vpr (veq:vgrp-mvc (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
+      (vpr (mvcgrp (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
 returns: (values 1f0 3f0 4f0 6f0)"
   (awg (gsfx rest x)
     `(veq:fvprogn
@@ -177,6 +177,11 @@ returns: (values 1f0 3f0 4f0 6f0)"
                       collect (veq:lst (veq:mvc ,fx ,x)))))))
          (mvc #',gsfx ,@body)))))
 
+(defmacro mvcmap ((dim fx) &body body)
+  "returns (values (fx i) ...) for dim values from body."
+  (let ((symbs (-gensyms 'mvcmap dim)))
+    `(mvb (,@symbs) (~ ,@body)
+      (values ,@(mapcar (lambda (s) `(,fx ,s)) symbs)))))
 
 (defmacro mvcwrap (m fx)
   "define a macro named m so that (m a ...) is equivalent to (mvc #'fx a ...)"
