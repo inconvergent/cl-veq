@@ -48,9 +48,9 @@ note that this behaves like native lisp let*." dim)))
 ;;;;;;;;;;;;;;;;;; VLABELS
 
 (defmacro vlabels ((&rest labs) &body body)
-  "wraps labels so that it can be used with implicit mvc. that is,
-all labels are defined as if with def*, vdef* or fvdef*
-use %labelname to call the function directly, not via mvc."
+  "wraps labels so that it can be used with implicit mvc. that is, all labels
+are defined as if with def*.
+use %labelname to call the function directly."
   (labels ((mfx (l)
              (declare (list l))
              `(,(car l) (&rest rest)

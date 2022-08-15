@@ -6,6 +6,7 @@
 *.png
 *.svg
 *.tmp
+*-tmp.*
 *weir.core
 system-index.txt
 tmp.lisp

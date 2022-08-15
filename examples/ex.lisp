@@ -8,7 +8,7 @@
 ; (vpr ...) is a convenience macro used to print. (vpr a b) also returns
 ; (values a b) which means it can be used for debugging directly in code
 
-(vprogn ; enable veq inside this progn
+(fvprogn ; enable veq inside this progn
 
   ; ---- BASIC OPERATIONS ----
 
@@ -73,7 +73,7 @@
 ; same, but will wrap fx in a macro so that calling: (fx ...) will be
 ; equivalent to: (multiple-value-call #'fx ...).
 
-(vdef* print-some-values ((varg 2 a))
+(fvdef* print-some-values ((varg 2 a))
   ; (varg a 2) means that a is a 2d vector, all instances of a in the remaining
   ; code will be replaced with two gensyms
   (vpr (list a)) ;> (5.0 9.0)
@@ -87,8 +87,9 @@
 ; rename all fx symbols inside the definition to %fx. this is relevant when you
 ; want to use (return-from %fx ...).
 
-(vprogn
+(fvprogn
 
+  (format t "~%------------------~%~%")
   ; call print-some-values with two 2d vectors [1f0 2f0] and [4f0 7f0]
   (print-some-values (f2+ 1f0 2f0 4f0 7f0))
 
@@ -109,6 +110,7 @@
   ;     (multiple-value-bind (,bx ,by) (f2+ ,ax ,ay 3f0 2f0)
   ;       (list ,ax ,ay ,bx ,by)))))
 
+  (format t "~%------------------~%~%")
   ; there is also a let that accepts different dimensions for each binding:
   (fvlet ((a 2 (f2 3f0 32f0))
           (b 3 (f3+ a 0f0 3f0 2f0 4f0))
@@ -127,10 +129,11 @@
   ; veq alternative to plain let.
   )
 
-(vprogn
+(fvprogn
 
   ; ---- ARRAYS OF VECTORS ----
 
+  (format t "~%------------------~%~%")
   (let ((a (f2$point 3f0 3f0))
         (line (f2$line 3f0 40f0 7f0 3f0))
         (line* (f2$line 1f0 2f0 3f0 4f0))
@@ -155,6 +158,7 @@
     (vpr (f2$take b (list 1 2))) ; select rows (vectors)
     ;> #(1.0 2.0 2.0 3.0)
 
+  (format t "~%------------------~%~%")
     (let ((a (f3$zero 3)) (b (f3$zero 3)) (c (f3$zero 3)))
 
       ; set values of a and b
@@ -170,7 +174,7 @@
         ; execute cross on rows of a and b
         (f3$with-rows (3 a b) cross))
 
-      (vpr c)
+      (vpr (3$print c))
       ;> #(0.0 0.0 -1.0 -7.0 1.5 2.0 -17.0 2.0 7.0)
       (vpr (3$to-list c))
       ;> '((0.0 0.0 -1.0) (-7.0 1.5 2.0) (-17.0 2.0 7.0))
@@ -183,11 +187,11 @@
 
       (vpr (f3$len c)) ;> #(1.0 7.4330344 18.493242)
 
-      (vpr (f$neg (f3$len c))) ;> #(-1.0 -7.4330344 -18.493242)
+      (vpr (3$print (f$neg (f3$len c)))) ;> #(-1.0 -7.4330344 -18.493242)
 
-      (vpr (f$abs (f$neg (f3$len c)))) ;> #(1.0 7.4330344 18.493242)
+      (vpr ($print (f$abs (f$neg (f3$len c))))) ;> #(1.0 7.4330344 18.493242)
 
-      (vpr (f$cos-sin (f$lspace 4 0f0 fpii))))
+      ($print (f$cos-sin (f$lspace 4 0f0 fpii))))
       ;> #(1.0 0.0 -0.50000006 0.8660254 -0.4999999 -0.86602545 1.0
       ;>   1.7484555e-7)
 
@@ -210,5 +214,5 @@
             (b k (init2 k)) ; init row k of b with init2
             (c k (cross a b)))) ; set row k of c to (cross a b)
       ; use the arrays. the last form is returned, as in a progn
-      (vpr c))))
+      (vpr (3$print c)))))
 

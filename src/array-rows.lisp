@@ -36,12 +36,10 @@ assuming c is a structname, and a,b are ~a of dim ~a" mname (arrtype type) dim))
 
 ; TODO: with-op; simpler version of with-rows that takes input arrays and
 ; creates an output array of a given dimension
-
 (defmacro -with-arrays ((&key type n (inds nil inds?) itr cnt arr
                               fxs exs nxs start)
                          &body body)
   (declare (list arr fxs exs))
-  ; TODO: handle case where largest inds >= n
   (awg (n* inds*)
     (let ((itr (if itr itr (gensym "ITR")))
           (cnt (if cnt cnt (gensym "CNT"))))
@@ -112,8 +110,8 @@ assuming c is a structname, and a,b are ~a of dim ~a" mname (arrtype type) dim))
   (format nil "args: (&key (n 0) inds (start 0) itr cnt arr fxs exs nxs)
 
 n is the number of iterations
-start is the first index. then n-1 more.
-inds is indices to iterate. replaces n/start
+start is the first (row) index. then n-1 more.
+inds is (row) indices to iterate. replaces n/start
 arr is the arrays to be defined/referenced
 itr is the symbol representing indices
 cnt is the symbol representing iterations from 0
@@ -143,6 +141,8 @@ ex:
 
 (map-docstring 'dwith-arrays (-with-arr-doc "dwith-arrays") :nodesc :context)
 (map-docstring 'fwith-arrays (-with-arr-doc "fwith-arrays") :nodesc :context)
+(map-docstring 'iwith-arrays (-with-arr-doc "pwith-arrays") :nodesc :context)
+(map-docstring 'pwith-arrays (-with-arr-doc "iwith-arrays") :nodesc :context)
 
 (mapcar #'map-symbol
   `((dwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs nxs)
@@ -154,6 +154,18 @@ ex:
     (fwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs nxs)
                    &body body)
       `(-with-arrays (:type 'ff :n ,n ,@(when inds? `(:inds ,inds))
+                      :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs :nxs ,nxs
+                      :exs ,exs :start ,start)
+                     ,@body))
+    (iwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs nxs)
+                   &body body)
+      `(-with-arrays (:type 'in :n ,n ,@(when inds? `(:inds ,inds))
+                      :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs :nxs ,nxs
+                      :exs ,exs :start ,start)
+                     ,@body))
+    (pwith-arrays ((&key (n 0) (inds nil inds?) (start 0) itr cnt arr fxs exs nxs)
+                   &body body)
+      `(-with-arrays (:type 'pn :n ,n ,@(when inds? `(:inds ,inds))
                       :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs :nxs ,nxs
                       :exs ,exs :start ,start)
                      ,@body))))
@@ -177,8 +189,6 @@ ex:
 
 (defun -with-rows (n arrs expr &key dim type)
   (declare (pos-int dim) (list arrs))
-  "execute function (expr i ax ay az bx by bz ...) for row i and arrays a and b
-  (...).  arrs can be one or more arrays."
   (awg (fx itr)
     (replace-varg ; < -- need this because of the (varg ...) below
       `(-with-arrays
@@ -193,11 +203,18 @@ ex:
 
 (defmacro map-wrows (dim type)
   (let* ((mname (veqsymb dim type "$with-rows"))
-         (docs (format nil "make ~ad" dim)))
+         (docs (format nil "execute function (expr i ax ay az bx by bz ...) for
+row i and ~ad arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))" dim)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
             (map-symbol `(,',mname
                            ((n &rest arrs) &body expr) ,,docs
                            (-with-rows n arrs expr :dim ,,dim :type ',',type))))))
 (map-wrows 1 ff) (map-wrows 2 ff) (map-wrows 3 ff) (map-wrows 4 ff)
 (map-wrows 1 df) (map-wrows 2 df) (map-wrows 3 df) (map-wrows 4 df)
+(map-wrows 1 in) (map-wrows 2 in) (map-wrows 3 in) (map-wrows 4 in)
+(map-wrows 1 pn) (map-wrows 2 pn) (map-wrows 3 pn) (map-wrows 4 pn)
 

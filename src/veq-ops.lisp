@@ -20,41 +20,92 @@
   (cdr (assoc (char (string-upcase (mkstr symb)) 0)
               `((#\D . df) (#\F . ff) (#\I . in)))))
 
-(defun body-len (a b) (= a (length b)))
+(defun body-len (n a) (and (= n (length a)) (every #'atom a)))
 
-(defmacro op ((mname args) &body body)
+
+
+(defun -expand-!symb (s)
+  (declare (symbol s))
+  "t if symbol starts with Fd! where d is a positive integer"
+  (let ((sn (symbol-name s)))
+    (if (and (> (length (symbol-name s)) 2)
+             (string= sn "!" :start1 1 :end1 2))
+        (loop with rst = (subseq sn 2)
+              repeat (reread (char sn 0))
+              for s in '(#\X #\Y #\Z #\W #\P #\Q #\U #\V)
+              collect (symb rst s))
+        s)))
+
+(defun make-broadcast-name (n &aux (n (symbol-name n)))
+  (if (numberp (reread (char n 1)))
+      (symb (subseq n 0 2) #\$ (subseq n 2))
+      (symb (subseq n 0 1) #\$ (subseq n 1))))
+
+(defun -expand-and-flatten-!symbols (ss)
+  (awf (loop for s in ss collect (-expand-!symb s))))
+
+(defun -get-!arrdim (args)
+  (let ((d (reread (char (symbol-name (car args)) 0))))
+    (typecase d (number d) (t 1))))
+
+(defmacro op ((type out-dim mname args) &body body)
   (declare (symbol mname) (list args))
   "build an op. see ops-1.lisp, ops-2.lisp, ..."
-  (let* ((declares `(,(optype mname) ,@args))
-         (fname (symb "-" mname))
-         (macroname (symb "_" mname))
-         (docs (format nil "veq context op: ~a~%fxname: ~a
-args: ~a~%body: ~a." mname fname args (car body))))
-    `(progn (map-symbol `(,',mname (&body mbody)
-                            `(,@(if (body-len ,,(length args) mbody)
+  (let* ((exp-args (-expand-and-flatten-!symbols args))
+         (declares `(,(optype mname) ,@exp-args))
+         (arr-dim (-get-!arrdim args))
+         (br-dim (- (length exp-args) arr-dim))
+         (fname (symb #\- mname))
+         (bname (make-broadcast-name mname))
+         (bname! (symb bname "!"))
+         (mdocs (format nil "veq context op: ~a
+fxname: ~a
+args: ~a~%body (~a): ~a." mname fname exp-args out-dim (car body)))
+         (bdocs (format nil "veq context broadcast op: ~a
+fxname: ~a
+args: ~a~%body (~a): ~a." bname fname exp-args out-dim (car body))))
+    `(progn (export ',mname)
+            (map-symbol `(,',mname (&body mbody)
+                            `(,@(if (body-len ,,(length exp-args) mbody)
                                   `(,',',fname)
                                   `(mvc #',',',fname))
                                ,@mbody)))
-            (map-docstring ',mname ,docs :nodesc :context)
-            (export ',mname)
+            (map-docstring ',mname ,mdocs :nodesc :context)
+
+            (export ',bname)
+            (map-symbol `(,',bname (a &body mbody)
+                           (broadcast-op ,,arr-dim ,,br-dim ',',type ',',fname
+                             a mbody :out ,,out-dim)))
+            (map-docstring ',bname ,bdocs :nodesc :context)
+
+            ,@(when (= arr-dim out-dim)
+                `((export ',bname!)
+                  (map-symbol `(,',bname! (a &body mbody)
+                    (broadcast-op ,,arr-dim ,,br-dim ',',type ',',fname a mbody)))
+                  (map-docstring ',bname! ,(format nil "~a~%destructive." bdocs) :nodesc :context)))
             ,@(unless #.*dev* `((declaim (inline ,fname))))
-            (defun ,fname ,args (declare ,*opt* ,declares) ,docs
+            (defun ,fname ,exp-args
+              (declare ,*opt* ,declares)
               (progn ,@body)))))
 
-(defun type-placeholder (root type)
+(defun -placeholders (root type)
   (labels ((repl (symb type)
             (intern (substitute type #\@
                       (string-upcase (mkstr symb))))))
     (cond ((numberp root) (coerce root (optype type)))
+          ((keywordp root) (reread (mkstr root)))
           ((symbolp root) (repl root type))
           ((atom root) root)
-          (t (cons (type-placeholder (car root) type)
-                   (type-placeholder (cdr root) type))))))
+          (t (cons (-placeholders (car root) type)
+                   (-placeholders (cdr root) type))))))
 
 (defmacro ops (&body body)
   "used to build ops in ops-1.lisp, ops-2.lisp, ..."
-  `(progn ,@(loop for (args body*) in (group (type-placeholder body #\D) 2)
-                  collect `(op ,args ,body*))
-          ,@(loop for (args body*) in (group (type-placeholder body #\F) 2)
-                  collect `(op ,args ,body*))))
+  `(progn
+     #-:veq-disable-macrolet-singles
+     ,@(loop for (o body) in (group (-placeholders body #\F) 2)
+             collect `(op (ff ,@o) ,body))
+     #-:veq-disable-macrolet-doubles
+     ,@(loop for (o body) in (group (-placeholders body #\D) 2)
+             collect `(op (df ,@o) ,body))))
 

@@ -3,8 +3,8 @@
 
 (fvdef* f2segdst ((varg 2 va vb v))
   "find distance between line, (va vb), and v.
-   returns (values distance s) where is is the interpolation value that will
-   yield the closest point on line."
+returns (values distance s) where is is the interpolation value that will
+yield the closest point on line."
   (declare #.*opt* (ff va vb v))
   (let ((l2 (f2dst2 va vb)))
     (declare (ff l2))
@@ -21,8 +21,8 @@
 (fvdef* f2segx ((varg 2 a1 a2 b1 b2))
   (declare #.*opt* (ff a1 a2 b1 b2))
   "find intersection between lines (a1 a2), (b1 b2).
-   returns isect? p q where p and q is the distance along each line to the
-   intersection point"
+returns isect? p q where p and q is the distance along each line to the
+intersection point"
   (f2let ((sa (f2- a2 a1))
           (sb (f2- b2 b1)))
     (let ((u (f2cross sa sb))
@@ -99,10 +99,10 @@
   (declare #.*opt* (sequence lines*))
   "lines = #( #(ax ay bx by) ... )
 
-   not entirely slow line-line intersection for all lines. this is faster than
-   comparing all lines when lines are short relative to the area that the lines
-   cover. it can be improved further by using binary search tree to store
-   current state."
+not entirely slow line-line intersection for all lines. this is faster than
+comparing all lines when lines are short relative to the area that the lines
+cover. it can be improved further by using binary search tree to store
+current state."
   (let ((lines (typecase lines*
                  (list (make-array (length lines*) :initial-contents lines*
                                                    :adjustable nil

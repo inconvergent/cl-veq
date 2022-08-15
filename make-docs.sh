@@ -30,7 +30,8 @@ The corresponding vector array type is \`dvec\`, short for \`(simple-array df)\`
 
 Symbols with \`$\` in the name pertain to vector arrays.
 
-Symbols postfixed with \`!\` are destructive or in-place.
+Symbols postfixed with \`!\` are destructive or in-place. Usually on the first
+argument.
 
 
 #### Abbreviations

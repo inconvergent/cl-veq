@@ -20,7 +20,8 @@ The corresponding vector array type is `dvec`, short for `(simple-array df)`.
 
 Symbols with `$` in the name pertain to vector arrays.
 
-Symbols postfixed with `!` are destructive or in-place.
+Symbols postfixed with `!` are destructive or in-place. Usually on the first
+argument.
 
 
 #### Abbreviations
@@ -44,6 +45,10 @@ use ($ a i j ...) to return (values a[i] a[j] ...)
  ; VEQ:$
  ;   [symbol]
  ;
+ ; $ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Source file: src/array-utils.lisp
+ ;
  ; (SETF $) has a complex setf-expansion:
  ;   Lambda-list: (A &OPTIONAL (I 0))
  ;   Documentation:
@@ -51,6 +56,30 @@ use ($ a i j ...) to return (values a[i] a[j] ...)
  ;     use (setf ($ a i) (list x)) to set a[i].
  ;     use ($ a i j ...) to return (values a[i] a[j] ...)
  ;   Source file: src/vset.lisp
+```
+
+#### $COPY
+
+```
+:missing:todo:
+
+ ; VEQ:$COPY
+ ;   [symbol]
+```
+
+#### $MAKE
+
+```
+create vector array with size (n dim), and initial value v.
+
+ ; VEQ:$MAKE
+ ;   [symbol]
+ ;
+ ; $MAKE names a macro:
+ ;   Lambda-list: (&KEY (DIM 1) (N 1) V (TYPE T))
+ ;   Documentation:
+ ;     create vector array with size (n dim), and initial value v.
+ ;   Source file: src/array-utils.lisp
 ```
 
 #### $NUM
@@ -72,25 +101,43 @@ untyped.
  ;   Source file: src/array-utils.lisp
 ```
 
+#### $NVSET
+
+```
+set n indices in a, from a[i] with n values from body.
+
+ ; VEQ:$NVSET
+ ;   [symbol]
+ ;
+ ; $NVSET names a macro:
+ ;   Lambda-list: ((A N &OPTIONAL (I 0)) &BODY BODY)
+ ;   Documentation:
+ ;     set n indices in a, from a[i] with n values from body.
+ ;   Source file: src/vset.lisp
+```
+
 #### $PRINT
 
 ```
-pretty print nd array.
+pretty print n, or all, rows from vector array of dim.
+start at row (start 0).
+negative start counts backwards from the last row
+use s to overrid output stream.
 
  ; VEQ:$PRINT
  ;   [symbol]
  ;
  ; $PRINT names a compiled function:
- ;   Lambda-list: (A &KEY N (DIM 1) &AUX
- ;                 (N
- ;                  (IF N
- ;                      N
- ;                      (/ (LENGTH A) DIM))))
+ ;   Lambda-list: (A &KEY (DIM 1) (START 0) N (S T))
  ;   Derived type: (FUNCTION
- ;                  (SIMPLE-ARRAY &KEY (:N T) (:DIM (UNSIGNED-BYTE 31)))
+ ;                  (SIMPLE-ARRAY &KEY (:DIM (UNSIGNED-BYTE 31))
+ ;                   (:START FIXNUM) (:N T) (:S T))
  ;                  (VALUES (SIMPLE-ARRAY * (*)) &OPTIONAL))
  ;   Documentation:
- ;     pretty print nd array.
+ ;     pretty print n, or all, rows from vector array of dim.
+ ;     start at row (start 0).
+ ;     negative start counts backwards from the last row
+ ;     use s to overrid output stream.
  ;   Source file: src/array-print.lisp
 ```
 
@@ -140,6 +187,10 @@ use (2$ a i j ...) to return (values a[i] a[j] ...)
  ; VEQ:2$
  ;   [symbol]
  ;
+ ; 2$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Source file: src/array-utils.lisp
+ ;
  ; (SETF 2$) has a complex setf-expansion:
  ;   Lambda-list: (A &OPTIONAL (I 0))
  ;   Documentation:
@@ -177,8 +228,8 @@ pretty print 2d array. returns array.
  ;   [symbol]
  ;
  ; 2$PRINT names a compiled function:
- ;   Lambda-list: (A &KEY N)
- ;   Derived type: (FUNCTION (T &KEY (:N T)) *)
+ ;   Lambda-list: (A &KEY N (S T))
+ ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 2d array. returns array.
  ;   Source file: src/array-print.lisp
@@ -215,6 +266,10 @@ use (3$ a i j ...) to return (values a[i] a[j] ...)
 
  ; VEQ:3$
  ;   [symbol]
+ ;
+ ; 3$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Source file: src/array-utils.lisp
  ;
  ; (SETF 3$) has a complex setf-expansion:
  ;   Lambda-list: (A &OPTIONAL (I 0))
@@ -253,8 +308,8 @@ pretty print 3d array. returns array.
  ;   [symbol]
  ;
  ; 3$PRINT names a compiled function:
- ;   Lambda-list: (A &KEY N)
- ;   Derived type: (FUNCTION (T &KEY (:N T)) *)
+ ;   Lambda-list: (A &KEY N (S T))
+ ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 3d array. returns array.
  ;   Source file: src/array-print.lisp
@@ -291,6 +346,10 @@ use (4$ a i j ...) to return (values a[i] a[j] ...)
 
  ; VEQ:4$
  ;   [symbol]
+ ;
+ ; 4$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Source file: src/array-utils.lisp
  ;
  ; (SETF 4$) has a complex setf-expansion:
  ;   Lambda-list: (A &OPTIONAL (I 0))
@@ -329,8 +388,8 @@ pretty print 4d array. returns array.
  ;   [symbol]
  ;
  ; 4$PRINT names a compiled function:
- ;   Lambda-list: (A &KEY N)
- ;   Derived type: (FUNCTION (T &KEY (:N T)) *)
+ ;   Lambda-list: (A &KEY N (S T))
+ ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 4d array. returns array.
  ;   Source file: src/array-print.lisp
@@ -400,156 +459,107 @@ note that the number of values depends on the dimension.
  ;   Source file: src/array-utils.lisp
 ```
 
-#### D$\*
+#### :context: D$\*
 
 ```
-broadcast for: D*
-ex: (D$* a ...) performs (D* a[i] ...) for every row in a.
-
- ; VEQ:D$*
- ;   [symbol]
- ;
- ; D$* names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$*;
- ;     broadcast for: D*
- ;     ex: (D$* a ...) performs (D* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$*
+fxname: -D*
+args: (AX BX)
+body (1): (* AX BX).
 ```
 
-#### D$\*!
+#### :context: D$\*!
 
 ```
-destructive broadcast for: D*
-ex: (D$*! a ...) performs (D* a[i] ...) for every row in a.
-
- ; VEQ:D$*!
- ;   [symbol]
- ;
- ; D$*! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$*!;
- ;     destructive broadcast for: D*
- ;     ex: (D$*! a ...) performs (D* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$*
+fxname: -D*
+args: (AX BX)
+body (1): (* AX BX).
+destructive.
 ```
 
-#### D$+
+#### :context: D$+
 
 ```
-broadcast for: D+
-ex: (D$+ a ...) performs (D+ a[i] ...) for every row in a.
-
- ; VEQ:D$+
- ;   [symbol]
- ;
- ; D$+ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$+;
- ;     broadcast for: D+
- ;     ex: (D$+ a ...) performs (D+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$+
+fxname: -D+
+args: (AX BX)
+body (1): (+ AX BX).
 ```
 
-#### D$+!
+#### :context: D$+!
 
 ```
-destructive broadcast for: D+
-ex: (D$+! a ...) performs (D+ a[i] ...) for every row in a.
-
- ; VEQ:D$+!
- ;   [symbol]
- ;
- ; D$+! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$+!;
- ;     destructive broadcast for: D+
- ;     ex: (D$+! a ...) performs (D+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$+
+fxname: -D+
+args: (AX BX)
+body (1): (+ AX BX).
+destructive.
 ```
 
-#### D$-
+#### :context: D$-
 
 ```
-broadcast for: D-
-ex: (D$- a ...) performs (D- a[i] ...) for every row in a.
-
- ; VEQ:D$-
- ;   [symbol]
- ;
- ; D$- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$-;
- ;     broadcast for: D-
- ;     ex: (D$- a ...) performs (D- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$-
+fxname: -D-
+args: (AX BX)
+body (1): (- AX BX).
 ```
 
-#### D$-!
+#### :context: D$-!
 
 ```
-destructive broadcast for: D-
-ex: (D$-! a ...) performs (D- a[i] ...) for every row in a.
-
- ; VEQ:D$-!
- ;   [symbol]
- ;
- ; D$-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$-!;
- ;     destructive broadcast for: D-
- ;     ex: (D$-! a ...) performs (D- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$-
+fxname: -D-
+args: (AX BX)
+body (1): (- AX BX).
+destructive.
 ```
 
-#### D$/
+#### :context: D$/
 
 ```
-broadcast for: D/
-ex: (D$/ a ...) performs (D/ a[i] ...) for every row in a.
-
- ; VEQ:D$/
- ;   [symbol]
- ;
- ; D$/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$/;
- ;     broadcast for: D/
- ;     ex: (D$/ a ...) performs (D/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$/
+fxname: -D/
+args: (AX BX)
+body (1): (/ AX BX).
 ```
 
-#### D$/!
+#### :context: D$/!
 
 ```
-destructive broadcast for: D/
-ex: (D$/! a ...) performs (D/ a[i] ...) for every row in a.
+veq context broadcast op: D$/
+fxname: -D/
+args: (AX BX)
+body (1): (/ AX BX).
+destructive.
+```
 
- ; VEQ:D$/!
- ;   [symbol]
- ;
- ; D$/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$/!;
- ;     destructive broadcast for: D/
- ;     ex: (D$/! a ...) performs (D/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D$^
+
+```
+veq context broadcast op: D$^
+fxname: -D^
+args: (AX S)
+body (1): (EXPT AX S).
+```
+
+#### :context: D$^!
+
+```
+veq context broadcast op: D$^
+fxname: -D^
+args: (AX S)
+body (1): (EXPT AX S).
+destructive.
 ```
 
 #### D$_
 
 ```
-create vector array (dvec) from body. wherebody is a list of lists.
-ex: ($_ (loop repeat 2 collect `(1d0 2d0)))
-ex: ($_ '((1d0 2d0) (1d0 2d0))).
+create dvec vector array from body. where body is a list of lists.
+ex: (d$_ (loop repeat 2 collect `(1d0 2d0)))
+ex: (d$_ '((1d0 2d0) (1d0 2d0))).
 
  ; VEQ:D$_
  ;   [symbol]
@@ -557,117 +567,150 @@ ex: ($_ '((1d0 2d0) (1d0 2d0))).
  ; D$_ names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     create vector array (dvec) from body. wherebody is a list of lists.
- ;     ex: ($_ (loop repeat 2 collect `(1d0 2d0)))
- ;     ex: ($_ '((1d0 2d0) (1d0 2d0))).
+ ;     create dvec vector array from body. where body is a list of lists.
+ ;     ex: (d$_ (loop repeat 2 collect `(1d0 2d0)))
+ ;     ex: (d$_ '((1d0 2d0) (1d0 2d0))).
  ;   Source file: src/array-utils.lisp
 ```
 
-#### D$ABS
+#### :context: D$ABS
 
 ```
-broadcast for: DABS
-ex: (D$ABS a ...) performs (DABS a[i] ...) for every row in a.
-
- ; VEQ:D$ABS
- ;   [symbol]
- ;
- ; D$ABS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$ABS;
- ;     broadcast for: DABS
- ;     ex: (D$ABS a ...) performs (DABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$ABS
+fxname: -DABS
+args: (AX)
+body (1): (ABS AX).
 ```
 
-#### D$ABS!
+#### :context: D$ABS!
 
 ```
-destructive broadcast for: DABS
-ex: (D$ABS! a ...) performs (DABS a[i] ...) for every row in a.
+veq context broadcast op: D$ABS
+fxname: -DABS
+args: (AX)
+body (1): (ABS AX).
+destructive.
+```
 
- ; VEQ:D$ABS!
- ;   [symbol]
- ;
- ; D$ABS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$ABS!;
- ;     destructive broadcast for: DABS
- ;     ex: (D$ABS! a ...) performs (DABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D$CLAMP
+
+```
+veq context broadcast op: D$CLAMP
+fxname: -DCLAMP
+args: (X)
+body (1): (MIN 1.0d0 (MAX 0.0d0 X)).
+```
+
+#### :context: D$CLAMP!
+
+```
+veq context broadcast op: D$CLAMP
+fxname: -DCLAMP
+args: (X)
+body (1): (MIN 1.0d0 (MAX 0.0d0 X)).
+destructive.
+```
+
+#### :context: D$CLAMP\*
+
+```
+veq context broadcast op: D$CLAMP*
+fxname: -DCLAMP*
+args: (X MI MA)
+body (1): (MIN MA (MAX MI X)).
+```
+
+#### :context: D$CLAMP\*!
+
+```
+veq context broadcast op: D$CLAMP*
+fxname: -DCLAMP*
+args: (X MI MA)
+body (1): (MIN MA (MAX MI X)).
+destructive.
 ```
 
 #### D$COPY
 
 ```
-copy vector array (dvec).
+copy DVEC vector array.
 
  ; VEQ:D$COPY
  ;   [symbol]
  ;
  ; D$COPY names a compiled function:
- ;   Lambda-list: (A)
+ ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     copy vector array (dvec).
+ ;     copy DVEC vector array.
  ;   Source file: src/array-utils.lisp
 ```
 
-#### D$COS-SIN
+#### :context: D$COS-SIN
 
 ```
-broadcast for: DCOS-SIN
-ex: (D$COS-SIN a ...) performs (DCOS-SIN a[i] ...) for every row in a.
-
- ; VEQ:D$COS-SIN
- ;   [symbol]
- ;
- ; D$COS-SIN names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$COS-SIN;
- ;     broadcast for: DCOS-SIN
- ;     ex: (D$COS-SIN a ...) performs (DCOS-SIN a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$COS-SIN
+fxname: -DCOS-SIN
+args: (AX)
+body (2): (VALUES (COS AX) (SIN AX)).
 ```
 
-#### D$FROM
+#### :context: D$DEG->RAD
 
 ```
-broadcast for: DFROM
-ex: (D$FROM a ...) performs (DFROM a[i] ...) for every row in a.
-
- ; VEQ:D$FROM
- ;   [symbol]
- ;
- ; D$FROM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$FROM;
- ;     broadcast for: DFROM
- ;     ex: (D$FROM a ...) performs (DFROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$DEG->RAD
+fxname: -DDEG->RAD
+args: (D)
+body (1): (* DPI (/ D 180.0d0)).
 ```
 
-#### D$FROM!
+#### :context: D$DEG->RAD!
 
 ```
-destructive broadcast for: DFROM
-ex: (D$FROM! a ...) performs (DFROM a[i] ...) for every row in a.
+veq context broadcast op: D$DEG->RAD
+fxname: -DDEG->RAD
+args: (D)
+body (1): (* DPI (/ D 180.0d0)).
+destructive.
+```
 
- ; VEQ:D$FROM!
- ;   [symbol]
- ;
- ; D$FROM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$FROM!;
- ;     destructive broadcast for: DFROM
- ;     ex: (D$FROM! a ...) performs (DFROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D$EXP
+
+```
+veq context broadcast op: D$EXP
+fxname: -DEXP
+args: (AX)
+body (1): (VALUES (EXP AX)).
+```
+
+#### :context: D$EXP!
+
+```
+veq context broadcast op: D$EXP
+fxname: -DEXP
+args: (AX)
+body (1): (VALUES (EXP AX)).
+destructive.
+```
+
+#### :context: D$FROM
+
+```
+veq context broadcast op: D$FROM
+fxname: -DFROM
+args: (AX BX S)
+body (1): (+ AX (* BX S)).
+```
+
+#### :context: D$FROM!
+
+```
+veq context broadcast op: D$FROM
+fxname: -DFROM
+args: (AX BX S)
+body (1): (+ AX (* BX S)).
+destructive.
 ```
 
 #### :context: D$FXLSPACE
@@ -680,112 +723,61 @@ assumes the last form in fx is a function and does
 ex: (D$FXLSPACE (n a b) (lambda (i (:va 1 a b)) (vpr i a b)))
 ```
 
-#### D$I-
+#### :context: D$I-
 
 ```
-broadcast for: DI-
-ex: (D$I- a ...) performs (DI- a[i] ...) for every row in a.
-
- ; VEQ:D$I-
- ;   [symbol]
- ;
- ; D$I- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$I-;
- ;     broadcast for: DI-
- ;     ex: (D$I- a ...) performs (DI- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$I-
+fxname: -DI-
+args: (AX BX)
+body (1): (- BX AX).
 ```
 
-#### D$I-!
+#### :context: D$I-!
 
 ```
-destructive broadcast for: DI-
-ex: (D$I-! a ...) performs (DI- a[i] ...) for every row in a.
-
- ; VEQ:D$I-!
- ;   [symbol]
- ;
- ; D$I-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$I-!;
- ;     destructive broadcast for: DI-
- ;     ex: (D$I-! a ...) performs (DI- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$I-
+fxname: -DI-
+args: (AX BX)
+body (1): (- BX AX).
+destructive.
 ```
 
-#### D$I/
+#### :context: D$I/
 
 ```
-broadcast for: DI/
-ex: (D$I/ a ...) performs (DI/ a[i] ...) for every row in a.
-
- ; VEQ:D$I/
- ;   [symbol]
- ;
- ; D$I/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$I/;
- ;     broadcast for: DI/
- ;     ex: (D$I/ a ...) performs (DI/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$I/
+fxname: -DI/
+args: (AX BX)
+body (1): (/ BX AX).
 ```
 
-#### D$I/!
+#### :context: D$I/!
 
 ```
-destructive broadcast for: DI/
-ex: (D$I/! a ...) performs (DI/ a[i] ...) for every row in a.
-
- ; VEQ:D$I/!
- ;   [symbol]
- ;
- ; D$I/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$I/!;
- ;     destructive broadcast for: DI/
- ;     ex: (D$I/! a ...) performs (DI/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$I/
+fxname: -DI/
+args: (AX BX)
+body (1): (/ BX AX).
+destructive.
 ```
 
-#### D$ISCALE
+#### :context: D$ISCALE
 
 ```
-broadcast for: DISCALE
-ex: (D$ISCALE a ...) performs (DISCALE a[i] ...) for every row in a.
-
- ; VEQ:D$ISCALE
- ;   [symbol]
- ;
- ; D$ISCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$ISCALE;
- ;     broadcast for: DISCALE
- ;     ex: (D$ISCALE a ...) performs (DISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$ISCALE
+fxname: -DISCALE
+args: (AX S)
+body (1): (VALUES (/ AX S)).
 ```
 
-#### D$ISCALE!
+#### :context: D$ISCALE!
 
 ```
-destructive broadcast for: DISCALE
-ex: (D$ISCALE! a ...) performs (DISCALE a[i] ...) for every row in a.
-
- ; VEQ:D$ISCALE!
- ;   [symbol]
- ;
- ; D$ISCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$ISCALE!;
- ;     destructive broadcast for: DISCALE
- ;     ex: (D$ISCALE! a ...) performs (DISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$ISCALE
+fxname: -DISCALE
+args: (AX S)
+body (1): (VALUES (/ AX S)).
+destructive.
 ```
 
 #### D$LAST
@@ -805,40 +797,61 @@ return values from last row of 1d vector array.
  ;   Source file: src/array-rows.lisp
 ```
 
-#### D$LEN
+#### :context: D$LEN
 
 ```
-broadcast for: DLEN
-ex: (D$LEN a ...) performs (DLEN a[i] ...) for every row in a.
-
- ; VEQ:D$LEN
- ;   [symbol]
- ;
- ; D$LEN names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$LEN;
- ;     broadcast for: DLEN
- ;     ex: (D$LEN a ...) performs (DLEN a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$LEN
+fxname: -DLEN
+args: (AX)
+body (1): (THE POS-DF AX).
 ```
 
-#### D$LEN2
+#### :context: D$LEN!
 
 ```
-broadcast for: DLEN2
-ex: (D$LEN2 a ...) performs (DLEN2 a[i] ...) for every row in a.
+veq context broadcast op: D$LEN
+fxname: -DLEN
+args: (AX)
+body (1): (THE POS-DF AX).
+destructive.
+```
 
- ; VEQ:D$LEN2
- ;   [symbol]
- ;
- ; D$LEN2 names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$LEN2;
- ;     broadcast for: DLEN2
- ;     ex: (D$LEN2 a ...) performs (DLEN2 a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D$LEN2
+
+```
+veq context broadcast op: D$LEN2
+fxname: -DLEN2
+args: (AX)
+body (1): (THE POS-DF (MVC #'+ (-DSQUARE AX))).
+```
+
+#### :context: D$LEN2!
+
+```
+veq context broadcast op: D$LEN2
+fxname: -DLEN2
+args: (AX)
+body (1): (THE POS-DF (MVC #'+ (-DSQUARE AX))).
+destructive.
+```
+
+#### :context: D$LERP
+
+```
+veq context broadcast op: D$LERP
+fxname: -DLERP
+args: (AX BX S)
+body (1): (+ AX (* (- BX AX) S)).
+```
+
+#### :context: D$LERP!
+
+```
+veq context broadcast op: D$LERP
+fxname: -DLERP
+args: (AX BX S)
+body (1): (+ AX (* (- BX AX) S)).
+destructive.
 ```
 
 #### D$LINE
@@ -882,7 +895,7 @@ defined via veq:fvdef*
 #### D$MAKE
 
 ```
-create array with size (n dim), and initial value v.
+create DVEC vector array with size n * dim, and initial value v.
 
  ; VEQ:D$MAKE
  ;   [symbol]
@@ -890,8 +903,27 @@ create array with size (n dim), and initial value v.
  ; D$MAKE names a macro:
  ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0.0d0))
  ;   Documentation:
- ;     create array with size (n dim), and initial value v.
+ ;     create DVEC vector array with size n * dim, and initial value v.
  ;   Source file: src/array-utils.lisp
+```
+
+#### :context: D$MID
+
+```
+veq context broadcast op: D$MID
+fxname: -DMID
+args: (AX BX)
+body (1): (* 0.5d0 (+ AX BX)).
+```
+
+#### :context: D$MID!
+
+```
+veq context broadcast op: D$MID
+fxname: -DMID
+args: (AX BX)
+body (1): (* 0.5d0 (+ AX BX)).
+destructive.
 ```
 
 #### D$MIMA
@@ -916,76 +948,61 @@ use n to limit to first n rows.
  ;   Source file: src/array-mima.lisp
 ```
 
-#### D$NEG
+#### :context: D$MOD
 
 ```
-broadcast for: DNEG
-ex: (D$NEG a ...) performs (DNEG a[i] ...) for every row in a.
-
- ; VEQ:D$NEG
- ;   [symbol]
- ;
- ; D$NEG names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$NEG;
- ;     broadcast for: DNEG
- ;     ex: (D$NEG a ...) performs (DNEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$MOD
+fxname: -DMOD
+args: (AX S)
+body (1): (MOD AX S).
 ```
 
-#### D$NEG!
+#### :context: D$MOD!
 
 ```
-destructive broadcast for: DNEG
-ex: (D$NEG! a ...) performs (DNEG a[i] ...) for every row in a.
-
- ; VEQ:D$NEG!
- ;   [symbol]
- ;
- ; D$NEG! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$NEG!;
- ;     destructive broadcast for: DNEG
- ;     ex: (D$NEG! a ...) performs (DNEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$MOD
+fxname: -DMOD
+args: (AX S)
+body (1): (MOD AX S).
+destructive.
 ```
 
-#### D$NORM
+#### :context: D$NEG
 
 ```
-broadcast for: DNORM
-ex: (D$NORM a ...) performs (DNORM a[i] ...) for every row in a.
-
- ; VEQ:D$NORM
- ;   [symbol]
- ;
- ; D$NORM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$NORM;
- ;     broadcast for: DNORM
- ;     ex: (D$NORM a ...) performs (DNORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$NEG
+fxname: -DNEG
+args: (AX)
+body (1): (- AX).
 ```
 
-#### D$NORM!
+#### :context: D$NEG!
 
 ```
-destructive broadcast for: DNORM
-ex: (D$NORM! a ...) performs (DNORM a[i] ...) for every row in a.
+veq context broadcast op: D$NEG
+fxname: -DNEG
+args: (AX)
+body (1): (- AX).
+destructive.
+```
 
- ; VEQ:D$NORM!
- ;   [symbol]
- ;
- ; D$NORM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$NORM!;
- ;     destructive broadcast for: DNORM
- ;     ex: (D$NORM! a ...) performs (DNORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D$NORM
+
+```
+veq context broadcast op: D$NORM
+fxname: -DNORM
+args: (AX)
+body (1): (MVC #'-DISCALE AX (MVC #'-DLEN AX)).
+```
+
+#### :context: D$NORM!
+
+```
+veq context broadcast op: D$NORM
+fxname: -DNORM
+args: (AX)
+body (1): (MVC #'-DISCALE AX (MVC #'-DLEN AX)).
+destructive.
 ```
 
 #### D$NUM
@@ -1055,40 +1072,70 @@ returns (values a ... adim b ... bdim val)
 assuming c is a structname, and a,b are DVEC of dim 1
 ```
 
-#### D$SCALE
+#### :context: D$SCALE
 
 ```
-broadcast for: DSCALE
-ex: (D$SCALE a ...) performs (DSCALE a[i] ...) for every row in a.
-
- ; VEQ:D$SCALE
- ;   [symbol]
- ;
- ; D$SCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$SCALE;
- ;     broadcast for: DSCALE
- ;     ex: (D$SCALE a ...) performs (DSCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D$SCALE
+fxname: -DSCALE
+args: (AX S)
+body (1): (VALUES (* AX S)).
 ```
 
-#### D$SCALE!
+#### :context: D$SCALE!
 
 ```
-destructive broadcast for: DSCALE
-ex: (D$SCALE! a ...) performs (DSCALE a[i] ...) for every row in a.
+veq context broadcast op: D$SCALE
+fxname: -DSCALE
+args: (AX S)
+body (1): (VALUES (* AX S)).
+destructive.
+```
 
- ; VEQ:D$SCALE!
- ;   [symbol]
- ;
- ; D$SCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D$SCALE!;
- ;     destructive broadcast for: DSCALE
- ;     ex: (D$SCALE! a ...) performs (DSCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D$SIN-COS
+
+```
+veq context broadcast op: D$SIN-COS
+fxname: -DSIN-COS
+args: (AX)
+body (2): (VALUES (SIN AX) (COS AX)).
+```
+
+#### :context: D$SQRT
+
+```
+veq context broadcast op: D$SQRT
+fxname: -DSQRT
+args: (AX)
+body (1): (THE POS-DF (SQRT (THE POS-DF AX))).
+```
+
+#### :context: D$SQRT!
+
+```
+veq context broadcast op: D$SQRT
+fxname: -DSQRT
+args: (AX)
+body (1): (THE POS-DF (SQRT (THE POS-DF AX))).
+destructive.
+```
+
+#### :context: D$SQUARE
+
+```
+veq context broadcast op: D$SQUARE
+fxname: -DSQUARE
+args: (AX)
+body (1): (* AX AX).
+```
+
+#### :context: D$SQUARE!
+
+```
+veq context broadcast op: D$SQUARE
+fxname: -DSQUARE
+args: (AX)
+body (1): (* AX AX).
+destructive.
 ```
 
 #### D$SUM
@@ -1112,7 +1159,7 @@ sum all rows of 1d array.
 
 ```
 returns 1d array with rows for inds.
-use :res put result in existing array
+use :res to put result in existing array.
 
  ; VEQ:D$TAKE
  ;   [symbol]
@@ -1124,7 +1171,7 @@ use :res put result in existing array
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     returns 1d array with rows for inds.
- ;     use :res put result in existing array
+ ;     use :res to put result in existing array.
  ;   Source file: src/array-take.lisp
 ```
 
@@ -1150,7 +1197,12 @@ typed.
 #### :context: D$WITH-ROWS
 
 ```
-make 1d
+execute function (expr i ax ay az bx by bz ...) for
+row i and 1d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
 ```
 
 #### D$ZERO
@@ -1177,8 +1229,8 @@ typed.
 ```
 veq context op: D*
 fxname: -D*
-args: (A B)
-body: (* A B).
+args: (AX BX)
+body (1): (* AX BX).
 ```
 
 #### :context: D+
@@ -1186,8 +1238,8 @@ body: (* A B).
 ```
 veq context op: D+
 fxname: -D+
-args: (A B)
-body: (+ A B).
+args: (AX BX)
+body (1): (+ AX BX).
 ```
 
 #### :context: D-
@@ -1195,8 +1247,8 @@ body: (+ A B).
 ```
 veq context op: D-
 fxname: -D-
-args: (A B)
-body: (- A B).
+args: (AX BX)
+body (1): (- AX BX).
 ```
 
 #### :context: D/
@@ -1204,8 +1256,8 @@ body: (- A B).
 ```
 veq context op: D/
 fxname: -D/
-args: (A B)
-body: (/ A B).
+args: (AX BX)
+body (1): (/ AX BX).
 ```
 
 #### :context: D2
@@ -1233,220 +1285,230 @@ note that the number of values depends on the dimension.
  ;   Source file: src/array-utils.lisp
 ```
 
-#### D2$\*
+#### :context: D2$\*
 
 ```
-broadcast for: D2*
-ex: (D2$* a ...) performs (D2* a[i] ...) for every row in a.
-
- ; VEQ:D2$*
- ;   [symbol]
- ;
- ; D2$* names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$*;
- ;     broadcast for: D2*
- ;     ex: (D2$* a ...) performs (D2* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$*
+fxname: -D2*
+args: (AX AY BX BY)
+body (2): (VALUES (* AX BX) (* AY BY)).
 ```
 
-#### D2$\*!
+#### :context: D2$\*!
 
 ```
-destructive broadcast for: D2*
-ex: (D2$*! a ...) performs (D2* a[i] ...) for every row in a.
-
- ; VEQ:D2$*!
- ;   [symbol]
- ;
- ; D2$*! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$*!;
- ;     destructive broadcast for: D2*
- ;     ex: (D2$*! a ...) performs (D2* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$*
+fxname: -D2*
+args: (AX AY BX BY)
+body (2): (VALUES (* AX BX) (* AY BY)).
+destructive.
 ```
 
-#### D2$+
+#### :context: D2$+
 
 ```
-broadcast for: D2+
-ex: (D2$+ a ...) performs (D2+ a[i] ...) for every row in a.
-
- ; VEQ:D2$+
- ;   [symbol]
- ;
- ; D2$+ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$+;
- ;     broadcast for: D2+
- ;     ex: (D2$+ a ...) performs (D2+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$+
+fxname: -D2+
+args: (AX AY BX BY)
+body (2): (VALUES (+ AX BX) (+ AY BY)).
 ```
 
-#### D2$+!
+#### :context: D2$+!
 
 ```
-destructive broadcast for: D2+
-ex: (D2$+! a ...) performs (D2+ a[i] ...) for every row in a.
-
- ; VEQ:D2$+!
- ;   [symbol]
- ;
- ; D2$+! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$+!;
- ;     destructive broadcast for: D2+
- ;     ex: (D2$+! a ...) performs (D2+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$+
+fxname: -D2+
+args: (AX AY BX BY)
+body (2): (VALUES (+ AX BX) (+ AY BY)).
+destructive.
 ```
 
-#### D2$-
+#### :context: D2$-
 
 ```
-broadcast for: D2-
-ex: (D2$- a ...) performs (D2- a[i] ...) for every row in a.
-
- ; VEQ:D2$-
- ;   [symbol]
- ;
- ; D2$- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$-;
- ;     broadcast for: D2-
- ;     ex: (D2$- a ...) performs (D2- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$-
+fxname: -D2-
+args: (AX AY BX BY)
+body (2): (VALUES (- AX BX) (- AY BY)).
 ```
 
-#### D2$-!
+#### :context: D2$-!
 
 ```
-destructive broadcast for: D2-
-ex: (D2$-! a ...) performs (D2- a[i] ...) for every row in a.
-
- ; VEQ:D2$-!
- ;   [symbol]
- ;
- ; D2$-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$-!;
- ;     destructive broadcast for: D2-
- ;     ex: (D2$-! a ...) performs (D2- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$-
+fxname: -D2-
+args: (AX AY BX BY)
+body (2): (VALUES (- AX BX) (- AY BY)).
+destructive.
 ```
 
-#### D2$/
+#### :context: D2$.
 
 ```
-broadcast for: D2/
-ex: (D2$/ a ...) performs (D2/ a[i] ...) for every row in a.
-
- ; VEQ:D2$/
- ;   [symbol]
- ;
- ; D2$/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$/;
- ;     broadcast for: D2/
- ;     ex: (D2$/ a ...) performs (D2/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$.
+fxname: -D2.
+args: (AX AY BX BY)
+body (1): (+ (* AX BX) (* AY BY)).
 ```
 
-#### D2$/!
+#### :context: D2$/
 
 ```
-destructive broadcast for: D2/
-ex: (D2$/! a ...) performs (D2/ a[i] ...) for every row in a.
-
- ; VEQ:D2$/!
- ;   [symbol]
- ;
- ; D2$/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$/!;
- ;     destructive broadcast for: D2/
- ;     ex: (D2$/! a ...) performs (D2/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$/
+fxname: -D2/
+args: (AX AY BX BY)
+body (2): (VALUES (/ AX BX) (/ AY BY)).
 ```
 
-#### D2$ABS
+#### :context: D2$/!
 
 ```
-broadcast for: D2ABS
-ex: (D2$ABS a ...) performs (D2ABS a[i] ...) for every row in a.
-
- ; VEQ:D2$ABS
- ;   [symbol]
- ;
- ; D2$ABS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$ABS;
- ;     broadcast for: D2ABS
- ;     ex: (D2$ABS a ...) performs (D2ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$/
+fxname: -D2/
+args: (AX AY BX BY)
+body (2): (VALUES (/ AX BX) (/ AY BY)).
+destructive.
 ```
 
-#### D2$ABS!
+#### :context: D2$^
 
 ```
-destructive broadcast for: D2ABS
-ex: (D2$ABS! a ...) performs (D2ABS a[i] ...) for every row in a.
-
- ; VEQ:D2$ABS!
- ;   [symbol]
- ;
- ; D2$ABS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$ABS!;
- ;     destructive broadcast for: D2ABS
- ;     ex: (D2$ABS! a ...) performs (D2ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$^
+fxname: -D2^
+args: (AX AY S)
+body (2): (VALUES (EXPT AX S) (EXPT AY S)).
 ```
 
-#### D2$FROM
+#### :context: D2$^!
 
 ```
-broadcast for: D2FROM
-ex: (D2$FROM a ...) performs (D2FROM a[i] ...) for every row in a.
-
- ; VEQ:D2$FROM
- ;   [symbol]
- ;
- ; D2$FROM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$FROM;
- ;     broadcast for: D2FROM
- ;     ex: (D2$FROM a ...) performs (D2FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$^
+fxname: -D2^
+args: (AX AY S)
+body (2): (VALUES (EXPT AX S) (EXPT AY S)).
+destructive.
 ```
 
-#### D2$FROM!
+#### :context: D2$ABS
 
 ```
-destructive broadcast for: D2FROM
-ex: (D2$FROM! a ...) performs (D2FROM a[i] ...) for every row in a.
+veq context broadcast op: D2$ABS
+fxname: -D2ABS
+args: (AX AY)
+body (2): (VALUES (ABS AX) (ABS AY)).
+```
 
- ; VEQ:D2$FROM!
- ;   [symbol]
- ;
- ; D2$FROM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$FROM!;
- ;     destructive broadcast for: D2FROM
- ;     ex: (D2$FROM! a ...) performs (D2FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D2$ABS!
+
+```
+veq context broadcast op: D2$ABS
+fxname: -D2ABS
+args: (AX AY)
+body (2): (VALUES (ABS AX) (ABS AY)).
+destructive.
+```
+
+#### :context: D2$ANGLE
+
+```
+veq context broadcast op: D2$ANGLE
+fxname: -D2ANGLE
+args: (AX AY)
+body (1): (MVC #'ATAN (-D2NORM AY AX)).
+```
+
+#### :context: D2$CROSS
+
+```
+veq context broadcast op: D2$CROSS
+fxname: -D2CROSS
+args: (AX AY BX BY)
+body (2): (- (* AX BY) (* AY BX)).
+```
+
+#### :context: D2$CROSS!
+
+```
+veq context broadcast op: D2$CROSS
+fxname: -D2CROSS
+args: (AX AY BX BY)
+body (2): (- (* AX BY) (* AY BX)).
+destructive.
+```
+
+#### :context: D2$DST
+
+```
+veq context broadcast op: D2$DST
+fxname: -D2DST
+args: (AX AY BX BY)
+body (1): (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))))).
+```
+
+#### :context: D2$DST2
+
+```
+veq context broadcast op: D2$DST2
+fxname: -D2DST2
+args: (AX AY BX BY)
+body (1): (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))).
+```
+
+#### :context: D2$EXP
+
+```
+veq context broadcast op: D2$EXP
+fxname: -D2EXP
+args: (AX AY)
+body (2): (VALUES (EXP AX) (EXP AY)).
+```
+
+#### :context: D2$EXP!
+
+```
+veq context broadcast op: D2$EXP
+fxname: -D2EXP
+args: (AX AY)
+body (2): (VALUES (EXP AX) (EXP AY)).
+destructive.
+```
+
+#### :context: D2$FLIP
+
+```
+veq context broadcast op: D2$FLIP
+fxname: -D2FLIP
+args: (AX AY)
+body (2): (VALUES AY AX).
+```
+
+#### :context: D2$FLIP!
+
+```
+veq context broadcast op: D2$FLIP
+fxname: -D2FLIP
+args: (AX AY)
+body (2): (VALUES AY AX).
+destructive.
+```
+
+#### :context: D2$FROM
+
+```
+veq context broadcast op: D2$FROM
+fxname: -D2FROM
+args: (AX AY BX BY S)
+body (2): (-D2+ AX AY (* BX S) (* BY S)).
+```
+
+#### :context: D2$FROM!
+
+```
+veq context broadcast op: D2$FROM
+fxname: -D2FROM
+args: (AX AY BX BY S)
+body (2): (-D2+ AX AY (* BX S) (* BY S)).
+destructive.
 ```
 
 #### :context: D2$FXLSPACE
@@ -1459,112 +1521,61 @@ assumes the last form in fx is a function and does
 ex: (D2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
 ```
 
-#### D2$I-
+#### :context: D2$I-
 
 ```
-broadcast for: D2I-
-ex: (D2$I- a ...) performs (D2I- a[i] ...) for every row in a.
-
- ; VEQ:D2$I-
- ;   [symbol]
- ;
- ; D2$I- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$I-;
- ;     broadcast for: D2I-
- ;     ex: (D2$I- a ...) performs (D2I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$I-
+fxname: -D2I-
+args: (AX AY BX BY)
+body (2): (VALUES (- BX AX) (- BY AY)).
 ```
 
-#### D2$I-!
+#### :context: D2$I-!
 
 ```
-destructive broadcast for: D2I-
-ex: (D2$I-! a ...) performs (D2I- a[i] ...) for every row in a.
-
- ; VEQ:D2$I-!
- ;   [symbol]
- ;
- ; D2$I-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$I-!;
- ;     destructive broadcast for: D2I-
- ;     ex: (D2$I-! a ...) performs (D2I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$I-
+fxname: -D2I-
+args: (AX AY BX BY)
+body (2): (VALUES (- BX AX) (- BY AY)).
+destructive.
 ```
 
-#### D2$I/
+#### :context: D2$I/
 
 ```
-broadcast for: D2I/
-ex: (D2$I/ a ...) performs (D2I/ a[i] ...) for every row in a.
-
- ; VEQ:D2$I/
- ;   [symbol]
- ;
- ; D2$I/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$I/;
- ;     broadcast for: D2I/
- ;     ex: (D2$I/ a ...) performs (D2I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$I/
+fxname: -D2I/
+args: (AX AY BX BY)
+body (2): (VALUES (/ BX AX) (/ BY AY)).
 ```
 
-#### D2$I/!
+#### :context: D2$I/!
 
 ```
-destructive broadcast for: D2I/
-ex: (D2$I/! a ...) performs (D2I/ a[i] ...) for every row in a.
-
- ; VEQ:D2$I/!
- ;   [symbol]
- ;
- ; D2$I/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$I/!;
- ;     destructive broadcast for: D2I/
- ;     ex: (D2$I/! a ...) performs (D2I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$I/
+fxname: -D2I/
+args: (AX AY BX BY)
+body (2): (VALUES (/ BX AX) (/ BY AY)).
+destructive.
 ```
 
-#### D2$ISCALE
+#### :context: D2$ISCALE
 
 ```
-broadcast for: D2ISCALE
-ex: (D2$ISCALE a ...) performs (D2ISCALE a[i] ...) for every row in a.
-
- ; VEQ:D2$ISCALE
- ;   [symbol]
- ;
- ; D2$ISCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$ISCALE;
- ;     broadcast for: D2ISCALE
- ;     ex: (D2$ISCALE a ...) performs (D2ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$ISCALE
+fxname: -D2ISCALE
+args: (AX AY S)
+body (2): (VALUES (/ AX S) (/ AY S)).
 ```
 
-#### D2$ISCALE!
+#### :context: D2$ISCALE!
 
 ```
-destructive broadcast for: D2ISCALE
-ex: (D2$ISCALE! a ...) performs (D2ISCALE a[i] ...) for every row in a.
-
- ; VEQ:D2$ISCALE!
- ;   [symbol]
- ;
- ; D2$ISCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$ISCALE!;
- ;     destructive broadcast for: D2ISCALE
- ;     ex: (D2$ISCALE! a ...) performs (D2ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$ISCALE
+fxname: -D2ISCALE
+args: (AX AY S)
+body (2): (VALUES (/ AX S) (/ AY S)).
+destructive.
 ```
 
 #### D2$LAST
@@ -1584,40 +1595,41 @@ return values from last row of 2d vector array.
  ;   Source file: src/array-rows.lisp
 ```
 
-#### D2$LEN
+#### :context: D2$LEN
 
 ```
-broadcast for: D2LEN
-ex: (D2$LEN a ...) performs (D2LEN a[i] ...) for every row in a.
-
- ; VEQ:D2$LEN
- ;   [symbol]
- ;
- ; D2$LEN names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$LEN;
- ;     broadcast for: D2LEN
- ;     ex: (D2$LEN a ...) performs (D2LEN a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$LEN
+fxname: -D2LEN
+args: (AX AY)
+body (1): (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE AX AY))))).
 ```
 
-#### D2$LEN2
+#### :context: D2$LEN2
 
 ```
-broadcast for: D2LEN2
-ex: (D2$LEN2 a ...) performs (D2LEN2 a[i] ...) for every row in a.
+veq context broadcast op: D2$LEN2
+fxname: -D2LEN2
+args: (AX AY)
+body (1): (THE POS-DF (MVC #'+ (-D2SQUARE AX AY))).
+```
 
- ; VEQ:D2$LEN2
- ;   [symbol]
- ;
- ; D2$LEN2 names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$LEN2;
- ;     broadcast for: D2LEN2
- ;     ex: (D2$LEN2 a ...) performs (D2LEN2 a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D2$LERP
+
+```
+veq context broadcast op: D2$LERP
+fxname: -D2LERP
+args: (AX AY BX BY S)
+body (2): (-D2+ AX AY (* (- BX AX) S) (* (- BY AY) S)).
+```
+
+#### :context: D2$LERP!
+
+```
+veq context broadcast op: D2$LERP
+fxname: -D2LERP
+args: (AX AY BX BY S)
+body (2): (-D2+ AX AY (* (- BX AX) S) (* (- BY AY) S)).
+destructive.
 ```
 
 #### D2$LINE
@@ -1658,6 +1670,34 @@ defined via veq:fvdef*
  ;   Source file: src/lspace.lisp
 ```
 
+#### :context: D2$MAX
+
+```
+veq context broadcast op: D2$MAX
+fxname: -D2MAX
+args: (AX AY)
+body (1): (MAX AX AY).
+```
+
+#### :context: D2$MID
+
+```
+veq context broadcast op: D2$MID
+fxname: -D2MID
+args: (AX AY BX BY)
+body (2): (VALUES (* 0.5d0 (+ AX BX)) (* 0.5d0 (+ AY BY))).
+```
+
+#### :context: D2$MID!
+
+```
+veq context broadcast op: D2$MID
+fxname: -D2MID
+args: (AX AY BX BY)
+body (2): (VALUES (* 0.5d0 (+ AX BX)) (* 0.5d0 (+ AY BY))).
+destructive.
+```
+
 #### D2$MIMA
 
 ```
@@ -1681,76 +1721,70 @@ use n to limit to first n rows.
  ;   Source file: src/array-mima.lisp
 ```
 
-#### D2$NEG
+#### :context: D2$MIN
 
 ```
-broadcast for: D2NEG
-ex: (D2$NEG a ...) performs (D2NEG a[i] ...) for every row in a.
-
- ; VEQ:D2$NEG
- ;   [symbol]
- ;
- ; D2$NEG names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$NEG;
- ;     broadcast for: D2NEG
- ;     ex: (D2$NEG a ...) performs (D2NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$MIN
+fxname: -D2MIN
+args: (AX AY)
+body (1): (MIN AX AY).
 ```
 
-#### D2$NEG!
+#### :context: D2$MOD
 
 ```
-destructive broadcast for: D2NEG
-ex: (D2$NEG! a ...) performs (D2NEG a[i] ...) for every row in a.
-
- ; VEQ:D2$NEG!
- ;   [symbol]
- ;
- ; D2$NEG! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$NEG!;
- ;     destructive broadcast for: D2NEG
- ;     ex: (D2$NEG! a ...) performs (D2NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$MOD
+fxname: -D2MOD
+args: (AX AY S)
+body (2): (VALUES (MOD AX S) (MOD AY S)).
 ```
 
-#### D2$NORM
+#### :context: D2$MOD!
 
 ```
-broadcast for: D2NORM
-ex: (D2$NORM a ...) performs (D2NORM a[i] ...) for every row in a.
-
- ; VEQ:D2$NORM
- ;   [symbol]
- ;
- ; D2$NORM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$NORM;
- ;     broadcast for: D2NORM
- ;     ex: (D2$NORM a ...) performs (D2NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$MOD
+fxname: -D2MOD
+args: (AX AY S)
+body (2): (VALUES (MOD AX S) (MOD AY S)).
+destructive.
 ```
 
-#### D2$NORM!
+#### :context: D2$NEG
 
 ```
-destructive broadcast for: D2NORM
-ex: (D2$NORM! a ...) performs (D2NORM a[i] ...) for every row in a.
+veq context broadcast op: D2$NEG
+fxname: -D2NEG
+args: (AX AY)
+body (2): (VALUES (- AX) (- AY)).
+```
 
- ; VEQ:D2$NORM!
- ;   [symbol]
- ;
- ; D2$NORM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$NORM!;
- ;     destructive broadcast for: D2NORM
- ;     ex: (D2$NORM! a ...) performs (D2NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D2$NEG!
+
+```
+veq context broadcast op: D2$NEG
+fxname: -D2NEG
+args: (AX AY)
+body (2): (VALUES (- AX) (- AY)).
+destructive.
+```
+
+#### :context: D2$NORM
+
+```
+veq context broadcast op: D2$NORM
+fxname: -D2NORM
+args: (AX AY)
+body (2): (MVC #'-D2ISCALE AX AY (MVC #'-D2LEN AX AY)).
+```
+
+#### :context: D2$NORM!
+
+```
+veq context broadcast op: D2$NORM
+fxname: -D2NORM
+args: (AX AY)
+body (2): (MVC #'-D2ISCALE AX AY (MVC #'-D2LEN AX AY)).
+destructive.
 ```
 
 #### D2$NUM
@@ -1772,6 +1806,24 @@ typed.
  ;   Source file: src/array-utils.lisp
 ```
 
+#### :context: D2$ON-CIRC
+
+```
+veq context broadcast op: D2$ON-CIRC
+fxname: -D2ON-CIRC
+args: (AX RAD)
+body (2): (MVC #'-D2SCALE (-DCOS-SIN (* AX DPII)) RAD).
+```
+
+#### :context: D2$ON-CIRC\*
+
+```
+veq context broadcast op: D2$ON-CIRC*
+fxname: -D2ON-CIRC*
+args: (AX RAD)
+body (2): (MVC #'-D2SCALE (-DCOS-SIN AX) RAD).
+```
+
 #### D2$ONE
 
 ```
@@ -1789,6 +1841,44 @@ typed.
  ;     make 2d array of ones.
  ;     typed.
  ;   Source file: src/array-utils.lisp
+```
+
+#### :context: D2$PERP
+
+```
+veq context broadcast op: D2$PERP
+fxname: -D2PERP
+args: (AX AY)
+body (2): (VALUES AY (- AX)).
+```
+
+#### :context: D2$PERP!
+
+```
+veq context broadcast op: D2$PERP
+fxname: -D2PERP
+args: (AX AY)
+body (2): (VALUES AY (- AX)).
+destructive.
+```
+
+#### :context: D2$PERP\*
+
+```
+veq context broadcast op: D2$PERP*
+fxname: -D2PERP*
+args: (AX AY)
+body (2): (VALUES (- AY) AX).
+```
+
+#### :context: D2$PERP\*!
+
+```
+veq context broadcast op: D2$PERP*
+fxname: -D2PERP*
+args: (AX AY)
+body (2): (VALUES (- AY) AX).
+destructive.
 ```
 
 #### D2$POINT
@@ -1810,76 +1900,52 @@ defined via veq:def*
  ;   Source file: src/shapes.lisp
 ```
 
-#### D2$ROT
+#### :context: D2$ROT
 
 ```
-broadcast for: D2ROT
-ex: (D2$ROT a ...) performs (D2ROT a[i] ...) for every row in a.
-
- ; VEQ:D2$ROT
- ;   [symbol]
- ;
- ; D2$ROT names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$ROT;
- ;     broadcast for: D2ROT
- ;     ex: (D2$ROT a ...) performs (D2ROT a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$ROT
+fxname: -D2ROT
+args: (AX AY ANGLE)
+body (2): (LET ((COSA (COS ANGLE)) (SINA (SIN ANGLE)))
+            (DECLARE
+             (DF
+               COSA
+               SINA))
+            (VALUES (- (* AX COSA) (* AY SINA)) (+ (* AX SINA) (* AY COSA)))).
 ```
 
-#### D2$ROT!
+#### :context: D2$ROT!
 
 ```
-destructive broadcast for: D2ROT
-ex: (D2$ROT! a ...) performs (D2ROT a[i] ...) for every row in a.
-
- ; VEQ:D2$ROT!
- ;   [symbol]
- ;
- ; D2$ROT! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$ROT!;
- ;     destructive broadcast for: D2ROT
- ;     ex: (D2$ROT! a ...) performs (D2ROT a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$ROT
+fxname: -D2ROT
+args: (AX AY ANGLE)
+body (2): (LET ((COSA (COS ANGLE)) (SINA (SIN ANGLE)))
+            (DECLARE
+             (DF
+               COSA
+               SINA))
+            (VALUES (- (* AX COSA) (* AY SINA)) (+ (* AX SINA) (* AY COSA)))).
+destructive.
 ```
 
-#### D2$ROTS
+#### :context: D2$ROTS
 
 ```
-broadcast for: D2ROTS
-ex: (D2$ROTS a ...) performs (D2ROTS a[i] ...) for every row in a.
-
- ; VEQ:D2$ROTS
- ;   [symbol]
- ;
- ; D2$ROTS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$ROTS;
- ;     broadcast for: D2ROTS
- ;     ex: (D2$ROTS a ...) performs (D2ROTS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$ROTS
+fxname: -D2ROTS
+args: (AX AY ANGLE SX SY)
+body (2): (MVC #'-D2+ (MVC #'-D2ROT (-D2- AX AY SX SY) ANGLE) SX SY).
 ```
 
-#### D2$ROTS!
+#### :context: D2$ROTS!
 
 ```
-destructive broadcast for: D2ROTS
-ex: (D2$ROTS! a ...) performs (D2ROTS a[i] ...) for every row in a.
-
- ; VEQ:D2$ROTS!
- ;   [symbol]
- ;
- ; D2$ROTS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$ROTS!;
- ;     destructive broadcast for: D2ROTS
- ;     ex: (D2$ROTS! a ...) performs (D2ROTS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$ROTS
+fxname: -D2ROTS
+args: (AX AY ANGLE SX SY)
+body (2): (MVC #'-D2+ (MVC #'-D2ROT (-D2- AX AY SX SY) ANGLE) SX SY).
+destructive.
 ```
 
 #### :context: D2$S
@@ -1892,40 +1958,63 @@ returns (values a ... adim b ... bdim val)
 assuming c is a structname, and a,b are DVEC of dim 2
 ```
 
-#### D2$SCALE
+#### :context: D2$SCALE
 
 ```
-broadcast for: D2SCALE
-ex: (D2$SCALE a ...) performs (D2SCALE a[i] ...) for every row in a.
-
- ; VEQ:D2$SCALE
- ;   [symbol]
- ;
- ; D2$SCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$SCALE;
- ;     broadcast for: D2SCALE
- ;     ex: (D2$SCALE a ...) performs (D2SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D2$SCALE
+fxname: -D2SCALE
+args: (AX AY S)
+body (2): (VALUES (* AX S) (* AY S)).
 ```
 
-#### D2$SCALE!
+#### :context: D2$SCALE!
 
 ```
-destructive broadcast for: D2SCALE
-ex: (D2$SCALE! a ...) performs (D2SCALE a[i] ...) for every row in a.
+veq context broadcast op: D2$SCALE
+fxname: -D2SCALE
+args: (AX AY S)
+body (2): (VALUES (* AX S) (* AY S)).
+destructive.
+```
 
- ; VEQ:D2$SCALE!
- ;   [symbol]
- ;
- ; D2$SCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D2$SCALE!;
- ;     destructive broadcast for: D2SCALE
- ;     ex: (D2$SCALE! a ...) performs (D2SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D2$SQRT
+
+```
+veq context broadcast op: D2$SQRT
+fxname: -D2SQRT
+args: (AX AY)
+body (2): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
+                  (THE POS-DF (SQRT (THE POS-DF AY)))).
+```
+
+#### :context: D2$SQRT!
+
+```
+veq context broadcast op: D2$SQRT
+fxname: -D2SQRT
+args: (AX AY)
+body (2): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
+                  (THE POS-DF (SQRT (THE POS-DF AY)))).
+destructive.
+```
+
+#### :context: D2$SQUARE
+
+```
+veq context broadcast op: D2$SQUARE
+fxname: -D2SQUARE
+args: (AX AY)
+body (2): (VALUES (* AX AX) (* AY AY)).
+```
+
+#### :context: D2$SQUARE!
+
+```
+veq context broadcast op: D2$SQUARE
+fxname: -D2SQUARE
+args: (AX AY)
+body (2): (VALUES (* AX AX) (* AY AY)).
+destructive.
 ```
 
 #### D2$SUM
@@ -1949,7 +2038,7 @@ sum all rows of 2d array.
 
 ```
 returns 2d array with rows for inds.
-use :res put result in existing array
+use :res to put result in existing array.
 
  ; VEQ:D2$TAKE
  ;   [symbol]
@@ -1961,7 +2050,7 @@ use :res put result in existing array
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     returns 2d array with rows for inds.
- ;     use :res put result in existing array
+ ;     use :res to put result in existing array.
  ;   Source file: src/array-take.lisp
 ```
 
@@ -1987,7 +2076,12 @@ typed.
 #### :context: D2$WITH-ROWS
 
 ```
-make 2d
+execute function (expr i ax ay az bx by bz ...) for
+row i and 2d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
 ```
 
 #### D2$ZERO
@@ -2015,7 +2109,7 @@ typed.
 veq context op: D2*
 fxname: -D2*
 args: (AX AY BX BY)
-body: (VALUES (* AX BX) (* AY BY)).
+body (2): (VALUES (* AX BX) (* AY BY)).
 ```
 
 #### :context: D2+
@@ -2024,7 +2118,7 @@ body: (VALUES (* AX BX) (* AY BY)).
 veq context op: D2+
 fxname: -D2+
 args: (AX AY BX BY)
-body: (VALUES (+ AX BX) (+ AY BY)).
+body (2): (VALUES (+ AX BX) (+ AY BY)).
 ```
 
 #### :context: D2-
@@ -2033,7 +2127,7 @@ body: (VALUES (+ AX BX) (+ AY BY)).
 veq context op: D2-
 fxname: -D2-
 args: (AX AY BX BY)
-body: (VALUES (- AX BX) (- AY BY)).
+body (2): (VALUES (- AX BX) (- AY BY)).
 ```
 
 #### :context: D2.
@@ -2042,7 +2136,7 @@ body: (VALUES (- AX BX) (- AY BY)).
 veq context op: D2.
 fxname: -D2.
 args: (AX AY BX BY)
-body: (+ (* AX BX) (* AY BY)).
+body (1): (+ (* AX BX) (* AY BY)).
 ```
 
 #### :context: D2/
@@ -2051,7 +2145,7 @@ body: (+ (* AX BX) (* AY BY)).
 veq context op: D2/
 fxname: -D2/
 args: (AX AY BX BY)
-body: (VALUES (/ AX BX) (/ AY BY)).
+body (2): (VALUES (/ AX BX) (/ AY BY)).
 ```
 
 #### :context: D2^
@@ -2059,8 +2153,8 @@ body: (VALUES (/ AX BX) (/ AY BY)).
 ```
 veq context op: D2^
 fxname: -D2^
-args: (A B S)
-body: (VALUES (EXPT A S) (EXPT B S)).
+args: (AX AY S)
+body (2): (VALUES (EXPT AX S) (EXPT AY S)).
 ```
 
 #### :context: D2ABS
@@ -2068,8 +2162,8 @@ body: (VALUES (EXPT A S) (EXPT B S)).
 ```
 veq context op: D2ABS
 fxname: -D2ABS
-args: (A B)
-body: (VALUES (ABS A) (ABS B)).
+args: (AX AY)
+body (2): (VALUES (ABS AX) (ABS AY)).
 ```
 
 #### :context: D2ANGLE
@@ -2077,8 +2171,8 @@ body: (VALUES (ABS A) (ABS B)).
 ```
 veq context op: D2ANGLE
 fxname: -D2ANGLE
-args: (A B)
-body: (MVC #'ATAN (-D2NORM B A)).
+args: (AX AY)
+body (1): (MVC #'ATAN (-D2NORM AY AX)).
 ```
 
 #### :context: D2CROSS
@@ -2087,7 +2181,7 @@ body: (MVC #'ATAN (-D2NORM B A)).
 veq context op: D2CROSS
 fxname: -D2CROSS
 args: (AX AY BX BY)
-body: (- (* AX BY) (* AY BX)).
+body (2): (- (* AX BY) (* AY BX)).
 ```
 
 #### :context: D2DST
@@ -2096,7 +2190,7 @@ body: (- (* AX BY) (* AY BX)).
 veq context op: D2DST
 fxname: -D2DST
 args: (AX AY BX BY)
-body: (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))))).
+body (1): (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))))).
 ```
 
 #### :context: D2DST2
@@ -2105,7 +2199,7 @@ body: (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))))).
 veq context op: D2DST2
 fxname: -D2DST2
 args: (AX AY BX BY)
-body: (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))).
+body (1): (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))).
 ```
 
 #### :context: D2EXP
@@ -2113,8 +2207,8 @@ body: (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))).
 ```
 veq context op: D2EXP
 fxname: -D2EXP
-args: (A B)
-body: (VALUES (EXP A) (EXP B)).
+args: (AX AY)
+body (2): (VALUES (EXP AX) (EXP AY)).
 ```
 
 #### :context: D2FLIP
@@ -2122,8 +2216,8 @@ body: (VALUES (EXP A) (EXP B)).
 ```
 veq context op: D2FLIP
 fxname: -D2FLIP
-args: (A B)
-body: (VALUES B A).
+args: (AX AY)
+body (2): (VALUES AY AX).
 ```
 
 #### :context: D2FROM
@@ -2132,7 +2226,7 @@ body: (VALUES B A).
 veq context op: D2FROM
 fxname: -D2FROM
 args: (AX AY BX BY S)
-body: (-D2+ AX AY (* BX S) (* BY S)).
+body (2): (-D2+ AX AY (* BX S) (* BY S)).
 ```
 
 #### :context: D2I-
@@ -2141,7 +2235,7 @@ body: (-D2+ AX AY (* BX S) (* BY S)).
 veq context op: D2I-
 fxname: -D2I-
 args: (AX AY BX BY)
-body: (VALUES (- BX AX) (- BY AY)).
+body (2): (VALUES (- BX AX) (- BY AY)).
 ```
 
 #### :context: D2I/
@@ -2150,7 +2244,7 @@ body: (VALUES (- BX AX) (- BY AY)).
 veq context op: D2I/
 fxname: -D2I/
 args: (AX AY BX BY)
-body: (VALUES (/ BX AX) (/ BY AY)).
+body (2): (VALUES (/ BX AX) (/ BY AY)).
 ```
 
 #### :context: D2ISCALE
@@ -2158,8 +2252,8 @@ body: (VALUES (/ BX AX) (/ BY AY)).
 ```
 veq context op: D2ISCALE
 fxname: -D2ISCALE
-args: (A B S)
-body: (VALUES (/ A S) (/ B S)).
+args: (AX AY S)
+body (2): (VALUES (/ AX S) (/ AY S)).
 ```
 
 #### :context: D2LEN
@@ -2167,8 +2261,8 @@ body: (VALUES (/ A S) (/ B S)).
 ```
 veq context op: D2LEN
 fxname: -D2LEN
-args: (A B)
-body: (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE A B))))).
+args: (AX AY)
+body (1): (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE AX AY))))).
 ```
 
 #### :context: D2LEN2
@@ -2176,8 +2270,8 @@ body: (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE A B))))).
 ```
 veq context op: D2LEN2
 fxname: -D2LEN2
-args: (A B)
-body: (THE POS-DF (MVC #'+ (-D2SQUARE A B))).
+args: (AX AY)
+body (1): (THE POS-DF (MVC #'+ (-D2SQUARE AX AY))).
 ```
 
 #### :context: D2LERP
@@ -2186,7 +2280,7 @@ body: (THE POS-DF (MVC #'+ (-D2SQUARE A B))).
 veq context op: D2LERP
 fxname: -D2LERP
 args: (AX AY BX BY S)
-body: (-D2+ AX AY (* (- BX AX) S) (* (- BY AY) S)).
+body (2): (-D2+ AX AY (* (- BX AX) S) (* (- BY AY) S)).
 ```
 
 #### :context: D2LET
@@ -2202,8 +2296,8 @@ note that this behaves like native lisp let*.
 ```
 veq context op: D2MAX
 fxname: -D2MAX
-args: (A B)
-body: (MAX A B).
+args: (AX AY)
+body (1): (MAX AX AY).
 ```
 
 #### D2MEYE
@@ -2229,7 +2323,7 @@ return 2d eye matrix.
 veq context op: D2MID
 fxname: -D2MID
 args: (AX AY BX BY)
-body: (VALUES (* 0.5d0 (+ AX BX)) (* 0.5d0 (+ AY BY))).
+body (2): (VALUES (* 0.5d0 (+ AX BX)) (* 0.5d0 (+ AY BY))).
 ```
 
 #### :context: D2MIN
@@ -2237,8 +2331,8 @@ body: (VALUES (* 0.5d0 (+ AX BX)) (* 0.5d0 (+ AY BY))).
 ```
 veq context op: D2MIN
 fxname: -D2MIN
-args: (A B)
-body: (MIN A B).
+args: (AX AY)
+body (1): (MIN AX AY).
 ```
 
 #### D2MINV
@@ -2297,8 +2391,8 @@ of type: DVEC
 ```
 veq context op: D2MOD
 fxname: -D2MOD
-args: (A B S)
-body: (VALUES (MOD A S) (MOD B S)).
+args: (AX AY S)
+body (2): (VALUES (MOD AX S) (MOD AY S)).
 ```
 
 #### D2MROT
@@ -2453,8 +2547,8 @@ mat * v. for 2d matrix and vector.
 ```
 veq context op: D2NEG
 fxname: -D2NEG
-args: (A B)
-body: (VALUES (- A) (- B)).
+args: (AX AY)
+body (2): (VALUES (- AX) (- AY)).
 ```
 
 #### :context: D2NORM
@@ -2462,8 +2556,8 @@ body: (VALUES (- A) (- B)).
 ```
 veq context op: D2NORM
 fxname: -D2NORM
-args: (A B)
-body: (MVC #'-D2ISCALE A B (MVC #'-D2LEN A B)).
+args: (AX AY)
+body (2): (MVC #'-D2ISCALE AX AY (MVC #'-D2LEN AX AY)).
 ```
 
 #### :context: D2NSUM
@@ -2477,8 +2571,8 @@ make 2d
 ```
 veq context op: D2ON-CIRC
 fxname: -D2ON-CIRC
-args: (A RAD)
-body: (MVC #'-D2SCALE (-DCOS-SIN (* A DPII)) RAD).
+args: (AX RAD)
+body (2): (MVC #'-D2SCALE (-DCOS-SIN (* AX DPII)) RAD).
 ```
 
 #### :context: D2ON-CIRC\*
@@ -2486,8 +2580,8 @@ body: (MVC #'-D2SCALE (-DCOS-SIN (* A DPII)) RAD).
 ```
 veq context op: D2ON-CIRC*
 fxname: -D2ON-CIRC*
-args: (A RAD)
-body: (MVC #'-D2SCALE (-DCOS-SIN A) RAD).
+args: (AX RAD)
+body (2): (MVC #'-D2SCALE (-DCOS-SIN AX) RAD).
 ```
 
 #### :context: D2PERP
@@ -2495,8 +2589,8 @@ body: (MVC #'-D2SCALE (-DCOS-SIN A) RAD).
 ```
 veq context op: D2PERP
 fxname: -D2PERP
-args: (A B)
-body: (VALUES B (- A)).
+args: (AX AY)
+body (2): (VALUES AY (- AX)).
 ```
 
 #### :context: D2PERP\*
@@ -2504,8 +2598,8 @@ body: (VALUES B (- A)).
 ```
 veq context op: D2PERP*
 fxname: -D2PERP*
-args: (A B)
-body: (VALUES (- B) A).
+args: (AX AY)
+body (2): (VALUES (- AY) AX).
 ```
 
 #### :context: D2REP
@@ -2527,13 +2621,13 @@ ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 veq context op: D2ROT
 fxname: -D2ROT
-args: (X Y A)
-body: (LET ((COSA (COS A)) (SINA (SIN A)))
-        (DECLARE
-         (DF
-           COSA
-           SINA))
-        (VALUES (- (* X COSA) (* Y SINA)) (+ (* X SINA) (* Y COSA)))).
+args: (AX AY ANGLE)
+body (2): (LET ((COSA (COS ANGLE)) (SINA (SIN ANGLE)))
+            (DECLARE
+             (DF
+               COSA
+               SINA))
+            (VALUES (- (* AX COSA) (* AY SINA)) (+ (* AX SINA) (* AY COSA)))).
 ```
 
 #### :context: D2ROTS
@@ -2541,8 +2635,8 @@ body: (LET ((COSA (COS A)) (SINA (SIN A)))
 ```
 veq context op: D2ROTS
 fxname: -D2ROTS
-args: (X Y A SX SY)
-body: (MVC #'-D2+ (MVC #'-D2ROT (-D2- X Y SX SY) A) SX SY).
+args: (AX AY ANGLE SX SY)
+body (2): (MVC #'-D2+ (MVC #'-D2ROT (-D2- AX AY SX SY) ANGLE) SX SY).
 ```
 
 #### :context: D2SCALE
@@ -2550,8 +2644,8 @@ body: (MVC #'-D2+ (MVC #'-D2ROT (-D2- X Y SX SY) A) SX SY).
 ```
 veq context op: D2SCALE
 fxname: -D2SCALE
-args: (A B S)
-body: (VALUES (* A S) (* B S)).
+args: (AX AY S)
+body (2): (VALUES (* AX S) (* AY S)).
 ```
 
 #### :context: D2SQRT
@@ -2559,9 +2653,9 @@ body: (VALUES (* A S) (* B S)).
 ```
 veq context op: D2SQRT
 fxname: -D2SQRT
-args: (A B)
-body: (VALUES (THE POS-DF (SQRT (THE POS-DF A)))
-              (THE POS-DF (SQRT (THE POS-DF B)))).
+args: (AX AY)
+body (2): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
+                  (THE POS-DF (SQRT (THE POS-DF AY)))).
 ```
 
 #### :context: D2SQUARE
@@ -2569,8 +2663,8 @@ body: (VALUES (THE POS-DF (SQRT (THE POS-DF A)))
 ```
 veq context op: D2SQUARE
 fxname: -D2SQUARE
-args: (A B)
-body: (VALUES (* A A) (* B B)).
+args: (AX AY)
+body (2): (VALUES (* AX AX) (* AY AY)).
 ```
 
 #### :context: D2VSET
@@ -2614,220 +2708,205 @@ note that the number of values depends on the dimension.
  ;   Source file: src/array-utils.lisp
 ```
 
-#### D3$\*
+#### :context: D3$\*
 
 ```
-broadcast for: D3*
-ex: (D3$* a ...) performs (D3* a[i] ...) for every row in a.
-
- ; VEQ:D3$*
- ;   [symbol]
- ;
- ; D3$* names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$*;
- ;     broadcast for: D3*
- ;     ex: (D3$* a ...) performs (D3* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$*
+fxname: -D3*
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (* AX BX) (* AY BY) (* AZ BZ)).
 ```
 
-#### D3$\*!
+#### :context: D3$\*!
 
 ```
-destructive broadcast for: D3*
-ex: (D3$*! a ...) performs (D3* a[i] ...) for every row in a.
-
- ; VEQ:D3$*!
- ;   [symbol]
- ;
- ; D3$*! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$*!;
- ;     destructive broadcast for: D3*
- ;     ex: (D3$*! a ...) performs (D3* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$*
+fxname: -D3*
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (* AX BX) (* AY BY) (* AZ BZ)).
+destructive.
 ```
 
-#### D3$+
+#### :context: D3$+
 
 ```
-broadcast for: D3+
-ex: (D3$+ a ...) performs (D3+ a[i] ...) for every row in a.
-
- ; VEQ:D3$+
- ;   [symbol]
- ;
- ; D3$+ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$+;
- ;     broadcast for: D3+
- ;     ex: (D3$+ a ...) performs (D3+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$+
+fxname: -D3+
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ)).
 ```
 
-#### D3$+!
+#### :context: D3$+!
 
 ```
-destructive broadcast for: D3+
-ex: (D3$+! a ...) performs (D3+ a[i] ...) for every row in a.
-
- ; VEQ:D3$+!
- ;   [symbol]
- ;
- ; D3$+! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$+!;
- ;     destructive broadcast for: D3+
- ;     ex: (D3$+! a ...) performs (D3+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$+
+fxname: -D3+
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ)).
+destructive.
 ```
 
-#### D3$-
+#### :context: D3$-
 
 ```
-broadcast for: D3-
-ex: (D3$- a ...) performs (D3- a[i] ...) for every row in a.
-
- ; VEQ:D3$-
- ;   [symbol]
- ;
- ; D3$- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$-;
- ;     broadcast for: D3-
- ;     ex: (D3$- a ...) performs (D3- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$-
+fxname: -D3-
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- AX BX) (- AY BY) (- AZ BZ)).
 ```
 
-#### D3$-!
+#### :context: D3$-!
 
 ```
-destructive broadcast for: D3-
-ex: (D3$-! a ...) performs (D3- a[i] ...) for every row in a.
-
- ; VEQ:D3$-!
- ;   [symbol]
- ;
- ; D3$-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$-!;
- ;     destructive broadcast for: D3-
- ;     ex: (D3$-! a ...) performs (D3- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$-
+fxname: -D3-
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- AX BX) (- AY BY) (- AZ BZ)).
+destructive.
 ```
 
-#### D3$/
+#### :context: D3$.
 
 ```
-broadcast for: D3/
-ex: (D3$/ a ...) performs (D3/ a[i] ...) for every row in a.
-
- ; VEQ:D3$/
- ;   [symbol]
- ;
- ; D3$/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$/;
- ;     broadcast for: D3/
- ;     ex: (D3$/ a ...) performs (D3/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$.
+fxname: -D3.
+args: (AX AY AZ BX BY BZ)
+body (1): (+ (* AX BX) (* AY BY) (* AZ BZ)).
 ```
 
-#### D3$/!
+#### :context: D3$/
 
 ```
-destructive broadcast for: D3/
-ex: (D3$/! a ...) performs (D3/ a[i] ...) for every row in a.
-
- ; VEQ:D3$/!
- ;   [symbol]
- ;
- ; D3$/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$/!;
- ;     destructive broadcast for: D3/
- ;     ex: (D3$/! a ...) performs (D3/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$/
+fxname: -D3/
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
 ```
 
-#### D3$ABS
+#### :context: D3$/!
 
 ```
-broadcast for: D3ABS
-ex: (D3$ABS a ...) performs (D3ABS a[i] ...) for every row in a.
-
- ; VEQ:D3$ABS
- ;   [symbol]
- ;
- ; D3$ABS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$ABS;
- ;     broadcast for: D3ABS
- ;     ex: (D3$ABS a ...) performs (D3ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$/
+fxname: -D3/
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
+destructive.
 ```
 
-#### D3$ABS!
+#### :context: D3$^
 
 ```
-destructive broadcast for: D3ABS
-ex: (D3$ABS! a ...) performs (D3ABS a[i] ...) for every row in a.
-
- ; VEQ:D3$ABS!
- ;   [symbol]
- ;
- ; D3$ABS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$ABS!;
- ;     destructive broadcast for: D3ABS
- ;     ex: (D3$ABS! a ...) performs (D3ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$^
+fxname: -D3^
+args: (AX AY AZ S)
+body (3): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S)).
 ```
 
-#### D3$FROM
+#### :context: D3$^!
 
 ```
-broadcast for: D3FROM
-ex: (D3$FROM a ...) performs (D3FROM a[i] ...) for every row in a.
-
- ; VEQ:D3$FROM
- ;   [symbol]
- ;
- ; D3$FROM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$FROM;
- ;     broadcast for: D3FROM
- ;     ex: (D3$FROM a ...) performs (D3FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$^
+fxname: -D3^
+args: (AX AY AZ S)
+body (3): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S)).
+destructive.
 ```
 
-#### D3$FROM!
+#### :context: D3$ABS
 
 ```
-destructive broadcast for: D3FROM
-ex: (D3$FROM! a ...) performs (D3FROM a[i] ...) for every row in a.
+veq context broadcast op: D3$ABS
+fxname: -D3ABS
+args: (AX AY AZ)
+body (3): (VALUES (ABS AX) (ABS AY) (ABS AZ)).
+```
 
- ; VEQ:D3$FROM!
- ;   [symbol]
- ;
- ; D3$FROM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$FROM!;
- ;     destructive broadcast for: D3FROM
- ;     ex: (D3$FROM! a ...) performs (D3FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D3$ABS!
+
+```
+veq context broadcast op: D3$ABS
+fxname: -D3ABS
+args: (AX AY AZ)
+body (3): (VALUES (ABS AX) (ABS AY) (ABS AZ)).
+destructive.
+```
+
+#### :context: D3$CROSS
+
+```
+veq context broadcast op: D3$CROSS
+fxname: -D3CROSS
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
+                  (- (* AX BY) (* AY BX))).
+```
+
+#### :context: D3$CROSS!
+
+```
+veq context broadcast op: D3$CROSS
+fxname: -D3CROSS
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
+                  (- (* AX BY) (* AY BX))).
+destructive.
+```
+
+#### :context: D3$DST
+
+```
+veq context broadcast op: D3$DST
+fxname: -D3DST
+args: (AX AY AZ BX BY BZ)
+body (1): (SQRT
+           (THE POS-DF (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))))).
+```
+
+#### :context: D3$DST2
+
+```
+veq context broadcast op: D3$DST2
+fxname: -D3DST2
+args: (AX AY AZ BX BY BZ)
+body (1): (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
+```
+
+#### :context: D3$EXP
+
+```
+veq context broadcast op: D3$EXP
+fxname: -D3EXP
+args: (AX AY AZ)
+body (3): (VALUES (EXP AX) (EXP AY) (EXP AZ)).
+```
+
+#### :context: D3$EXP!
+
+```
+veq context broadcast op: D3$EXP
+fxname: -D3EXP
+args: (AX AY AZ)
+body (3): (VALUES (EXP AX) (EXP AY) (EXP AZ)).
+destructive.
+```
+
+#### :context: D3$FROM
+
+```
+veq context broadcast op: D3$FROM
+fxname: -D3FROM
+args: (AX AY AZ BX BY BZ S)
+body (3): (-D3+ AX AY AZ (* BX S) (* BY S) (* BZ S)).
+```
+
+#### :context: D3$FROM!
+
+```
+veq context broadcast op: D3$FROM
+fxname: -D3FROM
+args: (AX AY AZ BX BY BZ S)
+body (3): (-D3+ AX AY AZ (* BX S) (* BY S) (* BZ S)).
+destructive.
 ```
 
 #### :context: D3$FXLSPACE
@@ -2840,112 +2919,61 @@ assumes the last form in fx is a function and does
 ex: (D3$FXLSPACE (n a b) (lambda (i (:va 3 a b)) (vpr i a b)))
 ```
 
-#### D3$I-
+#### :context: D3$I-
 
 ```
-broadcast for: D3I-
-ex: (D3$I- a ...) performs (D3I- a[i] ...) for every row in a.
-
- ; VEQ:D3$I-
- ;   [symbol]
- ;
- ; D3$I- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$I-;
- ;     broadcast for: D3I-
- ;     ex: (D3$I- a ...) performs (D3I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$I-
+fxname: -D3I-
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
 ```
 
-#### D3$I-!
+#### :context: D3$I-!
 
 ```
-destructive broadcast for: D3I-
-ex: (D3$I-! a ...) performs (D3I- a[i] ...) for every row in a.
-
- ; VEQ:D3$I-!
- ;   [symbol]
- ;
- ; D3$I-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$I-!;
- ;     destructive broadcast for: D3I-
- ;     ex: (D3$I-! a ...) performs (D3I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$I-
+fxname: -D3I-
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
+destructive.
 ```
 
-#### D3$I/
+#### :context: D3$I/
 
 ```
-broadcast for: D3I/
-ex: (D3$I/ a ...) performs (D3I/ a[i] ...) for every row in a.
-
- ; VEQ:D3$I/
- ;   [symbol]
- ;
- ; D3$I/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$I/;
- ;     broadcast for: D3I/
- ;     ex: (D3$I/ a ...) performs (D3I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$I/
+fxname: -D3I/
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
 ```
 
-#### D3$I/!
+#### :context: D3$I/!
 
 ```
-destructive broadcast for: D3I/
-ex: (D3$I/! a ...) performs (D3I/ a[i] ...) for every row in a.
-
- ; VEQ:D3$I/!
- ;   [symbol]
- ;
- ; D3$I/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$I/!;
- ;     destructive broadcast for: D3I/
- ;     ex: (D3$I/! a ...) performs (D3I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$I/
+fxname: -D3I/
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
+destructive.
 ```
 
-#### D3$ISCALE
+#### :context: D3$ISCALE
 
 ```
-broadcast for: D3ISCALE
-ex: (D3$ISCALE a ...) performs (D3ISCALE a[i] ...) for every row in a.
-
- ; VEQ:D3$ISCALE
- ;   [symbol]
- ;
- ; D3$ISCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$ISCALE;
- ;     broadcast for: D3ISCALE
- ;     ex: (D3$ISCALE a ...) performs (D3ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$ISCALE
+fxname: -D3ISCALE
+args: (AX AY AZ S)
+body (3): (VALUES (/ AX S) (/ AY S) (/ AZ S)).
 ```
 
-#### D3$ISCALE!
+#### :context: D3$ISCALE!
 
 ```
-destructive broadcast for: D3ISCALE
-ex: (D3$ISCALE! a ...) performs (D3ISCALE a[i] ...) for every row in a.
-
- ; VEQ:D3$ISCALE!
- ;   [symbol]
- ;
- ; D3$ISCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$ISCALE!;
- ;     destructive broadcast for: D3ISCALE
- ;     ex: (D3$ISCALE! a ...) performs (D3ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$ISCALE
+fxname: -D3ISCALE
+args: (AX AY AZ S)
+body (3): (VALUES (/ AX S) (/ AY S) (/ AZ S)).
+destructive.
 ```
 
 #### D3$LAST
@@ -2966,40 +2994,41 @@ return values from last row of 3d vector array.
  ;   Source file: src/array-rows.lisp
 ```
 
-#### D3$LEN
+#### :context: D3$LEN
 
 ```
-broadcast for: D3LEN
-ex: (D3$LEN a ...) performs (D3LEN a[i] ...) for every row in a.
-
- ; VEQ:D3$LEN
- ;   [symbol]
- ;
- ; D3$LEN names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$LEN;
- ;     broadcast for: D3LEN
- ;     ex: (D3$LEN a ...) performs (D3LEN a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$LEN
+fxname: -D3LEN
+args: (AX AY AZ)
+body (1): (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D3SQUARE AX AY AZ))))).
 ```
 
-#### D3$LEN2
+#### :context: D3$LEN2
 
 ```
-broadcast for: D3LEN2
-ex: (D3$LEN2 a ...) performs (D3LEN2 a[i] ...) for every row in a.
+veq context broadcast op: D3$LEN2
+fxname: -D3LEN2
+args: (AX AY AZ)
+body (1): (THE POS-DF (MVC #'+ (-D3SQUARE AX AY AZ))).
+```
 
- ; VEQ:D3$LEN2
- ;   [symbol]
- ;
- ; D3$LEN2 names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$LEN2;
- ;     broadcast for: D3LEN2
- ;     ex: (D3$LEN2 a ...) performs (D3LEN2 a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D3$LERP
+
+```
+veq context broadcast op: D3$LERP
+fxname: -D3LERP
+args: (AX AY AZ BX BY BZ S)
+body (3): (-D3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)).
+```
+
+#### :context: D3$LERP!
+
+```
+veq context broadcast op: D3$LERP
+fxname: -D3LERP
+args: (AX AY AZ BX BY BZ S)
+body (3): (-D3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)).
+destructive.
 ```
 
 #### D3$LINE
@@ -3040,6 +3069,34 @@ defined via veq:fvdef*
  ;   Source file: src/lspace.lisp
 ```
 
+#### :context: D3$MAX
+
+```
+veq context broadcast op: D3$MAX
+fxname: -D3MAX
+args: (AX AY AZ)
+body (1): (MAX AX AY AZ).
+```
+
+#### :context: D3$MID
+
+```
+veq context broadcast op: D3$MID
+fxname: -D3MID
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)).
+```
+
+#### :context: D3$MID!
+
+```
+veq context broadcast op: D3$MID
+fxname: -D3MID
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)).
+destructive.
+```
+
 #### D3$MIMA
 
 ```
@@ -3064,76 +3121,70 @@ use n to limit to first n rows.
  ;   Source file: src/array-mima.lisp
 ```
 
-#### D3$NEG
+#### :context: D3$MIN
 
 ```
-broadcast for: D3NEG
-ex: (D3$NEG a ...) performs (D3NEG a[i] ...) for every row in a.
-
- ; VEQ:D3$NEG
- ;   [symbol]
- ;
- ; D3$NEG names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$NEG;
- ;     broadcast for: D3NEG
- ;     ex: (D3$NEG a ...) performs (D3NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$MIN
+fxname: -D3MIN
+args: (AX AY AZ)
+body (1): (MIN AX AY AZ).
 ```
 
-#### D3$NEG!
+#### :context: D3$MOD
 
 ```
-destructive broadcast for: D3NEG
-ex: (D3$NEG! a ...) performs (D3NEG a[i] ...) for every row in a.
-
- ; VEQ:D3$NEG!
- ;   [symbol]
- ;
- ; D3$NEG! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$NEG!;
- ;     destructive broadcast for: D3NEG
- ;     ex: (D3$NEG! a ...) performs (D3NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$MOD
+fxname: -D3MOD
+args: (AX AY AZ S)
+body (3): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S)).
 ```
 
-#### D3$NORM
+#### :context: D3$MOD!
 
 ```
-broadcast for: D3NORM
-ex: (D3$NORM a ...) performs (D3NORM a[i] ...) for every row in a.
-
- ; VEQ:D3$NORM
- ;   [symbol]
- ;
- ; D3$NORM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$NORM;
- ;     broadcast for: D3NORM
- ;     ex: (D3$NORM a ...) performs (D3NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$MOD
+fxname: -D3MOD
+args: (AX AY AZ S)
+body (3): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S)).
+destructive.
 ```
 
-#### D3$NORM!
+#### :context: D3$NEG
 
 ```
-destructive broadcast for: D3NORM
-ex: (D3$NORM! a ...) performs (D3NORM a[i] ...) for every row in a.
+veq context broadcast op: D3$NEG
+fxname: -D3NEG
+args: (AX AY AZ)
+body (3): (VALUES (- AX) (- AY) (- AZ)).
+```
 
- ; VEQ:D3$NORM!
- ;   [symbol]
- ;
- ; D3$NORM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$NORM!;
- ;     destructive broadcast for: D3NORM
- ;     ex: (D3$NORM! a ...) performs (D3NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D3$NEG!
+
+```
+veq context broadcast op: D3$NEG
+fxname: -D3NEG
+args: (AX AY AZ)
+body (3): (VALUES (- AX) (- AY) (- AZ)).
+destructive.
+```
+
+#### :context: D3$NORM
+
+```
+veq context broadcast op: D3$NORM
+fxname: -D3NORM
+args: (AX AY AZ)
+body (3): (MVC #'-D3ISCALE AX AY AZ (THE POS-DF (MVC #'-D3LEN AX AY AZ))).
+```
+
+#### :context: D3$NORM!
+
+```
+veq context broadcast op: D3$NORM
+fxname: -D3NORM
+args: (AX AY AZ)
+body (3): (MVC #'-D3ISCALE AX AY AZ (THE POS-DF (MVC #'-D3LEN AX AY AZ))).
+destructive.
 ```
 
 #### D3$NUM
@@ -3193,76 +3244,58 @@ defined via veq:def*
  ;   Source file: src/shapes.lisp
 ```
 
-#### D3$ROT
+#### :context: D3$ROT
 
 ```
-broadcast for: D3ROT
-ex: (D3$ROT a ...) performs (D3ROT a[i] ...) for every row in a.
-
- ; VEQ:D3$ROT
- ;   [symbol]
- ;
- ; D3$ROT names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$ROT;
- ;     broadcast for: D3ROT
- ;     ex: (D3$ROT a ...) performs (D3ROT a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$ROT
+fxname: -D3ROT
+args: (AX AY AZ NX NY NZ A)
+body (3): (LET ((COSA (COS A)))
+            (DECLARE
+             (DF
+               COSA))
+            (MVC #'-D3FROM
+                 (MVC #'-D3FROM (-D3SCALE AX AY AZ COSA)
+                      (-D3CROSS NX NY NZ AX AY AZ) (SIN A))
+                 NX NY NZ (* (-D3. NX NY NZ AX AY AZ) (- 1.0d0 COSA)))).
 ```
 
-#### D3$ROT!
+#### :context: D3$ROT!
 
 ```
-destructive broadcast for: D3ROT
-ex: (D3$ROT! a ...) performs (D3ROT a[i] ...) for every row in a.
-
- ; VEQ:D3$ROT!
- ;   [symbol]
- ;
- ; D3$ROT! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$ROT!;
- ;     destructive broadcast for: D3ROT
- ;     ex: (D3$ROT! a ...) performs (D3ROT a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$ROT
+fxname: -D3ROT
+args: (AX AY AZ NX NY NZ A)
+body (3): (LET ((COSA (COS A)))
+            (DECLARE
+             (DF
+               COSA))
+            (MVC #'-D3FROM
+                 (MVC #'-D3FROM (-D3SCALE AX AY AZ COSA)
+                      (-D3CROSS NX NY NZ AX AY AZ) (SIN A))
+                 NX NY NZ (* (-D3. NX NY NZ AX AY AZ) (- 1.0d0 COSA)))).
+destructive.
 ```
 
-#### D3$ROTS
+#### :context: D3$ROTS
 
 ```
-broadcast for: D3ROTS
-ex: (D3$ROTS a ...) performs (D3ROTS a[i] ...) for every row in a.
-
- ; VEQ:D3$ROTS
- ;   [symbol]
- ;
- ; D3$ROTS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$ROTS;
- ;     broadcast for: D3ROTS
- ;     ex: (D3$ROTS a ...) performs (D3ROTS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$ROTS
+fxname: -D3ROTS
+args: (AX AY AZ NX NY NZ A SX SY SZ)
+body (3): (MVC #'-D3+ (MVC #'-D3ROT (-D3- AX AY AZ SX SY SZ) NX NY NZ A) SX SY
+               SZ).
 ```
 
-#### D3$ROTS!
+#### :context: D3$ROTS!
 
 ```
-destructive broadcast for: D3ROTS
-ex: (D3$ROTS! a ...) performs (D3ROTS a[i] ...) for every row in a.
-
- ; VEQ:D3$ROTS!
- ;   [symbol]
- ;
- ; D3$ROTS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$ROTS!;
- ;     destructive broadcast for: D3ROTS
- ;     ex: (D3$ROTS! a ...) performs (D3ROTS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$ROTS
+fxname: -D3ROTS
+args: (AX AY AZ NX NY NZ A SX SY SZ)
+body (3): (MVC #'-D3+ (MVC #'-D3ROT (-D3- AX AY AZ SX SY SZ) NX NY NZ A) SX SY
+               SZ).
+destructive.
 ```
 
 #### :context: D3$S
@@ -3275,40 +3308,67 @@ returns (values a ... adim b ... bdim val)
 assuming c is a structname, and a,b are DVEC of dim 3
 ```
 
-#### D3$SCALE
+#### :context: D3$SCALE
 
 ```
-broadcast for: D3SCALE
-ex: (D3$SCALE a ...) performs (D3SCALE a[i] ...) for every row in a.
-
- ; VEQ:D3$SCALE
- ;   [symbol]
- ;
- ; D3$SCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$SCALE;
- ;     broadcast for: D3SCALE
- ;     ex: (D3$SCALE a ...) performs (D3SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D3$SCALE
+fxname: -D3SCALE
+args: (AX AY AZ S)
+body (3): (VALUES (* AX S) (* AY S) (* AZ S)).
 ```
 
-#### D3$SCALE!
+#### :context: D3$SCALE!
 
 ```
-destructive broadcast for: D3SCALE
-ex: (D3$SCALE! a ...) performs (D3SCALE a[i] ...) for every row in a.
+veq context broadcast op: D3$SCALE
+fxname: -D3SCALE
+args: (AX AY AZ S)
+body (3): (VALUES (* AX S) (* AY S) (* AZ S)).
+destructive.
+```
 
- ; VEQ:D3$SCALE!
- ;   [symbol]
- ;
- ; D3$SCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D3$SCALE!;
- ;     destructive broadcast for: D3SCALE
- ;     ex: (D3$SCALE! a ...) performs (D3SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D3$SQRT
+
+```
+veq context broadcast op: D3$SQRT
+fxname: -D3SQRT
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
+                  (THE POS-DF (SQRT (THE POS-DF AY)))
+                  (THE POS-DF (SQRT (THE POS-DF AZ)))).
+```
+
+#### :context: D3$SQRT!
+
+```
+veq context broadcast op: D3$SQRT
+fxname: -D3SQRT
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
+                  (THE POS-DF (SQRT (THE POS-DF AY)))
+                  (THE POS-DF (SQRT (THE POS-DF AZ)))).
+destructive.
+```
+
+#### :context: D3$SQUARE
+
+```
+veq context broadcast op: D3$SQUARE
+fxname: -D3SQUARE
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-DF (* AX AX)) (THE POS-DF (* AY AY))
+                  (THE POS-DF (* AZ AZ))).
+```
+
+#### :context: D3$SQUARE!
+
+```
+veq context broadcast op: D3$SQUARE
+fxname: -D3SQUARE
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-DF (* AX AX)) (THE POS-DF (* AY AY))
+                  (THE POS-DF (* AZ AZ))).
+destructive.
 ```
 
 #### D3$SUM
@@ -3333,7 +3393,7 @@ sum all rows of 3d array.
 
 ```
 returns 3d array with rows for inds.
-use :res put result in existing array
+use :res to put result in existing array.
 
  ; VEQ:D3$TAKE
  ;   [symbol]
@@ -3345,7 +3405,7 @@ use :res put result in existing array
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     returns 3d array with rows for inds.
- ;     use :res put result in existing array
+ ;     use :res to put result in existing array.
  ;   Source file: src/array-take.lisp
 ```
 
@@ -3371,7 +3431,12 @@ typed.
 #### :context: D3$WITH-ROWS
 
 ```
-make 3d
+execute function (expr i ax ay az bx by bz ...) for
+row i and 3d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
 ```
 
 #### D3$ZERO
@@ -3399,7 +3464,7 @@ typed.
 veq context op: D3*
 fxname: -D3*
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (* AX BX) (* AY BY) (* AZ BZ)).
+body (3): (VALUES (* AX BX) (* AY BY) (* AZ BZ)).
 ```
 
 #### :context: D3+
@@ -3408,7 +3473,7 @@ body: (VALUES (* AX BX) (* AY BY) (* AZ BZ)).
 veq context op: D3+
 fxname: -D3+
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ)).
+body (3): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ)).
 ```
 
 #### :context: D3-
@@ -3417,7 +3482,7 @@ body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ)).
 veq context op: D3-
 fxname: -D3-
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (- AX BX) (- AY BY) (- AZ BZ)).
+body (3): (VALUES (- AX BX) (- AY BY) (- AZ BZ)).
 ```
 
 #### :context: D3.
@@ -3426,7 +3491,7 @@ body: (VALUES (- AX BX) (- AY BY) (- AZ BZ)).
 veq context op: D3.
 fxname: -D3.
 args: (AX AY AZ BX BY BZ)
-body: (+ (* AX BX) (* AY BY) (* AZ BZ)).
+body (1): (+ (* AX BX) (* AY BY) (* AZ BZ)).
 ```
 
 #### :context: D3/
@@ -3435,7 +3500,7 @@ body: (+ (* AX BX) (* AY BY) (* AZ BZ)).
 veq context op: D3/
 fxname: -D3/
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
+body (3): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
 ```
 
 #### :context: D3^
@@ -3443,8 +3508,8 @@ body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
 ```
 veq context op: D3^
 fxname: -D3^
-args: (A B C S)
-body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S)).
+args: (AX AY AZ S)
+body (3): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S)).
 ```
 
 #### :context: D3ABS
@@ -3452,8 +3517,8 @@ body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S)).
 ```
 veq context op: D3ABS
 fxname: -D3ABS
-args: (A B C)
-body: (VALUES (ABS A) (ABS B) (ABS C)).
+args: (AX AY AZ)
+body (3): (VALUES (ABS AX) (ABS AY) (ABS AZ)).
 ```
 
 #### :context: D3CROSS
@@ -3462,8 +3527,8 @@ body: (VALUES (ABS A) (ABS B) (ABS C)).
 veq context op: D3CROSS
 fxname: -D3CROSS
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
-              (- (* AX BY) (* AY BX))).
+body (3): (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
+                  (- (* AX BY) (* AY BX))).
 ```
 
 #### :context: D3DST
@@ -3472,7 +3537,8 @@ body: (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
 veq context op: D3DST
 fxname: -D3DST
 args: (AX AY AZ BX BY BZ)
-body: (SQRT (THE POS-DF (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))))).
+body (1): (SQRT
+           (THE POS-DF (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))))).
 ```
 
 #### :context: D3DST2
@@ -3481,7 +3547,7 @@ body: (SQRT (THE POS-DF (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))))).
 veq context op: D3DST2
 fxname: -D3DST2
 args: (AX AY AZ BX BY BZ)
-body: (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
+body (1): (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
 ```
 
 #### :context: D3EXP
@@ -3489,8 +3555,8 @@ body: (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
 ```
 veq context op: D3EXP
 fxname: -D3EXP
-args: (A B C)
-body: (VALUES (EXP A) (EXP B) (EXP C)).
+args: (AX AY AZ)
+body (3): (VALUES (EXP AX) (EXP AY) (EXP AZ)).
 ```
 
 #### :context: D3FROM
@@ -3499,7 +3565,7 @@ body: (VALUES (EXP A) (EXP B) (EXP C)).
 veq context op: D3FROM
 fxname: -D3FROM
 args: (AX AY AZ BX BY BZ S)
-body: (-D3+ AX AY AZ (* BX S) (* BY S) (* BZ S)).
+body (3): (-D3+ AX AY AZ (* BX S) (* BY S) (* BZ S)).
 ```
 
 #### :context: D3I-
@@ -3508,7 +3574,7 @@ body: (-D3+ AX AY AZ (* BX S) (* BY S) (* BZ S)).
 veq context op: D3I-
 fxname: -D3I-
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
+body (3): (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
 ```
 
 #### :context: D3I/
@@ -3517,7 +3583,7 @@ body: (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
 veq context op: D3I/
 fxname: -D3I/
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
+body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
 ```
 
 #### :context: D3ISCALE
@@ -3525,8 +3591,8 @@ body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
 ```
 veq context op: D3ISCALE
 fxname: -D3ISCALE
-args: (A B C S)
-body: (VALUES (/ A S) (/ B S) (/ C S)).
+args: (AX AY AZ S)
+body (3): (VALUES (/ AX S) (/ AY S) (/ AZ S)).
 ```
 
 #### :context: D3LEN
@@ -3534,8 +3600,8 @@ body: (VALUES (/ A S) (/ B S) (/ C S)).
 ```
 veq context op: D3LEN
 fxname: -D3LEN
-args: (A B C)
-body: (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D3SQUARE A B C))))).
+args: (AX AY AZ)
+body (1): (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D3SQUARE AX AY AZ))))).
 ```
 
 #### :context: D3LEN2
@@ -3543,8 +3609,8 @@ body: (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D3SQUARE A B C))))).
 ```
 veq context op: D3LEN2
 fxname: -D3LEN2
-args: (A B C)
-body: (THE POS-DF (MVC #'+ (-D3SQUARE A B C))).
+args: (AX AY AZ)
+body (1): (THE POS-DF (MVC #'+ (-D3SQUARE AX AY AZ))).
 ```
 
 #### :context: D3LERP
@@ -3553,7 +3619,7 @@ body: (THE POS-DF (MVC #'+ (-D3SQUARE A B C))).
 veq context op: D3LERP
 fxname: -D3LERP
 args: (AX AY AZ BX BY BZ S)
-body: (-D3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)).
+body (3): (-D3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)).
 ```
 
 #### :context: D3LET
@@ -3569,8 +3635,8 @@ note that this behaves like native lisp let*.
 ```
 veq context op: D3MAX
 fxname: -D3MAX
-args: (A B C)
-body: (MAX A B C).
+args: (AX AY AZ)
+body (1): (MAX AX AY AZ).
 ```
 
 #### D3MEYE
@@ -3596,7 +3662,7 @@ return 3d eye matrix.
 veq context op: D3MID
 fxname: -D3MID
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)).
+body (3): (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)).
 ```
 
 #### :context: D3MIN
@@ -3604,8 +3670,8 @@ body: (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)).
 ```
 veq context op: D3MIN
 fxname: -D3MIN
-args: (A B C)
-body: (MIN A B C).
+args: (AX AY AZ)
+body (1): (MIN AX AY AZ).
 ```
 
 #### D3MINV
@@ -3664,8 +3730,8 @@ of type: DVEC
 ```
 veq context op: D3MOD
 fxname: -D3MOD
-args: (A B C S)
-body: (VALUES (MOD A S) (MOD B S) (MOD C S)).
+args: (AX AY AZ S)
+body (3): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S)).
 ```
 
 #### D3MROT
@@ -3820,8 +3886,8 @@ mat * v. for 3d matrix and vector.
 ```
 veq context op: D3NEG
 fxname: -D3NEG
-args: (A B C)
-body: (VALUES (- A) (- B) (- C)).
+args: (AX AY AZ)
+body (3): (VALUES (- AX) (- AY) (- AZ)).
 ```
 
 #### :context: D3NORM
@@ -3829,8 +3895,8 @@ body: (VALUES (- A) (- B) (- C)).
 ```
 veq context op: D3NORM
 fxname: -D3NORM
-args: (A B C)
-body: (MVC #'-D3ISCALE A B C (THE POS-DF (MVC #'-D3LEN A B C))).
+args: (AX AY AZ)
+body (3): (MVC #'-D3ISCALE AX AY AZ (THE POS-DF (MVC #'-D3LEN AX AY AZ))).
 ```
 
 #### :context: D3NSUM
@@ -3858,15 +3924,15 @@ ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 veq context op: D3ROT
 fxname: -D3ROT
-args: (X Y Z NX NY NZ A)
-body: (LET ((COSA (COS A)))
-        (DECLARE
-         (DF
-           COSA))
-        (MVC #'-D3FROM
-             (MVC #'-D3FROM (-D3SCALE X Y Z COSA) (-D3CROSS NX NY NZ X Y Z)
-                  (SIN A))
-             NX NY NZ (* (-D3. NX NY NZ X Y Z) (- 1.0d0 COSA)))).
+args: (AX AY AZ NX NY NZ A)
+body (3): (LET ((COSA (COS A)))
+            (DECLARE
+             (DF
+               COSA))
+            (MVC #'-D3FROM
+                 (MVC #'-D3FROM (-D3SCALE AX AY AZ COSA)
+                      (-D3CROSS NX NY NZ AX AY AZ) (SIN A))
+                 NX NY NZ (* (-D3. NX NY NZ AX AY AZ) (- 1.0d0 COSA)))).
 ```
 
 #### :context: D3ROTS
@@ -3874,8 +3940,9 @@ body: (LET ((COSA (COS A)))
 ```
 veq context op: D3ROTS
 fxname: -D3ROTS
-args: (X Y Z NX NY NZ A SX SY SZ)
-body: (MVC #'-D3+ (MVC #'-D3ROT (-D3- X Y Z SX SY SZ) NX NY NZ A) SX SY SZ).
+args: (AX AY AZ NX NY NZ A SX SY SZ)
+body (3): (MVC #'-D3+ (MVC #'-D3ROT (-D3- AX AY AZ SX SY SZ) NX NY NZ A) SX SY
+               SZ).
 ```
 
 #### :context: D3SCALE
@@ -3883,8 +3950,8 @@ body: (MVC #'-D3+ (MVC #'-D3ROT (-D3- X Y Z SX SY SZ) NX NY NZ A) SX SY SZ).
 ```
 veq context op: D3SCALE
 fxname: -D3SCALE
-args: (A B C S)
-body: (VALUES (* A S) (* B S) (* C S)).
+args: (AX AY AZ S)
+body (3): (VALUES (* AX S) (* AY S) (* AZ S)).
 ```
 
 #### :context: D3SQRT
@@ -3892,10 +3959,10 @@ body: (VALUES (* A S) (* B S) (* C S)).
 ```
 veq context op: D3SQRT
 fxname: -D3SQRT
-args: (A B C)
-body: (VALUES (THE POS-DF (SQRT (THE POS-DF A)))
-              (THE POS-DF (SQRT (THE POS-DF B)))
-              (THE POS-DF (SQRT (THE POS-DF C)))).
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
+                  (THE POS-DF (SQRT (THE POS-DF AY)))
+                  (THE POS-DF (SQRT (THE POS-DF AZ)))).
 ```
 
 #### :context: D3SQUARE
@@ -3903,8 +3970,9 @@ body: (VALUES (THE POS-DF (SQRT (THE POS-DF A)))
 ```
 veq context op: D3SQUARE
 fxname: -D3SQUARE
-args: (A B C)
-body: (VALUES (THE POS-DF (* A A)) (THE POS-DF (* B B)) (THE POS-DF (* C C))).
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-DF (* AX AX)) (THE POS-DF (* AY AY))
+                  (THE POS-DF (* AZ AZ))).
 ```
 
 #### :context: D3VSET
@@ -3948,220 +4016,185 @@ note that the number of values depends on the dimension.
  ;   Source file: src/array-utils.lisp
 ```
 
-#### D4$\*
+#### :context: D4$\*
 
 ```
-broadcast for: D4*
-ex: (D4$* a ...) performs (D4* a[i] ...) for every row in a.
-
- ; VEQ:D4$*
- ;   [symbol]
- ;
- ; D4$* names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$*;
- ;     broadcast for: D4*
- ;     ex: (D4$* a ...) performs (D4* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$*
+fxname: -D4*
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 ```
 
-#### D4$\*!
+#### :context: D4$\*!
 
 ```
-destructive broadcast for: D4*
-ex: (D4$*! a ...) performs (D4* a[i] ...) for every row in a.
-
- ; VEQ:D4$*!
- ;   [symbol]
- ;
- ; D4$*! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$*!;
- ;     destructive broadcast for: D4*
- ;     ex: (D4$*! a ...) performs (D4* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$*
+fxname: -D4*
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
+destructive.
 ```
 
-#### D4$+
+#### :context: D4$+
 
 ```
-broadcast for: D4+
-ex: (D4$+ a ...) performs (D4+ a[i] ...) for every row in a.
-
- ; VEQ:D4$+
- ;   [symbol]
- ;
- ; D4$+ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$+;
- ;     broadcast for: D4+
- ;     ex: (D4$+ a ...) performs (D4+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$+
+fxname: -D4+
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW)).
 ```
 
-#### D4$+!
+#### :context: D4$+!
 
 ```
-destructive broadcast for: D4+
-ex: (D4$+! a ...) performs (D4+ a[i] ...) for every row in a.
-
- ; VEQ:D4$+!
- ;   [symbol]
- ;
- ; D4$+! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$+!;
- ;     destructive broadcast for: D4+
- ;     ex: (D4$+! a ...) performs (D4+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$+
+fxname: -D4+
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW)).
+destructive.
 ```
 
-#### D4$-
+#### :context: D4$-
 
 ```
-broadcast for: D4-
-ex: (D4$- a ...) performs (D4- a[i] ...) for every row in a.
-
- ; VEQ:D4$-
- ;   [symbol]
- ;
- ; D4$- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$-;
- ;     broadcast for: D4-
- ;     ex: (D4$- a ...) performs (D4- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$-
+fxname: -D4-
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW)).
 ```
 
-#### D4$-!
+#### :context: D4$-!
 
 ```
-destructive broadcast for: D4-
-ex: (D4$-! a ...) performs (D4- a[i] ...) for every row in a.
-
- ; VEQ:D4$-!
- ;   [symbol]
- ;
- ; D4$-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$-!;
- ;     destructive broadcast for: D4-
- ;     ex: (D4$-! a ...) performs (D4- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$-
+fxname: -D4-
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW)).
+destructive.
 ```
 
-#### D4$/
+#### :context: D4$.
 
 ```
-broadcast for: D4/
-ex: (D4$/ a ...) performs (D4/ a[i] ...) for every row in a.
-
- ; VEQ:D4$/
- ;   [symbol]
- ;
- ; D4$/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$/;
- ;     broadcast for: D4/
- ;     ex: (D4$/ a ...) performs (D4/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$.
+fxname: -D4.
+args: (AX AY AZ AW BX BY BZ BW)
+body (1): (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 ```
 
-#### D4$/!
+#### :context: D4$/
 
 ```
-destructive broadcast for: D4/
-ex: (D4$/! a ...) performs (D4/ a[i] ...) for every row in a.
-
- ; VEQ:D4$/!
- ;   [symbol]
- ;
- ; D4$/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$/!;
- ;     destructive broadcast for: D4/
- ;     ex: (D4$/! a ...) performs (D4/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$/
+fxname: -D4/
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
 ```
 
-#### D4$ABS
+#### :context: D4$/!
 
 ```
-broadcast for: D4ABS
-ex: (D4$ABS a ...) performs (D4ABS a[i] ...) for every row in a.
-
- ; VEQ:D4$ABS
- ;   [symbol]
- ;
- ; D4$ABS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$ABS;
- ;     broadcast for: D4ABS
- ;     ex: (D4$ABS a ...) performs (D4ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$/
+fxname: -D4/
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
+destructive.
 ```
 
-#### D4$ABS!
+#### :context: D4$^
 
 ```
-destructive broadcast for: D4ABS
-ex: (D4$ABS! a ...) performs (D4ABS a[i] ...) for every row in a.
-
- ; VEQ:D4$ABS!
- ;   [symbol]
- ;
- ; D4$ABS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$ABS!;
- ;     destructive broadcast for: D4ABS
- ;     ex: (D4$ABS! a ...) performs (D4ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$^
+fxname: -D4^
+args: (AX AY AZ AW S)
+body (4): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S) (EXPT AW S)).
 ```
 
-#### D4$FROM
+#### :context: D4$^!
 
 ```
-broadcast for: D4FROM
-ex: (D4$FROM a ...) performs (D4FROM a[i] ...) for every row in a.
-
- ; VEQ:D4$FROM
- ;   [symbol]
- ;
- ; D4$FROM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$FROM;
- ;     broadcast for: D4FROM
- ;     ex: (D4$FROM a ...) performs (D4FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$^
+fxname: -D4^
+args: (AX AY AZ AW S)
+body (4): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S) (EXPT AW S)).
+destructive.
 ```
 
-#### D4$FROM!
+#### :context: D4$ABS
 
 ```
-destructive broadcast for: D4FROM
-ex: (D4$FROM! a ...) performs (D4FROM a[i] ...) for every row in a.
+veq context broadcast op: D4$ABS
+fxname: -D4ABS
+args: (AX AY AZ AW)
+body (4): (VALUES (ABS AX) (ABS AY) (ABS AZ) (ABS AW)).
+```
 
- ; VEQ:D4$FROM!
- ;   [symbol]
- ;
- ; D4$FROM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$FROM!;
- ;     destructive broadcast for: D4FROM
- ;     ex: (D4$FROM! a ...) performs (D4FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D4$ABS!
+
+```
+veq context broadcast op: D4$ABS
+fxname: -D4ABS
+args: (AX AY AZ AW)
+body (4): (VALUES (ABS AX) (ABS AY) (ABS AZ) (ABS AW)).
+destructive.
+```
+
+#### :context: D4$DST
+
+```
+veq context broadcast op: D4$DST
+fxname: -D4DST
+args: (AX AY AZ AW BX BY BZ BW)
+body (1): (SQRT
+           (THE POS-DF
+                (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))))).
+```
+
+#### :context: D4$DST2
+
+```
+veq context broadcast op: D4$DST2
+fxname: -D4DST2
+args: (AX AY AZ AW BX BY BZ BW)
+body (1): (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
+```
+
+#### :context: D4$EXP
+
+```
+veq context broadcast op: D4$EXP
+fxname: -D4EXP
+args: (AX AY AZ AW)
+body (4): (VALUES (EXP AX) (EXP AY) (EXP AZ) (EXP AW)).
+```
+
+#### :context: D4$EXP!
+
+```
+veq context broadcast op: D4$EXP
+fxname: -D4EXP
+args: (AX AY AZ AW)
+body (4): (VALUES (EXP AX) (EXP AY) (EXP AZ) (EXP AW)).
+destructive.
+```
+
+#### :context: D4$FROM
+
+```
+veq context broadcast op: D4$FROM
+fxname: -D4FROM
+args: (AX AY AZ AW BX BY BZ BW S)
+body (4): (-D4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S)).
+```
+
+#### :context: D4$FROM!
+
+```
+veq context broadcast op: D4$FROM
+fxname: -D4FROM
+args: (AX AY AZ AW BX BY BZ BW S)
+body (4): (-D4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S)).
+destructive.
 ```
 
 #### :context: D4$FXLSPACE
@@ -4174,112 +4207,61 @@ assumes the last form in fx is a function and does
 ex: (D4$FXLSPACE (n a b) (lambda (i (:va 4 a b)) (vpr i a b)))
 ```
 
-#### D4$I-
+#### :context: D4$I-
 
 ```
-broadcast for: D4I-
-ex: (D4$I- a ...) performs (D4I- a[i] ...) for every row in a.
-
- ; VEQ:D4$I-
- ;   [symbol]
- ;
- ; D4$I- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$I-;
- ;     broadcast for: D4I-
- ;     ex: (D4$I- a ...) performs (D4I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$I-
+fxname: -D4I-
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
 ```
 
-#### D4$I-!
+#### :context: D4$I-!
 
 ```
-destructive broadcast for: D4I-
-ex: (D4$I-! a ...) performs (D4I- a[i] ...) for every row in a.
-
- ; VEQ:D4$I-!
- ;   [symbol]
- ;
- ; D4$I-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$I-!;
- ;     destructive broadcast for: D4I-
- ;     ex: (D4$I-! a ...) performs (D4I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$I-
+fxname: -D4I-
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
+destructive.
 ```
 
-#### D4$I/
+#### :context: D4$I/
 
 ```
-broadcast for: D4I/
-ex: (D4$I/ a ...) performs (D4I/ a[i] ...) for every row in a.
-
- ; VEQ:D4$I/
- ;   [symbol]
- ;
- ; D4$I/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$I/;
- ;     broadcast for: D4I/
- ;     ex: (D4$I/ a ...) performs (D4I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$I/
+fxname: -D4I/
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
 ```
 
-#### D4$I/!
+#### :context: D4$I/!
 
 ```
-destructive broadcast for: D4I/
-ex: (D4$I/! a ...) performs (D4I/ a[i] ...) for every row in a.
-
- ; VEQ:D4$I/!
- ;   [symbol]
- ;
- ; D4$I/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$I/!;
- ;     destructive broadcast for: D4I/
- ;     ex: (D4$I/! a ...) performs (D4I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$I/
+fxname: -D4I/
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
+destructive.
 ```
 
-#### D4$ISCALE
+#### :context: D4$ISCALE
 
 ```
-broadcast for: D4ISCALE
-ex: (D4$ISCALE a ...) performs (D4ISCALE a[i] ...) for every row in a.
-
- ; VEQ:D4$ISCALE
- ;   [symbol]
- ;
- ; D4$ISCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$ISCALE;
- ;     broadcast for: D4ISCALE
- ;     ex: (D4$ISCALE a ...) performs (D4ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$ISCALE
+fxname: -D4ISCALE
+args: (AX AY AZ AW S)
+body (4): (VALUES (/ AX S) (/ AY S) (/ AZ S) (/ AW S)).
 ```
 
-#### D4$ISCALE!
+#### :context: D4$ISCALE!
 
 ```
-destructive broadcast for: D4ISCALE
-ex: (D4$ISCALE! a ...) performs (D4ISCALE a[i] ...) for every row in a.
-
- ; VEQ:D4$ISCALE!
- ;   [symbol]
- ;
- ; D4$ISCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$ISCALE!;
- ;     destructive broadcast for: D4ISCALE
- ;     ex: (D4$ISCALE! a ...) performs (D4ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$ISCALE
+fxname: -D4ISCALE
+args: (AX AY AZ AW S)
+body (4): (VALUES (/ AX S) (/ AY S) (/ AZ S) (/ AW S)).
+destructive.
 ```
 
 #### D4$LAST
@@ -4300,40 +4282,43 @@ return values from last row of 4d vector array.
  ;   Source file: src/array-rows.lisp
 ```
 
-#### D4$LEN
+#### :context: D4$LEN
 
 ```
-broadcast for: D4LEN
-ex: (D4$LEN a ...) performs (D4LEN a[i] ...) for every row in a.
-
- ; VEQ:D4$LEN
- ;   [symbol]
- ;
- ; D4$LEN names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$LEN;
- ;     broadcast for: D4LEN
- ;     ex: (D4$LEN a ...) performs (D4LEN a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$LEN
+fxname: -D4LEN
+args: (AX AY AZ AW)
+body (1): (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D4SQUARE AX AY AZ AW))))).
 ```
 
-#### D4$LEN2
+#### :context: D4$LEN2
 
 ```
-broadcast for: D4LEN2
-ex: (D4$LEN2 a ...) performs (D4LEN2 a[i] ...) for every row in a.
+veq context broadcast op: D4$LEN2
+fxname: -D4LEN2
+args: (AX AY AZ AW)
+body (1): (THE POS-DF (MVC #'+ (-D4SQUARE AX AY AZ AW))).
+```
 
- ; VEQ:D4$LEN2
- ;   [symbol]
- ;
- ; D4$LEN2 names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$LEN2;
- ;     broadcast for: D4LEN2
- ;     ex: (D4$LEN2 a ...) performs (D4LEN2 a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D4$LERP
+
+```
+veq context broadcast op: D4$LERP
+fxname: -D4LERP
+args: (AX AY AZ AW BX BY BZ BW S)
+body (4): (-D4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
+           (* (- BW AW) S)).
+```
+
+#### :context: D4$LERP!
+
+```
+veq context broadcast op: D4$LERP
+fxname: -D4LERP
+args: (AX AY AZ AW BX BY BZ BW S)
+body (4): (-D4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
+           (* (- BW AW) S)).
+destructive.
 ```
 
 #### D4$LINE
@@ -4374,76 +4359,100 @@ defined via veq:fvdef*
  ;   Source file: src/lspace.lisp
 ```
 
-#### D4$NEG
+#### :context: D4$MAX
 
 ```
-broadcast for: D4NEG
-ex: (D4$NEG a ...) performs (D4NEG a[i] ...) for every row in a.
-
- ; VEQ:D4$NEG
- ;   [symbol]
- ;
- ; D4$NEG names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$NEG;
- ;     broadcast for: D4NEG
- ;     ex: (D4$NEG a ...) performs (D4NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$MAX
+fxname: -D4MAX
+args: (AX AY AZ AW)
+body (1): (MAX AX AY AZ AW).
 ```
 
-#### D4$NEG!
+#### :context: D4$MID
 
 ```
-destructive broadcast for: D4NEG
-ex: (D4$NEG! a ...) performs (D4NEG a[i] ...) for every row in a.
-
- ; VEQ:D4$NEG!
- ;   [symbol]
- ;
- ; D4$NEG! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$NEG!;
- ;     destructive broadcast for: D4NEG
- ;     ex: (D4$NEG! a ...) performs (D4NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$MID
+fxname: -D4MID
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)
+                  (* (+ BW AW) 0.5d0)).
 ```
 
-#### D4$NORM
+#### :context: D4$MID!
 
 ```
-broadcast for: D4NORM
-ex: (D4$NORM a ...) performs (D4NORM a[i] ...) for every row in a.
-
- ; VEQ:D4$NORM
- ;   [symbol]
- ;
- ; D4$NORM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$NORM;
- ;     broadcast for: D4NORM
- ;     ex: (D4$NORM a ...) performs (D4NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$MID
+fxname: -D4MID
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)
+                  (* (+ BW AW) 0.5d0)).
+destructive.
 ```
 
-#### D4$NORM!
+#### :context: D4$MIN
 
 ```
-destructive broadcast for: D4NORM
-ex: (D4$NORM! a ...) performs (D4NORM a[i] ...) for every row in a.
+veq context broadcast op: D4$MIN
+fxname: -D4MIN
+args: (AX AY AZ AW)
+body (1): (MIN AX AY AZ AW).
+```
 
- ; VEQ:D4$NORM!
- ;   [symbol]
- ;
- ; D4$NORM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$NORM!;
- ;     destructive broadcast for: D4NORM
- ;     ex: (D4$NORM! a ...) performs (D4NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D4$MOD
+
+```
+veq context broadcast op: D4$MOD
+fxname: -D4MOD
+args: (AX AY AZ AW S)
+body (4): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S) (MOD AW S)).
+```
+
+#### :context: D4$MOD!
+
+```
+veq context broadcast op: D4$MOD
+fxname: -D4MOD
+args: (AX AY AZ AW S)
+body (4): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S) (MOD AW S)).
+destructive.
+```
+
+#### :context: D4$NEG
+
+```
+veq context broadcast op: D4$NEG
+fxname: -D4NEG
+args: (AX AY AZ AW)
+body (4): (VALUES (- AX) (- AY) (- AZ) (- AW)).
+```
+
+#### :context: D4$NEG!
+
+```
+veq context broadcast op: D4$NEG
+fxname: -D4NEG
+args: (AX AY AZ AW)
+body (4): (VALUES (- AX) (- AY) (- AZ) (- AW)).
+destructive.
+```
+
+#### :context: D4$NORM
+
+```
+veq context broadcast op: D4$NORM
+fxname: -D4NORM
+args: (AX AY AZ AW)
+body (4): (MVC #'-D4ISCALE AX AY AZ AW (THE POS-DF (MVC #'-D4LEN AX AY AZ AW))).
+```
+
+#### :context: D4$NORM!
+
+```
+veq context broadcast op: D4$NORM
+fxname: -D4NORM
+args: (AX AY AZ AW)
+body (4): (MVC #'-D4ISCALE AX AY AZ AW (THE POS-DF (MVC #'-D4LEN AX AY AZ AW))).
+destructive.
 ```
 
 #### D4$NUM
@@ -4513,40 +4522,69 @@ returns (values a ... adim b ... bdim val)
 assuming c is a structname, and a,b are DVEC of dim 4
 ```
 
-#### D4$SCALE
+#### :context: D4$SCALE
 
 ```
-broadcast for: D4SCALE
-ex: (D4$SCALE a ...) performs (D4SCALE a[i] ...) for every row in a.
-
- ; VEQ:D4$SCALE
- ;   [symbol]
- ;
- ; D4$SCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$SCALE;
- ;     broadcast for: D4SCALE
- ;     ex: (D4$SCALE a ...) performs (D4SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: D4$SCALE
+fxname: -D4SCALE
+args: (AX AY AZ AW S)
+body (4): (VALUES (* AX S) (* AY S) (* AZ S) (* AW S)).
 ```
 
-#### D4$SCALE!
+#### :context: D4$SCALE!
 
 ```
-destructive broadcast for: D4SCALE
-ex: (D4$SCALE! a ...) performs (D4SCALE a[i] ...) for every row in a.
+veq context broadcast op: D4$SCALE
+fxname: -D4SCALE
+args: (AX AY AZ AW S)
+body (4): (VALUES (* AX S) (* AY S) (* AZ S) (* AW S)).
+destructive.
+```
 
- ; VEQ:D4$SCALE!
- ;   [symbol]
- ;
- ; D4$SCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %D4$SCALE!;
- ;     destructive broadcast for: D4SCALE
- ;     ex: (D4$SCALE! a ...) performs (D4SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: D4$SQRT
+
+```
+veq context broadcast op: D4$SQRT
+fxname: -D4SQRT
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
+                  (THE POS-DF (SQRT (THE POS-DF AY)))
+                  (THE POS-DF (SQRT (THE POS-DF AZ)))
+                  (THE POS-DF (SQRT (THE POS-DF AW)))).
+```
+
+#### :context: D4$SQRT!
+
+```
+veq context broadcast op: D4$SQRT
+fxname: -D4SQRT
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
+                  (THE POS-DF (SQRT (THE POS-DF AY)))
+                  (THE POS-DF (SQRT (THE POS-DF AZ)))
+                  (THE POS-DF (SQRT (THE POS-DF AW)))).
+destructive.
+```
+
+#### :context: D4$SQUARE
+
+```
+veq context broadcast op: D4$SQUARE
+fxname: -D4SQUARE
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-DF (* AX AX)) (THE POS-DF (* AY AY))
+                  (THE POS-DF (* AZ AZ)) (THE POS-DF (* AW AW))).
+```
+
+#### :context: D4$SQUARE!
+
+```
+veq context broadcast op: D4$SQUARE
+fxname: -D4SQUARE
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-DF (* AX AX)) (THE POS-DF (* AY AY))
+                  (THE POS-DF (* AZ AZ)) (THE POS-DF (* AW AW))).
+destructive.
 ```
 
 #### D4$SUM
@@ -4571,7 +4609,7 @@ sum all rows of 4d array.
 
 ```
 returns 4d array with rows for inds.
-use :res put result in existing array
+use :res to put result in existing array.
 
  ; VEQ:D4$TAKE
  ;   [symbol]
@@ -4583,7 +4621,7 @@ use :res put result in existing array
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     returns 4d array with rows for inds.
- ;     use :res put result in existing array
+ ;     use :res to put result in existing array.
  ;   Source file: src/array-take.lisp
 ```
 
@@ -4609,7 +4647,12 @@ typed.
 #### :context: D4$WITH-ROWS
 
 ```
-make 4d
+execute function (expr i ax ay az bx by bz ...) for
+row i and 4d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
 ```
 
 #### D4$ZERO
@@ -4637,7 +4680,7 @@ typed.
 veq context op: D4*
 fxname: -D4*
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
+body (4): (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 ```
 
 #### :context: D4+
@@ -4646,7 +4689,7 @@ body: (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 veq context op: D4+
 fxname: -D4+
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW)).
+body (4): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW)).
 ```
 
 #### :context: D4-
@@ -4655,7 +4698,7 @@ body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW)).
 veq context op: D4-
 fxname: -D4-
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW)).
+body (4): (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW)).
 ```
 
 #### :context: D4.
@@ -4664,7 +4707,7 @@ body: (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW)).
 veq context op: D4.
 fxname: -D4.
 args: (AX AY AZ AW BX BY BZ BW)
-body: (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
+body (1): (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 ```
 
 #### :context: D4/
@@ -4673,7 +4716,7 @@ body: (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 veq context op: D4/
 fxname: -D4/
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
+body (4): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
 ```
 
 #### :context: D4^
@@ -4681,8 +4724,8 @@ body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
 ```
 veq context op: D4^
 fxname: -D4^
-args: (A B C D S)
-body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S) (EXPT D S)).
+args: (AX AY AZ AW S)
+body (4): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S) (EXPT AW S)).
 ```
 
 #### :context: D4ABS
@@ -4690,8 +4733,8 @@ body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S) (EXPT D S)).
 ```
 veq context op: D4ABS
 fxname: -D4ABS
-args: (A B C D)
-body: (VALUES (ABS A) (ABS B) (ABS C) (ABS D)).
+args: (AX AY AZ AW)
+body (4): (VALUES (ABS AX) (ABS AY) (ABS AZ) (ABS AW)).
 ```
 
 #### :context: D4DST
@@ -4700,9 +4743,9 @@ body: (VALUES (ABS A) (ABS B) (ABS C) (ABS D)).
 veq context op: D4DST
 fxname: -D4DST
 args: (AX AY AZ AW BX BY BZ BW)
-body: (SQRT
-       (THE POS-DF
-            (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))))).
+body (1): (SQRT
+           (THE POS-DF
+                (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))))).
 ```
 
 #### :context: D4DST2
@@ -4711,7 +4754,7 @@ body: (SQRT
 veq context op: D4DST2
 fxname: -D4DST2
 args: (AX AY AZ AW BX BY BZ BW)
-body: (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
+body (1): (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
 ```
 
 #### :context: D4EXP
@@ -4719,8 +4762,8 @@ body: (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
 ```
 veq context op: D4EXP
 fxname: -D4EXP
-args: (A B C D)
-body: (VALUES (EXP A) (EXP B) (EXP C) (EXP D)).
+args: (AX AY AZ AW)
+body (4): (VALUES (EXP AX) (EXP AY) (EXP AZ) (EXP AW)).
 ```
 
 #### :context: D4FROM
@@ -4729,7 +4772,7 @@ body: (VALUES (EXP A) (EXP B) (EXP C) (EXP D)).
 veq context op: D4FROM
 fxname: -D4FROM
 args: (AX AY AZ AW BX BY BZ BW S)
-body: (-D4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S)).
+body (4): (-D4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S)).
 ```
 
 #### :context: D4I-
@@ -4738,7 +4781,7 @@ body: (-D4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S)).
 veq context op: D4I-
 fxname: -D4I-
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
+body (4): (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
 ```
 
 #### :context: D4I/
@@ -4747,7 +4790,7 @@ body: (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
 veq context op: D4I/
 fxname: -D4I/
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
+body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
 ```
 
 #### :context: D4ISCALE
@@ -4755,8 +4798,8 @@ body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
 ```
 veq context op: D4ISCALE
 fxname: -D4ISCALE
-args: (A B C D S)
-body: (VALUES (/ A S) (/ B S) (/ C S) (/ D S)).
+args: (AX AY AZ AW S)
+body (4): (VALUES (/ AX S) (/ AY S) (/ AZ S) (/ AW S)).
 ```
 
 #### :context: D4LEN
@@ -4764,8 +4807,8 @@ body: (VALUES (/ A S) (/ B S) (/ C S) (/ D S)).
 ```
 veq context op: D4LEN
 fxname: -D4LEN
-args: (A B C D)
-body: (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D4SQUARE A B C D))))).
+args: (AX AY AZ AW)
+body (1): (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D4SQUARE AX AY AZ AW))))).
 ```
 
 #### :context: D4LEN2
@@ -4773,8 +4816,8 @@ body: (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D4SQUARE A B C D))))).
 ```
 veq context op: D4LEN2
 fxname: -D4LEN2
-args: (A B C D)
-body: (THE POS-DF (MVC #'+ (-D4SQUARE A B C D))).
+args: (AX AY AZ AW)
+body (1): (THE POS-DF (MVC #'+ (-D4SQUARE AX AY AZ AW))).
 ```
 
 #### :context: D4LERP
@@ -4783,8 +4826,8 @@ body: (THE POS-DF (MVC #'+ (-D4SQUARE A B C D))).
 veq context op: D4LERP
 fxname: -D4LERP
 args: (AX AY AZ AW BX BY BZ BW S)
-body: (-D4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
-       (* (- BW AW) S)).
+body (4): (-D4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
+           (* (- BW AW) S)).
 ```
 
 #### :context: D4LET
@@ -4800,8 +4843,8 @@ note that this behaves like native lisp let*.
 ```
 veq context op: D4MAX
 fxname: -D4MAX
-args: (A B C D)
-body: (MAX A B C D).
+args: (AX AY AZ AW)
+body (1): (MAX AX AY AZ AW).
 ```
 
 #### D4MEYE
@@ -4827,8 +4870,8 @@ return 4d eye matrix.
 veq context op: D4MID
 fxname: -D4MID
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)
-              (* (+ BW AW) 0.5d0)).
+body (4): (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)
+                  (* (+ BW AW) 0.5d0)).
 ```
 
 #### :context: D4MIN
@@ -4836,8 +4879,8 @@ body: (VALUES (* (+ BX AX) 0.5d0) (* (+ BY AY) 0.5d0) (* (+ BZ AZ) 0.5d0)
 ```
 veq context op: D4MIN
 fxname: -D4MIN
-args: (A B C D)
-body: (MIN A B C D).
+args: (AX AY AZ AW)
+body (1): (MIN AX AY AZ AW).
 ```
 
 #### D4MINV
@@ -4896,8 +4939,8 @@ of type: DVEC
 ```
 veq context op: D4MOD
 fxname: -D4MOD
-args: (A B C D S)
-body: (VALUES (MOD A S) (MOD B S) (MOD C S) (MOD D S)).
+args: (AX AY AZ AW S)
+body (4): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S) (MOD AW S)).
 ```
 
 #### D4MT!
@@ -4984,8 +5027,8 @@ mat * v. for 4d matrix and vector.
 ```
 veq context op: D4NEG
 fxname: -D4NEG
-args: (A B C D)
-body: (VALUES (- A) (- B) (- C) (- D)).
+args: (AX AY AZ AW)
+body (4): (VALUES (- AX) (- AY) (- AZ) (- AW)).
 ```
 
 #### :context: D4NORM
@@ -4993,8 +5036,8 @@ body: (VALUES (- A) (- B) (- C) (- D)).
 ```
 veq context op: D4NORM
 fxname: -D4NORM
-args: (A B C D)
-body: (MVC #'-D4ISCALE A B C D (THE POS-DF (MVC #'-D4LEN A B C D))).
+args: (AX AY AZ AW)
+body (4): (MVC #'-D4ISCALE AX AY AZ AW (THE POS-DF (MVC #'-D4LEN AX AY AZ AW))).
 ```
 
 #### :context: D4NSUM
@@ -5022,8 +5065,8 @@ ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 veq context op: D4SCALE
 fxname: -D4SCALE
-args: (A B C D S)
-body: (VALUES (* A S) (* B S) (* C S) (* D S)).
+args: (AX AY AZ AW S)
+body (4): (VALUES (* AX S) (* AY S) (* AZ S) (* AW S)).
 ```
 
 #### :context: D4SQRT
@@ -5031,11 +5074,11 @@ body: (VALUES (* A S) (* B S) (* C S) (* D S)).
 ```
 veq context op: D4SQRT
 fxname: -D4SQRT
-args: (A B C D)
-body: (VALUES (THE POS-DF (SQRT (THE POS-DF A)))
-              (THE POS-DF (SQRT (THE POS-DF B)))
-              (THE POS-DF (SQRT (THE POS-DF C)))
-              (THE POS-DF (SQRT (THE POS-DF D)))).
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
+                  (THE POS-DF (SQRT (THE POS-DF AY)))
+                  (THE POS-DF (SQRT (THE POS-DF AZ)))
+                  (THE POS-DF (SQRT (THE POS-DF AW)))).
 ```
 
 #### :context: D4SQUARE
@@ -5043,9 +5086,9 @@ body: (VALUES (THE POS-DF (SQRT (THE POS-DF A)))
 ```
 veq context op: D4SQUARE
 fxname: -D4SQUARE
-args: (A B C D)
-body: (VALUES (THE POS-DF (* A A)) (THE POS-DF (* B B)) (THE POS-DF (* C C))
-              (THE POS-DF (* D D))).
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-DF (* AX AX)) (THE POS-DF (* AY AY))
+                  (THE POS-DF (* AZ AZ)) (THE POS-DF (* AW AW))).
 ```
 
 #### :context: D4VSET
@@ -5085,14 +5128,14 @@ describe argument
 ```
 veq context op: D^
 fxname: -D^
-args: (A S)
-body: (EXPT A S).
+args: (AX S)
+body (1): (EXPT AX S).
 ```
 
 #### D_
 
 ```
-create vector array (dvec) from body: (d_ '(1d0 2d0 3d0)).
+create DVEC vector array from body: (D_ '(a b c ...)).
 
  ; VEQ:D_
  ;   [symbol]
@@ -5100,7 +5143,7 @@ create vector array (dvec) from body: (d_ '(1d0 2d0 3d0)).
  ; D_ names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     create vector array (dvec) from body: (d_ '(1d0 2d0 3d0)).
+ ;     create DVEC vector array from body: (D_ '(a b c ...)).
  ;   Source file: src/array-utils.lisp
 ```
 
@@ -5109,8 +5152,8 @@ create vector array (dvec) from body: (d_ '(1d0 2d0 3d0)).
 ```
 veq context op: DABS
 fxname: -DABS
-args: (A)
-body: (ABS A).
+args: (AX)
+body (1): (ABS AX).
 ```
 
 #### :context: DCLAMP
@@ -5119,7 +5162,7 @@ body: (ABS A).
 veq context op: DCLAMP
 fxname: -DCLAMP
 args: (X)
-body: (MIN 1.0d0 (MAX 0.0d0 X)).
+body (1): (MIN 1.0d0 (MAX 0.0d0 X)).
 ```
 
 #### :context: DCLAMP\*
@@ -5128,7 +5171,7 @@ body: (MIN 1.0d0 (MAX 0.0d0 X)).
 veq context op: DCLAMP*
 fxname: -DCLAMP*
 args: (X MI MA)
-body: (MIN MA (MAX MI X)).
+body (1): (MIN MA (MAX MI X)).
 ```
 
 #### :context: DCOS-SIN
@@ -5136,8 +5179,8 @@ body: (MIN MA (MAX MI X)).
 ```
 veq context op: DCOS-SIN
 fxname: -DCOS-SIN
-args: (A)
-body: (VALUES (COS A) (SIN A)).
+args: (AX)
+body (2): (VALUES (COS AX) (SIN AX)).
 ```
 
 #### :context: DDEG->RAD
@@ -5145,8 +5188,8 @@ body: (VALUES (COS A) (SIN A)).
 ```
 veq context op: DDEG->RAD
 fxname: -DDEG->RAD
-args: (DEG)
-body: (* DPI (/ DEG 180.0d0)).
+args: (D)
+body (1): (* DPI (/ D 180.0d0)).
 ```
 
 #### DEASE-IN-BACK
@@ -5754,7 +5797,7 @@ the wrapper macro ensures every call to this function is done as
  ;
  ;     the wrapper macro ensures every call to this function is done as
  ;     (mvc #'%fx ...).
- ;   Source file: src/macros.lisp
+ ;   Source file: src/macrolets.lisp
 ```
 
 #### :context: DEXP
@@ -5762,8 +5805,8 @@ the wrapper macro ensures every call to this function is done as
 ```
 veq context op: DEXP
 fxname: -DEXP
-args: (A)
-body: (VALUES (EXP A)).
+args: (AX)
+body (1): (VALUES (EXP AX)).
 ```
 
 #### DF
@@ -5776,7 +5819,7 @@ body: (VALUES (EXP A)).
  ;
  ; DF names a macro:
  ;   Lambda-list: (&BODY BODY)
- ;   Source file: src/utils.lisp
+ ;   Source file: src/types.lisp
  ;
  ; DF names a type-specifier:
  ;   Lambda-list: ()
@@ -5793,7 +5836,7 @@ body: (VALUES (EXP A)).
  ;
  ; DF* names a macro:
  ;   Lambda-list: (&BODY BODY)
- ;   Source file: src/utils.lisp
+ ;   Source file: src/types.lisp
 ```
 
 #### DFL
@@ -5809,7 +5852,7 @@ return (values (df a) (df b ..) from (list a b ..).
  ;   Derived type: (FUNCTION (LIST) *)
  ;   Documentation:
  ;     return (values (df a) (df b ..) from (list a b ..).
- ;   Source file: src/utils.lisp
+ ;   Source file: src/types.lisp
 ```
 
 #### :context: DFROM
@@ -5818,7 +5861,7 @@ return (values (df a) (df b ..) from (list a b ..).
 veq context op: DFROM
 fxname: -DFROM
 args: (AX BX S)
-body: (+ AX (* BX S)).
+body (1): (+ AX (* BX S)).
 ```
 
 #### :context: DI-
@@ -5826,8 +5869,8 @@ body: (+ AX (* BX S)).
 ```
 veq context op: DI-
 fxname: -DI-
-args: (A B)
-body: (- B A).
+args: (AX BX)
+body (1): (- BX AX).
 ```
 
 #### :context: DI/
@@ -5835,8 +5878,8 @@ body: (- B A).
 ```
 veq context op: DI/
 fxname: -DI/
-args: (A B)
-body: (/ B A).
+args: (AX BX)
+body (1): (/ BX AX).
 ```
 
 #### :context: DISCALE
@@ -5844,8 +5887,8 @@ body: (/ B A).
 ```
 veq context op: DISCALE
 fxname: -DISCALE
-args: (A S)
-body: (VALUES (/ A S)).
+args: (AX S)
+body (1): (VALUES (/ AX S)).
 ```
 
 #### :context: DLEN
@@ -5853,8 +5896,8 @@ body: (VALUES (/ A S)).
 ```
 veq context op: DLEN
 fxname: -DLEN
-args: (A)
-body: (THE POS-DF A).
+args: (AX)
+body (1): (THE POS-DF AX).
 ```
 
 #### :context: DLEN2
@@ -5862,8 +5905,8 @@ body: (THE POS-DF A).
 ```
 veq context op: DLEN2
 fxname: -DLEN2
-args: (A)
-body: (THE POS-DF (MVC #'+ (-DSQUARE A))).
+args: (AX)
+body (1): (THE POS-DF (MVC #'+ (-DSQUARE AX))).
 ```
 
 #### :context: DLERP
@@ -5872,7 +5915,7 @@ body: (THE POS-DF (MVC #'+ (-DSQUARE A))).
 veq context op: DLERP
 fxname: -DLERP
 args: (AX BX S)
-body: (+ AX (* (- BX AX) S)).
+body (1): (+ AX (* (- BX AX) S)).
 ```
 
 #### :context: DMID
@@ -5881,7 +5924,7 @@ body: (+ AX (* (- BX AX) S)).
 veq context op: DMID
 fxname: -DMID
 args: (AX BX)
-body: (* 0.5d0 (+ AX BX)).
+body (1): (* 0.5d0 (+ AX BX)).
 ```
 
 #### :context: DMOD
@@ -5889,8 +5932,8 @@ body: (* 0.5d0 (+ AX BX)).
 ```
 veq context op: DMOD
 fxname: -DMOD
-args: (A S)
-body: (MOD A S).
+args: (AX S)
+body (1): (MOD AX S).
 ```
 
 #### :context: DNEG
@@ -5898,8 +5941,8 @@ body: (MOD A S).
 ```
 veq context op: DNEG
 fxname: -DNEG
-args: (A)
-body: (- A).
+args: (AX)
+body (1): (- AX).
 ```
 
 #### :context: DNORM
@@ -5907,8 +5950,8 @@ body: (- A).
 ```
 veq context op: DNORM
 fxname: -DNORM
-args: (A)
-body: (MVC #'-DISCALE A (MVC #'-DLEN A)).
+args: (AX)
+body (1): (MVC #'-DISCALE AX (MVC #'-DLEN AX)).
 ```
 
 #### :context: DNSUM
@@ -5988,8 +6031,27 @@ ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 veq context op: DSCALE
 fxname: -DSCALE
-args: (A S)
-body: (VALUES (* A S)).
+args: (AX S)
+body (1): (VALUES (* AX S)).
+```
+
+#### DSEL
+
+```
+return values from body in order of dims. use indices or :x :y :z :w
+ex: (dsel (:w :zx 0) (values a b c d))
+returns (values d c a a).
+
+ ; VEQ:DSEL
+ ;   [symbol]
+ ;
+ ; DSEL names a macro:
+ ;   Lambda-list: ((&REST DIMS) &BODY BODY)
+ ;   Documentation:
+ ;     return values from body in order of dims. use indices or :x :y :z :w
+ ;     ex: (dsel (:w :zx 0) (values a b c d))
+ ;     returns (values d c a a).
+ ;   Source file: src/select-dim.lisp
 ```
 
 #### :context: DSIN-COS
@@ -5997,8 +6059,8 @@ body: (VALUES (* A S)).
 ```
 veq context op: DSIN-COS
 fxname: -DSIN-COS
-args: (A)
-body: (VALUES (SIN A) (COS A)).
+args: (AX)
+body (2): (VALUES (SIN AX) (COS AX)).
 ```
 
 #### :context: DSQRT
@@ -6006,8 +6068,8 @@ body: (VALUES (SIN A) (COS A)).
 ```
 veq context op: DSQRT
 fxname: -DSQRT
-args: (A)
-body: (THE POS-DF (SQRT (THE POS-DF A))).
+args: (AX)
+body (1): (THE POS-DF (SQRT (THE POS-DF AX))).
 ```
 
 #### :context: DSQUARE
@@ -6015,8 +6077,8 @@ body: (THE POS-DF (SQRT (THE POS-DF A))).
 ```
 veq context op: DSQUARE
 fxname: -DSQUARE
-args: (A)
-body: (* A A).
+args: (AX)
+body (1): (* AX AX).
 ```
 
 #### DVEC
@@ -6055,8 +6117,8 @@ where (fx ...) returns 1 values.
 args: (&key (n 0) inds (start 0) itr cnt arr fxs exs nxs)
 
 n is the number of iterations
-start is the first index. then n-1 more.
-inds is indices to iterate. replaces n/start
+start is the first (row) index. then n-1 more.
+inds is (row) indices to iterate. replaces n/start
 arr is the arrays to be defined/referenced
 itr is the symbol representing indices
 cnt is the symbol representing iterations from 0
@@ -6135,156 +6197,107 @@ note that the number of values depends on the dimension.
  ;   Source file: src/array-utils.lisp
 ```
 
-#### F$\*
+#### :context: F$\*
 
 ```
-broadcast for: F*
-ex: (F$* a ...) performs (F* a[i] ...) for every row in a.
-
- ; VEQ:F$*
- ;   [symbol]
- ;
- ; F$* names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$*;
- ;     broadcast for: F*
- ;     ex: (F$* a ...) performs (F* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$*
+fxname: -F*
+args: (AX BX)
+body (1): (* AX BX).
 ```
 
-#### F$\*!
+#### :context: F$\*!
 
 ```
-destructive broadcast for: F*
-ex: (F$*! a ...) performs (F* a[i] ...) for every row in a.
-
- ; VEQ:F$*!
- ;   [symbol]
- ;
- ; F$*! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$*!;
- ;     destructive broadcast for: F*
- ;     ex: (F$*! a ...) performs (F* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$*
+fxname: -F*
+args: (AX BX)
+body (1): (* AX BX).
+destructive.
 ```
 
-#### F$+
+#### :context: F$+
 
 ```
-broadcast for: F+
-ex: (F$+ a ...) performs (F+ a[i] ...) for every row in a.
-
- ; VEQ:F$+
- ;   [symbol]
- ;
- ; F$+ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$+;
- ;     broadcast for: F+
- ;     ex: (F$+ a ...) performs (F+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$+
+fxname: -F+
+args: (AX BX)
+body (1): (+ AX BX).
 ```
 
-#### F$+!
+#### :context: F$+!
 
 ```
-destructive broadcast for: F+
-ex: (F$+! a ...) performs (F+ a[i] ...) for every row in a.
-
- ; VEQ:F$+!
- ;   [symbol]
- ;
- ; F$+! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$+!;
- ;     destructive broadcast for: F+
- ;     ex: (F$+! a ...) performs (F+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$+
+fxname: -F+
+args: (AX BX)
+body (1): (+ AX BX).
+destructive.
 ```
 
-#### F$-
+#### :context: F$-
 
 ```
-broadcast for: F-
-ex: (F$- a ...) performs (F- a[i] ...) for every row in a.
-
- ; VEQ:F$-
- ;   [symbol]
- ;
- ; F$- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$-;
- ;     broadcast for: F-
- ;     ex: (F$- a ...) performs (F- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$-
+fxname: -F-
+args: (AX BX)
+body (1): (- AX BX).
 ```
 
-#### F$-!
+#### :context: F$-!
 
 ```
-destructive broadcast for: F-
-ex: (F$-! a ...) performs (F- a[i] ...) for every row in a.
-
- ; VEQ:F$-!
- ;   [symbol]
- ;
- ; F$-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$-!;
- ;     destructive broadcast for: F-
- ;     ex: (F$-! a ...) performs (F- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$-
+fxname: -F-
+args: (AX BX)
+body (1): (- AX BX).
+destructive.
 ```
 
-#### F$/
+#### :context: F$/
 
 ```
-broadcast for: F/
-ex: (F$/ a ...) performs (F/ a[i] ...) for every row in a.
-
- ; VEQ:F$/
- ;   [symbol]
- ;
- ; F$/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$/;
- ;     broadcast for: F/
- ;     ex: (F$/ a ...) performs (F/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$/
+fxname: -F/
+args: (AX BX)
+body (1): (/ AX BX).
 ```
 
-#### F$/!
+#### :context: F$/!
 
 ```
-destructive broadcast for: F/
-ex: (F$/! a ...) performs (F/ a[i] ...) for every row in a.
+veq context broadcast op: F$/
+fxname: -F/
+args: (AX BX)
+body (1): (/ AX BX).
+destructive.
+```
 
- ; VEQ:F$/!
- ;   [symbol]
- ;
- ; F$/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$/!;
- ;     destructive broadcast for: F/
- ;     ex: (F$/! a ...) performs (F/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F$^
+
+```
+veq context broadcast op: F$^
+fxname: -F^
+args: (AX S)
+body (1): (EXPT AX S).
+```
+
+#### :context: F$^!
+
+```
+veq context broadcast op: F$^
+fxname: -F^
+args: (AX S)
+body (1): (EXPT AX S).
+destructive.
 ```
 
 #### F$_
 
 ```
-create vector array (fvec) from body. where body is a list of lists.
-ex: ($_ (loop repeat 2 collect `(1f0 2f0)))
-ex: ($_ '((1f0 2f0) (1f0 2f0))).
+create fvec vector array from body. where body is a list of lists.
+ex: (f$_ (loop repeat 2 collect `(1f0 2f0)))
+ex: (f$_ '((1f0 2f0) (1f0 2f0))).
 
  ; VEQ:F$_
  ;   [symbol]
@@ -6292,117 +6305,150 @@ ex: ($_ '((1f0 2f0) (1f0 2f0))).
  ; F$_ names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     create vector array (fvec) from body. where body is a list of lists.
- ;     ex: ($_ (loop repeat 2 collect `(1f0 2f0)))
- ;     ex: ($_ '((1f0 2f0) (1f0 2f0))).
+ ;     create fvec vector array from body. where body is a list of lists.
+ ;     ex: (f$_ (loop repeat 2 collect `(1f0 2f0)))
+ ;     ex: (f$_ '((1f0 2f0) (1f0 2f0))).
  ;   Source file: src/array-utils.lisp
 ```
 
-#### F$ABS
+#### :context: F$ABS
 
 ```
-broadcast for: FABS
-ex: (F$ABS a ...) performs (FABS a[i] ...) for every row in a.
-
- ; VEQ:F$ABS
- ;   [symbol]
- ;
- ; F$ABS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$ABS;
- ;     broadcast for: FABS
- ;     ex: (F$ABS a ...) performs (FABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$ABS
+fxname: -FABS
+args: (AX)
+body (1): (ABS AX).
 ```
 
-#### F$ABS!
+#### :context: F$ABS!
 
 ```
-destructive broadcast for: FABS
-ex: (F$ABS! a ...) performs (FABS a[i] ...) for every row in a.
+veq context broadcast op: F$ABS
+fxname: -FABS
+args: (AX)
+body (1): (ABS AX).
+destructive.
+```
 
- ; VEQ:F$ABS!
- ;   [symbol]
- ;
- ; F$ABS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$ABS!;
- ;     destructive broadcast for: FABS
- ;     ex: (F$ABS! a ...) performs (FABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F$CLAMP
+
+```
+veq context broadcast op: F$CLAMP
+fxname: -FCLAMP
+args: (X)
+body (1): (MIN 1.0 (MAX 0.0 X)).
+```
+
+#### :context: F$CLAMP!
+
+```
+veq context broadcast op: F$CLAMP
+fxname: -FCLAMP
+args: (X)
+body (1): (MIN 1.0 (MAX 0.0 X)).
+destructive.
+```
+
+#### :context: F$CLAMP\*
+
+```
+veq context broadcast op: F$CLAMP*
+fxname: -FCLAMP*
+args: (X MI MA)
+body (1): (MIN MA (MAX MI X)).
+```
+
+#### :context: F$CLAMP\*!
+
+```
+veq context broadcast op: F$CLAMP*
+fxname: -FCLAMP*
+args: (X MI MA)
+body (1): (MIN MA (MAX MI X)).
+destructive.
 ```
 
 #### F$COPY
 
 ```
-copy vector array (fvec).
+copy FVEC vector array.
 
  ; VEQ:F$COPY
  ;   [symbol]
  ;
  ; F$COPY names a compiled function:
- ;   Lambda-list: (A)
+ ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     copy vector array (fvec).
+ ;     copy FVEC vector array.
  ;   Source file: src/array-utils.lisp
 ```
 
-#### F$COS-SIN
+#### :context: F$COS-SIN
 
 ```
-broadcast for: FCOS-SIN
-ex: (F$COS-SIN a ...) performs (FCOS-SIN a[i] ...) for every row in a.
-
- ; VEQ:F$COS-SIN
- ;   [symbol]
- ;
- ; F$COS-SIN names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$COS-SIN;
- ;     broadcast for: FCOS-SIN
- ;     ex: (F$COS-SIN a ...) performs (FCOS-SIN a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$COS-SIN
+fxname: -FCOS-SIN
+args: (AX)
+body (2): (VALUES (COS AX) (SIN AX)).
 ```
 
-#### F$FROM
+#### :context: F$DEG->RAD
 
 ```
-broadcast for: FFROM
-ex: (F$FROM a ...) performs (FFROM a[i] ...) for every row in a.
-
- ; VEQ:F$FROM
- ;   [symbol]
- ;
- ; F$FROM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$FROM;
- ;     broadcast for: FFROM
- ;     ex: (F$FROM a ...) performs (FFROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$DEG->RAD
+fxname: -FDEG->RAD
+args: (D)
+body (1): (* FPI (/ D 180.0)).
 ```
 
-#### F$FROM!
+#### :context: F$DEG->RAD!
 
 ```
-destructive broadcast for: FFROM
-ex: (F$FROM! a ...) performs (FFROM a[i] ...) for every row in a.
+veq context broadcast op: F$DEG->RAD
+fxname: -FDEG->RAD
+args: (D)
+body (1): (* FPI (/ D 180.0)).
+destructive.
+```
 
- ; VEQ:F$FROM!
- ;   [symbol]
- ;
- ; F$FROM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$FROM!;
- ;     destructive broadcast for: FFROM
- ;     ex: (F$FROM! a ...) performs (FFROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F$EXP
+
+```
+veq context broadcast op: F$EXP
+fxname: -FEXP
+args: (AX)
+body (1): (VALUES (EXP AX)).
+```
+
+#### :context: F$EXP!
+
+```
+veq context broadcast op: F$EXP
+fxname: -FEXP
+args: (AX)
+body (1): (VALUES (EXP AX)).
+destructive.
+```
+
+#### :context: F$FROM
+
+```
+veq context broadcast op: F$FROM
+fxname: -FFROM
+args: (AX BX S)
+body (1): (+ AX (* BX S)).
+```
+
+#### :context: F$FROM!
+
+```
+veq context broadcast op: F$FROM
+fxname: -FFROM
+args: (AX BX S)
+body (1): (+ AX (* BX S)).
+destructive.
 ```
 
 #### :context: F$FXLSPACE
@@ -6415,112 +6461,61 @@ assumes the last form in fx is a function and does
 ex: (F$FXLSPACE (n a b) (lambda (i (:va 1 a b)) (vpr i a b)))
 ```
 
-#### F$I-
+#### :context: F$I-
 
 ```
-broadcast for: FI-
-ex: (F$I- a ...) performs (FI- a[i] ...) for every row in a.
-
- ; VEQ:F$I-
- ;   [symbol]
- ;
- ; F$I- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$I-;
- ;     broadcast for: FI-
- ;     ex: (F$I- a ...) performs (FI- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$I-
+fxname: -FI-
+args: (AX BX)
+body (1): (- BX AX).
 ```
 
-#### F$I-!
+#### :context: F$I-!
 
 ```
-destructive broadcast for: FI-
-ex: (F$I-! a ...) performs (FI- a[i] ...) for every row in a.
-
- ; VEQ:F$I-!
- ;   [symbol]
- ;
- ; F$I-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$I-!;
- ;     destructive broadcast for: FI-
- ;     ex: (F$I-! a ...) performs (FI- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$I-
+fxname: -FI-
+args: (AX BX)
+body (1): (- BX AX).
+destructive.
 ```
 
-#### F$I/
+#### :context: F$I/
 
 ```
-broadcast for: FI/
-ex: (F$I/ a ...) performs (FI/ a[i] ...) for every row in a.
-
- ; VEQ:F$I/
- ;   [symbol]
- ;
- ; F$I/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$I/;
- ;     broadcast for: FI/
- ;     ex: (F$I/ a ...) performs (FI/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$I/
+fxname: -FI/
+args: (AX BX)
+body (1): (/ BX AX).
 ```
 
-#### F$I/!
+#### :context: F$I/!
 
 ```
-destructive broadcast for: FI/
-ex: (F$I/! a ...) performs (FI/ a[i] ...) for every row in a.
-
- ; VEQ:F$I/!
- ;   [symbol]
- ;
- ; F$I/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$I/!;
- ;     destructive broadcast for: FI/
- ;     ex: (F$I/! a ...) performs (FI/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$I/
+fxname: -FI/
+args: (AX BX)
+body (1): (/ BX AX).
+destructive.
 ```
 
-#### F$ISCALE
+#### :context: F$ISCALE
 
 ```
-broadcast for: FISCALE
-ex: (F$ISCALE a ...) performs (FISCALE a[i] ...) for every row in a.
-
- ; VEQ:F$ISCALE
- ;   [symbol]
- ;
- ; F$ISCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$ISCALE;
- ;     broadcast for: FISCALE
- ;     ex: (F$ISCALE a ...) performs (FISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$ISCALE
+fxname: -FISCALE
+args: (AX S)
+body (1): (VALUES (/ AX S)).
 ```
 
-#### F$ISCALE!
+#### :context: F$ISCALE!
 
 ```
-destructive broadcast for: FISCALE
-ex: (F$ISCALE! a ...) performs (FISCALE a[i] ...) for every row in a.
-
- ; VEQ:F$ISCALE!
- ;   [symbol]
- ;
- ; F$ISCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$ISCALE!;
- ;     destructive broadcast for: FISCALE
- ;     ex: (F$ISCALE! a ...) performs (FISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$ISCALE
+fxname: -FISCALE
+args: (AX S)
+body (1): (VALUES (/ AX S)).
+destructive.
 ```
 
 #### F$LAST
@@ -6540,40 +6535,61 @@ return values from last row of 1d vector array.
  ;   Source file: src/array-rows.lisp
 ```
 
-#### F$LEN
+#### :context: F$LEN
 
 ```
-broadcast for: FLEN
-ex: (F$LEN a ...) performs (FLEN a[i] ...) for every row in a.
-
- ; VEQ:F$LEN
- ;   [symbol]
- ;
- ; F$LEN names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$LEN;
- ;     broadcast for: FLEN
- ;     ex: (F$LEN a ...) performs (FLEN a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$LEN
+fxname: -FLEN
+args: (AX)
+body (1): (THE POS-FF AX).
 ```
 
-#### F$LEN2
+#### :context: F$LEN!
 
 ```
-broadcast for: FLEN2
-ex: (F$LEN2 a ...) performs (FLEN2 a[i] ...) for every row in a.
+veq context broadcast op: F$LEN
+fxname: -FLEN
+args: (AX)
+body (1): (THE POS-FF AX).
+destructive.
+```
 
- ; VEQ:F$LEN2
- ;   [symbol]
- ;
- ; F$LEN2 names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$LEN2;
- ;     broadcast for: FLEN2
- ;     ex: (F$LEN2 a ...) performs (FLEN2 a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F$LEN2
+
+```
+veq context broadcast op: F$LEN2
+fxname: -FLEN2
+args: (AX)
+body (1): (THE POS-FF (MVC #'+ (-FSQUARE AX))).
+```
+
+#### :context: F$LEN2!
+
+```
+veq context broadcast op: F$LEN2
+fxname: -FLEN2
+args: (AX)
+body (1): (THE POS-FF (MVC #'+ (-FSQUARE AX))).
+destructive.
+```
+
+#### :context: F$LERP
+
+```
+veq context broadcast op: F$LERP
+fxname: -FLERP
+args: (AX BX S)
+body (1): (+ AX (* (- BX AX) S)).
+```
+
+#### :context: F$LERP!
+
+```
+veq context broadcast op: F$LERP
+fxname: -FLERP
+args: (AX BX S)
+body (1): (+ AX (* (- BX AX) S)).
+destructive.
 ```
 
 #### F$LINE
@@ -6617,7 +6633,7 @@ defined via veq:fvdef*
 #### F$MAKE
 
 ```
-create array with size (n dim), and initial value v.
+create FVEC vector array with size n * dim, and initial value v.
 
  ; VEQ:F$MAKE
  ;   [symbol]
@@ -6625,8 +6641,27 @@ create array with size (n dim), and initial value v.
  ; F$MAKE names a macro:
  ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0.0))
  ;   Documentation:
- ;     create array with size (n dim), and initial value v.
+ ;     create FVEC vector array with size n * dim, and initial value v.
  ;   Source file: src/array-utils.lisp
+```
+
+#### :context: F$MID
+
+```
+veq context broadcast op: F$MID
+fxname: -FMID
+args: (AX BX)
+body (1): (* 0.5 (+ AX BX)).
+```
+
+#### :context: F$MID!
+
+```
+veq context broadcast op: F$MID
+fxname: -FMID
+args: (AX BX)
+body (1): (* 0.5 (+ AX BX)).
+destructive.
 ```
 
 #### F$MIMA
@@ -6651,76 +6686,61 @@ use n to limit to first n rows.
  ;   Source file: src/array-mima.lisp
 ```
 
-#### F$NEG
+#### :context: F$MOD
 
 ```
-broadcast for: FNEG
-ex: (F$NEG a ...) performs (FNEG a[i] ...) for every row in a.
-
- ; VEQ:F$NEG
- ;   [symbol]
- ;
- ; F$NEG names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$NEG;
- ;     broadcast for: FNEG
- ;     ex: (F$NEG a ...) performs (FNEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$MOD
+fxname: -FMOD
+args: (AX S)
+body (1): (MOD AX S).
 ```
 
-#### F$NEG!
+#### :context: F$MOD!
 
 ```
-destructive broadcast for: FNEG
-ex: (F$NEG! a ...) performs (FNEG a[i] ...) for every row in a.
-
- ; VEQ:F$NEG!
- ;   [symbol]
- ;
- ; F$NEG! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$NEG!;
- ;     destructive broadcast for: FNEG
- ;     ex: (F$NEG! a ...) performs (FNEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$MOD
+fxname: -FMOD
+args: (AX S)
+body (1): (MOD AX S).
+destructive.
 ```
 
-#### F$NORM
+#### :context: F$NEG
 
 ```
-broadcast for: FNORM
-ex: (F$NORM a ...) performs (FNORM a[i] ...) for every row in a.
-
- ; VEQ:F$NORM
- ;   [symbol]
- ;
- ; F$NORM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$NORM;
- ;     broadcast for: FNORM
- ;     ex: (F$NORM a ...) performs (FNORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$NEG
+fxname: -FNEG
+args: (AX)
+body (1): (- AX).
 ```
 
-#### F$NORM!
+#### :context: F$NEG!
 
 ```
-destructive broadcast for: FNORM
-ex: (F$NORM! a ...) performs (FNORM a[i] ...) for every row in a.
+veq context broadcast op: F$NEG
+fxname: -FNEG
+args: (AX)
+body (1): (- AX).
+destructive.
+```
 
- ; VEQ:F$NORM!
- ;   [symbol]
- ;
- ; F$NORM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$NORM!;
- ;     destructive broadcast for: FNORM
- ;     ex: (F$NORM! a ...) performs (FNORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F$NORM
+
+```
+veq context broadcast op: F$NORM
+fxname: -FNORM
+args: (AX)
+body (1): (MVC #'-FISCALE AX (MVC #'-FLEN AX)).
+```
+
+#### :context: F$NORM!
+
+```
+veq context broadcast op: F$NORM
+fxname: -FNORM
+args: (AX)
+body (1): (MVC #'-FISCALE AX (MVC #'-FLEN AX)).
+destructive.
 ```
 
 #### F$NUM
@@ -6790,40 +6810,70 @@ returns (values a ... adim b ... bdim val)
 assuming c is a structname, and a,b are FVEC of dim 1
 ```
 
-#### F$SCALE
+#### :context: F$SCALE
 
 ```
-broadcast for: FSCALE
-ex: (F$SCALE a ...) performs (FSCALE a[i] ...) for every row in a.
-
- ; VEQ:F$SCALE
- ;   [symbol]
- ;
- ; F$SCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$SCALE;
- ;     broadcast for: FSCALE
- ;     ex: (F$SCALE a ...) performs (FSCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F$SCALE
+fxname: -FSCALE
+args: (AX S)
+body (1): (VALUES (* AX S)).
 ```
 
-#### F$SCALE!
+#### :context: F$SCALE!
 
 ```
-destructive broadcast for: FSCALE
-ex: (F$SCALE! a ...) performs (FSCALE a[i] ...) for every row in a.
+veq context broadcast op: F$SCALE
+fxname: -FSCALE
+args: (AX S)
+body (1): (VALUES (* AX S)).
+destructive.
+```
 
- ; VEQ:F$SCALE!
- ;   [symbol]
- ;
- ; F$SCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F$SCALE!;
- ;     destructive broadcast for: FSCALE
- ;     ex: (F$SCALE! a ...) performs (FSCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F$SIN-COS
+
+```
+veq context broadcast op: F$SIN-COS
+fxname: -FSIN-COS
+args: (AX)
+body (2): (VALUES (SIN AX) (COS AX)).
+```
+
+#### :context: F$SQRT
+
+```
+veq context broadcast op: F$SQRT
+fxname: -FSQRT
+args: (AX)
+body (1): (THE POS-FF (SQRT (THE POS-FF AX))).
+```
+
+#### :context: F$SQRT!
+
+```
+veq context broadcast op: F$SQRT
+fxname: -FSQRT
+args: (AX)
+body (1): (THE POS-FF (SQRT (THE POS-FF AX))).
+destructive.
+```
+
+#### :context: F$SQUARE
+
+```
+veq context broadcast op: F$SQUARE
+fxname: -FSQUARE
+args: (AX)
+body (1): (* AX AX).
+```
+
+#### :context: F$SQUARE!
+
+```
+veq context broadcast op: F$SQUARE
+fxname: -FSQUARE
+args: (AX)
+body (1): (* AX AX).
+destructive.
 ```
 
 #### F$SUM
@@ -6847,7 +6897,7 @@ sum all rows of 1d array.
 
 ```
 returns 1d array with rows for inds.
-use :res put result in existing array
+use :res to put result in existing array.
 
  ; VEQ:F$TAKE
  ;   [symbol]
@@ -6859,7 +6909,7 @@ use :res put result in existing array
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     returns 1d array with rows for inds.
- ;     use :res put result in existing array
+ ;     use :res to put result in existing array.
  ;   Source file: src/array-take.lisp
 ```
 
@@ -6885,7 +6935,12 @@ typed.
 #### :context: F$WITH-ROWS
 
 ```
-make 1d
+execute function (expr i ax ay az bx by bz ...) for
+row i and 1d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
 ```
 
 #### F$ZERO
@@ -6912,8 +6967,8 @@ typed.
 ```
 veq context op: F*
 fxname: -F*
-args: (A B)
-body: (* A B).
+args: (AX BX)
+body (1): (* AX BX).
 ```
 
 #### :context: F+
@@ -6921,8 +6976,8 @@ body: (* A B).
 ```
 veq context op: F+
 fxname: -F+
-args: (A B)
-body: (+ A B).
+args: (AX BX)
+body (1): (+ AX BX).
 ```
 
 #### :context: F-
@@ -6930,8 +6985,8 @@ body: (+ A B).
 ```
 veq context op: F-
 fxname: -F-
-args: (A B)
-body: (- A B).
+args: (AX BX)
+body (1): (- AX BX).
 ```
 
 #### :context: F/
@@ -6939,8 +6994,8 @@ body: (- A B).
 ```
 veq context op: F/
 fxname: -F/
-args: (A B)
-body: (/ A B).
+args: (AX BX)
+body (1): (/ AX BX).
 ```
 
 #### :context: F2
@@ -6968,184 +7023,136 @@ note that the number of values depends on the dimension.
  ;   Source file: src/array-utils.lisp
 ```
 
-#### F2$\*
+#### :context: F2$\*
 
 ```
-broadcast for: F2*
-ex: (F2$* a ...) performs (F2* a[i] ...) for every row in a.
-
- ; VEQ:F2$*
- ;   [symbol]
- ;
- ; F2$* names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$*;
- ;     broadcast for: F2*
- ;     ex: (F2$* a ...) performs (F2* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$*
+fxname: -F2*
+args: (AX AY BX BY)
+body (2): (VALUES (* AX BX) (* AY BY)).
 ```
 
-#### F2$\*!
+#### :context: F2$\*!
 
 ```
-destructive broadcast for: F2*
-ex: (F2$*! a ...) performs (F2* a[i] ...) for every row in a.
-
- ; VEQ:F2$*!
- ;   [symbol]
- ;
- ; F2$*! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$*!;
- ;     destructive broadcast for: F2*
- ;     ex: (F2$*! a ...) performs (F2* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$*
+fxname: -F2*
+args: (AX AY BX BY)
+body (2): (VALUES (* AX BX) (* AY BY)).
+destructive.
 ```
 
-#### F2$+
+#### :context: F2$+
 
 ```
-broadcast for: F2+
-ex: (F2$+ a ...) performs (F2+ a[i] ...) for every row in a.
-
- ; VEQ:F2$+
- ;   [symbol]
- ;
- ; F2$+ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$+;
- ;     broadcast for: F2+
- ;     ex: (F2$+ a ...) performs (F2+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$+
+fxname: -F2+
+args: (AX AY BX BY)
+body (2): (VALUES (+ AX BX) (+ AY BY)).
 ```
 
-#### F2$+!
+#### :context: F2$+!
 
 ```
-destructive broadcast for: F2+
-ex: (F2$+! a ...) performs (F2+ a[i] ...) for every row in a.
-
- ; VEQ:F2$+!
- ;   [symbol]
- ;
- ; F2$+! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$+!;
- ;     destructive broadcast for: F2+
- ;     ex: (F2$+! a ...) performs (F2+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$+
+fxname: -F2+
+args: (AX AY BX BY)
+body (2): (VALUES (+ AX BX) (+ AY BY)).
+destructive.
 ```
 
-#### F2$-
+#### :context: F2$-
 
 ```
-broadcast for: F2-
-ex: (F2$- a ...) performs (F2- a[i] ...) for every row in a.
-
- ; VEQ:F2$-
- ;   [symbol]
- ;
- ; F2$- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$-;
- ;     broadcast for: F2-
- ;     ex: (F2$- a ...) performs (F2- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$-
+fxname: -F2-
+args: (AX AY BX BY)
+body (2): (VALUES (- AX BX) (- AY BY)).
 ```
 
-#### F2$-!
+#### :context: F2$-!
 
 ```
-destructive broadcast for: F2-
-ex: (F2$-! a ...) performs (F2- a[i] ...) for every row in a.
-
- ; VEQ:F2$-!
- ;   [symbol]
- ;
- ; F2$-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$-!;
- ;     destructive broadcast for: F2-
- ;     ex: (F2$-! a ...) performs (F2- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$-
+fxname: -F2-
+args: (AX AY BX BY)
+body (2): (VALUES (- AX BX) (- AY BY)).
+destructive.
 ```
 
-#### F2$/
+#### :context: F2$.
 
 ```
-broadcast for: F2/
-ex: (F2$/ a ...) performs (F2/ a[i] ...) for every row in a.
-
- ; VEQ:F2$/
- ;   [symbol]
- ;
- ; F2$/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$/;
- ;     broadcast for: F2/
- ;     ex: (F2$/ a ...) performs (F2/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$.
+fxname: -F2.
+args: (AX AY BX BY)
+body (1): (+ (* AX BX) (* AY BY)).
 ```
 
-#### F2$/!
+#### :context: F2$/
 
 ```
-destructive broadcast for: F2/
-ex: (F2$/! a ...) performs (F2/ a[i] ...) for every row in a.
-
- ; VEQ:F2$/!
- ;   [symbol]
- ;
- ; F2$/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$/!;
- ;     destructive broadcast for: F2/
- ;     ex: (F2$/! a ...) performs (F2/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$/
+fxname: -F2/
+args: (AX AY BX BY)
+body (2): (VALUES (/ AX BX) (/ AY BY)).
 ```
 
-#### F2$ABS
+#### :context: F2$/!
 
 ```
-broadcast for: F2ABS
-ex: (F2$ABS a ...) performs (F2ABS a[i] ...) for every row in a.
-
- ; VEQ:F2$ABS
- ;   [symbol]
- ;
- ; F2$ABS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$ABS;
- ;     broadcast for: F2ABS
- ;     ex: (F2$ABS a ...) performs (F2ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$/
+fxname: -F2/
+args: (AX AY BX BY)
+body (2): (VALUES (/ AX BX) (/ AY BY)).
+destructive.
 ```
 
-#### F2$ABS!
+#### :context: F2$^
 
 ```
-destructive broadcast for: F2ABS
-ex: (F2$ABS! a ...) performs (F2ABS a[i] ...) for every row in a.
+veq context broadcast op: F2$^
+fxname: -F2^
+args: (AX AY S)
+body (2): (VALUES (EXPT AX S) (EXPT AY S)).
+```
 
- ; VEQ:F2$ABS!
- ;   [symbol]
- ;
- ; F2$ABS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$ABS!;
- ;     destructive broadcast for: F2ABS
- ;     ex: (F2$ABS! a ...) performs (F2ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F2$^!
+
+```
+veq context broadcast op: F2$^
+fxname: -F2^
+args: (AX AY S)
+body (2): (VALUES (EXPT AX S) (EXPT AY S)).
+destructive.
+```
+
+#### :context: F2$ABS
+
+```
+veq context broadcast op: F2$ABS
+fxname: -F2ABS
+args: (AX AY)
+body (2): (VALUES (ABS AX) (ABS AY)).
+```
+
+#### :context: F2$ABS!
+
+```
+veq context broadcast op: F2$ABS
+fxname: -F2ABS
+args: (AX AY)
+body (2): (VALUES (ABS AX) (ABS AY)).
+destructive.
+```
+
+#### :context: F2$ANGLE
+
+```
+veq context broadcast op: F2$ANGLE
+fxname: -F2ANGLE
+args: (AX AY)
+body (1): (MVC #'ATAN (-F2NORM AY AX)).
 ```
 
 #### F2$CENTER
@@ -7182,40 +7189,98 @@ return circle of size rad. (rs 0.5) is vertex density.
  ;   Source file: src/shapes.lisp
 ```
 
-#### F2$FROM
+#### :context: F2$CROSS
 
 ```
-broadcast for: F2FROM
-ex: (F2$FROM a ...) performs (F2FROM a[i] ...) for every row in a.
-
- ; VEQ:F2$FROM
- ;   [symbol]
- ;
- ; F2$FROM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$FROM;
- ;     broadcast for: F2FROM
- ;     ex: (F2$FROM a ...) performs (F2FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$CROSS
+fxname: -F2CROSS
+args: (AX AY BX BY)
+body (2): (- (* AX BY) (* AY BX)).
 ```
 
-#### F2$FROM!
+#### :context: F2$CROSS!
 
 ```
-destructive broadcast for: F2FROM
-ex: (F2$FROM! a ...) performs (F2FROM a[i] ...) for every row in a.
+veq context broadcast op: F2$CROSS
+fxname: -F2CROSS
+args: (AX AY BX BY)
+body (2): (- (* AX BY) (* AY BX)).
+destructive.
+```
 
- ; VEQ:F2$FROM!
- ;   [symbol]
- ;
- ; F2$FROM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$FROM!;
- ;     destructive broadcast for: F2FROM
- ;     ex: (F2$FROM! a ...) performs (F2FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F2$DST
+
+```
+veq context broadcast op: F2$DST
+fxname: -F2DST
+args: (AX AY BX BY)
+body (1): (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))))).
+```
+
+#### :context: F2$DST2
+
+```
+veq context broadcast op: F2$DST2
+fxname: -F2DST2
+args: (AX AY BX BY)
+body (1): (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))).
+```
+
+#### :context: F2$EXP
+
+```
+veq context broadcast op: F2$EXP
+fxname: -F2EXP
+args: (AX AY)
+body (2): (VALUES (EXP AX) (EXP AY)).
+```
+
+#### :context: F2$EXP!
+
+```
+veq context broadcast op: F2$EXP
+fxname: -F2EXP
+args: (AX AY)
+body (2): (VALUES (EXP AX) (EXP AY)).
+destructive.
+```
+
+#### :context: F2$FLIP
+
+```
+veq context broadcast op: F2$FLIP
+fxname: -F2FLIP
+args: (AX AY)
+body (2): (VALUES AY AX).
+```
+
+#### :context: F2$FLIP!
+
+```
+veq context broadcast op: F2$FLIP
+fxname: -F2FLIP
+args: (AX AY)
+body (2): (VALUES AY AX).
+destructive.
+```
+
+#### :context: F2$FROM
+
+```
+veq context broadcast op: F2$FROM
+fxname: -F2FROM
+args: (AX AY BX BY S)
+body (2): (-F2+ AX AY (* BX S) (* BY S)).
+```
+
+#### :context: F2$FROM!
+
+```
+veq context broadcast op: F2$FROM
+fxname: -F2FROM
+args: (AX AY BX BY S)
+body (2): (-F2+ AX AY (* BX S) (* BY S)).
+destructive.
 ```
 
 #### :context: F2$FXLSPACE
@@ -7228,112 +7293,61 @@ assumes the last form in fx is a function and does
 ex: (F2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
 ```
 
-#### F2$I-
+#### :context: F2$I-
 
 ```
-broadcast for: F2I-
-ex: (F2$I- a ...) performs (F2I- a[i] ...) for every row in a.
-
- ; VEQ:F2$I-
- ;   [symbol]
- ;
- ; F2$I- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$I-;
- ;     broadcast for: F2I-
- ;     ex: (F2$I- a ...) performs (F2I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$I-
+fxname: -F2I-
+args: (AX AY BX BY)
+body (2): (VALUES (- BX AX) (- BY AY)).
 ```
 
-#### F2$I-!
+#### :context: F2$I-!
 
 ```
-destructive broadcast for: F2I-
-ex: (F2$I-! a ...) performs (F2I- a[i] ...) for every row in a.
-
- ; VEQ:F2$I-!
- ;   [symbol]
- ;
- ; F2$I-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$I-!;
- ;     destructive broadcast for: F2I-
- ;     ex: (F2$I-! a ...) performs (F2I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$I-
+fxname: -F2I-
+args: (AX AY BX BY)
+body (2): (VALUES (- BX AX) (- BY AY)).
+destructive.
 ```
 
-#### F2$I/
+#### :context: F2$I/
 
 ```
-broadcast for: F2I/
-ex: (F2$I/ a ...) performs (F2I/ a[i] ...) for every row in a.
-
- ; VEQ:F2$I/
- ;   [symbol]
- ;
- ; F2$I/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$I/;
- ;     broadcast for: F2I/
- ;     ex: (F2$I/ a ...) performs (F2I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$I/
+fxname: -F2I/
+args: (AX AY BX BY)
+body (2): (VALUES (/ BX AX) (/ BY AY)).
 ```
 
-#### F2$I/!
+#### :context: F2$I/!
 
 ```
-destructive broadcast for: F2I/
-ex: (F2$I/! a ...) performs (F2I/ a[i] ...) for every row in a.
-
- ; VEQ:F2$I/!
- ;   [symbol]
- ;
- ; F2$I/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$I/!;
- ;     destructive broadcast for: F2I/
- ;     ex: (F2$I/! a ...) performs (F2I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$I/
+fxname: -F2I/
+args: (AX AY BX BY)
+body (2): (VALUES (/ BX AX) (/ BY AY)).
+destructive.
 ```
 
-#### F2$ISCALE
+#### :context: F2$ISCALE
 
 ```
-broadcast for: F2ISCALE
-ex: (F2$ISCALE a ...) performs (F2ISCALE a[i] ...) for every row in a.
-
- ; VEQ:F2$ISCALE
- ;   [symbol]
- ;
- ; F2$ISCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$ISCALE;
- ;     broadcast for: F2ISCALE
- ;     ex: (F2$ISCALE a ...) performs (F2ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$ISCALE
+fxname: -F2ISCALE
+args: (AX AY S)
+body (2): (VALUES (/ AX S) (/ AY S)).
 ```
 
-#### F2$ISCALE!
+#### :context: F2$ISCALE!
 
 ```
-destructive broadcast for: F2ISCALE
-ex: (F2$ISCALE! a ...) performs (F2ISCALE a[i] ...) for every row in a.
-
- ; VEQ:F2$ISCALE!
- ;   [symbol]
- ;
- ; F2$ISCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$ISCALE!;
- ;     destructive broadcast for: F2ISCALE
- ;     ex: (F2$ISCALE! a ...) performs (F2ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$ISCALE
+fxname: -F2ISCALE
+args: (AX AY S)
+body (2): (VALUES (/ AX S) (/ AY S)).
+destructive.
 ```
 
 #### F2$LAST
@@ -7353,40 +7367,41 @@ return values from last row of 2d vector array.
  ;   Source file: src/array-rows.lisp
 ```
 
-#### F2$LEN
+#### :context: F2$LEN
 
 ```
-broadcast for: F2LEN
-ex: (F2$LEN a ...) performs (F2LEN a[i] ...) for every row in a.
-
- ; VEQ:F2$LEN
- ;   [symbol]
- ;
- ; F2$LEN names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$LEN;
- ;     broadcast for: F2LEN
- ;     ex: (F2$LEN a ...) performs (F2LEN a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$LEN
+fxname: -F2LEN
+args: (AX AY)
+body (1): (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE AX AY))))).
 ```
 
-#### F2$LEN2
+#### :context: F2$LEN2
 
 ```
-broadcast for: F2LEN2
-ex: (F2$LEN2 a ...) performs (F2LEN2 a[i] ...) for every row in a.
+veq context broadcast op: F2$LEN2
+fxname: -F2LEN2
+args: (AX AY)
+body (1): (THE POS-FF (MVC #'+ (-F2SQUARE AX AY))).
+```
 
- ; VEQ:F2$LEN2
- ;   [symbol]
- ;
- ; F2$LEN2 names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$LEN2;
- ;     broadcast for: F2LEN2
- ;     ex: (F2$LEN2 a ...) performs (F2LEN2 a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F2$LERP
+
+```
+veq context broadcast op: F2$LERP
+fxname: -F2LERP
+args: (AX AY BX BY S)
+body (2): (-F2+ AX AY (* (- BX AX) S) (* (- BY AY) S)).
+```
+
+#### :context: F2$LERP!
+
+```
+veq context broadcast op: F2$LERP
+fxname: -F2LERP
+args: (AX AY BX BY S)
+body (2): (-F2+ AX AY (* (- BX AX) S) (* (- BY AY) S)).
+destructive.
 ```
 
 #### F2$LINE
@@ -7427,6 +7442,34 @@ defined via veq:fvdef*
  ;   Source file: src/lspace.lisp
 ```
 
+#### :context: F2$MAX
+
+```
+veq context broadcast op: F2$MAX
+fxname: -F2MAX
+args: (AX AY)
+body (1): (MAX AX AY).
+```
+
+#### :context: F2$MID
+
+```
+veq context broadcast op: F2$MID
+fxname: -F2MID
+args: (AX AY BX BY)
+body (2): (VALUES (* 0.5 (+ AX BX)) (* 0.5 (+ AY BY))).
+```
+
+#### :context: F2$MID!
+
+```
+veq context broadcast op: F2$MID
+fxname: -F2MID
+args: (AX AY BX BY)
+body (2): (VALUES (* 0.5 (+ AX BX)) (* 0.5 (+ AY BY))).
+destructive.
+```
+
 #### F2$MIMA
 
 ```
@@ -7450,76 +7493,70 @@ use n to limit to first n rows.
  ;   Source file: src/array-mima.lisp
 ```
 
-#### F2$NEG
+#### :context: F2$MIN
 
 ```
-broadcast for: F2NEG
-ex: (F2$NEG a ...) performs (F2NEG a[i] ...) for every row in a.
-
- ; VEQ:F2$NEG
- ;   [symbol]
- ;
- ; F2$NEG names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$NEG;
- ;     broadcast for: F2NEG
- ;     ex: (F2$NEG a ...) performs (F2NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$MIN
+fxname: -F2MIN
+args: (AX AY)
+body (1): (MIN AX AY).
 ```
 
-#### F2$NEG!
+#### :context: F2$MOD
 
 ```
-destructive broadcast for: F2NEG
-ex: (F2$NEG! a ...) performs (F2NEG a[i] ...) for every row in a.
-
- ; VEQ:F2$NEG!
- ;   [symbol]
- ;
- ; F2$NEG! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$NEG!;
- ;     destructive broadcast for: F2NEG
- ;     ex: (F2$NEG! a ...) performs (F2NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$MOD
+fxname: -F2MOD
+args: (AX AY S)
+body (2): (VALUES (MOD AX S) (MOD AY S)).
 ```
 
-#### F2$NORM
+#### :context: F2$MOD!
 
 ```
-broadcast for: F2NORM
-ex: (F2$NORM a ...) performs (F2NORM a[i] ...) for every row in a.
-
- ; VEQ:F2$NORM
- ;   [symbol]
- ;
- ; F2$NORM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$NORM;
- ;     broadcast for: F2NORM
- ;     ex: (F2$NORM a ...) performs (F2NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$MOD
+fxname: -F2MOD
+args: (AX AY S)
+body (2): (VALUES (MOD AX S) (MOD AY S)).
+destructive.
 ```
 
-#### F2$NORM!
+#### :context: F2$NEG
 
 ```
-destructive broadcast for: F2NORM
-ex: (F2$NORM! a ...) performs (F2NORM a[i] ...) for every row in a.
+veq context broadcast op: F2$NEG
+fxname: -F2NEG
+args: (AX AY)
+body (2): (VALUES (- AX) (- AY)).
+```
 
- ; VEQ:F2$NORM!
- ;   [symbol]
- ;
- ; F2$NORM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$NORM!;
- ;     destructive broadcast for: F2NORM
- ;     ex: (F2$NORM! a ...) performs (F2NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F2$NEG!
+
+```
+veq context broadcast op: F2$NEG
+fxname: -F2NEG
+args: (AX AY)
+body (2): (VALUES (- AX) (- AY)).
+destructive.
+```
+
+#### :context: F2$NORM
+
+```
+veq context broadcast op: F2$NORM
+fxname: -F2NORM
+args: (AX AY)
+body (2): (MVC #'-F2ISCALE AX AY (MVC #'-F2LEN AX AY)).
+```
+
+#### :context: F2$NORM!
+
+```
+veq context broadcast op: F2$NORM
+fxname: -F2NORM
+args: (AX AY)
+body (2): (MVC #'-F2ISCALE AX AY (MVC #'-F2LEN AX AY)).
+destructive.
 ```
 
 #### F2$NUM
@@ -7541,6 +7578,24 @@ typed.
  ;   Source file: src/array-utils.lisp
 ```
 
+#### :context: F2$ON-CIRC
+
+```
+veq context broadcast op: F2$ON-CIRC
+fxname: -F2ON-CIRC
+args: (AX RAD)
+body (2): (MVC #'-F2SCALE (-FCOS-SIN (* AX FPII)) RAD).
+```
+
+#### :context: F2$ON-CIRC\*
+
+```
+veq context broadcast op: F2$ON-CIRC*
+fxname: -F2ON-CIRC*
+args: (AX RAD)
+body (2): (MVC #'-F2SCALE (-FCOS-SIN AX) RAD).
+```
+
 #### F2$ONE
 
 ```
@@ -7558,6 +7613,44 @@ typed.
  ;     make 2d array of ones.
  ;     typed.
  ;   Source file: src/array-utils.lisp
+```
+
+#### :context: F2$PERP
+
+```
+veq context broadcast op: F2$PERP
+fxname: -F2PERP
+args: (AX AY)
+body (2): (VALUES AY (- AX)).
+```
+
+#### :context: F2$PERP!
+
+```
+veq context broadcast op: F2$PERP
+fxname: -F2PERP
+args: (AX AY)
+body (2): (VALUES AY (- AX)).
+destructive.
+```
+
+#### :context: F2$PERP\*
+
+```
+veq context broadcast op: F2$PERP*
+fxname: -F2PERP*
+args: (AX AY)
+body (2): (VALUES (- AY) AX).
+```
+
+#### :context: F2$PERP\*!
+
+```
+veq context broadcast op: F2$PERP*
+fxname: -F2PERP*
+args: (AX AY)
+body (2): (VALUES (- AY) AX).
+destructive.
 ```
 
 #### F2$POINT
@@ -7615,76 +7708,52 @@ defined via veq:def*
  ;   Source file: src/shapes.lisp
 ```
 
-#### F2$ROT
+#### :context: F2$ROT
 
 ```
-broadcast for: F2ROT
-ex: (F2$ROT a ...) performs (F2ROT a[i] ...) for every row in a.
-
- ; VEQ:F2$ROT
- ;   [symbol]
- ;
- ; F2$ROT names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$ROT;
- ;     broadcast for: F2ROT
- ;     ex: (F2$ROT a ...) performs (F2ROT a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$ROT
+fxname: -F2ROT
+args: (AX AY ANGLE)
+body (2): (LET ((COSA (COS ANGLE)) (SINA (SIN ANGLE)))
+            (DECLARE
+             (FF
+               COSA
+               SINA))
+            (VALUES (- (* AX COSA) (* AY SINA)) (+ (* AX SINA) (* AY COSA)))).
 ```
 
-#### F2$ROT!
+#### :context: F2$ROT!
 
 ```
-destructive broadcast for: F2ROT
-ex: (F2$ROT! a ...) performs (F2ROT a[i] ...) for every row in a.
-
- ; VEQ:F2$ROT!
- ;   [symbol]
- ;
- ; F2$ROT! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$ROT!;
- ;     destructive broadcast for: F2ROT
- ;     ex: (F2$ROT! a ...) performs (F2ROT a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$ROT
+fxname: -F2ROT
+args: (AX AY ANGLE)
+body (2): (LET ((COSA (COS ANGLE)) (SINA (SIN ANGLE)))
+            (DECLARE
+             (FF
+               COSA
+               SINA))
+            (VALUES (- (* AX COSA) (* AY SINA)) (+ (* AX SINA) (* AY COSA)))).
+destructive.
 ```
 
-#### F2$ROTS
+#### :context: F2$ROTS
 
 ```
-broadcast for: F2ROTS
-ex: (F2$ROTS a ...) performs (F2ROTS a[i] ...) for every row in a.
-
- ; VEQ:F2$ROTS
- ;   [symbol]
- ;
- ; F2$ROTS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$ROTS;
- ;     broadcast for: F2ROTS
- ;     ex: (F2$ROTS a ...) performs (F2ROTS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$ROTS
+fxname: -F2ROTS
+args: (AX AY ANGLE SX SY)
+body (2): (MVC #'-F2+ (MVC #'-F2ROT (-F2- AX AY SX SY) ANGLE) SX SY).
 ```
 
-#### F2$ROTS!
+#### :context: F2$ROTS!
 
 ```
-destructive broadcast for: F2ROTS
-ex: (F2$ROTS! a ...) performs (F2ROTS a[i] ...) for every row in a.
-
- ; VEQ:F2$ROTS!
- ;   [symbol]
- ;
- ; F2$ROTS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$ROTS!;
- ;     destructive broadcast for: F2ROTS
- ;     ex: (F2$ROTS! a ...) performs (F2ROTS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$ROTS
+fxname: -F2ROTS
+args: (AX AY ANGLE SX SY)
+body (2): (MVC #'-F2+ (MVC #'-F2ROT (-F2- AX AY SX SY) ANGLE) SX SY).
+destructive.
 ```
 
 #### :context: F2$S
@@ -7697,59 +7766,63 @@ returns (values a ... adim b ... bdim val)
 assuming c is a structname, and a,b are FVEC of dim 2
 ```
 
-#### F2$SCALE
+#### :context: F2$SCALE
 
 ```
-broadcast for: F2SCALE
-ex: (F2$SCALE a ...) performs (F2SCALE a[i] ...) for every row in a.
-
- ; VEQ:F2$SCALE
- ;   [symbol]
- ;
- ; F2$SCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$SCALE;
- ;     broadcast for: F2SCALE
- ;     ex: (F2$SCALE a ...) performs (F2SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$SCALE
+fxname: -F2SCALE
+args: (AX AY S)
+body (2): (VALUES (* AX S) (* AY S)).
 ```
 
-#### F2$SCALE!
+#### :context: F2$SCALE!
 
 ```
-destructive broadcast for: F2SCALE
-ex: (F2$SCALE! a ...) performs (F2SCALE a[i] ...) for every row in a.
-
- ; VEQ:F2$SCALE!
- ;   [symbol]
- ;
- ; F2$SCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F2$SCALE!;
- ;     destructive broadcast for: F2SCALE
- ;     ex: (F2$SCALE! a ...) performs (F2SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F2$SCALE
+fxname: -F2SCALE
+args: (AX AY S)
+body (2): (VALUES (* AX S) (* AY S)).
+destructive.
 ```
 
-#### F2$SQUARE
+#### :context: F2$SQRT
 
 ```
-fx: %F2$SQUARE
-macro wrapper: F2$SQUARE
-defined via veq:def*
+veq context broadcast op: F2$SQRT
+fxname: -F2SQRT
+args: (AX AY)
+body (2): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
+                  (THE POS-FF (SQRT (THE POS-FF AY)))).
+```
 
- ; VEQ:F2$SQUARE
- ;   [symbol]
- ;
- ; F2$SQUARE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     fx: %F2$SQUARE
- ;     macro wrapper: F2$SQUARE
- ;     defined via veq:def*
- ;   Source file: src/shapes.lisp
+#### :context: F2$SQRT!
+
+```
+veq context broadcast op: F2$SQRT
+fxname: -F2SQRT
+args: (AX AY)
+body (2): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
+                  (THE POS-FF (SQRT (THE POS-FF AY)))).
+destructive.
+```
+
+#### :context: F2$SQUARE
+
+```
+veq context broadcast op: F2$SQUARE
+fxname: -F2SQUARE
+args: (AX AY)
+body (2): (VALUES (* AX AX) (* AY AY)).
+```
+
+#### :context: F2$SQUARE!
+
+```
+veq context broadcast op: F2$SQUARE
+fxname: -F2SQUARE
+args: (AX AY)
+body (2): (VALUES (* AX AX) (* AY AY)).
+destructive.
 ```
 
 #### F2$SUM
@@ -7773,7 +7846,7 @@ sum all rows of 2d array.
 
 ```
 returns 2d array with rows for inds.
-use :res put result in existing array
+use :res to put result in existing array.
 
  ; VEQ:F2$TAKE
  ;   [symbol]
@@ -7785,7 +7858,7 @@ use :res put result in existing array
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     returns 2d array with rows for inds.
- ;     use :res put result in existing array
+ ;     use :res to put result in existing array.
  ;   Source file: src/array-take.lisp
 ```
 
@@ -7811,7 +7884,12 @@ typed.
 #### :context: F2$WITH-ROWS
 
 ```
-make 2d
+execute function (expr i ax ay az bx by bz ...) for
+row i and 2d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
 ```
 
 #### F2$ZERO
@@ -7839,7 +7917,7 @@ typed.
 veq context op: F2*
 fxname: -F2*
 args: (AX AY BX BY)
-body: (VALUES (* AX BX) (* AY BY)).
+body (2): (VALUES (* AX BX) (* AY BY)).
 ```
 
 #### :context: F2+
@@ -7848,7 +7926,7 @@ body: (VALUES (* AX BX) (* AY BY)).
 veq context op: F2+
 fxname: -F2+
 args: (AX AY BX BY)
-body: (VALUES (+ AX BX) (+ AY BY)).
+body (2): (VALUES (+ AX BX) (+ AY BY)).
 ```
 
 #### :context: F2-
@@ -7857,7 +7935,7 @@ body: (VALUES (+ AX BX) (+ AY BY)).
 veq context op: F2-
 fxname: -F2-
 args: (AX AY BX BY)
-body: (VALUES (- AX BX) (- AY BY)).
+body (2): (VALUES (- AX BX) (- AY BY)).
 ```
 
 #### :context: F2.
@@ -7866,7 +7944,7 @@ body: (VALUES (- AX BX) (- AY BY)).
 veq context op: F2.
 fxname: -F2.
 args: (AX AY BX BY)
-body: (+ (* AX BX) (* AY BY)).
+body (1): (+ (* AX BX) (* AY BY)).
 ```
 
 #### :context: F2/
@@ -7875,7 +7953,7 @@ body: (+ (* AX BX) (* AY BY)).
 veq context op: F2/
 fxname: -F2/
 args: (AX AY BX BY)
-body: (VALUES (/ AX BX) (/ AY BY)).
+body (2): (VALUES (/ AX BX) (/ AY BY)).
 ```
 
 #### :context: F2^
@@ -7883,8 +7961,8 @@ body: (VALUES (/ AX BX) (/ AY BY)).
 ```
 veq context op: F2^
 fxname: -F2^
-args: (A B S)
-body: (VALUES (EXPT A S) (EXPT B S)).
+args: (AX AY S)
+body (2): (VALUES (EXPT AX S) (EXPT AY S)).
 ```
 
 #### :context: F2ABS
@@ -7892,8 +7970,8 @@ body: (VALUES (EXPT A S) (EXPT B S)).
 ```
 veq context op: F2ABS
 fxname: -F2ABS
-args: (A B)
-body: (VALUES (ABS A) (ABS B)).
+args: (AX AY)
+body (2): (VALUES (ABS AX) (ABS AY)).
 ```
 
 #### :context: F2ANGLE
@@ -7901,8 +7979,8 @@ body: (VALUES (ABS A) (ABS B)).
 ```
 veq context op: F2ANGLE
 fxname: -F2ANGLE
-args: (A B)
-body: (MVC #'ATAN (-F2NORM B A)).
+args: (AX AY)
+body (1): (MVC #'ATAN (-F2NORM AY AX)).
 ```
 
 #### :context: F2CROSS
@@ -7911,7 +7989,7 @@ body: (MVC #'ATAN (-F2NORM B A)).
 veq context op: F2CROSS
 fxname: -F2CROSS
 args: (AX AY BX BY)
-body: (- (* AX BY) (* AY BX)).
+body (2): (- (* AX BY) (* AY BX)).
 ```
 
 #### :context: F2DST
@@ -7920,7 +7998,7 @@ body: (- (* AX BY) (* AY BX)).
 veq context op: F2DST
 fxname: -F2DST
 args: (AX AY BX BY)
-body: (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))))).
+body (1): (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))))).
 ```
 
 #### :context: F2DST2
@@ -7929,7 +8007,7 @@ body: (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))))).
 veq context op: F2DST2
 fxname: -F2DST2
 args: (AX AY BX BY)
-body: (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))).
+body (1): (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))).
 ```
 
 #### :context: F2EXP
@@ -7937,8 +8015,8 @@ body: (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))).
 ```
 veq context op: F2EXP
 fxname: -F2EXP
-args: (A B)
-body: (VALUES (EXP A) (EXP B)).
+args: (AX AY)
+body (2): (VALUES (EXP AX) (EXP AY)).
 ```
 
 #### :context: F2FLIP
@@ -7946,8 +8024,8 @@ body: (VALUES (EXP A) (EXP B)).
 ```
 veq context op: F2FLIP
 fxname: -F2FLIP
-args: (A B)
-body: (VALUES B A).
+args: (AX AY)
+body (2): (VALUES AY AX).
 ```
 
 #### :context: F2FROM
@@ -7956,7 +8034,7 @@ body: (VALUES B A).
 veq context op: F2FROM
 fxname: -F2FROM
 args: (AX AY BX BY S)
-body: (-F2+ AX AY (* BX S) (* BY S)).
+body (2): (-F2+ AX AY (* BX S) (* BY S)).
 ```
 
 #### :context: F2I-
@@ -7965,7 +8043,7 @@ body: (-F2+ AX AY (* BX S) (* BY S)).
 veq context op: F2I-
 fxname: -F2I-
 args: (AX AY BX BY)
-body: (VALUES (- BX AX) (- BY AY)).
+body (2): (VALUES (- BX AX) (- BY AY)).
 ```
 
 #### :context: F2I/
@@ -7974,7 +8052,7 @@ body: (VALUES (- BX AX) (- BY AY)).
 veq context op: F2I/
 fxname: -F2I/
 args: (AX AY BX BY)
-body: (VALUES (/ BX AX) (/ BY AY)).
+body (2): (VALUES (/ BX AX) (/ BY AY)).
 ```
 
 #### F2IN-BBOX
@@ -8039,8 +8117,8 @@ defined via veq:fvdef*
 ```
 veq context op: F2ISCALE
 fxname: -F2ISCALE
-args: (A B S)
-body: (VALUES (/ A S) (/ B S)).
+args: (AX AY S)
+body (2): (VALUES (/ AX S) (/ AY S)).
 ```
 
 #### :context: F2LEN
@@ -8048,8 +8126,8 @@ body: (VALUES (/ A S) (/ B S)).
 ```
 veq context op: F2LEN
 fxname: -F2LEN
-args: (A B)
-body: (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE A B))))).
+args: (AX AY)
+body (1): (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE AX AY))))).
 ```
 
 #### :context: F2LEN2
@@ -8057,8 +8135,8 @@ body: (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE A B))))).
 ```
 veq context op: F2LEN2
 fxname: -F2LEN2
-args: (A B)
-body: (THE POS-FF (MVC #'+ (-F2SQUARE A B))).
+args: (AX AY)
+body (1): (THE POS-FF (MVC #'+ (-F2SQUARE AX AY))).
 ```
 
 #### :context: F2LERP
@@ -8067,7 +8145,7 @@ body: (THE POS-FF (MVC #'+ (-F2SQUARE A B))).
 veq context op: F2LERP
 fxname: -F2LERP
 args: (AX AY BX BY S)
-body: (-F2+ AX AY (* (- BX AX) S) (* (- BY AY) S)).
+body (2): (-F2+ AX AY (* (- BX AX) S) (* (- BY AY) S)).
 ```
 
 #### :context: F2LET
@@ -8084,10 +8162,10 @@ note that this behaves like native lisp let*.
 DOCSTRING for %F2LSEGX;
 lines = #( #(ax ay bx by) ... )
 
-   not entirely slow line-line intersection for all lines. this is faster than
-   comparing all lines when lines are short relative to the area that the lines
-   cover. it can be improved further by using binary search tree to store
-   current state.
+not entirely slow line-line intersection for all lines. this is faster than
+comparing all lines when lines are short relative to the area that the lines
+cover. it can be improved further by using binary search tree to store
+current state.
 
  ; VEQ:F2LSEGX
  ;   [symbol]
@@ -8098,10 +8176,10 @@ lines = #( #(ax ay bx by) ... )
  ;     DOCSTRING for %F2LSEGX;
  ;     lines = #( #(ax ay bx by) ... )
  ;
- ;        not entirely slow line-line intersection for all lines. this is faster than
- ;        comparing all lines when lines are short relative to the area that the lines
- ;        cover. it can be improved further by using binary search tree to store
- ;        current state.
+ ;     not entirely slow line-line intersection for all lines. this is faster than
+ ;     comparing all lines when lines are short relative to the area that the lines
+ ;     cover. it can be improved further by using binary search tree to store
+ ;     current state.
  ;   Source file: src/checks.lisp
 ```
 
@@ -8110,8 +8188,8 @@ lines = #( #(ax ay bx by) ... )
 ```
 veq context op: F2MAX
 fxname: -F2MAX
-args: (A B)
-body: (MAX A B).
+args: (AX AY)
+body (1): (MAX AX AY).
 ```
 
 #### F2MEYE
@@ -8137,7 +8215,7 @@ return 2d eye matrix.
 veq context op: F2MID
 fxname: -F2MID
 args: (AX AY BX BY)
-body: (VALUES (* 0.5 (+ AX BX)) (* 0.5 (+ AY BY))).
+body (2): (VALUES (* 0.5 (+ AX BX)) (* 0.5 (+ AY BY))).
 ```
 
 #### :context: F2MIN
@@ -8145,8 +8223,8 @@ body: (VALUES (* 0.5 (+ AX BX)) (* 0.5 (+ AY BY))).
 ```
 veq context op: F2MIN
 fxname: -F2MIN
-args: (A B)
-body: (MIN A B).
+args: (AX AY)
+body (1): (MIN AX AY).
 ```
 
 #### F2MINV
@@ -8205,8 +8283,8 @@ of type: FVEC
 ```
 veq context op: F2MOD
 fxname: -F2MOD
-args: (A B S)
-body: (VALUES (MOD A S) (MOD B S)).
+args: (AX AY S)
+body (2): (VALUES (MOD AX S) (MOD AY S)).
 ```
 
 #### F2MROT
@@ -8361,8 +8439,8 @@ mat * v. for 2d matrix and vector.
 ```
 veq context op: F2NEG
 fxname: -F2NEG
-args: (A B)
-body: (VALUES (- A) (- B)).
+args: (AX AY)
+body (2): (VALUES (- AX) (- AY)).
 ```
 
 #### :context: F2NORM
@@ -8370,8 +8448,8 @@ body: (VALUES (- A) (- B)).
 ```
 veq context op: F2NORM
 fxname: -F2NORM
-args: (A B)
-body: (MVC #'-F2ISCALE A B (MVC #'-F2LEN A B)).
+args: (AX AY)
+body (2): (MVC #'-F2ISCALE AX AY (MVC #'-F2LEN AX AY)).
 ```
 
 #### :context: F2NSUM
@@ -8385,8 +8463,8 @@ make 2d
 ```
 veq context op: F2ON-CIRC
 fxname: -F2ON-CIRC
-args: (A RAD)
-body: (MVC #'-F2SCALE (-FCOS-SIN (* A FPII)) RAD).
+args: (AX RAD)
+body (2): (MVC #'-F2SCALE (-FCOS-SIN (* AX FPII)) RAD).
 ```
 
 #### :context: F2ON-CIRC\*
@@ -8394,8 +8472,8 @@ body: (MVC #'-F2SCALE (-FCOS-SIN (* A FPII)) RAD).
 ```
 veq context op: F2ON-CIRC*
 fxname: -F2ON-CIRC*
-args: (A RAD)
-body: (MVC #'-F2SCALE (-FCOS-SIN A) RAD).
+args: (AX RAD)
+body (2): (MVC #'-F2SCALE (-FCOS-SIN AX) RAD).
 ```
 
 #### :context: F2PERP
@@ -8403,8 +8481,8 @@ body: (MVC #'-F2SCALE (-FCOS-SIN A) RAD).
 ```
 veq context op: F2PERP
 fxname: -F2PERP
-args: (A B)
-body: (VALUES B (- A)).
+args: (AX AY)
+body (2): (VALUES AY (- AX)).
 ```
 
 #### :context: F2PERP\*
@@ -8412,8 +8490,8 @@ body: (VALUES B (- A)).
 ```
 veq context op: F2PERP*
 fxname: -F2PERP*
-args: (A B)
-body: (VALUES (- B) A).
+args: (AX AY)
+body (2): (VALUES (- AY) AX).
 ```
 
 #### :context: F2REP
@@ -8435,13 +8513,13 @@ ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 veq context op: F2ROT
 fxname: -F2ROT
-args: (X Y A)
-body: (LET ((COSA (COS A)) (SINA (SIN A)))
-        (DECLARE
-         (FF
-           COSA
-           SINA))
-        (VALUES (- (* X COSA) (* Y SINA)) (+ (* X SINA) (* Y COSA)))).
+args: (AX AY ANGLE)
+body (2): (LET ((COSA (COS ANGLE)) (SINA (SIN ANGLE)))
+            (DECLARE
+             (FF
+               COSA
+               SINA))
+            (VALUES (- (* AX COSA) (* AY SINA)) (+ (* AX SINA) (* AY COSA)))).
 ```
 
 #### :context: F2ROTS
@@ -8449,8 +8527,8 @@ body: (LET ((COSA (COS A)) (SINA (SIN A)))
 ```
 veq context op: F2ROTS
 fxname: -F2ROTS
-args: (X Y A SX SY)
-body: (MVC #'-F2+ (MVC #'-F2ROT (-F2- X Y SX SY) A) SX SY).
+args: (AX AY ANGLE SX SY)
+body (2): (MVC #'-F2+ (MVC #'-F2ROT (-F2- AX AY SX SY) ANGLE) SX SY).
 ```
 
 #### :context: F2SCALE
@@ -8458,8 +8536,8 @@ body: (MVC #'-F2+ (MVC #'-F2ROT (-F2- X Y SX SY) A) SX SY).
 ```
 veq context op: F2SCALE
 fxname: -F2SCALE
-args: (A B S)
-body: (VALUES (* A S) (* B S)).
+args: (AX AY S)
+body (2): (VALUES (* AX S) (* AY S)).
 ```
 
 #### F2SEGDST
@@ -8486,8 +8564,8 @@ defined via veq:fvdef*
 ```
 DOCSTRING for %F2SEGX;
 find intersection between lines (a1 a2), (b1 b2).
-   returns isect? p q where p and q is the distance along each line to the
-   intersection point
+returns isect? p q where p and q is the distance along each line to the
+intersection point
 
  ; VEQ:F2SEGX
  ;   [symbol]
@@ -8497,8 +8575,8 @@ find intersection between lines (a1 a2), (b1 b2).
  ;   Documentation:
  ;     DOCSTRING for %F2SEGX;
  ;     find intersection between lines (a1 a2), (b1 b2).
- ;        returns isect? p q where p and q is the distance along each line to the
- ;        intersection point
+ ;     returns isect? p q where p and q is the distance along each line to the
+ ;     intersection point
  ;   Source file: src/checks.lisp
 ```
 
@@ -8507,9 +8585,9 @@ find intersection between lines (a1 a2), (b1 b2).
 ```
 veq context op: F2SQRT
 fxname: -F2SQRT
-args: (A B)
-body: (VALUES (THE POS-FF (SQRT (THE POS-FF A)))
-              (THE POS-FF (SQRT (THE POS-FF B)))).
+args: (AX AY)
+body (2): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
+                  (THE POS-FF (SQRT (THE POS-FF AY)))).
 ```
 
 #### :context: F2SQUARE
@@ -8517,8 +8595,8 @@ body: (VALUES (THE POS-FF (SQRT (THE POS-FF A)))
 ```
 veq context op: F2SQUARE
 fxname: -F2SQUARE
-args: (A B)
-body: (VALUES (* A A) (* B B)).
+args: (AX AY)
+body (2): (VALUES (* AX AX) (* AY AY)).
 ```
 
 #### :context: F2VSET
@@ -8562,220 +8640,205 @@ note that the number of values depends on the dimension.
  ;   Source file: src/array-utils.lisp
 ```
 
-#### F3$\*
+#### :context: F3$\*
 
 ```
-broadcast for: F3*
-ex: (F3$* a ...) performs (F3* a[i] ...) for every row in a.
-
- ; VEQ:F3$*
- ;   [symbol]
- ;
- ; F3$* names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$*;
- ;     broadcast for: F3*
- ;     ex: (F3$* a ...) performs (F3* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$*
+fxname: -F3*
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (* AX BX) (* AY BY) (* AZ BZ)).
 ```
 
-#### F3$\*!
+#### :context: F3$\*!
 
 ```
-destructive broadcast for: F3*
-ex: (F3$*! a ...) performs (F3* a[i] ...) for every row in a.
-
- ; VEQ:F3$*!
- ;   [symbol]
- ;
- ; F3$*! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$*!;
- ;     destructive broadcast for: F3*
- ;     ex: (F3$*! a ...) performs (F3* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$*
+fxname: -F3*
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (* AX BX) (* AY BY) (* AZ BZ)).
+destructive.
 ```
 
-#### F3$+
+#### :context: F3$+
 
 ```
-broadcast for: F3+
-ex: (F3$+ a ...) performs (F3+ a[i] ...) for every row in a.
-
- ; VEQ:F3$+
- ;   [symbol]
- ;
- ; F3$+ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$+;
- ;     broadcast for: F3+
- ;     ex: (F3$+ a ...) performs (F3+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$+
+fxname: -F3+
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ)).
 ```
 
-#### F3$+!
+#### :context: F3$+!
 
 ```
-destructive broadcast for: F3+
-ex: (F3$+! a ...) performs (F3+ a[i] ...) for every row in a.
-
- ; VEQ:F3$+!
- ;   [symbol]
- ;
- ; F3$+! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$+!;
- ;     destructive broadcast for: F3+
- ;     ex: (F3$+! a ...) performs (F3+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$+
+fxname: -F3+
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ)).
+destructive.
 ```
 
-#### F3$-
+#### :context: F3$-
 
 ```
-broadcast for: F3-
-ex: (F3$- a ...) performs (F3- a[i] ...) for every row in a.
-
- ; VEQ:F3$-
- ;   [symbol]
- ;
- ; F3$- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$-;
- ;     broadcast for: F3-
- ;     ex: (F3$- a ...) performs (F3- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$-
+fxname: -F3-
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- AX BX) (- AY BY) (- AZ BZ)).
 ```
 
-#### F3$-!
+#### :context: F3$-!
 
 ```
-destructive broadcast for: F3-
-ex: (F3$-! a ...) performs (F3- a[i] ...) for every row in a.
-
- ; VEQ:F3$-!
- ;   [symbol]
- ;
- ; F3$-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$-!;
- ;     destructive broadcast for: F3-
- ;     ex: (F3$-! a ...) performs (F3- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$-
+fxname: -F3-
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- AX BX) (- AY BY) (- AZ BZ)).
+destructive.
 ```
 
-#### F3$/
+#### :context: F3$.
 
 ```
-broadcast for: F3/
-ex: (F3$/ a ...) performs (F3/ a[i] ...) for every row in a.
-
- ; VEQ:F3$/
- ;   [symbol]
- ;
- ; F3$/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$/;
- ;     broadcast for: F3/
- ;     ex: (F3$/ a ...) performs (F3/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$.
+fxname: -F3.
+args: (AX AY AZ BX BY BZ)
+body (1): (+ (* AX BX) (* AY BY) (* AZ BZ)).
 ```
 
-#### F3$/!
+#### :context: F3$/
 
 ```
-destructive broadcast for: F3/
-ex: (F3$/! a ...) performs (F3/ a[i] ...) for every row in a.
-
- ; VEQ:F3$/!
- ;   [symbol]
- ;
- ; F3$/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$/!;
- ;     destructive broadcast for: F3/
- ;     ex: (F3$/! a ...) performs (F3/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$/
+fxname: -F3/
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
 ```
 
-#### F3$ABS
+#### :context: F3$/!
 
 ```
-broadcast for: F3ABS
-ex: (F3$ABS a ...) performs (F3ABS a[i] ...) for every row in a.
-
- ; VEQ:F3$ABS
- ;   [symbol]
- ;
- ; F3$ABS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$ABS;
- ;     broadcast for: F3ABS
- ;     ex: (F3$ABS a ...) performs (F3ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$/
+fxname: -F3/
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
+destructive.
 ```
 
-#### F3$ABS!
+#### :context: F3$^
 
 ```
-destructive broadcast for: F3ABS
-ex: (F3$ABS! a ...) performs (F3ABS a[i] ...) for every row in a.
-
- ; VEQ:F3$ABS!
- ;   [symbol]
- ;
- ; F3$ABS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$ABS!;
- ;     destructive broadcast for: F3ABS
- ;     ex: (F3$ABS! a ...) performs (F3ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$^
+fxname: -F3^
+args: (AX AY AZ S)
+body (3): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S)).
 ```
 
-#### F3$FROM
+#### :context: F3$^!
 
 ```
-broadcast for: F3FROM
-ex: (F3$FROM a ...) performs (F3FROM a[i] ...) for every row in a.
-
- ; VEQ:F3$FROM
- ;   [symbol]
- ;
- ; F3$FROM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$FROM;
- ;     broadcast for: F3FROM
- ;     ex: (F3$FROM a ...) performs (F3FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$^
+fxname: -F3^
+args: (AX AY AZ S)
+body (3): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S)).
+destructive.
 ```
 
-#### F3$FROM!
+#### :context: F3$ABS
 
 ```
-destructive broadcast for: F3FROM
-ex: (F3$FROM! a ...) performs (F3FROM a[i] ...) for every row in a.
+veq context broadcast op: F3$ABS
+fxname: -F3ABS
+args: (AX AY AZ)
+body (3): (VALUES (ABS AX) (ABS AY) (ABS AZ)).
+```
 
- ; VEQ:F3$FROM!
- ;   [symbol]
- ;
- ; F3$FROM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$FROM!;
- ;     destructive broadcast for: F3FROM
- ;     ex: (F3$FROM! a ...) performs (F3FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F3$ABS!
+
+```
+veq context broadcast op: F3$ABS
+fxname: -F3ABS
+args: (AX AY AZ)
+body (3): (VALUES (ABS AX) (ABS AY) (ABS AZ)).
+destructive.
+```
+
+#### :context: F3$CROSS
+
+```
+veq context broadcast op: F3$CROSS
+fxname: -F3CROSS
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
+                  (- (* AX BY) (* AY BX))).
+```
+
+#### :context: F3$CROSS!
+
+```
+veq context broadcast op: F3$CROSS
+fxname: -F3CROSS
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
+                  (- (* AX BY) (* AY BX))).
+destructive.
+```
+
+#### :context: F3$DST
+
+```
+veq context broadcast op: F3$DST
+fxname: -F3DST
+args: (AX AY AZ BX BY BZ)
+body (1): (SQRT
+           (THE POS-FF (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))))).
+```
+
+#### :context: F3$DST2
+
+```
+veq context broadcast op: F3$DST2
+fxname: -F3DST2
+args: (AX AY AZ BX BY BZ)
+body (1): (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
+```
+
+#### :context: F3$EXP
+
+```
+veq context broadcast op: F3$EXP
+fxname: -F3EXP
+args: (AX AY AZ)
+body (3): (VALUES (EXP AX) (EXP AY) (EXP AZ)).
+```
+
+#### :context: F3$EXP!
+
+```
+veq context broadcast op: F3$EXP
+fxname: -F3EXP
+args: (AX AY AZ)
+body (3): (VALUES (EXP AX) (EXP AY) (EXP AZ)).
+destructive.
+```
+
+#### :context: F3$FROM
+
+```
+veq context broadcast op: F3$FROM
+fxname: -F3FROM
+args: (AX AY AZ BX BY BZ S)
+body (3): (-F3+ AX AY AZ (* BX S) (* BY S) (* BZ S)).
+```
+
+#### :context: F3$FROM!
+
+```
+veq context broadcast op: F3$FROM
+fxname: -F3FROM
+args: (AX AY AZ BX BY BZ S)
+body (3): (-F3+ AX AY AZ (* BX S) (* BY S) (* BZ S)).
+destructive.
 ```
 
 #### :context: F3$FXLSPACE
@@ -8788,112 +8851,61 @@ assumes the last form in fx is a function and does
 ex: (F3$FXLSPACE (n a b) (lambda (i (:va 3 a b)) (vpr i a b)))
 ```
 
-#### F3$I-
+#### :context: F3$I-
 
 ```
-broadcast for: F3I-
-ex: (F3$I- a ...) performs (F3I- a[i] ...) for every row in a.
-
- ; VEQ:F3$I-
- ;   [symbol]
- ;
- ; F3$I- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$I-;
- ;     broadcast for: F3I-
- ;     ex: (F3$I- a ...) performs (F3I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$I-
+fxname: -F3I-
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
 ```
 
-#### F3$I-!
+#### :context: F3$I-!
 
 ```
-destructive broadcast for: F3I-
-ex: (F3$I-! a ...) performs (F3I- a[i] ...) for every row in a.
-
- ; VEQ:F3$I-!
- ;   [symbol]
- ;
- ; F3$I-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$I-!;
- ;     destructive broadcast for: F3I-
- ;     ex: (F3$I-! a ...) performs (F3I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$I-
+fxname: -F3I-
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
+destructive.
 ```
 
-#### F3$I/
+#### :context: F3$I/
 
 ```
-broadcast for: F3I/
-ex: (F3$I/ a ...) performs (F3I/ a[i] ...) for every row in a.
-
- ; VEQ:F3$I/
- ;   [symbol]
- ;
- ; F3$I/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$I/;
- ;     broadcast for: F3I/
- ;     ex: (F3$I/ a ...) performs (F3I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$I/
+fxname: -F3I/
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
 ```
 
-#### F3$I/!
+#### :context: F3$I/!
 
 ```
-destructive broadcast for: F3I/
-ex: (F3$I/! a ...) performs (F3I/ a[i] ...) for every row in a.
-
- ; VEQ:F3$I/!
- ;   [symbol]
- ;
- ; F3$I/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$I/!;
- ;     destructive broadcast for: F3I/
- ;     ex: (F3$I/! a ...) performs (F3I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$I/
+fxname: -F3I/
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
+destructive.
 ```
 
-#### F3$ISCALE
+#### :context: F3$ISCALE
 
 ```
-broadcast for: F3ISCALE
-ex: (F3$ISCALE a ...) performs (F3ISCALE a[i] ...) for every row in a.
-
- ; VEQ:F3$ISCALE
- ;   [symbol]
- ;
- ; F3$ISCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$ISCALE;
- ;     broadcast for: F3ISCALE
- ;     ex: (F3$ISCALE a ...) performs (F3ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$ISCALE
+fxname: -F3ISCALE
+args: (AX AY AZ S)
+body (3): (VALUES (/ AX S) (/ AY S) (/ AZ S)).
 ```
 
-#### F3$ISCALE!
+#### :context: F3$ISCALE!
 
 ```
-destructive broadcast for: F3ISCALE
-ex: (F3$ISCALE! a ...) performs (F3ISCALE a[i] ...) for every row in a.
-
- ; VEQ:F3$ISCALE!
- ;   [symbol]
- ;
- ; F3$ISCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$ISCALE!;
- ;     destructive broadcast for: F3ISCALE
- ;     ex: (F3$ISCALE! a ...) performs (F3ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$ISCALE
+fxname: -F3ISCALE
+args: (AX AY AZ S)
+body (3): (VALUES (/ AX S) (/ AY S) (/ AZ S)).
+destructive.
 ```
 
 #### F3$LAST
@@ -8914,40 +8926,41 @@ return values from last row of 3d vector array.
  ;   Source file: src/array-rows.lisp
 ```
 
-#### F3$LEN
+#### :context: F3$LEN
 
 ```
-broadcast for: F3LEN
-ex: (F3$LEN a ...) performs (F3LEN a[i] ...) for every row in a.
-
- ; VEQ:F3$LEN
- ;   [symbol]
- ;
- ; F3$LEN names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$LEN;
- ;     broadcast for: F3LEN
- ;     ex: (F3$LEN a ...) performs (F3LEN a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$LEN
+fxname: -F3LEN
+args: (AX AY AZ)
+body (1): (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F3SQUARE AX AY AZ))))).
 ```
 
-#### F3$LEN2
+#### :context: F3$LEN2
 
 ```
-broadcast for: F3LEN2
-ex: (F3$LEN2 a ...) performs (F3LEN2 a[i] ...) for every row in a.
+veq context broadcast op: F3$LEN2
+fxname: -F3LEN2
+args: (AX AY AZ)
+body (1): (THE POS-FF (MVC #'+ (-F3SQUARE AX AY AZ))).
+```
 
- ; VEQ:F3$LEN2
- ;   [symbol]
- ;
- ; F3$LEN2 names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$LEN2;
- ;     broadcast for: F3LEN2
- ;     ex: (F3$LEN2 a ...) performs (F3LEN2 a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F3$LERP
+
+```
+veq context broadcast op: F3$LERP
+fxname: -F3LERP
+args: (AX AY AZ BX BY BZ S)
+body (3): (-F3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)).
+```
+
+#### :context: F3$LERP!
+
+```
+veq context broadcast op: F3$LERP
+fxname: -F3LERP
+args: (AX AY AZ BX BY BZ S)
+body (3): (-F3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)).
+destructive.
 ```
 
 #### F3$LINE
@@ -8988,6 +9001,34 @@ defined via veq:fvdef*
  ;   Source file: src/lspace.lisp
 ```
 
+#### :context: F3$MAX
+
+```
+veq context broadcast op: F3$MAX
+fxname: -F3MAX
+args: (AX AY AZ)
+body (1): (MAX AX AY AZ).
+```
+
+#### :context: F3$MID
+
+```
+veq context broadcast op: F3$MID
+fxname: -F3MID
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)).
+```
+
+#### :context: F3$MID!
+
+```
+veq context broadcast op: F3$MID
+fxname: -F3MID
+args: (AX AY AZ BX BY BZ)
+body (3): (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)).
+destructive.
+```
+
 #### F3$MIMA
 
 ```
@@ -9012,76 +9053,70 @@ use n to limit to first n rows.
  ;   Source file: src/array-mima.lisp
 ```
 
-#### F3$NEG
+#### :context: F3$MIN
 
 ```
-broadcast for: F3NEG
-ex: (F3$NEG a ...) performs (F3NEG a[i] ...) for every row in a.
-
- ; VEQ:F3$NEG
- ;   [symbol]
- ;
- ; F3$NEG names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$NEG;
- ;     broadcast for: F3NEG
- ;     ex: (F3$NEG a ...) performs (F3NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$MIN
+fxname: -F3MIN
+args: (AX AY AZ)
+body (1): (MIN AX AY AZ).
 ```
 
-#### F3$NEG!
+#### :context: F3$MOD
 
 ```
-destructive broadcast for: F3NEG
-ex: (F3$NEG! a ...) performs (F3NEG a[i] ...) for every row in a.
-
- ; VEQ:F3$NEG!
- ;   [symbol]
- ;
- ; F3$NEG! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$NEG!;
- ;     destructive broadcast for: F3NEG
- ;     ex: (F3$NEG! a ...) performs (F3NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$MOD
+fxname: -F3MOD
+args: (AX AY AZ S)
+body (3): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S)).
 ```
 
-#### F3$NORM
+#### :context: F3$MOD!
 
 ```
-broadcast for: F3NORM
-ex: (F3$NORM a ...) performs (F3NORM a[i] ...) for every row in a.
-
- ; VEQ:F3$NORM
- ;   [symbol]
- ;
- ; F3$NORM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$NORM;
- ;     broadcast for: F3NORM
- ;     ex: (F3$NORM a ...) performs (F3NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$MOD
+fxname: -F3MOD
+args: (AX AY AZ S)
+body (3): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S)).
+destructive.
 ```
 
-#### F3$NORM!
+#### :context: F3$NEG
 
 ```
-destructive broadcast for: F3NORM
-ex: (F3$NORM! a ...) performs (F3NORM a[i] ...) for every row in a.
+veq context broadcast op: F3$NEG
+fxname: -F3NEG
+args: (AX AY AZ)
+body (3): (VALUES (- AX) (- AY) (- AZ)).
+```
 
- ; VEQ:F3$NORM!
- ;   [symbol]
- ;
- ; F3$NORM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$NORM!;
- ;     destructive broadcast for: F3NORM
- ;     ex: (F3$NORM! a ...) performs (F3NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F3$NEG!
+
+```
+veq context broadcast op: F3$NEG
+fxname: -F3NEG
+args: (AX AY AZ)
+body (3): (VALUES (- AX) (- AY) (- AZ)).
+destructive.
+```
+
+#### :context: F3$NORM
+
+```
+veq context broadcast op: F3$NORM
+fxname: -F3NORM
+args: (AX AY AZ)
+body (3): (MVC #'-F3ISCALE AX AY AZ (THE POS-FF (MVC #'-F3LEN AX AY AZ))).
+```
+
+#### :context: F3$NORM!
+
+```
+veq context broadcast op: F3$NORM
+fxname: -F3NORM
+args: (AX AY AZ)
+body (3): (MVC #'-F3ISCALE AX AY AZ (THE POS-FF (MVC #'-F3LEN AX AY AZ))).
+destructive.
 ```
 
 #### F3$NUM
@@ -9141,76 +9176,58 @@ defined via veq:def*
  ;   Source file: src/shapes.lisp
 ```
 
-#### F3$ROT
+#### :context: F3$ROT
 
 ```
-broadcast for: F3ROT
-ex: (F3$ROT a ...) performs (F3ROT a[i] ...) for every row in a.
-
- ; VEQ:F3$ROT
- ;   [symbol]
- ;
- ; F3$ROT names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$ROT;
- ;     broadcast for: F3ROT
- ;     ex: (F3$ROT a ...) performs (F3ROT a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$ROT
+fxname: -F3ROT
+args: (AX AY AZ NX NY NZ A)
+body (3): (LET ((COSA (COS A)))
+            (DECLARE
+             (FF
+               COSA))
+            (MVC #'-F3FROM
+                 (MVC #'-F3FROM (-F3SCALE AX AY AZ COSA)
+                      (-F3CROSS NX NY NZ AX AY AZ) (SIN A))
+                 NX NY NZ (* (-F3. NX NY NZ AX AY AZ) (- 1.0 COSA)))).
 ```
 
-#### F3$ROT!
+#### :context: F3$ROT!
 
 ```
-destructive broadcast for: F3ROT
-ex: (F3$ROT! a ...) performs (F3ROT a[i] ...) for every row in a.
-
- ; VEQ:F3$ROT!
- ;   [symbol]
- ;
- ; F3$ROT! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$ROT!;
- ;     destructive broadcast for: F3ROT
- ;     ex: (F3$ROT! a ...) performs (F3ROT a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$ROT
+fxname: -F3ROT
+args: (AX AY AZ NX NY NZ A)
+body (3): (LET ((COSA (COS A)))
+            (DECLARE
+             (FF
+               COSA))
+            (MVC #'-F3FROM
+                 (MVC #'-F3FROM (-F3SCALE AX AY AZ COSA)
+                      (-F3CROSS NX NY NZ AX AY AZ) (SIN A))
+                 NX NY NZ (* (-F3. NX NY NZ AX AY AZ) (- 1.0 COSA)))).
+destructive.
 ```
 
-#### F3$ROTS
+#### :context: F3$ROTS
 
 ```
-broadcast for: F3ROTS
-ex: (F3$ROTS a ...) performs (F3ROTS a[i] ...) for every row in a.
-
- ; VEQ:F3$ROTS
- ;   [symbol]
- ;
- ; F3$ROTS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$ROTS;
- ;     broadcast for: F3ROTS
- ;     ex: (F3$ROTS a ...) performs (F3ROTS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$ROTS
+fxname: -F3ROTS
+args: (AX AY AZ NX NY NZ A SX SY SZ)
+body (3): (MVC #'-F3+ (MVC #'-F3ROT (-F3- AX AY AZ SX SY SZ) NX NY NZ A) SX SY
+               SZ).
 ```
 
-#### F3$ROTS!
+#### :context: F3$ROTS!
 
 ```
-destructive broadcast for: F3ROTS
-ex: (F3$ROTS! a ...) performs (F3ROTS a[i] ...) for every row in a.
-
- ; VEQ:F3$ROTS!
- ;   [symbol]
- ;
- ; F3$ROTS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$ROTS!;
- ;     destructive broadcast for: F3ROTS
- ;     ex: (F3$ROTS! a ...) performs (F3ROTS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$ROTS
+fxname: -F3ROTS
+args: (AX AY AZ NX NY NZ A SX SY SZ)
+body (3): (MVC #'-F3+ (MVC #'-F3ROT (-F3- AX AY AZ SX SY SZ) NX NY NZ A) SX SY
+               SZ).
+destructive.
 ```
 
 #### :context: F3$S
@@ -9223,40 +9240,67 @@ returns (values a ... adim b ... bdim val)
 assuming c is a structname, and a,b are FVEC of dim 3
 ```
 
-#### F3$SCALE
+#### :context: F3$SCALE
 
 ```
-broadcast for: F3SCALE
-ex: (F3$SCALE a ...) performs (F3SCALE a[i] ...) for every row in a.
-
- ; VEQ:F3$SCALE
- ;   [symbol]
- ;
- ; F3$SCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$SCALE;
- ;     broadcast for: F3SCALE
- ;     ex: (F3$SCALE a ...) performs (F3SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F3$SCALE
+fxname: -F3SCALE
+args: (AX AY AZ S)
+body (3): (VALUES (* AX S) (* AY S) (* AZ S)).
 ```
 
-#### F3$SCALE!
+#### :context: F3$SCALE!
 
 ```
-destructive broadcast for: F3SCALE
-ex: (F3$SCALE! a ...) performs (F3SCALE a[i] ...) for every row in a.
+veq context broadcast op: F3$SCALE
+fxname: -F3SCALE
+args: (AX AY AZ S)
+body (3): (VALUES (* AX S) (* AY S) (* AZ S)).
+destructive.
+```
 
- ; VEQ:F3$SCALE!
- ;   [symbol]
- ;
- ; F3$SCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F3$SCALE!;
- ;     destructive broadcast for: F3SCALE
- ;     ex: (F3$SCALE! a ...) performs (F3SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F3$SQRT
+
+```
+veq context broadcast op: F3$SQRT
+fxname: -F3SQRT
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
+                  (THE POS-FF (SQRT (THE POS-FF AY)))
+                  (THE POS-FF (SQRT (THE POS-FF AZ)))).
+```
+
+#### :context: F3$SQRT!
+
+```
+veq context broadcast op: F3$SQRT
+fxname: -F3SQRT
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
+                  (THE POS-FF (SQRT (THE POS-FF AY)))
+                  (THE POS-FF (SQRT (THE POS-FF AZ)))).
+destructive.
+```
+
+#### :context: F3$SQUARE
+
+```
+veq context broadcast op: F3$SQUARE
+fxname: -F3SQUARE
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-FF (* AX AX)) (THE POS-FF (* AY AY))
+                  (THE POS-FF (* AZ AZ))).
+```
+
+#### :context: F3$SQUARE!
+
+```
+veq context broadcast op: F3$SQUARE
+fxname: -F3SQUARE
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-FF (* AX AX)) (THE POS-FF (* AY AY))
+                  (THE POS-FF (* AZ AZ))).
+destructive.
 ```
 
 #### F3$SUM
@@ -9281,7 +9325,7 @@ sum all rows of 3d array.
 
 ```
 returns 3d array with rows for inds.
-use :res put result in existing array
+use :res to put result in existing array.
 
  ; VEQ:F3$TAKE
  ;   [symbol]
@@ -9293,7 +9337,7 @@ use :res put result in existing array
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     returns 3d array with rows for inds.
- ;     use :res put result in existing array
+ ;     use :res to put result in existing array.
  ;   Source file: src/array-take.lisp
 ```
 
@@ -9319,7 +9363,12 @@ typed.
 #### :context: F3$WITH-ROWS
 
 ```
-make 3d
+execute function (expr i ax ay az bx by bz ...) for
+row i and 3d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
 ```
 
 #### F3$ZERO
@@ -9347,7 +9396,7 @@ typed.
 veq context op: F3*
 fxname: -F3*
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (* AX BX) (* AY BY) (* AZ BZ)).
+body (3): (VALUES (* AX BX) (* AY BY) (* AZ BZ)).
 ```
 
 #### :context: F3+
@@ -9356,7 +9405,7 @@ body: (VALUES (* AX BX) (* AY BY) (* AZ BZ)).
 veq context op: F3+
 fxname: -F3+
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ)).
+body (3): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ)).
 ```
 
 #### :context: F3-
@@ -9365,7 +9414,7 @@ body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ)).
 veq context op: F3-
 fxname: -F3-
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (- AX BX) (- AY BY) (- AZ BZ)).
+body (3): (VALUES (- AX BX) (- AY BY) (- AZ BZ)).
 ```
 
 #### :context: F3.
@@ -9374,7 +9423,7 @@ body: (VALUES (- AX BX) (- AY BY) (- AZ BZ)).
 veq context op: F3.
 fxname: -F3.
 args: (AX AY AZ BX BY BZ)
-body: (+ (* AX BX) (* AY BY) (* AZ BZ)).
+body (1): (+ (* AX BX) (* AY BY) (* AZ BZ)).
 ```
 
 #### :context: F3/
@@ -9383,7 +9432,7 @@ body: (+ (* AX BX) (* AY BY) (* AZ BZ)).
 veq context op: F3/
 fxname: -F3/
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
+body (3): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
 ```
 
 #### :context: F3^
@@ -9391,8 +9440,8 @@ body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
 ```
 veq context op: F3^
 fxname: -F3^
-args: (A B C S)
-body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S)).
+args: (AX AY AZ S)
+body (3): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S)).
 ```
 
 #### :context: F3ABS
@@ -9400,8 +9449,8 @@ body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S)).
 ```
 veq context op: F3ABS
 fxname: -F3ABS
-args: (A B C)
-body: (VALUES (ABS A) (ABS B) (ABS C)).
+args: (AX AY AZ)
+body (3): (VALUES (ABS AX) (ABS AY) (ABS AZ)).
 ```
 
 #### :context: F3CROSS
@@ -9410,8 +9459,8 @@ body: (VALUES (ABS A) (ABS B) (ABS C)).
 veq context op: F3CROSS
 fxname: -F3CROSS
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
-              (- (* AX BY) (* AY BX))).
+body (3): (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
+                  (- (* AX BY) (* AY BX))).
 ```
 
 #### :context: F3DST
@@ -9420,7 +9469,8 @@ body: (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
 veq context op: F3DST
 fxname: -F3DST
 args: (AX AY AZ BX BY BZ)
-body: (SQRT (THE POS-FF (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))))).
+body (1): (SQRT
+           (THE POS-FF (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))))).
 ```
 
 #### :context: F3DST2
@@ -9429,7 +9479,7 @@ body: (SQRT (THE POS-FF (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))))).
 veq context op: F3DST2
 fxname: -F3DST2
 args: (AX AY AZ BX BY BZ)
-body: (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
+body (1): (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
 ```
 
 #### :context: F3EXP
@@ -9437,8 +9487,8 @@ body: (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
 ```
 veq context op: F3EXP
 fxname: -F3EXP
-args: (A B C)
-body: (VALUES (EXP A) (EXP B) (EXP C)).
+args: (AX AY AZ)
+body (3): (VALUES (EXP AX) (EXP AY) (EXP AZ)).
 ```
 
 #### :context: F3FROM
@@ -9447,7 +9497,7 @@ body: (VALUES (EXP A) (EXP B) (EXP C)).
 veq context op: F3FROM
 fxname: -F3FROM
 args: (AX AY AZ BX BY BZ S)
-body: (-F3+ AX AY AZ (* BX S) (* BY S) (* BZ S)).
+body (3): (-F3+ AX AY AZ (* BX S) (* BY S) (* BZ S)).
 ```
 
 #### :context: F3I-
@@ -9456,7 +9506,7 @@ body: (-F3+ AX AY AZ (* BX S) (* BY S) (* BZ S)).
 veq context op: F3I-
 fxname: -F3I-
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
+body (3): (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
 ```
 
 #### :context: F3I/
@@ -9465,7 +9515,7 @@ body: (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
 veq context op: F3I/
 fxname: -F3I/
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
+body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
 ```
 
 #### :context: F3ISCALE
@@ -9473,8 +9523,8 @@ body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
 ```
 veq context op: F3ISCALE
 fxname: -F3ISCALE
-args: (A B C S)
-body: (VALUES (/ A S) (/ B S) (/ C S)).
+args: (AX AY AZ S)
+body (3): (VALUES (/ AX S) (/ AY S) (/ AZ S)).
 ```
 
 #### :context: F3LEN
@@ -9482,8 +9532,8 @@ body: (VALUES (/ A S) (/ B S) (/ C S)).
 ```
 veq context op: F3LEN
 fxname: -F3LEN
-args: (A B C)
-body: (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F3SQUARE A B C))))).
+args: (AX AY AZ)
+body (1): (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F3SQUARE AX AY AZ))))).
 ```
 
 #### :context: F3LEN2
@@ -9491,8 +9541,8 @@ body: (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F3SQUARE A B C))))).
 ```
 veq context op: F3LEN2
 fxname: -F3LEN2
-args: (A B C)
-body: (THE POS-FF (MVC #'+ (-F3SQUARE A B C))).
+args: (AX AY AZ)
+body (1): (THE POS-FF (MVC #'+ (-F3SQUARE AX AY AZ))).
 ```
 
 #### :context: F3LERP
@@ -9501,7 +9551,7 @@ body: (THE POS-FF (MVC #'+ (-F3SQUARE A B C))).
 veq context op: F3LERP
 fxname: -F3LERP
 args: (AX AY AZ BX BY BZ S)
-body: (-F3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)).
+body (3): (-F3+ AX AY AZ (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)).
 ```
 
 #### :context: F3LET
@@ -9517,8 +9567,8 @@ note that this behaves like native lisp let*.
 ```
 veq context op: F3MAX
 fxname: -F3MAX
-args: (A B C)
-body: (MAX A B C).
+args: (AX AY AZ)
+body (1): (MAX AX AY AZ).
 ```
 
 #### F3MEYE
@@ -9544,7 +9594,7 @@ return 3d eye matrix.
 veq context op: F3MID
 fxname: -F3MID
 args: (AX AY AZ BX BY BZ)
-body: (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)).
+body (3): (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)).
 ```
 
 #### :context: F3MIN
@@ -9552,8 +9602,8 @@ body: (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)).
 ```
 veq context op: F3MIN
 fxname: -F3MIN
-args: (A B C)
-body: (MIN A B C).
+args: (AX AY AZ)
+body (1): (MIN AX AY AZ).
 ```
 
 #### F3MINV
@@ -9612,8 +9662,8 @@ of type: FVEC
 ```
 veq context op: F3MOD
 fxname: -F3MOD
-args: (A B C S)
-body: (VALUES (MOD A S) (MOD B S) (MOD C S)).
+args: (AX AY AZ S)
+body (3): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S)).
 ```
 
 #### F3MROT
@@ -9768,8 +9818,8 @@ mat * v. for 3d matrix and vector.
 ```
 veq context op: F3NEG
 fxname: -F3NEG
-args: (A B C)
-body: (VALUES (- A) (- B) (- C)).
+args: (AX AY AZ)
+body (3): (VALUES (- AX) (- AY) (- AZ)).
 ```
 
 #### :context: F3NORM
@@ -9777,8 +9827,8 @@ body: (VALUES (- A) (- B) (- C)).
 ```
 veq context op: F3NORM
 fxname: -F3NORM
-args: (A B C)
-body: (MVC #'-F3ISCALE A B C (THE POS-FF (MVC #'-F3LEN A B C))).
+args: (AX AY AZ)
+body (3): (MVC #'-F3ISCALE AX AY AZ (THE POS-FF (MVC #'-F3LEN AX AY AZ))).
 ```
 
 #### :context: F3NSUM
@@ -9823,15 +9873,15 @@ ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 veq context op: F3ROT
 fxname: -F3ROT
-args: (X Y Z NX NY NZ A)
-body: (LET ((COSA (COS A)))
-        (DECLARE
-         (FF
-           COSA))
-        (MVC #'-F3FROM
-             (MVC #'-F3FROM (-F3SCALE X Y Z COSA) (-F3CROSS NX NY NZ X Y Z)
-                  (SIN A))
-             NX NY NZ (* (-F3. NX NY NZ X Y Z) (- 1.0 COSA)))).
+args: (AX AY AZ NX NY NZ A)
+body (3): (LET ((COSA (COS A)))
+            (DECLARE
+             (FF
+               COSA))
+            (MVC #'-F3FROM
+                 (MVC #'-F3FROM (-F3SCALE AX AY AZ COSA)
+                      (-F3CROSS NX NY NZ AX AY AZ) (SIN A))
+                 NX NY NZ (* (-F3. NX NY NZ AX AY AZ) (- 1.0 COSA)))).
 ```
 
 #### :context: F3ROTS
@@ -9839,8 +9889,9 @@ body: (LET ((COSA (COS A)))
 ```
 veq context op: F3ROTS
 fxname: -F3ROTS
-args: (X Y Z NX NY NZ A SX SY SZ)
-body: (MVC #'-F3+ (MVC #'-F3ROT (-F3- X Y Z SX SY SZ) NX NY NZ A) SX SY SZ).
+args: (AX AY AZ NX NY NZ A SX SY SZ)
+body (3): (MVC #'-F3+ (MVC #'-F3ROT (-F3- AX AY AZ SX SY SZ) NX NY NZ A) SX SY
+               SZ).
 ```
 
 #### :context: F3SCALE
@@ -9848,8 +9899,8 @@ body: (MVC #'-F3+ (MVC #'-F3ROT (-F3- X Y Z SX SY SZ) NX NY NZ A) SX SY SZ).
 ```
 veq context op: F3SCALE
 fxname: -F3SCALE
-args: (A B C S)
-body: (VALUES (* A S) (* B S) (* C S)).
+args: (AX AY AZ S)
+body (3): (VALUES (* AX S) (* AY S) (* AZ S)).
 ```
 
 #### :context: F3SQRT
@@ -9857,10 +9908,10 @@ body: (VALUES (* A S) (* B S) (* C S)).
 ```
 veq context op: F3SQRT
 fxname: -F3SQRT
-args: (A B C)
-body: (VALUES (THE POS-FF (SQRT (THE POS-FF A)))
-              (THE POS-FF (SQRT (THE POS-FF B)))
-              (THE POS-FF (SQRT (THE POS-FF C)))).
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
+                  (THE POS-FF (SQRT (THE POS-FF AY)))
+                  (THE POS-FF (SQRT (THE POS-FF AZ)))).
 ```
 
 #### :context: F3SQUARE
@@ -9868,8 +9919,9 @@ body: (VALUES (THE POS-FF (SQRT (THE POS-FF A)))
 ```
 veq context op: F3SQUARE
 fxname: -F3SQUARE
-args: (A B C)
-body: (VALUES (THE POS-FF (* A A)) (THE POS-FF (* B B)) (THE POS-FF (* C C))).
+args: (AX AY AZ)
+body (3): (VALUES (THE POS-FF (* AX AX)) (THE POS-FF (* AY AY))
+                  (THE POS-FF (* AZ AZ))).
 ```
 
 #### :context: F3VSET
@@ -9913,220 +9965,185 @@ note that the number of values depends on the dimension.
  ;   Source file: src/array-utils.lisp
 ```
 
-#### F4$\*
+#### :context: F4$\*
 
 ```
-broadcast for: F4*
-ex: (F4$* a ...) performs (F4* a[i] ...) for every row in a.
-
- ; VEQ:F4$*
- ;   [symbol]
- ;
- ; F4$* names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$*;
- ;     broadcast for: F4*
- ;     ex: (F4$* a ...) performs (F4* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$*
+fxname: -F4*
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 ```
 
-#### F4$\*!
+#### :context: F4$\*!
 
 ```
-destructive broadcast for: F4*
-ex: (F4$*! a ...) performs (F4* a[i] ...) for every row in a.
-
- ; VEQ:F4$*!
- ;   [symbol]
- ;
- ; F4$*! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$*!;
- ;     destructive broadcast for: F4*
- ;     ex: (F4$*! a ...) performs (F4* a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$*
+fxname: -F4*
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
+destructive.
 ```
 
-#### F4$+
+#### :context: F4$+
 
 ```
-broadcast for: F4+
-ex: (F4$+ a ...) performs (F4+ a[i] ...) for every row in a.
-
- ; VEQ:F4$+
- ;   [symbol]
- ;
- ; F4$+ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$+;
- ;     broadcast for: F4+
- ;     ex: (F4$+ a ...) performs (F4+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$+
+fxname: -F4+
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW)).
 ```
 
-#### F4$+!
+#### :context: F4$+!
 
 ```
-destructive broadcast for: F4+
-ex: (F4$+! a ...) performs (F4+ a[i] ...) for every row in a.
-
- ; VEQ:F4$+!
- ;   [symbol]
- ;
- ; F4$+! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$+!;
- ;     destructive broadcast for: F4+
- ;     ex: (F4$+! a ...) performs (F4+ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$+
+fxname: -F4+
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW)).
+destructive.
 ```
 
-#### F4$-
+#### :context: F4$-
 
 ```
-broadcast for: F4-
-ex: (F4$- a ...) performs (F4- a[i] ...) for every row in a.
-
- ; VEQ:F4$-
- ;   [symbol]
- ;
- ; F4$- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$-;
- ;     broadcast for: F4-
- ;     ex: (F4$- a ...) performs (F4- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$-
+fxname: -F4-
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW)).
 ```
 
-#### F4$-!
+#### :context: F4$-!
 
 ```
-destructive broadcast for: F4-
-ex: (F4$-! a ...) performs (F4- a[i] ...) for every row in a.
-
- ; VEQ:F4$-!
- ;   [symbol]
- ;
- ; F4$-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$-!;
- ;     destructive broadcast for: F4-
- ;     ex: (F4$-! a ...) performs (F4- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$-
+fxname: -F4-
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW)).
+destructive.
 ```
 
-#### F4$/
+#### :context: F4$.
 
 ```
-broadcast for: F4/
-ex: (F4$/ a ...) performs (F4/ a[i] ...) for every row in a.
-
- ; VEQ:F4$/
- ;   [symbol]
- ;
- ; F4$/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$/;
- ;     broadcast for: F4/
- ;     ex: (F4$/ a ...) performs (F4/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$.
+fxname: -F4.
+args: (AX AY AZ AW BX BY BZ BW)
+body (1): (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 ```
 
-#### F4$/!
+#### :context: F4$/
 
 ```
-destructive broadcast for: F4/
-ex: (F4$/! a ...) performs (F4/ a[i] ...) for every row in a.
-
- ; VEQ:F4$/!
- ;   [symbol]
- ;
- ; F4$/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$/!;
- ;     destructive broadcast for: F4/
- ;     ex: (F4$/! a ...) performs (F4/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$/
+fxname: -F4/
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
 ```
 
-#### F4$ABS
+#### :context: F4$/!
 
 ```
-broadcast for: F4ABS
-ex: (F4$ABS a ...) performs (F4ABS a[i] ...) for every row in a.
-
- ; VEQ:F4$ABS
- ;   [symbol]
- ;
- ; F4$ABS names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$ABS;
- ;     broadcast for: F4ABS
- ;     ex: (F4$ABS a ...) performs (F4ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$/
+fxname: -F4/
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
+destructive.
 ```
 
-#### F4$ABS!
+#### :context: F4$^
 
 ```
-destructive broadcast for: F4ABS
-ex: (F4$ABS! a ...) performs (F4ABS a[i] ...) for every row in a.
-
- ; VEQ:F4$ABS!
- ;   [symbol]
- ;
- ; F4$ABS! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$ABS!;
- ;     destructive broadcast for: F4ABS
- ;     ex: (F4$ABS! a ...) performs (F4ABS a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$^
+fxname: -F4^
+args: (AX AY AZ AW S)
+body (4): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S) (EXPT AW S)).
 ```
 
-#### F4$FROM
+#### :context: F4$^!
 
 ```
-broadcast for: F4FROM
-ex: (F4$FROM a ...) performs (F4FROM a[i] ...) for every row in a.
-
- ; VEQ:F4$FROM
- ;   [symbol]
- ;
- ; F4$FROM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$FROM;
- ;     broadcast for: F4FROM
- ;     ex: (F4$FROM a ...) performs (F4FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$^
+fxname: -F4^
+args: (AX AY AZ AW S)
+body (4): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S) (EXPT AW S)).
+destructive.
 ```
 
-#### F4$FROM!
+#### :context: F4$ABS
 
 ```
-destructive broadcast for: F4FROM
-ex: (F4$FROM! a ...) performs (F4FROM a[i] ...) for every row in a.
+veq context broadcast op: F4$ABS
+fxname: -F4ABS
+args: (AX AY AZ AW)
+body (4): (VALUES (ABS AX) (ABS AY) (ABS AZ) (ABS AW)).
+```
 
- ; VEQ:F4$FROM!
- ;   [symbol]
- ;
- ; F4$FROM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$FROM!;
- ;     destructive broadcast for: F4FROM
- ;     ex: (F4$FROM! a ...) performs (F4FROM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F4$ABS!
+
+```
+veq context broadcast op: F4$ABS
+fxname: -F4ABS
+args: (AX AY AZ AW)
+body (4): (VALUES (ABS AX) (ABS AY) (ABS AZ) (ABS AW)).
+destructive.
+```
+
+#### :context: F4$DST
+
+```
+veq context broadcast op: F4$DST
+fxname: -F4DST
+args: (AX AY AZ AW BX BY BZ BW)
+body (1): (SQRT
+           (THE POS-FF
+                (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))))).
+```
+
+#### :context: F4$DST2
+
+```
+veq context broadcast op: F4$DST2
+fxname: -F4DST2
+args: (AX AY AZ AW BX BY BZ BW)
+body (1): (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
+```
+
+#### :context: F4$EXP
+
+```
+veq context broadcast op: F4$EXP
+fxname: -F4EXP
+args: (AX AY AZ AW)
+body (4): (VALUES (EXP AX) (EXP AY) (EXP AZ) (EXP AW)).
+```
+
+#### :context: F4$EXP!
+
+```
+veq context broadcast op: F4$EXP
+fxname: -F4EXP
+args: (AX AY AZ AW)
+body (4): (VALUES (EXP AX) (EXP AY) (EXP AZ) (EXP AW)).
+destructive.
+```
+
+#### :context: F4$FROM
+
+```
+veq context broadcast op: F4$FROM
+fxname: -F4FROM
+args: (AX AY AZ AW BX BY BZ BW S)
+body (4): (-F4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S)).
+```
+
+#### :context: F4$FROM!
+
+```
+veq context broadcast op: F4$FROM
+fxname: -F4FROM
+args: (AX AY AZ AW BX BY BZ BW S)
+body (4): (-F4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S)).
+destructive.
 ```
 
 #### :context: F4$FXLSPACE
@@ -10139,112 +10156,61 @@ assumes the last form in fx is a function and does
 ex: (F4$FXLSPACE (n a b) (lambda (i (:va 4 a b)) (vpr i a b)))
 ```
 
-#### F4$I-
+#### :context: F4$I-
 
 ```
-broadcast for: F4I-
-ex: (F4$I- a ...) performs (F4I- a[i] ...) for every row in a.
-
- ; VEQ:F4$I-
- ;   [symbol]
- ;
- ; F4$I- names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$I-;
- ;     broadcast for: F4I-
- ;     ex: (F4$I- a ...) performs (F4I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$I-
+fxname: -F4I-
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
 ```
 
-#### F4$I-!
+#### :context: F4$I-!
 
 ```
-destructive broadcast for: F4I-
-ex: (F4$I-! a ...) performs (F4I- a[i] ...) for every row in a.
-
- ; VEQ:F4$I-!
- ;   [symbol]
- ;
- ; F4$I-! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$I-!;
- ;     destructive broadcast for: F4I-
- ;     ex: (F4$I-! a ...) performs (F4I- a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$I-
+fxname: -F4I-
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
+destructive.
 ```
 
-#### F4$I/
+#### :context: F4$I/
 
 ```
-broadcast for: F4I/
-ex: (F4$I/ a ...) performs (F4I/ a[i] ...) for every row in a.
-
- ; VEQ:F4$I/
- ;   [symbol]
- ;
- ; F4$I/ names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$I/;
- ;     broadcast for: F4I/
- ;     ex: (F4$I/ a ...) performs (F4I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$I/
+fxname: -F4I/
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
 ```
 
-#### F4$I/!
+#### :context: F4$I/!
 
 ```
-destructive broadcast for: F4I/
-ex: (F4$I/! a ...) performs (F4I/ a[i] ...) for every row in a.
-
- ; VEQ:F4$I/!
- ;   [symbol]
- ;
- ; F4$I/! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$I/!;
- ;     destructive broadcast for: F4I/
- ;     ex: (F4$I/! a ...) performs (F4I/ a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$I/
+fxname: -F4I/
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
+destructive.
 ```
 
-#### F4$ISCALE
+#### :context: F4$ISCALE
 
 ```
-broadcast for: F4ISCALE
-ex: (F4$ISCALE a ...) performs (F4ISCALE a[i] ...) for every row in a.
-
- ; VEQ:F4$ISCALE
- ;   [symbol]
- ;
- ; F4$ISCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$ISCALE;
- ;     broadcast for: F4ISCALE
- ;     ex: (F4$ISCALE a ...) performs (F4ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$ISCALE
+fxname: -F4ISCALE
+args: (AX AY AZ AW S)
+body (4): (VALUES (/ AX S) (/ AY S) (/ AZ S) (/ AW S)).
 ```
 
-#### F4$ISCALE!
+#### :context: F4$ISCALE!
 
 ```
-destructive broadcast for: F4ISCALE
-ex: (F4$ISCALE! a ...) performs (F4ISCALE a[i] ...) for every row in a.
-
- ; VEQ:F4$ISCALE!
- ;   [symbol]
- ;
- ; F4$ISCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$ISCALE!;
- ;     destructive broadcast for: F4ISCALE
- ;     ex: (F4$ISCALE! a ...) performs (F4ISCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$ISCALE
+fxname: -F4ISCALE
+args: (AX AY AZ AW S)
+body (4): (VALUES (/ AX S) (/ AY S) (/ AZ S) (/ AW S)).
+destructive.
 ```
 
 #### F4$LAST
@@ -10265,40 +10231,43 @@ return values from last row of 4d vector array.
  ;   Source file: src/array-rows.lisp
 ```
 
-#### F4$LEN
+#### :context: F4$LEN
 
 ```
-broadcast for: F4LEN
-ex: (F4$LEN a ...) performs (F4LEN a[i] ...) for every row in a.
-
- ; VEQ:F4$LEN
- ;   [symbol]
- ;
- ; F4$LEN names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$LEN;
- ;     broadcast for: F4LEN
- ;     ex: (F4$LEN a ...) performs (F4LEN a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$LEN
+fxname: -F4LEN
+args: (AX AY AZ AW)
+body (1): (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F4SQUARE AX AY AZ AW))))).
 ```
 
-#### F4$LEN2
+#### :context: F4$LEN2
 
 ```
-broadcast for: F4LEN2
-ex: (F4$LEN2 a ...) performs (F4LEN2 a[i] ...) for every row in a.
+veq context broadcast op: F4$LEN2
+fxname: -F4LEN2
+args: (AX AY AZ AW)
+body (1): (THE POS-FF (MVC #'+ (-F4SQUARE AX AY AZ AW))).
+```
 
- ; VEQ:F4$LEN2
- ;   [symbol]
- ;
- ; F4$LEN2 names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$LEN2;
- ;     broadcast for: F4LEN2
- ;     ex: (F4$LEN2 a ...) performs (F4LEN2 a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F4$LERP
+
+```
+veq context broadcast op: F4$LERP
+fxname: -F4LERP
+args: (AX AY AZ AW BX BY BZ BW S)
+body (4): (-F4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
+           (* (- BW AW) S)).
+```
+
+#### :context: F4$LERP!
+
+```
+veq context broadcast op: F4$LERP
+fxname: -F4LERP
+args: (AX AY AZ AW BX BY BZ BW S)
+body (4): (-F4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
+           (* (- BW AW) S)).
+destructive.
 ```
 
 #### F4$LINE
@@ -10339,76 +10308,100 @@ defined via veq:fvdef*
  ;   Source file: src/lspace.lisp
 ```
 
-#### F4$NEG
+#### :context: F4$MAX
 
 ```
-broadcast for: F4NEG
-ex: (F4$NEG a ...) performs (F4NEG a[i] ...) for every row in a.
-
- ; VEQ:F4$NEG
- ;   [symbol]
- ;
- ; F4$NEG names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$NEG;
- ;     broadcast for: F4NEG
- ;     ex: (F4$NEG a ...) performs (F4NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$MAX
+fxname: -F4MAX
+args: (AX AY AZ AW)
+body (1): (MAX AX AY AZ AW).
 ```
 
-#### F4$NEG!
+#### :context: F4$MID
 
 ```
-destructive broadcast for: F4NEG
-ex: (F4$NEG! a ...) performs (F4NEG a[i] ...) for every row in a.
-
- ; VEQ:F4$NEG!
- ;   [symbol]
- ;
- ; F4$NEG! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$NEG!;
- ;     destructive broadcast for: F4NEG
- ;     ex: (F4$NEG! a ...) performs (F4NEG a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$MID
+fxname: -F4MID
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)
+                  (* (+ BW AW) 0.5)).
 ```
 
-#### F4$NORM
+#### :context: F4$MID!
 
 ```
-broadcast for: F4NORM
-ex: (F4$NORM a ...) performs (F4NORM a[i] ...) for every row in a.
-
- ; VEQ:F4$NORM
- ;   [symbol]
- ;
- ; F4$NORM names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$NORM;
- ;     broadcast for: F4NORM
- ;     ex: (F4$NORM a ...) performs (F4NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$MID
+fxname: -F4MID
+args: (AX AY AZ AW BX BY BZ BW)
+body (4): (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)
+                  (* (+ BW AW) 0.5)).
+destructive.
 ```
 
-#### F4$NORM!
+#### :context: F4$MIN
 
 ```
-destructive broadcast for: F4NORM
-ex: (F4$NORM! a ...) performs (F4NORM a[i] ...) for every row in a.
+veq context broadcast op: F4$MIN
+fxname: -F4MIN
+args: (AX AY AZ AW)
+body (1): (MIN AX AY AZ AW).
+```
 
- ; VEQ:F4$NORM!
- ;   [symbol]
- ;
- ; F4$NORM! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$NORM!;
- ;     destructive broadcast for: F4NORM
- ;     ex: (F4$NORM! a ...) performs (F4NORM a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F4$MOD
+
+```
+veq context broadcast op: F4$MOD
+fxname: -F4MOD
+args: (AX AY AZ AW S)
+body (4): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S) (MOD AW S)).
+```
+
+#### :context: F4$MOD!
+
+```
+veq context broadcast op: F4$MOD
+fxname: -F4MOD
+args: (AX AY AZ AW S)
+body (4): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S) (MOD AW S)).
+destructive.
+```
+
+#### :context: F4$NEG
+
+```
+veq context broadcast op: F4$NEG
+fxname: -F4NEG
+args: (AX AY AZ AW)
+body (4): (VALUES (- AX) (- AY) (- AZ) (- AW)).
+```
+
+#### :context: F4$NEG!
+
+```
+veq context broadcast op: F4$NEG
+fxname: -F4NEG
+args: (AX AY AZ AW)
+body (4): (VALUES (- AX) (- AY) (- AZ) (- AW)).
+destructive.
+```
+
+#### :context: F4$NORM
+
+```
+veq context broadcast op: F4$NORM
+fxname: -F4NORM
+args: (AX AY AZ AW)
+body (4): (MVC #'-F4ISCALE AX AY AZ AW (THE POS-FF (MVC #'-F4LEN AX AY AZ AW))).
+```
+
+#### :context: F4$NORM!
+
+```
+veq context broadcast op: F4$NORM
+fxname: -F4NORM
+args: (AX AY AZ AW)
+body (4): (MVC #'-F4ISCALE AX AY AZ AW (THE POS-FF (MVC #'-F4LEN AX AY AZ AW))).
+destructive.
 ```
 
 #### F4$NUM
@@ -10478,40 +10471,69 @@ returns (values a ... adim b ... bdim val)
 assuming c is a structname, and a,b are FVEC of dim 4
 ```
 
-#### F4$SCALE
+#### :context: F4$SCALE
 
 ```
-broadcast for: F4SCALE
-ex: (F4$SCALE a ...) performs (F4SCALE a[i] ...) for every row in a.
-
- ; VEQ:F4$SCALE
- ;   [symbol]
- ;
- ; F4$SCALE names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$SCALE;
- ;     broadcast for: F4SCALE
- ;     ex: (F4$SCALE a ...) performs (F4SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+veq context broadcast op: F4$SCALE
+fxname: -F4SCALE
+args: (AX AY AZ AW S)
+body (4): (VALUES (* AX S) (* AY S) (* AZ S) (* AW S)).
 ```
 
-#### F4$SCALE!
+#### :context: F4$SCALE!
 
 ```
-destructive broadcast for: F4SCALE
-ex: (F4$SCALE! a ...) performs (F4SCALE a[i] ...) for every row in a.
+veq context broadcast op: F4$SCALE
+fxname: -F4SCALE
+args: (AX AY AZ AW S)
+body (4): (VALUES (* AX S) (* AY S) (* AZ S) (* AW S)).
+destructive.
+```
 
- ; VEQ:F4$SCALE!
- ;   [symbol]
- ;
- ; F4$SCALE! names a macro:
- ;   Lambda-list: (&REST REST)
- ;   Documentation:
- ;     DOCSTRING for %F4$SCALE!;
- ;     destructive broadcast for: F4SCALE
- ;     ex: (F4$SCALE! a ...) performs (F4SCALE a[i] ...) for every row in a.
- ;   Source file: src/array-broadcast.lisp
+#### :context: F4$SQRT
+
+```
+veq context broadcast op: F4$SQRT
+fxname: -F4SQRT
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
+                  (THE POS-FF (SQRT (THE POS-FF AY)))
+                  (THE POS-FF (SQRT (THE POS-FF AZ)))
+                  (THE POS-FF (SQRT (THE POS-FF AW)))).
+```
+
+#### :context: F4$SQRT!
+
+```
+veq context broadcast op: F4$SQRT
+fxname: -F4SQRT
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
+                  (THE POS-FF (SQRT (THE POS-FF AY)))
+                  (THE POS-FF (SQRT (THE POS-FF AZ)))
+                  (THE POS-FF (SQRT (THE POS-FF AW)))).
+destructive.
+```
+
+#### :context: F4$SQUARE
+
+```
+veq context broadcast op: F4$SQUARE
+fxname: -F4SQUARE
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-FF (* AX AX)) (THE POS-FF (* AY AY))
+                  (THE POS-FF (* AZ AZ)) (THE POS-FF (* AW AW))).
+```
+
+#### :context: F4$SQUARE!
+
+```
+veq context broadcast op: F4$SQUARE
+fxname: -F4SQUARE
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-FF (* AX AX)) (THE POS-FF (* AY AY))
+                  (THE POS-FF (* AZ AZ)) (THE POS-FF (* AW AW))).
+destructive.
 ```
 
 #### F4$SUM
@@ -10536,7 +10558,7 @@ sum all rows of 4d array.
 
 ```
 returns 4d array with rows for inds.
-use :res put result in existing array
+use :res to put result in existing array.
 
  ; VEQ:F4$TAKE
  ;   [symbol]
@@ -10548,7 +10570,7 @@ use :res put result in existing array
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     returns 4d array with rows for inds.
- ;     use :res put result in existing array
+ ;     use :res to put result in existing array.
  ;   Source file: src/array-take.lisp
 ```
 
@@ -10574,7 +10596,12 @@ typed.
 #### :context: F4$WITH-ROWS
 
 ```
-make 4d
+execute function (expr i ax ay az bx by bz ...) for
+row i and 4d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
 ```
 
 #### F4$ZERO
@@ -10602,7 +10629,7 @@ typed.
 veq context op: F4*
 fxname: -F4*
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
+body (4): (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 ```
 
 #### :context: F4+
@@ -10611,7 +10638,7 @@ body: (VALUES (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 veq context op: F4+
 fxname: -F4+
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW)).
+body (4): (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW)).
 ```
 
 #### :context: F4-
@@ -10620,7 +10647,7 @@ body: (VALUES (+ AX BX) (+ AY BY) (+ AZ BZ) (+ AW BW)).
 veq context op: F4-
 fxname: -F4-
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW)).
+body (4): (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW)).
 ```
 
 #### :context: F4.
@@ -10629,7 +10656,7 @@ body: (VALUES (- AX BX) (- AY BY) (- AZ BZ) (- AW BW)).
 veq context op: F4.
 fxname: -F4.
 args: (AX AY AZ AW BX BY BZ BW)
-body: (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
+body (1): (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 ```
 
 #### :context: F4/
@@ -10638,7 +10665,7 @@ body: (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
 veq context op: F4/
 fxname: -F4/
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
+body (4): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
 ```
 
 #### :context: F4^
@@ -10646,8 +10673,8 @@ body: (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
 ```
 veq context op: F4^
 fxname: -F4^
-args: (A B C D S)
-body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S) (EXPT D S)).
+args: (AX AY AZ AW S)
+body (4): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S) (EXPT AW S)).
 ```
 
 #### :context: F4ABS
@@ -10655,8 +10682,8 @@ body: (VALUES (EXPT A S) (EXPT B S) (EXPT C S) (EXPT D S)).
 ```
 veq context op: F4ABS
 fxname: -F4ABS
-args: (A B C D)
-body: (VALUES (ABS A) (ABS B) (ABS C) (ABS D)).
+args: (AX AY AZ AW)
+body (4): (VALUES (ABS AX) (ABS AY) (ABS AZ) (ABS AW)).
 ```
 
 #### :context: F4DST
@@ -10665,9 +10692,9 @@ body: (VALUES (ABS A) (ABS B) (ABS C) (ABS D)).
 veq context op: F4DST
 fxname: -F4DST
 args: (AX AY AZ AW BX BY BZ BW)
-body: (SQRT
-       (THE POS-FF
-            (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))))).
+body (1): (SQRT
+           (THE POS-FF
+                (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))))).
 ```
 
 #### :context: F4DST2
@@ -10676,7 +10703,7 @@ body: (SQRT
 veq context op: F4DST2
 fxname: -F4DST2
 args: (AX AY AZ AW BX BY BZ BW)
-body: (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
+body (1): (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
 ```
 
 #### :context: F4EXP
@@ -10684,8 +10711,8 @@ body: (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
 ```
 veq context op: F4EXP
 fxname: -F4EXP
-args: (A B C D)
-body: (VALUES (EXP A) (EXP B) (EXP C) (EXP D)).
+args: (AX AY AZ AW)
+body (4): (VALUES (EXP AX) (EXP AY) (EXP AZ) (EXP AW)).
 ```
 
 #### :context: F4FROM
@@ -10694,7 +10721,7 @@ body: (VALUES (EXP A) (EXP B) (EXP C) (EXP D)).
 veq context op: F4FROM
 fxname: -F4FROM
 args: (AX AY AZ AW BX BY BZ BW S)
-body: (-F4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S)).
+body (4): (-F4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S)).
 ```
 
 #### :context: F4I-
@@ -10703,7 +10730,7 @@ body: (-F4+ AX AY AZ AW (* BX S) (* BY S) (* BZ S) (* BW S)).
 veq context op: F4I-
 fxname: -F4I-
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
+body (4): (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
 ```
 
 #### :context: F4I/
@@ -10712,7 +10739,7 @@ body: (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
 veq context op: F4I/
 fxname: -F4I/
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
+body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
 ```
 
 #### :context: F4ISCALE
@@ -10720,8 +10747,8 @@ body: (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
 ```
 veq context op: F4ISCALE
 fxname: -F4ISCALE
-args: (A B C D S)
-body: (VALUES (/ A S) (/ B S) (/ C S) (/ D S)).
+args: (AX AY AZ AW S)
+body (4): (VALUES (/ AX S) (/ AY S) (/ AZ S) (/ AW S)).
 ```
 
 #### :context: F4LEN
@@ -10729,8 +10756,8 @@ body: (VALUES (/ A S) (/ B S) (/ C S) (/ D S)).
 ```
 veq context op: F4LEN
 fxname: -F4LEN
-args: (A B C D)
-body: (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F4SQUARE A B C D))))).
+args: (AX AY AZ AW)
+body (1): (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F4SQUARE AX AY AZ AW))))).
 ```
 
 #### :context: F4LEN2
@@ -10738,8 +10765,8 @@ body: (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F4SQUARE A B C D))))).
 ```
 veq context op: F4LEN2
 fxname: -F4LEN2
-args: (A B C D)
-body: (THE POS-FF (MVC #'+ (-F4SQUARE A B C D))).
+args: (AX AY AZ AW)
+body (1): (THE POS-FF (MVC #'+ (-F4SQUARE AX AY AZ AW))).
 ```
 
 #### :context: F4LERP
@@ -10748,8 +10775,8 @@ body: (THE POS-FF (MVC #'+ (-F4SQUARE A B C D))).
 veq context op: F4LERP
 fxname: -F4LERP
 args: (AX AY AZ AW BX BY BZ BW S)
-body: (-F4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
-       (* (- BW AW) S)).
+body (4): (-F4+ AX AY AZ AW (* (- BX AX) S) (* (- BY AY) S) (* (- BZ AZ) S)
+           (* (- BW AW) S)).
 ```
 
 #### :context: F4LET
@@ -10765,8 +10792,8 @@ note that this behaves like native lisp let*.
 ```
 veq context op: F4MAX
 fxname: -F4MAX
-args: (A B C D)
-body: (MAX A B C D).
+args: (AX AY AZ AW)
+body (1): (MAX AX AY AZ AW).
 ```
 
 #### F4MEYE
@@ -10792,8 +10819,8 @@ return 4d eye matrix.
 veq context op: F4MID
 fxname: -F4MID
 args: (AX AY AZ AW BX BY BZ BW)
-body: (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)
-              (* (+ BW AW) 0.5)).
+body (4): (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)
+                  (* (+ BW AW) 0.5)).
 ```
 
 #### :context: F4MIN
@@ -10801,8 +10828,8 @@ body: (VALUES (* (+ BX AX) 0.5) (* (+ BY AY) 0.5) (* (+ BZ AZ) 0.5)
 ```
 veq context op: F4MIN
 fxname: -F4MIN
-args: (A B C D)
-body: (MIN A B C D).
+args: (AX AY AZ AW)
+body (1): (MIN AX AY AZ AW).
 ```
 
 #### F4MINV
@@ -10861,8 +10888,8 @@ of type: FVEC
 ```
 veq context op: F4MOD
 fxname: -F4MOD
-args: (A B C D S)
-body: (VALUES (MOD A S) (MOD B S) (MOD C S) (MOD D S)).
+args: (AX AY AZ AW S)
+body (4): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S) (MOD AW S)).
 ```
 
 #### F4MT!
@@ -10949,8 +10976,8 @@ mat * v. for 4d matrix and vector.
 ```
 veq context op: F4NEG
 fxname: -F4NEG
-args: (A B C D)
-body: (VALUES (- A) (- B) (- C) (- D)).
+args: (AX AY AZ AW)
+body (4): (VALUES (- AX) (- AY) (- AZ) (- AW)).
 ```
 
 #### :context: F4NORM
@@ -10958,8 +10985,8 @@ body: (VALUES (- A) (- B) (- C) (- D)).
 ```
 veq context op: F4NORM
 fxname: -F4NORM
-args: (A B C D)
-body: (MVC #'-F4ISCALE A B C D (THE POS-FF (MVC #'-F4LEN A B C D))).
+args: (AX AY AZ AW)
+body (4): (MVC #'-F4ISCALE AX AY AZ AW (THE POS-FF (MVC #'-F4LEN AX AY AZ AW))).
 ```
 
 #### :context: F4NSUM
@@ -10987,8 +11014,8 @@ ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v)).
 ```
 veq context op: F4SCALE
 fxname: -F4SCALE
-args: (A B C D S)
-body: (VALUES (* A S) (* B S) (* C S) (* D S)).
+args: (AX AY AZ AW S)
+body (4): (VALUES (* AX S) (* AY S) (* AZ S) (* AW S)).
 ```
 
 #### :context: F4SQRT
@@ -10996,11 +11023,11 @@ body: (VALUES (* A S) (* B S) (* C S) (* D S)).
 ```
 veq context op: F4SQRT
 fxname: -F4SQRT
-args: (A B C D)
-body: (VALUES (THE POS-FF (SQRT (THE POS-FF A)))
-              (THE POS-FF (SQRT (THE POS-FF B)))
-              (THE POS-FF (SQRT (THE POS-FF C)))
-              (THE POS-FF (SQRT (THE POS-FF D)))).
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
+                  (THE POS-FF (SQRT (THE POS-FF AY)))
+                  (THE POS-FF (SQRT (THE POS-FF AZ)))
+                  (THE POS-FF (SQRT (THE POS-FF AW)))).
 ```
 
 #### :context: F4SQUARE
@@ -11008,9 +11035,9 @@ body: (VALUES (THE POS-FF (SQRT (THE POS-FF A)))
 ```
 veq context op: F4SQUARE
 fxname: -F4SQUARE
-args: (A B C D)
-body: (VALUES (THE POS-FF (* A A)) (THE POS-FF (* B B)) (THE POS-FF (* C C))
-              (THE POS-FF (* D D))).
+args: (AX AY AZ AW)
+body (4): (VALUES (THE POS-FF (* AX AX)) (THE POS-FF (* AY AY))
+                  (THE POS-FF (* AZ AZ)) (THE POS-FF (* AW AW))).
 ```
 
 #### :context: F4VSET
@@ -11034,14 +11061,14 @@ returns (values 1f0 2f0 3f0)
 ```
 veq context op: F^
 fxname: -F^
-args: (A S)
-body: (EXPT A S).
+args: (AX S)
+body (1): (EXPT AX S).
 ```
 
 #### F_
 
 ```
-create vector array (fvec) from body: (f_ '(1f0 2f0 3f0)).
+create FVEC vector array from body: (F_ '(a b c ...)).
 
  ; VEQ:F_
  ;   [symbol]
@@ -11049,7 +11076,7 @@ create vector array (fvec) from body: (f_ '(1f0 2f0 3f0)).
  ; F_ names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     create vector array (fvec) from body: (f_ '(1f0 2f0 3f0)).
+ ;     create FVEC vector array from body: (F_ '(a b c ...)).
  ;   Source file: src/array-utils.lisp
 ```
 
@@ -11058,8 +11085,8 @@ create vector array (fvec) from body: (f_ '(1f0 2f0 3f0)).
 ```
 veq context op: FABS
 fxname: -FABS
-args: (A)
-body: (ABS A).
+args: (AX)
+body (1): (ABS AX).
 ```
 
 #### :context: FCLAMP
@@ -11068,7 +11095,7 @@ body: (ABS A).
 veq context op: FCLAMP
 fxname: -FCLAMP
 args: (X)
-body: (MIN 1.0 (MAX 0.0 X)).
+body (1): (MIN 1.0 (MAX 0.0 X)).
 ```
 
 #### :context: FCLAMP\*
@@ -11077,7 +11104,7 @@ body: (MIN 1.0 (MAX 0.0 X)).
 veq context op: FCLAMP*
 fxname: -FCLAMP*
 args: (X MI MA)
-body: (MIN MA (MAX MI X)).
+body (1): (MIN MA (MAX MI X)).
 ```
 
 #### :context: FCOS-SIN
@@ -11085,8 +11112,8 @@ body: (MIN MA (MAX MI X)).
 ```
 veq context op: FCOS-SIN
 fxname: -FCOS-SIN
-args: (A)
-body: (VALUES (COS A) (SIN A)).
+args: (AX)
+body (2): (VALUES (COS AX) (SIN AX)).
 ```
 
 #### :context: FDEG->RAD
@@ -11094,8 +11121,8 @@ body: (VALUES (COS A) (SIN A)).
 ```
 veq context op: FDEG->RAD
 fxname: -FDEG->RAD
-args: (DEG)
-body: (* FPI (/ DEG 180.0)).
+args: (D)
+body (1): (* FPI (/ D 180.0)).
 ```
 
 #### FEASE-IN-BACK
@@ -11695,8 +11722,8 @@ body: (- 1.0 (COS (* X FPI5)))
 ```
 veq context op: FEXP
 fxname: -FEXP
-args: (A)
-body: (VALUES (EXP A)).
+args: (AX)
+body (1): (VALUES (EXP AX)).
 ```
 
 #### FF
@@ -11709,7 +11736,7 @@ body: (VALUES (EXP A)).
  ;
  ; FF names a macro:
  ;   Lambda-list: (&BODY BODY)
- ;   Source file: src/utils.lisp
+ ;   Source file: src/types.lisp
  ;
  ; FF names a type-specifier:
  ;   Lambda-list: ()
@@ -11726,7 +11753,7 @@ body: (VALUES (EXP A)).
  ;
  ; FF* names a macro:
  ;   Lambda-list: (&BODY BODY)
- ;   Source file: src/utils.lisp
+ ;   Source file: src/types.lisp
 ```
 
 #### FFL
@@ -11742,7 +11769,7 @@ return (values (ff a) (ff b) ..) from (list a b ..).
  ;   Derived type: (FUNCTION (LIST) *)
  ;   Documentation:
  ;     return (values (ff a) (ff b) ..) from (list a b ..).
- ;   Source file: src/utils.lisp
+ ;   Source file: src/types.lisp
 ```
 
 #### :context: FFROM
@@ -11751,7 +11778,7 @@ return (values (ff a) (ff b) ..) from (list a b ..).
 veq context op: FFROM
 fxname: -FFROM
 args: (AX BX S)
-body: (+ AX (* BX S)).
+body (1): (+ AX (* BX S)).
 ```
 
 #### :context: FI-
@@ -11759,8 +11786,8 @@ body: (+ AX (* BX S)).
 ```
 veq context op: FI-
 fxname: -FI-
-args: (A B)
-body: (- B A).
+args: (AX BX)
+body (1): (- BX AX).
 ```
 
 #### :context: FI/
@@ -11768,8 +11795,8 @@ body: (- B A).
 ```
 veq context op: FI/
 fxname: -FI/
-args: (A B)
-body: (/ B A).
+args: (AX BX)
+body (1): (/ BX AX).
 ```
 
 #### :context: FISCALE
@@ -11777,8 +11804,8 @@ body: (/ B A).
 ```
 veq context op: FISCALE
 fxname: -FISCALE
-args: (A S)
-body: (VALUES (/ A S)).
+args: (AX S)
+body (1): (VALUES (/ AX S)).
 ```
 
 #### :context: FLEN
@@ -11786,8 +11813,8 @@ body: (VALUES (/ A S)).
 ```
 veq context op: FLEN
 fxname: -FLEN
-args: (A)
-body: (THE POS-FF A).
+args: (AX)
+body (1): (THE POS-FF AX).
 ```
 
 #### :context: FLEN2
@@ -11795,8 +11822,8 @@ body: (THE POS-FF A).
 ```
 veq context op: FLEN2
 fxname: -FLEN2
-args: (A)
-body: (THE POS-FF (MVC #'+ (-FSQUARE A))).
+args: (AX)
+body (1): (THE POS-FF (MVC #'+ (-FSQUARE AX))).
 ```
 
 #### :context: FLERP
@@ -11805,7 +11832,7 @@ body: (THE POS-FF (MVC #'+ (-FSQUARE A))).
 veq context op: FLERP
 fxname: -FLERP
 args: (AX BX S)
-body: (+ AX (* (- BX AX) S)).
+body (1): (+ AX (* (- BX AX) S)).
 ```
 
 #### FMAKE-ORTHO-PROJ-MATRIX
@@ -11865,7 +11892,7 @@ make view matrix for cam (w/up) looking at target
 veq context op: FMID
 fxname: -FMID
 args: (AX BX)
-body: (* 0.5 (+ AX BX)).
+body (1): (* 0.5 (+ AX BX)).
 ```
 
 #### :context: FMOD
@@ -11873,8 +11900,8 @@ body: (* 0.5 (+ AX BX)).
 ```
 veq context op: FMOD
 fxname: -FMOD
-args: (A S)
-body: (MOD A S).
+args: (AX S)
+body (1): (MOD AX S).
 ```
 
 #### :context: FNEG
@@ -11882,8 +11909,8 @@ body: (MOD A S).
 ```
 veq context op: FNEG
 fxname: -FNEG
-args: (A)
-body: (- A).
+args: (AX)
+body (1): (- AX).
 ```
 
 #### :context: FNORM
@@ -11891,8 +11918,8 @@ body: (- A).
 ```
 veq context op: FNORM
 fxname: -FNORM
-args: (A)
-body: (MVC #'-FISCALE A (MVC #'-FLEN A)).
+args: (AX)
+body (1): (MVC #'-FISCALE AX (MVC #'-FLEN AX)).
 ```
 
 #### :context: FNSUM
@@ -11974,8 +12001,27 @@ get values from list. equivalent to (values-list ...).
 ```
 veq context op: FSCALE
 fxname: -FSCALE
-args: (A S)
-body: (VALUES (* A S)).
+args: (AX S)
+body (1): (VALUES (* AX S)).
+```
+
+#### FSEL
+
+```
+return values from body in order of dims. use indices or :x :y :z :w
+ex: (fsel (:w :zx 0) (values a b c d))
+returns (values d c a a).
+
+ ; VEQ:FSEL
+ ;   [symbol]
+ ;
+ ; FSEL names a macro:
+ ;   Lambda-list: ((&REST DIMS) &BODY BODY)
+ ;   Documentation:
+ ;     return values from body in order of dims. use indices or :x :y :z :w
+ ;     ex: (fsel (:w :zx 0) (values a b c d))
+ ;     returns (values d c a a).
+ ;   Source file: src/select-dim.lisp
 ```
 
 #### :context: FSIN-COS
@@ -11983,8 +12029,8 @@ body: (VALUES (* A S)).
 ```
 veq context op: FSIN-COS
 fxname: -FSIN-COS
-args: (A)
-body: (VALUES (SIN A) (COS A)).
+args: (AX)
+body (2): (VALUES (SIN AX) (COS AX)).
 ```
 
 #### :context: FSQRT
@@ -11992,8 +12038,8 @@ body: (VALUES (SIN A) (COS A)).
 ```
 veq context op: FSQRT
 fxname: -FSQRT
-args: (A)
-body: (THE POS-FF (SQRT (THE POS-FF A))).
+args: (AX)
+body (1): (THE POS-FF (SQRT (THE POS-FF AX))).
 ```
 
 #### :context: FSQUARE
@@ -12001,8 +12047,8 @@ body: (THE POS-FF (SQRT (THE POS-FF A))).
 ```
 veq context op: FSQUARE
 fxname: -FSQUARE
-args: (A)
-body: (* A A).
+args: (AX)
+body (1): (* AX AX).
 ```
 
 #### FVDEF
@@ -12017,7 +12063,7 @@ define function with veq context enabled. uses fvprogn.
  ;   Lambda-list: (FNAME &BODY BODY)
  ;   Documentation:
  ;     define function with veq context enabled. uses fvprogn.
- ;   Source file: src/macros.lisp
+ ;   Source file: src/macrolets.lisp
 ```
 
 #### FVDEF\*
@@ -12042,7 +12088,7 @@ the wrapper macro ensures every call to this function is done as
  ;
  ;     the wrapper macro ensures every call to this function is done as
  ;     (mvc #'%fx ...).
- ;   Source file: src/macros.lisp
+ ;   Source file: src/macrolets.lisp
 ```
 
 #### FVEC
@@ -12089,7 +12135,7 @@ body is complex. in the event of errors try vprogn instead.
  ;     works the same way as vprogn. but removes all macrolets that are not
  ;     directly used in body. this is faster, but may fail in some cases where
  ;     body is complex. in the event of errors try vprogn instead.
- ;   Source file: src/macros.lisp
+ ;   Source file: src/macrolets.lisp
 ```
 
 #### :context: FVSET
@@ -12106,8 +12152,8 @@ where (fx ...) returns 1 values.
 args: (&key (n 0) inds (start 0) itr cnt arr fxs exs nxs)
 
 n is the number of iterations
-start is the first index. then n-1 more.
-inds is indices to iterate. replaces n/start
+start is the first (row) index. then n-1 more.
+inds is (row) indices to iterate. replaces n/start
 arr is the arrays to be defined/referenced
 itr is the symbol representing indices
 cnt is the symbol representing iterations from 0
@@ -12144,6 +12190,410 @@ wraps body in mvc so that (f3~ 1 (f2~ 2f0 3))
 returns (values 1f0 2f0 3f0)
 ```
 
+#### I$COPY
+
+```
+copy IVEC vector array.
+
+ ; VEQ:I$COPY
+ ;   [symbol]
+ ;
+ ; I$COPY names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY FIXNUM))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     copy IVEC vector array.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I$MAKE
+
+```
+create IVEC vector array with size n * dim, and initial value v.
+
+ ; VEQ:I$MAKE
+ ;   [symbol]
+ ;
+ ; I$MAKE names a macro:
+ ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0))
+ ;   Documentation:
+ ;     create IVEC vector array with size n * dim, and initial value v.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I$NUM
+
+```
+number of elements in 1d array.
+typed.
+
+ ; VEQ:I$NUM
+ ;   [symbol]
+ ;
+ ; I$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY FIXNUM))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 1d array.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I$ONE
+
+```
+make 1d array of ones.
+typed.
+
+ ; VEQ:I$ONE
+ ;   [symbol]
+ ;
+ ; I$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d array of ones.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I$VAL
+
+```
+make 1d array of val.
+typed.
+
+ ; VEQ:I$VAL
+ ;   [symbol]
+ ;
+ ; I$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d array of val.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: I$WITH-ROWS
+
+```
+execute function (expr i ax ay az bx by bz ...) for
+row i and 1d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
+```
+
+#### I$ZERO
+
+```
+make 1d vector array of zeros.
+typed.
+
+ ; VEQ:I$ZERO
+ ;   [symbol]
+ ;
+ ; I$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d vector array of zeros.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I2$NUM
+
+```
+number of elements in 2d array.
+typed.
+
+ ; VEQ:I2$NUM
+ ;   [symbol]
+ ;
+ ; I2$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY FIXNUM))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 2d array.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I2$ONE
+
+```
+make 2d array of ones.
+typed.
+
+ ; VEQ:I2$ONE
+ ;   [symbol]
+ ;
+ ; I2$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d array of ones.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I2$VAL
+
+```
+make 2d array of val.
+typed.
+
+ ; VEQ:I2$VAL
+ ;   [symbol]
+ ;
+ ; I2$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d array of val.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: I2$WITH-ROWS
+
+```
+execute function (expr i ax ay az bx by bz ...) for
+row i and 2d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
+```
+
+#### I2$ZERO
+
+```
+make 2d vector array of zeros.
+typed.
+
+ ; VEQ:I2$ZERO
+ ;   [symbol]
+ ;
+ ; I2$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d vector array of zeros.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: I2VSET
+
+```
+set 2d value.
+ex: (I2VSET (a) (fx ...))
+where (fx ...) returns 2 values.
+```
+
+#### I3$NUM
+
+```
+number of elements in 3d array.
+typed.
+
+ ; VEQ:I3$NUM
+ ;   [symbol]
+ ;
+ ; I3$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY FIXNUM))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 3d array.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I3$ONE
+
+```
+make 3d array of ones.
+typed.
+
+ ; VEQ:I3$ONE
+ ;   [symbol]
+ ;
+ ; I3$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d array of ones.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I3$VAL
+
+```
+make 3d array of val.
+typed.
+
+ ; VEQ:I3$VAL
+ ;   [symbol]
+ ;
+ ; I3$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d array of val.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: I3$WITH-ROWS
+
+```
+execute function (expr i ax ay az bx by bz ...) for
+row i and 3d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
+```
+
+#### I3$ZERO
+
+```
+make 3d vector array of zeros.
+typed.
+
+ ; VEQ:I3$ZERO
+ ;   [symbol]
+ ;
+ ; I3$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d vector array of zeros.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: I3VSET
+
+```
+set 3d value.
+ex: (I3VSET (a) (fx ...))
+where (fx ...) returns 3 values.
+```
+
+#### I4$NUM
+
+```
+number of elements in 4d array.
+typed.
+
+ ; VEQ:I4$NUM
+ ;   [symbol]
+ ;
+ ; I4$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY FIXNUM))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 4d array.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I4$ONE
+
+```
+make 4d array of ones.
+typed.
+
+ ; VEQ:I4$ONE
+ ;   [symbol]
+ ;
+ ; I4$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d array of ones.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### I4$VAL
+
+```
+make 4d array of val.
+typed.
+
+ ; VEQ:I4$VAL
+ ;   [symbol]
+ ;
+ ; I4$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d array of val.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: I4$WITH-ROWS
+
+```
+execute function (expr i ax ay az bx by bz ...) for
+row i and 4d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
+```
+
+#### I4$ZERO
+
+```
+make 4d vector array of zeros.
+typed.
+
+ ; VEQ:I4$ZERO
+ ;   [symbol]
+ ;
+ ; I4$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d vector array of zeros.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: I4VSET
+
+```
+set 4d value.
+ex: (I4VSET (a) (fx ...))
+where (fx ...) returns 4 values.
+```
+
 #### I?
 
 ```
@@ -12160,6 +12610,21 @@ inspect argument
  ;   Source file: src/utils.lisp
 ```
 
+#### I_
+
+```
+create IVEC vector array from body: (I_ '(a b c ...)).
+
+ ; VEQ:I_
+ ;   [symbol]
+ ;
+ ; I_ names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Documentation:
+ ;     create IVEC vector array from body: (I_ '(a b c ...)).
+ ;   Source file: src/array-utils.lisp
+```
+
 #### IN
 
 ```
@@ -12170,7 +12635,7 @@ inspect argument
  ;
  ; IN names a macro:
  ;   Lambda-list: (&BODY BODY)
- ;   Source file: src/utils.lisp
+ ;   Source file: src/types.lisp
  ;
  ; IN names a type-specifier:
  ;   Lambda-list: ()
@@ -12187,7 +12652,7 @@ inspect argument
  ;
  ; IN* names a macro:
  ;   Lambda-list: (&BODY BODY)
- ;   Source file: src/utils.lisp
+ ;   Source file: src/types.lisp
 ```
 
 #### IVEC
@@ -12201,6 +12666,50 @@ inspect argument
  ; IVEC names a type-specifier:
  ;   Lambda-list: ()
  ;   Expansion: (SIMPLE-ARRAY VEQ:IN)
+```
+
+#### :context: IVSET
+
+```
+set 1d value.
+ex: (IVSET (a) (fx ...))
+where (fx ...) returns 1 values.
+```
+
+#### :context: IWITH-ARRAYS
+
+```
+args: (&key (n 0) inds (start 0) itr cnt arr fxs exs nxs)
+
+n is the number of iterations
+start is the first (row) index. then n-1 more.
+inds is (row) indices to iterate. replaces n/start
+arr is the arrays to be defined/referenced
+itr is the symbol representing indices
+cnt is the symbol representing iterations from 0
+fxs is the labels
+exs is the expressions assigned to array
+nxs is the expressions with no assignment
+
+ex:
+
+(pwith-arrays (:n 7 :itr k ; k will be 0, 1, ..., 6
+  ; the third form in elements of arr can be empty, a form that will be
+  ; executed, or a symbol that refers to an array defined outside of
+  ; with-arrays
+  :arr ((a 3 (f3$one 7)) ; init a as (f3$one 7)
+        (b 3) (c 3)) ; init b,c as (f3$zero 7)
+  ; define functions to use in fxs
+  :fxs ((cross ((varg 3 v w)) (f3cross v w))
+        (init1 (i) (f3~ (1+ i) (* 2 i) (+ 2 i)))
+        (init2 (i) (f3~ (+ 2 i) (1+ i) (* 2 i))))
+  ; perform the calculations
+  :exs ((a k (init1 k)) ; init row k of a with init1
+        (b k (init2 k)) ; init row k of b with init2
+        (c k (cross a b))) ; set row k of c to (cross a b)
+  :nxs ((cross a b))); executes the function, but does not assign res anywhere
+  ; use the arrays. the last form is returned, as in a progn
+  (vpr c))
 ```
 
 #### LST
@@ -12238,7 +12747,7 @@ expand macro.
 #### MAC\*
 
 ```
-expand macro all.
+expand macro all. only in SBCL.
 
  ; VEQ:MAC*
  ;   [symbol]
@@ -12246,7 +12755,7 @@ expand macro all.
  ; MAC* names a macro:
  ;   Lambda-list: (EXPR)
  ;   Documentation:
- ;     expand macro all.
+ ;     expand macro all. only in SBCL.
  ;   Source file: src/utils.lisp
 ```
 
@@ -12306,7 +12815,7 @@ returns: (values 1f0 3f0 4f0 6f0)
 #### MVCMAP
 
 ```
-returns (values (fx i) ...) for dim values from body.
+returns (values (fx i) (fx j) ...) for dim values from body.
 
  ; VEQ:MVCMAP
  ;   [symbol]
@@ -12314,7 +12823,7 @@ returns (values (fx i) ...) for dim values from body.
  ; MVCMAP names a macro:
  ;   Lambda-list: ((DIM FX) &BODY BODY)
  ;   Documentation:
- ;     returns (values (fx i) ...) for dim values from body.
+ ;     returns (values (fx i) (fx j) ...) for dim values from body.
  ;   Source file: src/utils.lisp
 ```
 
@@ -12331,6 +12840,532 @@ define a macro named m so that (m a ...) is equivalent to (mvc #'fx a ...)
  ;   Documentation:
  ;     define a macro named m so that (m a ...) is equivalent to (mvc #'fx a ...)
  ;   Source file: src/utils.lisp
+```
+
+#### P$COPY
+
+```
+copy PVEC vector array.
+
+ ; VEQ:P$COPY
+ ;   [symbol]
+ ;
+ ; P$COPY names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 31)))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     copy PVEC vector array.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P$MAKE
+
+```
+create PVEC vector array with size n * dim, and initial value v.
+
+ ; VEQ:P$MAKE
+ ;   [symbol]
+ ;
+ ; P$MAKE names a macro:
+ ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0))
+ ;   Documentation:
+ ;     create PVEC vector array with size n * dim, and initial value v.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P$NUM
+
+```
+number of elements in 1d array.
+typed.
+
+ ; VEQ:P$NUM
+ ;   [symbol]
+ ;
+ ; P$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 31)))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 1d array.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P$ONE
+
+```
+make 1d array of ones.
+typed.
+
+ ; VEQ:P$ONE
+ ;   [symbol]
+ ;
+ ; P$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d array of ones.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P$VAL
+
+```
+make 1d array of val.
+typed.
+
+ ; VEQ:P$VAL
+ ;   [symbol]
+ ;
+ ; P$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d array of val.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: P$WITH-ROWS
+
+```
+execute function (expr i ax ay az bx by bz ...) for
+row i and 1d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
+```
+
+#### P$ZERO
+
+```
+make 1d vector array of zeros.
+typed.
+
+ ; VEQ:P$ZERO
+ ;   [symbol]
+ ;
+ ; P$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 1d vector array of zeros.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P2$NUM
+
+```
+number of elements in 2d array.
+typed.
+
+ ; VEQ:P2$NUM
+ ;   [symbol]
+ ;
+ ; P2$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 31)))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 2d array.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P2$ONE
+
+```
+make 2d array of ones.
+typed.
+
+ ; VEQ:P2$ONE
+ ;   [symbol]
+ ;
+ ; P2$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d array of ones.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P2$VAL
+
+```
+make 2d array of val.
+typed.
+
+ ; VEQ:P2$VAL
+ ;   [symbol]
+ ;
+ ; P2$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d array of val.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: P2$WITH-ROWS
+
+```
+execute function (expr i ax ay az bx by bz ...) for
+row i and 2d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
+```
+
+#### P2$ZERO
+
+```
+make 2d vector array of zeros.
+typed.
+
+ ; VEQ:P2$ZERO
+ ;   [symbol]
+ ;
+ ; P2$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 2d vector array of zeros.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P3$NUM
+
+```
+number of elements in 3d array.
+typed.
+
+ ; VEQ:P3$NUM
+ ;   [symbol]
+ ;
+ ; P3$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 31)))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 3d array.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P3$ONE
+
+```
+make 3d array of ones.
+typed.
+
+ ; VEQ:P3$ONE
+ ;   [symbol]
+ ;
+ ; P3$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d array of ones.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P3$VAL
+
+```
+make 3d array of val.
+typed.
+
+ ; VEQ:P3$VAL
+ ;   [symbol]
+ ;
+ ; P3$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d array of val.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: P3$WITH-ROWS
+
+```
+execute function (expr i ax ay az bx by bz ...) for
+row i and 3d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
+```
+
+#### P3$ZERO
+
+```
+make 3d vector array of zeros.
+typed.
+
+ ; VEQ:P3$ZERO
+ ;   [symbol]
+ ;
+ ; P3$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 3d vector array of zeros.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P4$NUM
+
+```
+number of elements in 4d array.
+typed.
+
+ ; VEQ:P4$NUM
+ ;   [symbol]
+ ;
+ ; P4$NUM names a compiled function:
+ ;   Lambda-list: (A0)
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 31)))
+ ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Documentation:
+ ;     number of elements in 4d array.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P4$ONE
+
+```
+make 4d array of ones.
+typed.
+
+ ; VEQ:P4$ONE
+ ;   [symbol]
+ ;
+ ; P4$ONE names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d array of ones.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P4$VAL
+
+```
+make 4d array of val.
+typed.
+
+ ; VEQ:P4$VAL
+ ;   [symbol]
+ ;
+ ; P4$VAL names a compiled function:
+ ;   Lambda-list: (V &OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (T &OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d array of val.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### :context: P4$WITH-ROWS
+
+```
+execute function (expr i ax ay az bx by bz ...) for
+row i and 4d arrays a and b (...).  arrs can be one or more arrays.
+ex:
+  (labels ((cross (i (veq:varg 3 a b))
+             (veq:3$vset (c i) (veq:f3cross a b))))
+    (veq:f3$with-rows (n a b) cross))
+```
+
+#### P4$ZERO
+
+```
+make 4d vector array of zeros.
+typed.
+
+ ; VEQ:P4$ZERO
+ ;   [symbol]
+ ;
+ ; P4$ZERO names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (N1 1))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     make 4d vector array of zeros.
+ ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P_
+
+```
+create PVEC vector array from body: (P_ '(a b c ...)).
+
+ ; VEQ:P_
+ ;   [symbol]
+ ;
+ ; P_ names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Documentation:
+ ;     create PVEC vector array from body: (P_ '(a b c ...)).
+ ;   Source file: src/array-utils.lisp
+```
+
+#### PN
+
+```
+:missing:todo:
+
+ ; VEQ:PN
+ ;   [symbol]
+ ;
+ ; PN names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Source file: src/types.lisp
+ ;
+ ; PN names a type-specifier:
+ ;   Lambda-list: (&OPTIONAL (BITS 31))
+ ;   Expansion: (UNSIGNED-BYTE 31)
+```
+
+#### PN\*
+
+```
+:missing:todo:
+
+ ; VEQ:PN*
+ ;   [symbol]
+ ;
+ ; PN* names a macro:
+ ;   Lambda-list: (&BODY BODY)
+ ;   Source file: src/types.lisp
+```
+
+#### POS-DF
+
+```
+:missing:todo:
+
+ ; VEQ:POS-DF
+ ;   [symbol]
+ ;
+ ; POS-DF names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (DOUBLE-FLOAT 0.0d0 *)
+```
+
+#### POS-FF
+
+```
+:missing:todo:
+
+ ; VEQ:POS-FF
+ ;   [symbol]
+ ;
+ ; POS-FF names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (SINGLE-FLOAT 0.0 *)
+```
+
+#### POS-INT
+
+```
+:missing:todo:
+
+ ; VEQ:POS-INT
+ ;   [symbol]
+ ;
+ ; POS-INT names a type-specifier:
+ ;   Lambda-list: (&OPTIONAL (BITS 31))
+ ;   Expansion: (UNSIGNED-BYTE 31)
+```
+
+#### PVEC
+
+```
+:missing:todo:
+
+ ; VEQ:PVEC
+ ;   [symbol]
+ ;
+ ; PVEC names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (SIMPLE-ARRAY VEQ:PN)
+```
+
+#### :context: PWITH-ARRAYS
+
+```
+args: (&key (n 0) inds (start 0) itr cnt arr fxs exs nxs)
+
+n is the number of iterations
+start is the first (row) index. then n-1 more.
+inds is (row) indices to iterate. replaces n/start
+arr is the arrays to be defined/referenced
+itr is the symbol representing indices
+cnt is the symbol representing iterations from 0
+fxs is the labels
+exs is the expressions assigned to array
+nxs is the expressions with no assignment
+
+ex:
+
+(iwith-arrays (:n 7 :itr k ; k will be 0, 1, ..., 6
+  ; the third form in elements of arr can be empty, a form that will be
+  ; executed, or a symbol that refers to an array defined outside of
+  ; with-arrays
+  :arr ((a 3 (f3$one 7)) ; init a as (f3$one 7)
+        (b 3) (c 3)) ; init b,c as (f3$zero 7)
+  ; define functions to use in fxs
+  :fxs ((cross ((varg 3 v w)) (f3cross v w))
+        (init1 (i) (f3~ (1+ i) (* 2 i) (+ 2 i)))
+        (init2 (i) (f3~ (+ 2 i) (1+ i) (* 2 i))))
+  ; perform the calculations
+  :exs ((a k (init1 k)) ; init row k of a with init1
+        (b k (init2 k)) ; init row k of b with init2
+        (c k (cross a b))) ; set row k of c to (cross a b)
+  :nxs ((cross a b))); executes the function, but does not assign res anywhere
+  ; use the arrays. the last form is returned, as in a progn
+  (vpr c))
 ```
 
 #### V?
@@ -12352,9 +13387,9 @@ get version. use silent to surpress stdout
 #### :context: VARG
 
 ```
-use (veq:varg n a b ...) or (:vr n a b ...) to represent n dim vectors
-a,b of dim n in vprogn, fvprog, fvdef*, vdef*, def*.
-see replace-varg for implementation details.
+use (veq:varg dim a b ...) or (:vr dim a b ...) to represent dim vectors a,b
+of dim n in vprogn, fvprog, fvdef*, vdef*, def*.  see replace-varg for
+implementation details.
 ```
 
 #### VDEF
@@ -12369,7 +13404,7 @@ define function with veq context enabled. uses vprogn.
  ;   Lambda-list: (FNAME &BODY BODY)
  ;   Documentation:
  ;     define function with veq context enabled. uses vprogn.
- ;   Source file: src/macros.lisp
+ ;   Source file: src/macrolets.lisp
 ```
 
 #### VDEF\*
@@ -12394,15 +13429,15 @@ the wrapper macro ensures every call to this function is done as
  ;
  ;     the wrapper macro ensures every call to this function is done as
  ;     (mvc #'%fx ...).
- ;   Source file: src/macros.lisp
+ ;   Source file: src/macrolets.lisp
 ```
 
 #### VLABELS
 
 ```
-wraps labels so that it can be used with implicit mvc. that is,
-all labels are defined as if with def*, vdef* or fvdef*
-use %labelname to call the function directly, not via mvc.
+wraps labels so that it can be used with implicit mvc. that is, all labels
+are defined as if with def*.
+use %labelname to call the function directly.
 
  ; VEQ:VLABELS
  ;   [symbol]
@@ -12410,9 +13445,9 @@ use %labelname to call the function directly, not via mvc.
  ; VLABELS names a macro:
  ;   Lambda-list: ((&REST LABS) &BODY BODY)
  ;   Documentation:
- ;     wraps labels so that it can be used with implicit mvc. that is,
- ;     all labels are defined as if with def*, vdef* or fvdef*
- ;     use %labelname to call the function directly, not via mvc.
+ ;     wraps labels so that it can be used with implicit mvc. that is, all labels
+ ;     are defined as if with def*.
+ ;     use %labelname to call the function directly.
  ;   Source file: src/lets.lisp
 ```
 
@@ -12462,15 +13497,14 @@ fvprogn is faster, but has some limitations.
  ;     enable veq context inside this progn.
  ;     handles propagation and resolution of uses of (varg d var) and (vref var i).
  ;     fvprogn is faster, but has some limitations.
- ;   Source file: src/macros.lisp
+ ;   Source file: src/macrolets.lisp
 ```
 
 #### :context: VREF
 
 ```
 use (veq:vref s x) or (:vr s x) to get dim x of symbol s in vprogn,
-fvprogn, fvdef*, vdef*, def*.
-see replace-varg for implementation details.
+fvprogn, fvdef*, vdef*, def*. see replace-varg for implementation details.
 ```
 
 #### VSUM

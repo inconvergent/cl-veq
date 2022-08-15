@@ -1,46 +1,6 @@
 
 (in-package :veq)
 
-(deftype df () `double-float)
-(deftype dvec () `(simple-array df))
-(deftype ff () `single-float)
-(deftype fvec () `(simple-array ff))
-(deftype in () `fixnum)
-(deftype ivec () `(simple-array in))
-(deftype pos-df () `(double-float 0d0 *))
-(deftype pos-ff () `(single-float 0f0 *))
-(deftype pos-int (&optional (bits 31)) `(unsigned-byte ,bits))
-
-(defmacro df (&body body) `(coerce ,@body 'df))
-(defmacro ff (&body body) `(coerce ,@body 'ff))
-(defmacro in (&body body) `(coerce ,@body 'in))
-(defmacro df* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'df)) body)))
-(defmacro ff* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'ff)) body)))
-(defmacro in* (&body body) `(values ,@(mapcar (lambda (v) `(coerce ,v 'in)) body)))
-
-(defun ffl (l)
-  (declare (list l))
-  "return (values (ff a) (ff b) ..) from (list a b ..)."
-  (apply #'values (mapcar (lambda (v) (ff v)) l)))
-(defun dfl (l)
-  (declare (list l))
-  "return (values (df a) (df b ..) from (list a b ..)."
-  (apply #'values (mapcar (lambda (v) (df v)) l)))
-; (defun inl (l)
-;   (declare #.*opt* (list l))
-;   (apply #'values (mapcar (lambda (v) (in v)) l)))
-
-(declaim (df dpi dpii dpi5))
-(defconstant dpi #.(coerce pi 'df))
-(defconstant dpii #.(coerce (* pi 2d0) 'df))
-(defconstant dpi5 #.(coerce (* pi 0.5d0) 'df))
-
-(declaim (ff fpi fpii fpi5))
-(defconstant fpi #.(coerce pi 'ff))
-(defconstant fpii #.(coerce (* pi 2f0) 'ff))
-(defconstant fpi5 #.(coerce (* pi 0.5f0) 'ff))
-
-
 (defun v? (&optional (silent t))
   "get version. use silent to surpress stdout"
   (let ((v (slot-value (asdf:find-system 'veq) 'asdf:version)))
@@ -54,7 +14,7 @@
   "expand macro."
   `(pprint (macroexpand-1 ',expr)))
 #+sbcl (defmacro mac* (expr)
-         "expand macro all."
+         "expand macro all. only in SBCL."
          `(pprint (sb-cltl2:macroexpand-all ',expr)))
 
 ;from on lisp by pg
@@ -67,11 +27,20 @@
   `(defmacro ,short (&rest args)
      `(,',long ,@args)))
 
-(abbrev mvc multiple-value-call)
-(abbrev mvb multiple-value-bind)
-(abbrev dsb destructuring-bind)
-(abbrev awg alexandria:with-gensyms)
-(abbrev awf alexandria:flatten)
+; from on lisp by pg
+(defun flatten (x)
+  (labels ((rec (x acc)
+             (cond ((null x) acc)
+                   ((atom x) (cons x acc))
+                   (t (rec (car x) (rec (cdr x) acc))))))
+    (rec x nil)))
+
+; modified from on lisp by pg
+(defmacro with-gensyms (syms &body body)
+  `(let ,(mapcar #'(lambda (s)
+                     `(,s (gensym ,(symbol-name s))))
+                 syms)
+     ,@body))
 
 ; modified from on lisp by pg
 (defun group (source n)
@@ -83,7 +52,6 @@
                    (nreverse (cons source acc))))))
     (if source (rec source nil) nil)))
 
-
 ; from on lisp by pg
 (defun mkstr (&rest args)
   (with-output-to-string (s)
@@ -94,26 +62,35 @@
 
 ;https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
 (defun psymb (package &rest args) (values (intern (apply #'mkstr args) package)))
-
-;https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
 (defmacro with-struct ((name . fields) struct &body body)
-  (let ((gs (gensym "STRUCT")))
+  (let ((gs (gensym (string-upcase (mkstr name)))))
     `(let ((,gs ,struct))
        (let ,(mapcar #'(lambda (f)
                          `(,f (,(psymb (symbol-package name) name f) ,gs)))
                      fields)
          ,@body))))
 
-
 ; from on lisp by pg
 (defun reread (&rest args) (values (read-from-string (apply #'mkstr args))))
+
+(abbrev mvc multiple-value-call)
+(abbrev mvb multiple-value-bind)
+(abbrev dsb destructuring-bind)
+(abbrev awg with-gensyms)
+(abbrev awf flatten)
+
+(defun dotted-listp (l)
+  (cond ((null l) nil)
+        ((atom l) t)
+        (t (dotted-listp (cdr l)))))
 
 (defun veqsymb (dim type symb &key pref)
   (declare #.*opt* (pos-int dim) (symbol type))
   "builld a symbol with correct name convention.
 eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
-  (let ((elem (list (cdr (assoc type `((df . "D") (ff . "F")
-                                       (in . "I") (nil . ""))))
+  (let ((elem (list (cdr (assoc type
+                           `((df . "D") (ff . "F") (in . "I")
+                             (pn . "P") (nil . ""))))
                     (if (> dim 1) dim "")
                     (mkstr symb))))
     (when pref (setf elem (cons pref elem)))
@@ -123,8 +100,9 @@ eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
   (declare #.*opt* (symbol type))
   "use type to select array type."
   (values (intern (string-upcase
-                    (mkstr (cdr (assoc type `((df . "DVEC") (ff . "FVEC")
-                                              (in . "IVEC") (nil . ""))))))
+                    (mkstr (cdr (assoc type
+                                  `((df . "DVEC") (ff . "FVEC") (in . "IVEC")
+                                    (pn . "PVEC") (nil . ""))))))
                   "VEQ")))
 
 (defmacro push* (v l)
@@ -151,7 +129,6 @@ eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
   "last element of list."
   (first (last a)))
 
-
 (defun dupes (lst)
   (declare (list lst))
   "finds duplicates in list."
@@ -160,6 +137,17 @@ eg: (veqsymb 2 ff \"lerp\") yields f2lerp."
            (cons (car lst) (dupes (cdr lst))))
         (t (dupes (cdr lst)))))
 
+(defun split-string (x s &key prune)
+  (declare (character x) (string s) (boolean prune))
+  (labels
+    ((splt (s)
+       (loop for c across s for i from 0
+             if (equal c x)
+             do (return-from splt
+                  (cons (subseq s 0 i) (splt (subseq s (1+ i))))))))
+    (let ((res (splt (concatenate 'string s (string x)))))
+      (if prune (remove-if (lambda (s) (= 0 (length s))) res)
+                res))))
 
 (defmacro mvcgrp ((dim fx) &body body)
   "call fx on body in groups of dim.
@@ -178,7 +166,7 @@ returns: (values 1f0 3f0 4f0 6f0)"
          (mvc #',gsfx ,@body)))))
 
 (defmacro mvcmap ((dim fx) &body body)
-  "returns (values (fx i) ...) for dim values from body."
+  "returns (values (fx i) (fx j) ...) for dim values from body."
   (let ((symbs (-gensyms 'mvcmap dim)))
     `(mvb (,@symbs) (~ ,@body)
       (values ,@(mapcar (lambda (s) `(,fx ,s)) symbs)))))
@@ -193,10 +181,9 @@ returns: (values 1f0 3f0 4f0 6f0)"
 
 (defmacro vpr (&rest rest)
   "print (mvc #'list rest) and return (mvc #'values rest)."
-  (awg (res)
-    `(let ((,res (lst ,@rest)))
-       (format t "~& ; ~_~{~a | ~}~&~{ > ~a | ~}~&--~&" ',rest ,res)
-       (apply #'values ,res))))
+  (awg (res) `(let ((,res (lst ,@rest)))
+                (format t "~& ; ~{~a~^ | ~}~& > ~{~a~^ | ~}~&" ',rest ,res)
+                (apply #'values ,res))))
 
 ; NOTE: using (lst ...) makes things slower in some cases.  because of the
 ; consing or because the number of values is unknown?. avoid when possible.

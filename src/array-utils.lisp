@@ -3,36 +3,38 @@
 
 ;;;;;;;;;;;;;;;;;; GENERIC INIT ARRAY OF VEC
 
-(export 'f$make)
-(defmacro f$make (&key (dim 1) (n 1) (v 0f0))
-  "create array with size (n dim), and initial value v."
-  `(make-array (the pos-int (* ,dim ,n))
-               :initial-element ,v :element-type 'ff :adjustable nil))
+(defmacro $make (&key (dim 1) (n 1) v (type t))
+  "create vector array with size (n dim), and initial value v."
+  `(make-array (the pn (* ,dim ,n))
+     :initial-element ,v :element-type ,type :adjustable nil))
 
-(export 'd$make)
-(defmacro d$make (&key (dim 1) (n 1) (v 0d0))
-  "create array with size (n dim), and initial value v."
-  `(make-array (the pos-int (* ,dim ,n))
-               :initial-element ,v :element-type 'df :adjustable nil))
-
-;;;;;;;;;;;;;;;;;; COPY ARRAY
-
-(export 'd$copy)
-(defun d$copy (a)
-  (declare #.*opt* (dvec a))
-  "copy vector array (dvec)."
-  (make-array (length a) :initial-contents a :element-type 'df :adjustable nil))
-
-(export 'f$copy)
-(defun f$copy (a)
-  (declare #.*opt* (fvec a))
-  "copy vector array (fvec)."
-  (make-array (length a) :initial-contents a :element-type 'ff :adjustable nil))
-
+(defmacro define-constr (type)
+  (labels ((nm (n) (veqsymb 1 type n)))
+    (awg (a l)
+      `(progn
+        (export ',(nm "$make")) (export ',(nm "$copy")) (export ',(nm "_"))
+        (defmacro ,(nm "$make") (&key (dim 1) (n 1) (v ,(coerce 0 type)))
+          ,(format nil
+            "create ~a vector array with size n * dim, and initial value v."
+            (arrtype type))
+          `($make :dim ,dim :n ,n :v ,v :type ',',type))
+        (defun ,(nm "$copy") (,a)
+          (declare #.*opt* (,(arrtype type) ,a))
+          ,(format nil "copy ~a vector array." (arrtype type))
+          (make-array (length ,a) :initial-contents ,a
+                      :element-type ',type :adjustable nil))
+        (defmacro ,(nm "_") (&body body)
+          ,(format nil "create ~a vector array from body: (~a '(a b c ...))."
+                  (arrtype type) (nm "_"))
+          `(let ((,',l (progn ,@body)))
+            (declare (list ,',l))
+            (make-array (length ,',l) :initial-contents ,',l
+                        :element-type ',',type :adjustable nil)))))))
+(define-constr ff) (define-constr df) (define-constr in) (define-constr pn)
 
 ;;;;;;;;;;;;;;;;;; INIT ARRAY OF VEC
 
-(defmacro make-arr-num (dim)
+(defmacro define-arr-num (dim)
   (labels ((nm (n) (veqsymb dim nil n)))
     (awg (a)
       `(progn (export ',(nm "$num"))
@@ -40,9 +42,9 @@
                 (declare #.*opt* (simple-array ,a))
                 ,(format nil "number of elements in ~ad array.~%untyped." dim)
                 (the pos-int (/ (length ,a) ,dim)))))))
-(make-arr-num 1) (make-arr-num 2) (make-arr-num 3) (make-arr-num 4)
+(define-arr-num 1) (define-arr-num 2) (define-arr-num 3) (define-arr-num 4)
 
-(defmacro make-arr-util ( dim type )
+(defmacro define-arr-util ( dim type )
   (labels ((nm (n) (veqsymb dim type n)))
     (awg (a n)
       `(progn
@@ -66,15 +68,17 @@
            (declare #.*opt* (pos-int ,n))
            ,(format nil "make ~ad vector array of zeros.~%typed." dim)
            (,(veqsymb 1 type "$make") :dim ,dim :n ,n))))))
-(make-arr-util 1 ff) (make-arr-util 2 ff) (make-arr-util 3 ff) (make-arr-util 4 ff)
-(make-arr-util 1 df) (make-arr-util 2 df) (make-arr-util 3 df) (make-arr-util 4 df)
+(define-arr-util 1 ff) (define-arr-util 2 ff) (define-arr-util 3 ff) (define-arr-util 4 ff)
+(define-arr-util 1 df) (define-arr-util 2 df) (define-arr-util 3 df) (define-arr-util 4 df)
+(define-arr-util 1 in) (define-arr-util 2 in) (define-arr-util 3 in) (define-arr-util 4 in)
+(define-arr-util 1 pn) (define-arr-util 2 pn) (define-arr-util 3 pn) (define-arr-util 4 pn)
 
 ;;;;;;;;;;;;;;;;;;;;; INIT FROM EXPR
 
 (defmacro f$_ (&body body)
-  "create vector array (fvec) from body. where body is a list of lists.
-ex: ($_ (loop repeat 2 collect `(1f0 2f0)))
-ex: ($_ '((1f0 2f0) (1f0 2f0)))."
+  "create fvec vector array from body. where body is a list of lists.
+ex: (f$_ (loop repeat 2 collect `(1f0 2f0)))
+ex: (f$_ '((1f0 2f0) (1f0 2f0)))."
   (awg (body* n dim e)
     `(handler-case
        (let* ((,body* ,@body)
@@ -87,9 +91,9 @@ ex: ($_ '((1f0 2f0) (1f0 2f0)))."
        (error (,e) (error "error in f$_ with: ~a~%. err: ~a~%" ',body ,e)))))
 
 (defmacro d$_ (&body body)
-  "create vector array (dvec) from body. wherebody is a list of lists.
-ex: ($_ (loop repeat 2 collect `(1d0 2d0)))
-ex: ($_ '((1d0 2d0) (1d0 2d0)))."
+  "create dvec vector array from body. where body is a list of lists.
+ex: (d$_ (loop repeat 2 collect `(1d0 2d0)))
+ex: (d$_ '((1d0 2d0) (1d0 2d0)))."
   (awg (body* n dim e)
     `(handler-case
        (let* ((,body* ,@body)
@@ -100,19 +104,6 @@ ex: ($_ '((1d0 2d0) (1d0 2d0)))."
                                  :element-type 'df
                                  :adjustable nil))
        (error (,e) (error "error in d$_ with: ~a~%. err: ~a~%" ',body ,e)))))
-
-(defmacro f_ (&body body)
-  "create vector array (fvec) from body: (f_ '(1f0 2f0 3f0))."
-  (awg (l) `(let ((,l (progn ,@body)))
-             (declare (list ,l))
-             (make-array (length ,l) :initial-contents ,l
-                         :element-type 'ff :adjustable nil))))
-(defmacro d_ (&body body)
-  "create vector array (dvec) from body: (d_ '(1d0 2d0 3d0))."
-  (awg (l) `(let ((,l (progn ,@body)))
-             (declare (list ,l))
-             (make-array (length ,l) :initial-contents ,l
-                         :element-type 'df :adjustable nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
@@ -137,7 +128,10 @@ ex: ($_ '((1d0 2d0) (1d0 2d0)))."
                        finally (return (reverse res))))))))
 (defmacro define-$ ()
   `(progn ,@(loop for (dim type)
-                  in (group '(1 ff 2 ff 3 ff 4 ff 1 df 2 df 3 df 4 df) 2)
+                  in (group '(1 ff 2 ff 3 ff 4 ff
+                              1 df 2 df 3 df 4 df
+                              1 in 2 in 3 in 4 in
+                              1 pn 2 pn 3 pn 4 pn) 2)
                   collect (let* ((name (veqsymb dim type "$"))
                                  (at (arrtype type))
                                  (docs (format nil
@@ -147,4 +141,9 @@ note that the number of values depends on the dimension." dim at name)))
                             `(defmacro ,name (a &rest rest) ,docs
                                `(-$ ,,dim ,a :inds ,rest :atype ,',at))))))
 (define-$)
+
+(defmacro $ (a &rest rest) `(-$ 1 ,a :inds ,rest))
+(defmacro 2$ (a &rest rest) `(-$ 2 ,a :inds ,rest))
+(defmacro 3$ (a &rest rest) `(-$ 3 ,a :inds ,rest))
+(defmacro 4$ (a &rest rest) `(-$ 4 ,a :inds ,rest))
 

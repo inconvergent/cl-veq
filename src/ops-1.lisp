@@ -3,32 +3,40 @@
 
 (ops
 
-  (@+ (a b)) (+ a b) (@- (a b)) (- a b) (@* (a b)) (* a b) (@/ (a b)) (/ a b)
-  (@i- (a b)) (- b a) (@i/ (a b)) (/ b a)
+  (:1 @+ (ax bx)) (+ ax bx)
+  (:1 @- (ax bx)) (- ax bx)
+  (:1 @* (ax bx)) (* ax bx)
+  (:1 @/ (ax bx)) (/ ax bx)
+  (:1 @i- (ax bx)) (- bx ax)
+  (:1 @i/ (ax bx)) (/ bx ax)
 
-  (@scale (a s)) (values (* a s)) (@iscale (a s)) (values (/ a s))
+  (:1 @scale (ax s)) (values (* ax s))
+  (:1 @iscale (ax s)) (values (/ ax s))
 
-  (@abs (a)) (abs a) (@neg (a)) (- a) (@square (a)) (* a a)
-  (@sqrt (a)) (the pos-@f (sqrt (the pos-@f a)))
+  (:1 @abs (ax)) (abs ax)
+  (:1 @neg (ax)) (- ax)
+  (:1 @square (ax)) (* ax ax)
+  (:1 @sqrt (ax)) (the pos-@f (sqrt (the pos-@f ax)))
 
-  (@len2 (a)) (the pos-@f (mvc #'+ (-@square a)))
-  (@len (a)) (the pos-@f a)
+  (:1 @len2 (ax)) (the pos-@f (mvc #'+ (-@square ax)))
+  (:1 @len (ax)) (the pos-@f ax)
 
-  (@norm (a)) (mvc #'-@iscale a (mvc #'-@len a))
+  (:1 @norm (ax)) (mvc #'-@iscale ax (mvc #'-@len ax))
 
-  (@^ (a s)) (expt a s) (@mod (a s)) (mod a s)
-  (@exp (a)) (values (exp a))
+  (:1 @^ (ax s)) (expt ax s)
+  (:1 @mod (ax s)) (mod ax s)
+  (:1 @exp (ax)) (values (exp ax))
 
-  (@lerp (ax bx s)) (+ ax (* (- bx ax) s))
-  (@from (ax bx s)) (+ ax (* bx s))
-  (@mid (ax bx)) (* 1/2 (+ ax bx))
+  (:1 @lerp (ax bx s)) (+ ax (* (- bx ax) s))
+  (:1 @from (ax bx s)) (+ ax (* bx s))
+  (:1 @mid (ax bx)) (* 1/2 (+ ax bx))
 
-  (@clamp (x)) (min 1 (max 0 x))
-  (@clamp* (x mi ma)) (min ma (max mi x))
+  (:1 @clamp (x)) (min 1 (max 0 x))
+  (:1 @clamp* (x mi ma)) (min ma (max mi x))
 
-  (@cos-sin (a)) (values (cos a) (sin a))
-  (@sin-cos (a)) (values (sin a) (cos a))
+  (:2 @cos-sin (ax)) (values (cos ax) (sin ax))
+  (:2 @sin-cos (ax)) (values (sin ax) (cos ax))
 
-  ; (@deg (a)) (values (/ a 360))
-  (@deg->rad (deg)) (* @pi (/ deg 180)))
+  ; (:1 @deg (ax)) (values (/ ax 360))
+  (:1 @deg->rad (d)) (* @pi (/ d 180)))
 

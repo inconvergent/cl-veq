@@ -6,17 +6,24 @@
     #:mac #:mac* #:v? #:d? #:i? #:context? #:ext-symbols?
 
     #:from-lst #:lst #:mvb #:dsb
-    #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~
+    #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~ #:$nvset
+
+    #:pos-int #:pos-df #:pos-ff
+    #:df #:df* #:ff #:ff* #:in #:in* #:pn #:pn*
+    #:dvec #:fvec #:ivec #:pvec
 
     #:ffl #:dfl
-    #:df #:df* #:dvec #:ff #:ff* #:fvec #:in #:in* #:ivec
+
+    #:fsel #:dsel
 
     #:vdef #:vdef* #:def* #:fvdef* #:fvdef #:vlabels
     #:vprogn #:fvprogn #:varg #:vref
 
     #:d2let #:d3let #:d4let #:f2let #:f3let #:f4let
 
-    #:d$_ #:d_ #:f$_ #:f_ #:$ #:2$ #:3$ #:4$
+    #:$make #:$copy #:d$_ #:f$_ #:i_ #:p_
+    #:$ #:2$ #:3$ #:4$
+    #:f$ #:d$ #:f2$ #:d2$ #:f3$ #:d3$ #:f4$ #:d4$
 
     #:$print #:2$print #:3$print #:4$print #:vpr
     #:$num #:2$num #:3$num
@@ -31,10 +38,7 @@
     #:f2$center #:f2$circ #:f2$polygon #:f2$rect #:f2$square
 
     #:f2in-triangle #:f2in-bbox #:f2in-concave
-    #:f2segdst #:f2lsegx #:f2segx
-    #:f3planex
-
-    #:f$ #:d$ #:f2$ #:d2$ #:f3$ #:d3$ #:f4$ #:d4$
+    #:f2segdst #:f2lsegx #:f2segx #:f3planex
 
     #:vprod #:vsum))
 

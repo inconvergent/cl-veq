@@ -1,4 +1,5 @@
 
+
 (in-package :veq)
 
 (declaim (single-float *eps*) (boolean *dev*) (cons *opt*))

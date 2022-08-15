@@ -18,7 +18,9 @@ fvprogn, vdef, fvdef defined contexts/functions."
   (let ((d (with-output-to-string (*standard-output*)
              (describe sym))))
     (apply #'mkstr (mapcar (lambda (s) (mkstr " ; " s #\Newline))
-                           (butlast (str:split #\Newline d))))))
+                           (butlast (split-string #\Newline d))))))
+
+; (split-sequence:split-sequence #\/ (weird:mkstr s))
 
 (defun docstrings (sym)
   (apply #'mkstr
@@ -49,7 +51,13 @@ fvprogn, vdef, fvdef defined contexts/functions."
                  collect (list (mkstr ,sym) ,sym))
            #'string-lessp :key #'car)))
 
-(defun -md-sanitize (s) (str:replace-all "*" "\\*" s))
+(defun -md-sanitize (d)
+  (let ((sp (split-string #\* d)))
+    (apply #'veq::mkstr
+      (concatenate 'list (mapcar (lambda (s)
+                                  (veq::mkstr s #\\ #\*)) (butlast sp))
+                   (last sp)))))
+
 
 (defmacro ext-symbols? (&optional mode)
   "list all external symbols in veq. use :verbose to inlcude docstring.

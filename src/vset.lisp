@@ -29,17 +29,19 @@ where (fx ...) returns ~a values." dim mname dim)))
                            `(-vset ,',',dim ,symbs (progn ,@expr)))))))
 (map-vset 1 ff) (map-vset 2 ff) (map-vset 3 ff) (map-vset 4 ff)
 (map-vset 1 df) (map-vset 2 df) (map-vset 3 df) (map-vset 4 df)
+(map-vset 1 in) (map-vset 2 in) (map-vset 3 in) (map-vset 4 in)
 
 
 (defmacro -vaset ((arr dim i) &rest expr &aux (gs (list)))
-  (declare (symbol arr) (pos-int dim))
-  (awg (ii)
+  (declare (pos-int dim))
+  (awg (ii arr*)
     (labels ((mkgs () (push* (gensym "VASET") gs)))
       (let ((res (apply #'concatenate 'list
                    (loop for j of-type pos-int from 0 below dim
-                         collect `((aref ,arr (+ ,ii ,j))
+                         collect `((aref ,arr* (+ ,ii ,j))
                                    ,(mkgs))))))
-        `(let ((,ii (* ,dim ,i)))
+        `(let ((,arr* ,arr)
+               (,ii (* ,dim ,i)))
            (declare (pos-int ,ii))
            (mvb ,(reverse gs) ,@expr (setf ,@res)))))))
 
@@ -76,4 +78,16 @@ use (4$ a i j ...) to return (values a[i] a[j] ...)"
     (2$vset ((a i) &rest expr) `(-vaset (,a 2 ,i) ,@expr))
     (3$vset ((a i) &rest expr) `(-vaset (,a 3 ,i) ,@expr))
     (4$vset ((a i) &rest expr) `(-vaset (,a 4 ,i) ,@expr))))
+
+(defmacro $nvset ((a n &optional (i 0)) &body body)
+  (declare (symbol a) (fixnum n))
+  "set n indices in a, from a[i] with n values from body."
+  (awg (i*)
+    (let ((gs (loop for i from 0 below n collect (gensym))))
+      `(let ((,i* ,i))
+         (declare (fixnum ,i*))
+         (mvb (,@(loop for s in gs collect s)) (~ ,@body)
+           (progn ,@(loop for s in gs for i from 0
+                          collect `(setf (aref ,a (+ ,i* ,i)) ,s))))
+         ,a))))
 

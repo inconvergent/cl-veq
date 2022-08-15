@@ -111,10 +111,10 @@
 
 (subtest "select-dim"
   (veq:fvprogn
-    (is (veq:lst (veq:fzyx (veq:f3+ 1f0 2f0 3f0 2f0 3f0 3f0)))
+    (is (veq:lst (veq:fsel (:zy 0) (veq:f3+ 1f0 2f0 3f0 2f0 3f0 3f0)))
         (list 6f0 5f0 3f0))
-    (is (veq:lst (veq:dyx (values 1d0 2d0 3d0))) (list 2d0 1d0))
-    (is (veq:lst (veq:fwwxy (values 1f0 2f0 3f0 4f0))) (list 4f0 4f0 1f0 2f0))))
+    (is (veq:lst (veq:dsel (1 :x) (values 1d0 2d0 3d0))) (list 2d0 1d0))
+    (is (veq:lst (veq:fsel (:w :wxy) (values 1f0 2f0 3f0 4f0))) (list 4f0 4f0 1f0 2f0))))
 
 (subtest "vset"
   (veq:fvprogn

@@ -3,40 +3,53 @@
 
 (ops
 
-  (@4abs (a b c d)) (values (abs a) (abs b) (abs c) (abs d))
-  (@4neg (a b c d)) (values (- a) (- b) (- c) (- d))
-  (@4square (a b c d)) (values (the pos-@f (* a a)) (the pos-@f (* b b)) (the pos-@f (* c c)) (the pos-@f (* d d)))
-  (@4sqrt (a b c d)) (values (the pos-@f (sqrt (the pos-@f a))) (the pos-@f (sqrt (the pos-@f b))) (the pos-@f (sqrt (the pos-@f c))) (the pos-@f (sqrt (the pos-@f d))))
+  (:4 @4abs (4!a)) (values (abs ax) (abs ay) (abs az) (abs aw))
+  (:4 @4neg (4!a)) (values (- ax) (- ay) (- az) (- aw))
+  (:4 @4square (4!a)) (values (the pos-@f (* ax ax))
+                              (the pos-@f (* ay ay))
+                              (the pos-@f (* az az))
+                              (the pos-@f (* aw aw)))
+  (:4 @4sqrt (4!a)) (values (the pos-@f (sqrt (the pos-@f ax)))
+                            (the pos-@f (sqrt (the pos-@f ay)))
+                            (the pos-@f (sqrt (the pos-@f az)))
+                            (the pos-@f (sqrt (the pos-@f aw))))
 
-  (@4len2 (a b c d)) (the pos-@f (mvc #'+ (-@4square a b c d)))
-  (@4len (a b c d)) (the pos-@f (sqrt (the pos-@f (mvc #'+ (-@4square a b c d)))))
+  (:1 @4len2 (4!a)) (the pos-@f (mvc #'+ (-@4square ax ay az aw)))
+  (:1 @4len (4!a)) (the pos-@f (sqrt (the pos-@f (mvc #'+ (-@4square ax ay az aw)))))
 
+  (:1 @4max (4!a)) (max ax ay az aw)
+  (:1 @4min (4!a)) (min ax ay az aw)
 
-  (@4max (a b c d)) (max a b c d) (@4min (a b c d)) (min a b c d)
+  (:4 @4+ (4!a 4!b)) (values (+ ax bx) (+ ay by) (+ az bz) (+ aw bw))
+  (:4 @4- (4!a 4!b)) (values (- ax bx) (- ay by) (- az bz) (- aw bw))
+  (:4 @4* (4!a 4!b)) (values (* ax bx) (* ay by) (* az bz) (* aw bw))
+  (:4 @4/ (4!a 4!b)) (values (/ ax bx) (/ ay by) (/ az bz) (/ aw bw))
 
-  (@4+ (ax ay az aw bx by bz bw)) (values (+ ax bx) (+ ay by) (+ az bz) (+ aw bw))
-  (@4- (ax ay az aw bx by bz bw)) (values (- ax bx) (- ay by) (- az bz) (- aw bw))
-  (@4* (ax ay az aw bx by bz bw)) (values (* ax bx) (* ay by) (* az bz) (* aw bw))
-  (@4/ (ax ay az aw bx by bz bw)) (values (/ ax bx) (/ ay by) (/ az bz) (/ aw bw))
+  (:4 @4i- (4!a 4!b)) (values (- bx ax) (- by ay) (- bz az) (- bw aw))
+  (:4 @4i/ (4!a 4!b)) (values (/ bx ax) (/ by ay) (/ bz az) (/ bw aw))
 
-  (@4i- (ax ay az aw bx by bz bw)) (values (- bx ax) (- by ay) (- bz az) (- bw aw))
-  (@4i/ (ax ay az aw bx by bz bw)) (values (/ bx ax) (/ by ay) (/ bz az) (/ bw aw))
+  (:1 @4. (4!a 4!b)) (+ (* ax bx) (* ay by) (* az bz) (* aw bw))
 
-  (@4. (ax ay az aw bx by bz bw)) (+ (* ax bx) (* ay by) (* az bz) (* aw bw))
+  (:1 @4dst2 (4!a 4!b))
+       (mvc #'+ (-@4square (- bx ax) (- by ay) (- bz az) (- bw aw)))
+  (:1 @4dst (4!a 4!b))
+       (sqrt (the pos-@f (mvc #'+ (-@4square (- bx ax) (- by ay)
+                                             (- bz az) (- bw aw)))))
 
-  (@4dst2 (ax ay az aw bx by bz bw)) (mvc #'+ (-@4square (- bx ax) (- by ay) (- bz az) (- bw aw)))
-  (@4dst (ax ay az aw bx by bz bw)) (sqrt (the pos-@f (mvc #'+ (-@4square (- bx ax) (- by ay) (- bz az) (- bw aw)))))
+  (:4 @4lerp (4!a 4!b s))
+      (-@4+ ax ay az aw (* (- bx ax) s) (* (- by ay) s) (* (- bz az) s) (* (- bw aw) s))
+  (:4 @4from (4!a 4!b s))
+       (-@4+ ax ay az aw (* bx s) (* by s) (* bz s) (* bw s))
+  (:4 @4mid (4!a 4!b))
+       (values (* (+ bx ax) 1/2) (* (+ by ay) 1/2)
+               (* (+ bz az) 1/2) (* (+ bw aw) 1/2))
 
-  (@4lerp (ax ay az aw bx by bz bw s)) (-@4+ ax ay az aw (* (- bx ax) s) (* (- by ay) s) (* (- bz az) s) (* (- bw aw) s))
-  (@4from (ax ay az aw bx by bz bw s)) (-@4+ ax ay az aw (* bx s) (* by s) (* bz s) (* bw s))
-  (@4mid (ax ay az aw bx by bz bw)) (values (* (+ bx ax) 1/2) (* (+ by ay) 1/2) (* (+ bz az) 1/2) (* (+ bw aw) 1/2))
+  (:4 @4^ (4!a s)) (values (expt ax s) (expt ay s) (expt az s) (expt aw s))
+  (:4 @4exp (4!a)) (values (exp ax) (exp ay) (exp az) (exp aw))
+  (:4 @4mod (4!a s)) (values (mod ax s) (mod ay s) (mod az s) (mod aw s))
 
-  (@4^ (a b c d s)) (values (expt a s) (expt b s) (expt c s) (expt d s))
-  (@4exp (a b c d)) (values (exp a) (exp b) (exp c) (exp d))
-  (@4mod (a b c d s)) (values (mod a s) (mod b s) (mod c s) (mod d s))
+  (:4 @4scale (4!a s)) (values (* ax s) (* ay s) (* az s) (* aw s))
+  (:4 @4iscale (4!a s)) (values (/ ax s) (/ ay s) (/ az s) (/ aw s))
 
-  (@4scale (a b c d s)) (values (* a s) (* b s) (* c s) (* d s))
-  (@4iscale (a b c d s)) (values (/ a s) (/ b s) (/ c s) (/ d s))
-
-  (@4norm (a b c d)) (mvc #'-@4iscale a b c d (the pos-@f (mvc #'-@4len a b c d))))
+  (:4 @4norm (4!a)) (mvc #'-@4iscale ax ay az aw (the pos-@f (mvc #'-@4len ax ay az aw))))
 

@@ -42,7 +42,7 @@
 (def* f$line ((varg 2 x)) (declare #.*opt* (ff x)) (f_ (list x)))
 (def* f2$line ((varg 4 x)) (declare #.*opt* (ff x)) (f_ (list x)))
 (def* f3$line ((varg 6 x)) (declare #.*opt* (ff x)) (f_ (list x)))
-(def* f4$line ((varg 6 x)) (declare #.*opt* (ff x)) (f_ (list x)))
+(def* f4$line ((varg 8 x)) (declare #.*opt* (ff x)) (f_ (list x)))
 
 (def* d$point (a) (declare #.*opt* (df a)) (d_ (list a)))
 (def* d2$point ((varg 2 x)) (declare #.*opt* (df x)) (d_ (list x)))
@@ -52,4 +52,4 @@
 (def* d$line ((varg 2 x)) (declare #.*opt* (df x)) (d_ (list x)))
 (def* d2$line ((varg 4 x)) (declare #.*opt* (df x)) (d_ (list x)))
 (def* d3$line ((varg 6 x)) (declare #.*opt* (df x)) (d_ (list x)))
-(def* d4$line ((varg 6 x)) (declare #.*opt* (df x)) (d_ (list x))))
+(def* d4$line ((varg 8 x)) (declare #.*opt* (df x)) (d_ (list x))))
