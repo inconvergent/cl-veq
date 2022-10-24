@@ -5,6 +5,7 @@
 
   (:3 @3abs (3!a)) (values (abs ax) (abs ay) (abs az))
   (:3 @3neg (3!a)) (values (- ax) (- ay) (- az))
+  (:3 @3inv (3!a)) (values (/ ax) (/ ay) (/ az))
   (:3 @3square (3!a)) (values (the pos-@f (* ax ax))
                               (the pos-@f (* ay ay))
                               (the pos-@f (* az az)))

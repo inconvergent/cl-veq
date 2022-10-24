@@ -761,6 +761,25 @@ body (1): (/ BX AX).
 destructive.
 ```
 
+#### :context: D$INV
+
+```
+veq context broadcast op: D$INV
+fxname: -DINV
+args: (AX)
+body (1): (/ AX).
+```
+
+#### :context: D$INV!
+
+```
+veq context broadcast op: D$INV
+fxname: -DINV
+args: (AX)
+body (1): (/ AX).
+destructive.
+```
+
 #### :context: D$ISCALE
 
 ```
@@ -1559,6 +1578,25 @@ body (2): (VALUES (/ BX AX) (/ BY AY)).
 destructive.
 ```
 
+#### :context: D2$INV
+
+```
+veq context broadcast op: D2$INV
+fxname: -D2INV
+args: (AX AY)
+body (2): (VALUES (/ AX) (/ AY)).
+```
+
+#### :context: D2$INV!
+
+```
+veq context broadcast op: D2$INV
+fxname: -D2INV
+args: (AX AY)
+body (2): (VALUES (/ AX) (/ AY)).
+destructive.
+```
+
 #### :context: D2$ISCALE
 
 ```
@@ -2245,6 +2283,15 @@ veq context op: D2I/
 fxname: -D2I/
 args: (AX AY BX BY)
 body (2): (VALUES (/ BX AX) (/ BY AY)).
+```
+
+#### :context: D2INV
+
+```
+veq context op: D2INV
+fxname: -D2INV
+args: (AX AY)
+body (2): (VALUES (/ AX) (/ AY)).
 ```
 
 #### :context: D2ISCALE
@@ -2957,6 +3004,25 @@ body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
 destructive.
 ```
 
+#### :context: D3$INV
+
+```
+veq context broadcast op: D3$INV
+fxname: -D3INV
+args: (AX AY AZ)
+body (3): (VALUES (/ AX) (/ AY) (/ AZ)).
+```
+
+#### :context: D3$INV!
+
+```
+veq context broadcast op: D3$INV
+fxname: -D3INV
+args: (AX AY AZ)
+body (3): (VALUES (/ AX) (/ AY) (/ AZ)).
+destructive.
+```
+
 #### :context: D3$ISCALE
 
 ```
@@ -3584,6 +3650,15 @@ veq context op: D3I/
 fxname: -D3I/
 args: (AX AY AZ BX BY BZ)
 body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
+```
+
+#### :context: D3INV
+
+```
+veq context op: D3INV
+fxname: -D3INV
+args: (AX AY AZ)
+body (3): (VALUES (/ AX) (/ AY) (/ AZ)).
 ```
 
 #### :context: D3ISCALE
@@ -4245,6 +4320,25 @@ body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
 destructive.
 ```
 
+#### :context: D4$INV
+
+```
+veq context broadcast op: D4$INV
+fxname: -D4INV
+args: (AX AY AZ AW)
+body (4): (VALUES (/ AX) (/ AY) (/ AZ) (/ AW)).
+```
+
+#### :context: D4$INV!
+
+```
+veq context broadcast op: D4$INV
+fxname: -D4INV
+args: (AX AY AZ AW)
+body (4): (VALUES (/ AX) (/ AY) (/ AZ) (/ AW)).
+destructive.
+```
+
 #### :context: D4$ISCALE
 
 ```
@@ -4791,6 +4885,15 @@ veq context op: D4I/
 fxname: -D4I/
 args: (AX AY AZ AW BX BY BZ BW)
 body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
+```
+
+#### :context: D4INV
+
+```
+veq context op: D4INV
+fxname: -D4INV
+args: (AX AY AZ AW)
+body (4): (VALUES (/ AX) (/ AY) (/ AZ) (/ AW)).
 ```
 
 #### :context: D4ISCALE
@@ -5882,6 +5985,15 @@ args: (AX BX)
 body (1): (/ BX AX).
 ```
 
+#### :context: DINV
+
+```
+veq context op: DINV
+fxname: -DINV
+args: (AX)
+body (1): (/ AX).
+```
+
 #### :context: DISCALE
 
 ```
@@ -6496,6 +6608,25 @@ veq context broadcast op: F$I/
 fxname: -FI/
 args: (AX BX)
 body (1): (/ BX AX).
+destructive.
+```
+
+#### :context: F$INV
+
+```
+veq context broadcast op: F$INV
+fxname: -FINV
+args: (AX)
+body (1): (/ AX).
+```
+
+#### :context: F$INV!
+
+```
+veq context broadcast op: F$INV
+fxname: -FINV
+args: (AX)
+body (1): (/ AX).
 destructive.
 ```
 
@@ -7331,6 +7462,25 @@ body (2): (VALUES (/ BX AX) (/ BY AY)).
 destructive.
 ```
 
+#### :context: F2$INV
+
+```
+veq context broadcast op: F2$INV
+fxname: -F2INV
+args: (AX AY)
+body (2): (VALUES (/ AX) (/ AY)).
+```
+
+#### :context: F2$INV!
+
+```
+veq context broadcast op: F2$INV
+fxname: -F2INV
+args: (AX AY)
+body (2): (VALUES (/ AX) (/ AY)).
+destructive.
+```
+
 #### :context: F2$ISCALE
 
 ```
@@ -8112,6 +8262,15 @@ defined via veq:fvdef*
  ;   Source file: src/checks.lisp
 ```
 
+#### :context: F2INV
+
+```
+veq context op: F2INV
+fxname: -F2INV
+args: (AX AY)
+body (2): (VALUES (/ AX) (/ AY)).
+```
+
 #### :context: F2ISCALE
 
 ```
@@ -8889,6 +9048,25 @@ body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
 destructive.
 ```
 
+#### :context: F3$INV
+
+```
+veq context broadcast op: F3$INV
+fxname: -F3INV
+args: (AX AY AZ)
+body (3): (VALUES (/ AX) (/ AY) (/ AZ)).
+```
+
+#### :context: F3$INV!
+
+```
+veq context broadcast op: F3$INV
+fxname: -F3INV
+args: (AX AY AZ)
+body (3): (VALUES (/ AX) (/ AY) (/ AZ)).
+destructive.
+```
+
 #### :context: F3$ISCALE
 
 ```
@@ -9516,6 +9694,15 @@ veq context op: F3I/
 fxname: -F3I/
 args: (AX AY AZ BX BY BZ)
 body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
+```
+
+#### :context: F3INV
+
+```
+veq context op: F3INV
+fxname: -F3INV
+args: (AX AY AZ)
+body (3): (VALUES (/ AX) (/ AY) (/ AZ)).
 ```
 
 #### :context: F3ISCALE
@@ -10194,6 +10381,25 @@ body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
 destructive.
 ```
 
+#### :context: F4$INV
+
+```
+veq context broadcast op: F4$INV
+fxname: -F4INV
+args: (AX AY AZ AW)
+body (4): (VALUES (/ AX) (/ AY) (/ AZ) (/ AW)).
+```
+
+#### :context: F4$INV!
+
+```
+veq context broadcast op: F4$INV
+fxname: -F4INV
+args: (AX AY AZ AW)
+body (4): (VALUES (/ AX) (/ AY) (/ AZ) (/ AW)).
+destructive.
+```
+
 #### :context: F4$ISCALE
 
 ```
@@ -10740,6 +10946,15 @@ veq context op: F4I/
 fxname: -F4I/
 args: (AX AY AZ AW BX BY BZ BW)
 body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
+```
+
+#### :context: F4INV
+
+```
+veq context op: F4INV
+fxname: -F4INV
+args: (AX AY AZ AW)
+body (4): (VALUES (/ AX) (/ AY) (/ AZ) (/ AW)).
 ```
 
 #### :context: F4ISCALE
@@ -11797,6 +12012,15 @@ veq context op: FI/
 fxname: -FI/
 args: (AX BX)
 body (1): (/ BX AX).
+```
+
+#### :context: FINV
+
+```
+veq context op: FINV
+fxname: -FINV
+args: (AX)
+body (1): (/ AX).
 ```
 
 #### :context: FISCALE

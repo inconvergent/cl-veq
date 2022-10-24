@@ -25,6 +25,7 @@
 
   (:2 @2abs (2!a)) (values (abs ax) (abs ay))
   (:2 @2neg (2!a)) (values (- ax) (- ay))
+  (:2 @2inv (2!a)) (values (/ ax) (/ ay))
   (:2 @2perp (2!a)) (values ay (- ax))
   (:2 @2perp* (2!a)) (values (- ay) ax)
   (:2 @2flip (2!a)) (values ay ax)

@@ -15,6 +15,7 @@
 
   (:1 @abs (ax)) (abs ax)
   (:1 @neg (ax)) (- ax)
+  (:1 @inv (ax)) (/ ax)
   (:1 @square (ax)) (* ax ax)
   (:1 @sqrt (ax)) (the pos-@f (sqrt (the pos-@f ax)))
 
