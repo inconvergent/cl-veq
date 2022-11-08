@@ -13,14 +13,14 @@
   (f$_ `((,w ,(- h)) (,w ,h) (,(- w) ,h) (,(- w) ,(- h)))))
 (def* f2$square (s) (declare #.*opt* (ff s)) (f2$rect s s))
 
-(def* f2$polygon (n rad &key (rot 0f0))
+(def* f2$polygon (n rad &optional (rot 0f0))
   (declare #.*opt* (pos-int n) (ff rad rot))
   "return n-polygon of size rad. rotate by (rot 0)"
   (f$_ (loop with pin of-type ff = (/ fpii n)
              for i of-type pos-int from 0 below n
              collect (lst (f2scale (fcos-sin (+ rot (ff (* i pin)))) rad)))))
 
-(def* f2$circ (rad &key (rs 0.5f0))
+(def* f2$circ (rad &optional (rs 0.5f0))
   (declare #.*opt* (ff rad rs))
   "return circle of size rad. (rs 0.5) is vertex density."
   (let ((n (ceiling (the ff (* fpii (the ff (* rad rs)))))))
