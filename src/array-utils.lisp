@@ -85,6 +85,8 @@ ex: (f$_ '((1f0 2f0) (1f0 2f0)))."
               (,n (length ,body*))
               (,dim (length (the list (car ,body*)))))
          (declare (pos-int ,n ,dim) (list ,body*))
+         ; (veq:vpr ,dim ,n)
+         ; (veq:vpr ,body*)
          (make-array (* ,n ,dim) :initial-contents (the list (awf ,body*))
                                  :element-type 'ff
                                  :adjustable nil))

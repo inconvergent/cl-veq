@@ -35,7 +35,7 @@
     #:f$line #:f$point #:f2$line #:f2$point
     #:f3$line #:f3$point #:f4$line #:f4$point
 
-    #:f2$center #:f2$circ #:f2$polygon #:f2$rect #:f2$square
+    #:f2$center #:f2$circ #:f2$polygon #:f2$rect #:f2$square*
 
     #:f2in-triangle #:f2in-bbox #:f2in-concave
     #:f2segdst #:f2lsegx #:f2segx #:f3planex

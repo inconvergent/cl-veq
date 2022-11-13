@@ -7975,6 +7975,25 @@ body (2): (VALUES (* AX AX) (* AY AY)).
 destructive.
 ```
 
+#### F2$SQUARE\*
+
+```
+fx: %F2$SQUARE*
+macro wrapper: F2$SQUARE*
+defined via veq:def*
+
+ ; VEQ:F2$SQUARE*
+ ;   [symbol]
+ ;
+ ; F2$SQUARE* names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     fx: %F2$SQUARE*
+ ;     macro wrapper: F2$SQUARE*
+ ;     defined via veq:def*
+ ;   Source file: src/shapes.lisp
+```
+
 #### F2$SUM
 
 ```

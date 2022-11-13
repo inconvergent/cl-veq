@@ -11,7 +11,7 @@
 (def* f2$rect (w h)
   (declare #.*opt* (ff w h))
   (f$_ `((,w ,(- h)) (,w ,h) (,(- w) ,h) (,(- w) ,(- h)))))
-(def* f2$square (s) (declare #.*opt* (ff s)) (f2$rect s s))
+(def* f2$square* (s) (declare #.*opt* (ff s)) (f2$rect s s))
 
 (def* f2$polygon (n rad &optional (rot 0f0))
   (declare #.*opt* (pos-int n) (ff rad rot))
