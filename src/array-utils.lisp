@@ -12,7 +12,8 @@
   (labels ((nm (n) (veqsymb 1 type n)))
     (awg (a l)
       `(progn
-        (export ',(nm "$make")) (export ',(nm "$copy")) (export ',(nm "_"))
+        (export ',(nm "$make")) (export ',(nm "$copy"))
+        (export ',(nm "_")) (export ',(nm "$~"))
         (defmacro ,(nm "$make") (&key (dim 1) (n 1) (v ,(coerce 0 type)))
           ,(format nil
             "create ~a vector array with size n * dim, and initial value v."
@@ -29,7 +30,20 @@
           `(let ((,',l (progn ,@body)))
             (declare (list ,',l))
             (make-array (length ,',l) :initial-contents ,',l
-                        :element-type ',',type :adjustable nil)))))))
+                        :element-type ',',type :adjustable nil)))
+
+        (defmacro ,(nm "$~") ((&optional (dim 1)) &body body)
+          (declare (fixnum dim))
+          ,(format nil "create ~a vector array from body:
+((values ...) (values ...) ...)."
+                  (arrtype type) (nm "_"))
+          (let ((symbs (loop repeat (length body) collect (gensym))))
+            `(veq:fvprogn
+               (,',(nm "vlet") (,@(loop for s in symbs
+                                   for b in body collect (list s dim b)))
+               (,',(nm "_") (list ,@symbs))))))
+
+        ))))
 (define-constr ff) (define-constr df) (define-constr in) (define-constr pn)
 
 ;;;;;;;;;;;;;;;;;; INIT ARRAY OF VEC
@@ -85,8 +99,6 @@ ex: (f$_ '((1f0 2f0) (1f0 2f0)))."
               (,n (length ,body*))
               (,dim (length (the list (car ,body*)))))
          (declare (pos-int ,n ,dim) (list ,body*))
-         ; (veq:vpr ,dim ,n)
-         ; (veq:vpr ,body*)
          (make-array (* ,n ,dim) :initial-contents (the list (awf ,body*))
                                  :element-type 'ff
                                  :adjustable nil))

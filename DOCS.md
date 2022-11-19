@@ -1243,6 +1243,23 @@ typed.
  ;   Source file: src/array-utils.lisp
 ```
 
+#### D$~
+
+```
+create DVEC vector array from body:
+((values ...) (values ...) ...).
+
+ ; VEQ:D$~
+ ;   [symbol]
+ ;
+ ; D$~ names a macro:
+ ;   Lambda-list: ((&OPTIONAL (DIM 1)) &BODY BODY)
+ ;   Documentation:
+ ;     create DVEC vector array from body:
+ ;     ((values ...) (values ...) ...).
+ ;   Source file: src/array-utils.lisp
+```
+
 #### :context: D\*
 
 ```
@@ -7093,6 +7110,23 @@ typed.
  ;   Source file: src/array-utils.lisp
 ```
 
+#### F$~
+
+```
+create FVEC vector array from body:
+((values ...) (values ...) ...).
+
+ ; VEQ:F$~
+ ;   [symbol]
+ ;
+ ; F$~ names a macro:
+ ;   Lambda-list: ((&OPTIONAL (DIM 1)) &BODY BODY)
+ ;   Documentation:
+ ;     create FVEC vector array from body:
+ ;     ((values ...) (values ...) ...).
+ ;   Source file: src/array-utils.lisp
+```
+
 #### :context: F\*
 
 ```
@@ -12552,6 +12586,23 @@ typed.
  ;   Source file: src/array-utils.lisp
 ```
 
+#### I$~
+
+```
+create IVEC vector array from body:
+((values ...) (values ...) ...).
+
+ ; VEQ:I$~
+ ;   [symbol]
+ ;
+ ; I$~ names a macro:
+ ;   Lambda-list: ((&OPTIONAL (DIM 1)) &BODY BODY)
+ ;   Documentation:
+ ;     create IVEC vector array from body:
+ ;     ((values ...) (values ...) ...).
+ ;   Source file: src/array-utils.lisp
+```
+
 #### I2$NUM
 
 ```
@@ -13205,6 +13256,23 @@ typed.
  ;   Documentation:
  ;     make 1d vector array of zeros.
  ;     typed.
+ ;   Source file: src/array-utils.lisp
+```
+
+#### P$~
+
+```
+create PVEC vector array from body:
+((values ...) (values ...) ...).
+
+ ; VEQ:P$~
+ ;   [symbol]
+ ;
+ ; P$~ names a macro:
+ ;   Lambda-list: ((&OPTIONAL (DIM 1)) &BODY BODY)
+ ;   Documentation:
+ ;     create PVEC vector array from body:
+ ;     ((values ...) (values ...) ...).
  ;   Source file: src/array-utils.lisp
 ```
 
