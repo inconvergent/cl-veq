@@ -557,19 +557,21 @@ destructive.
 #### D$_
 
 ```
-create dvec vector array from body. where body is a list of lists.
-ex: (d$_ (loop repeat 2 collect `(1d0 2d0)))
-ex: (d$_ '((1d0 2d0) (1d0 2d0))).
+create DVEC vector array from body. where body is a list of lists.
+ex: (D$_ (loop repeat 2 collect `(1f0 2f0)))
+ex: (D$_ '((1f0 2f0) (1f0 2f0))).
 
  ; VEQ:D$_
  ;   [symbol]
  ;
- ; D$_ names a macro:
- ;   Lambda-list: (&BODY BODY)
+ ; D$_ names a compiled function:
+ ;   Lambda-list: (BODY)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     create dvec vector array from body. where body is a list of lists.
- ;     ex: (d$_ (loop repeat 2 collect `(1d0 2d0)))
- ;     ex: (d$_ '((1d0 2d0) (1d0 2d0))).
+ ;     create DVEC vector array from body. where body is a list of lists.
+ ;     ex: (D$_ (loop repeat 2 collect `(1f0 2f0)))
+ ;     ex: (D$_ '((1f0 2f0) (1f0 2f0))).
  ;   Source file: src/array-utils.lisp
 ```
 
@@ -5459,7 +5461,7 @@ body: (* X X (- (* (+ 1.0d0 S) X) S))
  ; DEASE-IN-OUT-BACK names a compiled function:
  ;   Lambda-list: (X &OPTIONAL (S 1.7015800476074219d0))
  ;   Derived type: (FUNCTION (T &OPTIONAL T)
- ;                  (VALUES (OR (COMPLEX DOUBLE-FLOAT) DOUBLE-FLOAT)
+ ;                  (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
@@ -5482,8 +5484,8 @@ body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
  ;                  (VALUES
- ;                   (OR (DOUBLE-FLOAT -0.0d0 1.0d0)
- ;                       (COMPLEX DOUBLE-FLOAT))
+ ;                   (OR (COMPLEX DOUBLE-FLOAT)
+ ;                       (DOUBLE-FLOAT -0.0d0 1.0d0))
  ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
@@ -5528,7 +5530,7 @@ body: (LET ((S (OR S (* (ASIN 1.0d0) (/ P DPII)))))
  ; DEASE-IN-OUT-ELASTIC names a compiled function:
  ;   Lambda-list: (X &OPTIONAL (P 0.30000001192092896d0) (S NIL))
  ;   Derived type: (FUNCTION (T &OPTIONAL T T)
- ;                  (VALUES (OR (COMPLEX DOUBLE-FLOAT) DOUBLE-FLOAT)
+ ;                  (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
@@ -6424,19 +6426,21 @@ destructive.
 #### F$_
 
 ```
-create fvec vector array from body. where body is a list of lists.
-ex: (f$_ (loop repeat 2 collect `(1f0 2f0)))
-ex: (f$_ '((1f0 2f0) (1f0 2f0))).
+create FVEC vector array from body. where body is a list of lists.
+ex: (F$_ (loop repeat 2 collect `(1f0 2f0)))
+ex: (F$_ '((1f0 2f0) (1f0 2f0))).
 
  ; VEQ:F$_
  ;   [symbol]
  ;
- ; F$_ names a macro:
- ;   Lambda-list: (&BODY BODY)
+ ; F$_ names a compiled function:
+ ;   Lambda-list: (BODY)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     create fvec vector array from body. where body is a list of lists.
- ;     ex: (f$_ (loop repeat 2 collect `(1f0 2f0)))
- ;     ex: (f$_ '((1f0 2f0) (1f0 2f0))).
+ ;     create FVEC vector array from body. where body is a list of lists.
+ ;     ex: (F$_ (loop repeat 2 collect `(1f0 2f0)))
+ ;     ex: (F$_ '((1f0 2f0) (1f0 2f0))).
  ;   Source file: src/array-utils.lisp
 ```
 
@@ -11407,8 +11411,8 @@ body: (* X X (- (* (+ 1.0 S) X) S))
  ;   Lambda-list: (X &OPTIONAL (S 1.70158))
  ;   Derived type: (FUNCTION (T &OPTIONAL T)
  ;                  (VALUES
- ;                   (OR FLOAT (COMPLEX DOUBLE-FLOAT)
- ;                       (COMPLEX SINGLE-FLOAT))
+ ;                   (OR FLOAT (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
  ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in:
@@ -11568,7 +11572,7 @@ body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
  ;                  (VALUES
- ;                   (OR (SINGLE-FLOAT -0.0 1.0) (COMPLEX SINGLE-FLOAT))
+ ;                   (OR (COMPLEX SINGLE-FLOAT) (SINGLE-FLOAT -0.0 1.0))
  ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
@@ -11614,8 +11618,8 @@ body: (LET ((S (OR S (* (ASIN 1.0) (/ P FPII)))))
  ;   Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
  ;   Derived type: (FUNCTION (T &OPTIONAL T T)
  ;                  (VALUES
- ;                   (OR FLOAT (COMPLEX DOUBLE-FLOAT)
- ;                       (COMPLEX SINGLE-FLOAT))
+ ;                   (OR FLOAT (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
  ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
@@ -11801,8 +11805,8 @@ body: (* X X (- (* (+ 1.0 S) X) S))
  ;   Lambda-list: (X &OPTIONAL (S 1.70158))
  ;   Derived type: (FUNCTION (T &OPTIONAL T)
  ;                  (VALUES
- ;                   (OR FLOAT (COMPLEX DOUBLE-FLOAT)
- ;                       (COMPLEX SINGLE-FLOAT))
+ ;                   (OR FLOAT (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
  ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease out:
@@ -12465,6 +12469,27 @@ ex:
 make 1d vector in veq context.
 wraps body in mvc so that (f3~ 1 (f2~ 2f0 3))
 returns (values 1f0 2f0 3f0)
+```
+
+#### I$_
+
+```
+create IVEC vector array from body. where body is a list of lists.
+ex: (I$_ (loop repeat 2 collect `(1f0 2f0)))
+ex: (I$_ '((1f0 2f0) (1f0 2f0))).
+
+ ; VEQ:I$_
+ ;   [symbol]
+ ;
+ ; I$_ names a compiled function:
+ ;   Lambda-list: (BODY)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     create IVEC vector array from body. where body is a list of lists.
+ ;     ex: (I$_ (loop repeat 2 collect `(1f0 2f0)))
+ ;     ex: (I$_ '((1f0 2f0) (1f0 2f0))).
+ ;   Source file: src/array-utils.lisp
 ```
 
 #### I$COPY
@@ -13134,6 +13159,28 @@ define a macro named m so that (m a ...) is equivalent to (mvc #'fx a ...)
  ;   Documentation:
  ;     define a macro named m so that (m a ...) is equivalent to (mvc #'fx a ...)
  ;   Source file: src/utils.lisp
+```
+
+#### P$_
+
+```
+create PVEC vector array from body. where body is a list of lists.
+ex: (P$_ (loop repeat 2 collect `(1f0 2f0)))
+ex: (P$_ '((1f0 2f0) (1f0 2f0))).
+
+ ; VEQ:P$_
+ ;   [symbol]
+ ;
+ ; P$_ names a compiled function:
+ ;   Lambda-list: (BODY)
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                          &OPTIONAL))
+ ;   Documentation:
+ ;     create PVEC vector array from body. where body is a list of lists.
+ ;     ex: (P$_ (loop repeat 2 collect `(1f0 2f0)))
+ ;     ex: (P$_ '((1f0 2f0) (1f0 2f0))).
+ ;   Source file: src/array-utils.lisp
 ```
 
 #### P$COPY

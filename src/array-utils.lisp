@@ -13,7 +13,7 @@
     (awg (a l)
       `(progn
         (export ',(nm "$make")) (export ',(nm "$copy"))
-        (export ',(nm "_")) (export ',(nm "$~"))
+        (export ',(nm "_")) (export ',(nm "$~")) (export ',(nm "$_"))
         (defmacro ,(nm "$make") (&key (dim 1) (n 1) (v ,(coerce 0 type)))
           ,(format nil
             "create ~a vector array with size n * dim, and initial value v."
@@ -43,7 +43,22 @@
                                    for b in body collect (list s dim b)))
                (,',(nm "_") (list ,@symbs))))))
 
-        ))))
+        (defun ,(nm "$_") (body)
+          ,(format nil
+            "create ~a vector array from body. where body is a list of lists.
+ex: (~a (loop repeat 2 collect `(1f0 2f0)))
+ex: (~a '((1f0 2f0) (1f0 2f0)))." (arrtype type) (nm "$_") (nm "$_"))
+          (let* ((dim (length (the list (car body))))
+                 (arr (make-array (* (length body) dim)
+                        :element-type ',type :adjustable nil
+                        :initial-element ',(coerce 0 type))))
+            (declare (pos-int dim) (,(arrtype type) arr))
+            (loop for r in body for i from 0 by dim
+                  do (loop repeat dim
+                           for e in r for ii from i
+                           do (setf (aref arr ii) e)))
+            arr))))))
+
 (define-constr ff) (define-constr df) (define-constr in) (define-constr pn)
 
 ;;;;;;;;;;;;;;;;;; INIT ARRAY OF VEC
@@ -86,38 +101,6 @@
 (define-arr-util 1 df) (define-arr-util 2 df) (define-arr-util 3 df) (define-arr-util 4 df)
 (define-arr-util 1 in) (define-arr-util 2 in) (define-arr-util 3 in) (define-arr-util 4 in)
 (define-arr-util 1 pn) (define-arr-util 2 pn) (define-arr-util 3 pn) (define-arr-util 4 pn)
-
-;;;;;;;;;;;;;;;;;;;;; INIT FROM EXPR
-
-(defmacro f$_ (&body body)
-  "create fvec vector array from body. where body is a list of lists.
-ex: (f$_ (loop repeat 2 collect `(1f0 2f0)))
-ex: (f$_ '((1f0 2f0) (1f0 2f0)))."
-  (awg (body* n dim e)
-    `(handler-case
-       (let* ((,body* ,@body)
-              (,n (length ,body*))
-              (,dim (length (the list (car ,body*)))))
-         (declare (pos-int ,n ,dim) (list ,body*))
-         (make-array (* ,n ,dim) :initial-contents (the list (awf ,body*))
-                                 :element-type 'ff
-                                 :adjustable nil))
-       (error (,e) (error "error in f$_ with: ~a~%. err: ~a~%" ',body ,e)))))
-
-(defmacro d$_ (&body body)
-  "create dvec vector array from body. where body is a list of lists.
-ex: (d$_ (loop repeat 2 collect `(1d0 2d0)))
-ex: (d$_ '((1d0 2d0) (1d0 2d0)))."
-  (awg (body* n dim e)
-    `(handler-case
-       (let* ((,body* ,@body)
-              (,n (length ,body*))
-              (,dim (length (the list (car ,body*)))))
-         (declare (pos-int ,n ,dim) (list ,body*))
-         (make-array (* ,n ,dim) :initial-contents (the list (awf ,body*))
-                                 :element-type 'df
-                                 :adjustable nil))
-       (error (,e) (error "error in d$_ with: ~a~%. err: ~a~%" ',body ,e)))))
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
