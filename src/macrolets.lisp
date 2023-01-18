@@ -35,58 +35,61 @@ body is complex. in the event of errors try vprogn instead."
      `(fvprogn (defun ,fname ,@body))))
 (define-fvdef)
 
+(defun get-docs (body)
+  "find docstring for body"
+  (labels ((r (s) (typecase s (cons (equal (car s) 'declare)))))
+    (let ((body (remove-if #'r (cdr body))))
+      (typecase (first body) (string (first body)) (t "[none]")))))
+
+; MNAME: my-fx; FNAME: %my-fx
+(defun make-wrap-docs (context mname fname body &aux (docs (get-docs body))
+                                                     (args (first body)))
+  (format nil "WRAPS: ~a~%ARGS: ~a~%DOCSTRING: ~a
+defined via veq:~a" fname args docs context))
+
 (defmacro define-vdef* ()
   `(defmacro vdef* (mname &body body)
-    "defines a function named: %fx
-and a wrapper macro named: fx
+    "defines a function named: %mname
+and a wrapper macro named: mname
 veq context is enabled. uses vprogn.
 
 the wrapper macro ensures every call to this function is done as
-(mvc #'%fx ...)."
-    (let ((fname (symb "%" mname))
-          (docs (typecase (third body) (string (third body)) (t nil))))
+(mvc #'%mname ...)."
+    (let ((fname (symb "%" mname)))
       `(vprogn ; replace internal references to mname
                (defun ,fname ,@(subst fname mname body))
                (defmacro ,mname (&rest rest)
-                  ,(if docs (format nil "DOCSTRING for ~a;~%~a" fname docs)
-                            (format nil "fx: ~a~%macro wrapper: ~a
-defined via veq:vdef*" fname mname))
+                 ,(make-wrap-docs :vdef* mname fname body)
                  `(mvc #',',fname ,@rest))))))
 (define-vdef*)
 
 (defmacro define-fvdef* ()
   `(defmacro fvdef* (mname &body body)
-    "defines a function named: %fx
-and a wrapper macro named: fx
+    "defines a function named: %mname
+and a wrapper macro named: mname
 veq context is enabled. uses fvprogn.
 
 the wrapper macro ensures every call to this function is done as
-(mvc #'%fx ...)."
-    (let ((fname (symb "%" mname))
-          (docs (typecase (third body) (string (third body)) (t nil))))
+(mvc #'%mname ...)."
+    (let ((fname (symb "%" mname)))
       `(fvprogn ; replace internal references to mname
                 (defun ,fname ,@(subst fname mname body))
                 (defmacro ,mname (&rest rest)
-                  ,(if docs (format nil "DOCSTRING for ~a;~%~a" fname docs)
-                            (format nil "fx: ~a~%macro wrapper: ~a
-defined via veq:fvdef*" fname mname))
+                  ,(make-wrap-docs :fvdef* mname fname body)
                   `(mvc #',',fname ,@rest))))))
 (define-fvdef*)
 
 (defmacro define-def* ()
   `(defmacro def* (mname &body body)
-    "defines a function named: %fx
-and a wrapper macro named: fx
+    "defines a function named: %mname
+and a wrapper macro named: mname
 
 the wrapper macro ensures every call to this function is done as
-(mvc #'%fx ...)."
-    (let ((fname (symb "%" mname))
-          (docs (typecase (third body) (string (third body)) (t nil))))
+(mvc #'%mname ...)."
+    (let ((fname (symb "%" mname)))
       `(progn (defun ,fname ,@body)
               (defmacro ,mname (&rest rest)
-                ,(if docs (format nil "DOCSTRING for ~a;~%~a" fname docs)
-                          (format nil "fx: ~a~%macro wrapper: ~a
-defined via veq:def*" fname mname))
+                ,(make-wrap-docs :def* mname fname body)
                 `(mvc #',',fname ,@rest))))))
 (define-def*)
 

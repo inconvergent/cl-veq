@@ -878,9 +878,10 @@ destructive.
 #### D$LINE
 
 ```
-fx: %D$LINE
-macro wrapper: D$LINE
-defined via veq:def*
+WRAPS: %D$LINE
+ARGS: (X-X-42 X-Y-43)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:D$LINE
  ;   [symbol]
@@ -888,18 +889,20 @@ defined via veq:def*
  ; D$LINE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$LINE
- ;     macro wrapper: D$LINE
- ;     defined via veq:def*
+ ;     WRAPS: %D$LINE
+ ;     ARGS: (X-X-42 X-Y-43)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### D$LSPACE
 
 ```
-fx: %D$LSPACE
-macro wrapper: D$LSPACE
-defined via veq:fvdef*
+WRAPS: %D$LSPACE
+ARGS: (N (VARG 1 A B) &KEY (END T))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:D$LSPACE
  ;   [symbol]
@@ -907,9 +910,10 @@ defined via veq:fvdef*
  ; D$LSPACE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$LSPACE
- ;     macro wrapper: D$LSPACE
- ;     defined via veq:fvdef*
+ ;     WRAPS: %D$LSPACE
+ ;     ARGS: (N (VARG 1 A B) &KEY (END T))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/lspace.lisp
 ```
 
@@ -1067,9 +1071,10 @@ typed.
 #### D$POINT
 
 ```
-fx: %D$POINT
-macro wrapper: D$POINT
-defined via veq:def*
+WRAPS: %D$POINT
+ARGS: (A)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:D$POINT
  ;   [symbol]
@@ -1077,9 +1082,10 @@ defined via veq:def*
  ; D$POINT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D$POINT
- ;     macro wrapper: D$POINT
- ;     defined via veq:def*
+ ;     WRAPS: %D$POINT
+ ;     ARGS: (A)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
@@ -1692,9 +1698,10 @@ destructive.
 #### D2$LINE
 
 ```
-fx: %D2$LINE
-macro wrapper: D2$LINE
-defined via veq:def*
+WRAPS: %D2$LINE
+ARGS: (X-X-44 X-Y-45 X-Z-46 X-W-47)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:D2$LINE
  ;   [symbol]
@@ -1702,18 +1709,20 @@ defined via veq:def*
  ; D2$LINE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$LINE
- ;     macro wrapper: D2$LINE
- ;     defined via veq:def*
+ ;     WRAPS: %D2$LINE
+ ;     ARGS: (X-X-44 X-Y-45 X-Z-46 X-W-47)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### D2$LSPACE
 
 ```
-fx: %D2$LSPACE
-macro wrapper: D2$LSPACE
-defined via veq:fvdef*
+WRAPS: %D2$LSPACE
+ARGS: (N (VARG 2 A B) &KEY (END T))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:D2$LSPACE
  ;   [symbol]
@@ -1721,9 +1730,10 @@ defined via veq:fvdef*
  ; D2$LSPACE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$LSPACE
- ;     macro wrapper: D2$LSPACE
- ;     defined via veq:fvdef*
+ ;     WRAPS: %D2$LSPACE
+ ;     ARGS: (N (VARG 2 A B) &KEY (END T))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/lspace.lisp
 ```
 
@@ -1941,9 +1951,10 @@ destructive.
 #### D2$POINT
 
 ```
-fx: %D2$POINT
-macro wrapper: D2$POINT
-defined via veq:def*
+WRAPS: %D2$POINT
+ARGS: (X-X-33 X-Y-34)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:D2$POINT
  ;   [symbol]
@@ -1951,9 +1962,10 @@ defined via veq:def*
  ; D2$POINT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D2$POINT
- ;     macro wrapper: D2$POINT
- ;     defined via veq:def*
+ ;     WRAPS: %D2$POINT
+ ;     ARGS: (X-X-33 X-Y-34)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
@@ -2464,8 +2476,10 @@ body (2): (VALUES (MOD AX S) (MOD AY S)).
 #### D2MROT
 
 ```
-DOCSTRING for %D2MROT;
-make 2d rotation matrix for rotating a rads
+WRAPS: %D2MROT
+ARGS: (A)
+DOCSTRING: make 2d rotation matrix for rotating a rads
+defined via veq:DEF*
 
  ; VEQ:D2MROT
  ;   [symbol]
@@ -2473,16 +2487,20 @@ make 2d rotation matrix for rotating a rads
  ; D2MROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %D2MROT;
- ;     make 2d rotation matrix for rotating a rads
+ ;     WRAPS: %D2MROT
+ ;     ARGS: (A)
+ ;     DOCSTRING: make 2d rotation matrix for rotating a rads
+ ;     defined via veq:DEF*
  ;   Source file: src/mat.lisp
 ```
 
 #### D2MROT\*
 
 ```
-DOCSTRING for %D2MROT*;
-make 2d rotation matrix for rotating a rads
+WRAPS: %D2MROT*
+ARGS: (A)
+DOCSTRING: make 2d rotation matrix for rotating a rads
+defined via veq:DEF*
 
  ; VEQ:D2MROT*
  ;   [symbol]
@@ -2490,16 +2508,20 @@ make 2d rotation matrix for rotating a rads
  ; D2MROT* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %D2MROT*;
- ;     make 2d rotation matrix for rotating a rads
+ ;     WRAPS: %D2MROT*
+ ;     ARGS: (A)
+ ;     DOCSTRING: make 2d rotation matrix for rotating a rads
+ ;     defined via veq:DEF*
  ;   Source file: src/mat.lisp
 ```
 
 #### D2MSCALE
 
 ```
-DOCSTRING for %D2MSCALE;
-make 2d matrix for scaling by x
+WRAPS: %D2MSCALE
+ARGS: ((VARG 2 X))
+DOCSTRING: make 2d matrix for scaling by x
+defined via veq:FVDEF*
 
  ; VEQ:D2MSCALE
  ;   [symbol]
@@ -2507,8 +2529,10 @@ make 2d matrix for scaling by x
  ; D2MSCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %D2MSCALE;
- ;     make 2d matrix for scaling by x
+ ;     WRAPS: %D2MSCALE
+ ;     ARGS: ((VARG 2 X))
+ ;     DOCSTRING: make 2d matrix for scaling by x
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat.lisp
 ```
 
@@ -2564,8 +2588,10 @@ of type: DVEC
 #### D2MTRANS
 
 ```
-DOCSTRING for %D2MTRANS;
-make 2d transpose matrix for moving by x
+WRAPS: %D2MTRANS
+ARGS: ((VARG 2 X))
+DOCSTRING: make 2d transpose matrix for moving by x
+defined via veq:FVDEF*
 
  ; VEQ:D2MTRANS
  ;   [symbol]
@@ -2573,8 +2599,10 @@ make 2d transpose matrix for moving by x
  ; D2MTRANS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %D2MTRANS;
- ;     make 2d transpose matrix for moving by x
+ ;     WRAPS: %D2MTRANS
+ ;     ARGS: ((VARG 2 X))
+ ;     DOCSTRING: make 2d transpose matrix for moving by x
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat.lisp
 ```
 
@@ -3119,9 +3147,10 @@ destructive.
 #### D3$LINE
 
 ```
-fx: %D3$LINE
-macro wrapper: D3$LINE
-defined via veq:def*
+WRAPS: %D3$LINE
+ARGS: (X-X-48 X-Y-49 X-Z-50 X-W-51 X-U-52 X-V-53)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:D3$LINE
  ;   [symbol]
@@ -3129,18 +3158,20 @@ defined via veq:def*
  ; D3$LINE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$LINE
- ;     macro wrapper: D3$LINE
- ;     defined via veq:def*
+ ;     WRAPS: %D3$LINE
+ ;     ARGS: (X-X-48 X-Y-49 X-Z-50 X-W-51 X-U-52 X-V-53)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### D3$LSPACE
 
 ```
-fx: %D3$LSPACE
-macro wrapper: D3$LSPACE
-defined via veq:fvdef*
+WRAPS: %D3$LSPACE
+ARGS: (N (VARG 3 A B) &KEY (END T))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:D3$LSPACE
  ;   [symbol]
@@ -3148,9 +3179,10 @@ defined via veq:fvdef*
  ; D3$LSPACE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$LSPACE
- ;     macro wrapper: D3$LSPACE
- ;     defined via veq:fvdef*
+ ;     WRAPS: %D3$LSPACE
+ ;     ARGS: (N (VARG 3 A B) &KEY (END T))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/lspace.lisp
 ```
 
@@ -3313,9 +3345,10 @@ typed.
 #### D3$POINT
 
 ```
-fx: %D3$POINT
-macro wrapper: D3$POINT
-defined via veq:def*
+WRAPS: %D3$POINT
+ARGS: (X-X-35 X-Y-36 X-Z-37)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:D3$POINT
  ;   [symbol]
@@ -3323,9 +3356,10 @@ defined via veq:def*
  ; D3$POINT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D3$POINT
- ;     macro wrapper: D3$POINT
- ;     defined via veq:def*
+ ;     WRAPS: %D3$POINT
+ ;     ARGS: (X-X-35 X-Y-36 X-Z-37)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
@@ -3831,8 +3865,10 @@ body (3): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S)).
 #### D3MROT
 
 ```
-DOCSTRING for %D3MROT;
-make 3d rotation matrix for rotating a rad around unit vector (x y z)
+WRAPS: %D3MROT
+ARGS: (A X Y Z)
+DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
+defined via veq:DEF*
 
  ; VEQ:D3MROT
  ;   [symbol]
@@ -3840,16 +3876,20 @@ make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ; D3MROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %D3MROT;
- ;     make 3d rotation matrix for rotating a rad around unit vector (x y z)
+ ;     WRAPS: %D3MROT
+ ;     ARGS: (A X Y Z)
+ ;     DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
+ ;     defined via veq:DEF*
  ;   Source file: src/mat.lisp
 ```
 
 #### D3MROT\*
 
 ```
-DOCSTRING for %D3MROT*;
-make 3d rotation matrix for rotating a rad around unit vector (x y z)
+WRAPS: %D3MROT*
+ARGS: (A X Y Z)
+DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
+defined via veq:DEF*
 
  ; VEQ:D3MROT*
  ;   [symbol]
@@ -3857,16 +3897,20 @@ make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ; D3MROT* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %D3MROT*;
- ;     make 3d rotation matrix for rotating a rad around unit vector (x y z)
+ ;     WRAPS: %D3MROT*
+ ;     ARGS: (A X Y Z)
+ ;     DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
+ ;     defined via veq:DEF*
  ;   Source file: src/mat.lisp
 ```
 
 #### D3MSCALE
 
 ```
-DOCSTRING for %D3MSCALE;
-make 3d matrix for scaling by x
+WRAPS: %D3MSCALE
+ARGS: ((VARG 3 X))
+DOCSTRING: make 3d matrix for scaling by x
+defined via veq:FVDEF*
 
  ; VEQ:D3MSCALE
  ;   [symbol]
@@ -3874,8 +3918,10 @@ make 3d matrix for scaling by x
  ; D3MSCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %D3MSCALE;
- ;     make 3d matrix for scaling by x
+ ;     WRAPS: %D3MSCALE
+ ;     ARGS: ((VARG 3 X))
+ ;     DOCSTRING: make 3d matrix for scaling by x
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat.lisp
 ```
 
@@ -3931,8 +3977,10 @@ of type: DVEC
 #### D3MTRANS
 
 ```
-DOCSTRING for %D3MTRANS;
-make 3d transpose matrix for moving by x
+WRAPS: %D3MTRANS
+ARGS: ((VARG 3 X))
+DOCSTRING: make 3d transpose matrix for moving by x
+defined via veq:FVDEF*
 
  ; VEQ:D3MTRANS
  ;   [symbol]
@@ -3940,8 +3988,10 @@ make 3d transpose matrix for moving by x
  ; D3MTRANS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %D3MTRANS;
- ;     make 3d transpose matrix for moving by x
+ ;     WRAPS: %D3MTRANS
+ ;     ARGS: ((VARG 3 X))
+ ;     DOCSTRING: make 3d transpose matrix for moving by x
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat.lisp
 ```
 
@@ -4437,9 +4487,10 @@ destructive.
 #### D4$LINE
 
 ```
-fx: %D4$LINE
-macro wrapper: D4$LINE
-defined via veq:def*
+WRAPS: %D4$LINE
+ARGS: (X-X-54 X-Y-55 X-Z-56 X-W-57 X-U-58 X-V-59 X-P-60 X-Q-61)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:D4$LINE
  ;   [symbol]
@@ -4447,18 +4498,20 @@ defined via veq:def*
  ; D4$LINE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$LINE
- ;     macro wrapper: D4$LINE
- ;     defined via veq:def*
+ ;     WRAPS: %D4$LINE
+ ;     ARGS: (X-X-54 X-Y-55 X-Z-56 X-W-57 X-U-58 X-V-59 X-P-60 X-Q-61)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### D4$LSPACE
 
 ```
-fx: %D4$LSPACE
-macro wrapper: D4$LSPACE
-defined via veq:fvdef*
+WRAPS: %D4$LSPACE
+ARGS: (N (VARG 4 A B) &KEY (END T))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:D4$LSPACE
  ;   [symbol]
@@ -4466,9 +4519,10 @@ defined via veq:fvdef*
  ; D4$LSPACE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$LSPACE
- ;     macro wrapper: D4$LSPACE
- ;     defined via veq:fvdef*
+ ;     WRAPS: %D4$LSPACE
+ ;     ARGS: (N (VARG 4 A B) &KEY (END T))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/lspace.lisp
 ```
 
@@ -4609,9 +4663,10 @@ typed.
 #### D4$POINT
 
 ```
-fx: %D4$POINT
-macro wrapper: D4$POINT
-defined via veq:def*
+WRAPS: %D4$POINT
+ARGS: (X-X-38 X-Y-39 X-Z-40 X-W-41)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:D4$POINT
  ;   [symbol]
@@ -4619,9 +4674,10 @@ defined via veq:def*
  ; D4$POINT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %D4$POINT
- ;     macro wrapper: D4$POINT
- ;     defined via veq:def*
+ ;     WRAPS: %D4$POINT
+ ;     ARGS: (X-X-38 X-Y-39 X-Z-40 X-W-41)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
@@ -5902,11 +5958,11 @@ body: (- 1.0d0 (COS (* X DPI5)))
 #### DEF\*
 
 ```
-defines a function named: %fx
-and a wrapper macro named: fx
+defines a function named: %mname
+and a wrapper macro named: mname
 
 the wrapper macro ensures every call to this function is done as
-(mvc #'%fx ...).
+(mvc #'%mname ...).
 
  ; VEQ:DEF*
  ;   [symbol]
@@ -5914,11 +5970,11 @@ the wrapper macro ensures every call to this function is done as
  ; DEF* names a macro:
  ;   Lambda-list: (MNAME &BODY BODY)
  ;   Documentation:
- ;     defines a function named: %fx
- ;     and a wrapper macro named: fx
+ ;     defines a function named: %mname
+ ;     and a wrapper macro named: mname
  ;
  ;     the wrapper macro ensures every call to this function is done as
- ;     (mvc #'%fx ...).
+ ;     (mvc #'%mname ...).
  ;   Source file: src/macrolets.lisp
 ```
 
@@ -6747,9 +6803,10 @@ destructive.
 #### F$LINE
 
 ```
-fx: %F$LINE
-macro wrapper: F$LINE
-defined via veq:def*
+WRAPS: %F$LINE
+ARGS: (X-X-13 X-Y-14)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:F$LINE
  ;   [symbol]
@@ -6757,18 +6814,20 @@ defined via veq:def*
  ; F$LINE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$LINE
- ;     macro wrapper: F$LINE
- ;     defined via veq:def*
+ ;     WRAPS: %F$LINE
+ ;     ARGS: (X-X-13 X-Y-14)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### F$LSPACE
 
 ```
-fx: %F$LSPACE
-macro wrapper: F$LSPACE
-defined via veq:fvdef*
+WRAPS: %F$LSPACE
+ARGS: (N (VARG 1 A B) &KEY (END T))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:F$LSPACE
  ;   [symbol]
@@ -6776,9 +6835,10 @@ defined via veq:fvdef*
  ; F$LSPACE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$LSPACE
- ;     macro wrapper: F$LSPACE
- ;     defined via veq:fvdef*
+ ;     WRAPS: %F$LSPACE
+ ;     ARGS: (N (VARG 1 A B) &KEY (END T))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/lspace.lisp
 ```
 
@@ -6936,9 +6996,10 @@ typed.
 #### F$POINT
 
 ```
-fx: %F$POINT
-macro wrapper: F$POINT
-defined via veq:def*
+WRAPS: %F$POINT
+ARGS: (A)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:F$POINT
  ;   [symbol]
@@ -6946,9 +7007,10 @@ defined via veq:def*
  ; F$POINT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F$POINT
- ;     macro wrapper: F$POINT
- ;     defined via veq:def*
+ ;     WRAPS: %F$POINT
+ ;     ARGS: (A)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
@@ -7327,8 +7389,10 @@ body (1): (MVC #'ATAN (-F2NORM AY AX)).
 #### F2$CENTER
 
 ```
-DOCSTRING for %F2$CENTER;
-center 2d array according to n points in array. n is optional.
+WRAPS: %F2$CENTER
+ARGS: (ARR &AUX (N (2$NUM ARR)))
+DOCSTRING: center 2d array according to n points in array. n is optional.
+defined via veq:DEF*
 
  ; VEQ:F2$CENTER
  ;   [symbol]
@@ -7336,16 +7400,20 @@ center 2d array according to n points in array. n is optional.
  ; F2$CENTER names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F2$CENTER;
- ;     center 2d array according to n points in array. n is optional.
+ ;     WRAPS: %F2$CENTER
+ ;     ARGS: (ARR &AUX (N (2$NUM ARR)))
+ ;     DOCSTRING: center 2d array according to n points in array. n is optional.
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### F2$CIRC
 
 ```
-DOCSTRING for %F2$CIRC;
-return circle of size rad. (rs 0.5) is vertex density.
+WRAPS: %F2$CIRC
+ARGS: (RAD &OPTIONAL (RS 0.5))
+DOCSTRING: return circle of size rad. (rs 0.5) is vertex density.
+defined via veq:DEF*
 
  ; VEQ:F2$CIRC
  ;   [symbol]
@@ -7353,8 +7421,10 @@ return circle of size rad. (rs 0.5) is vertex density.
  ; F2$CIRC names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F2$CIRC;
- ;     return circle of size rad. (rs 0.5) is vertex density.
+ ;     WRAPS: %F2$CIRC
+ ;     ARGS: (RAD &OPTIONAL (RS 0.5))
+ ;     DOCSTRING: return circle of size rad. (rs 0.5) is vertex density.
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
@@ -7595,9 +7665,10 @@ destructive.
 #### F2$LINE
 
 ```
-fx: %F2$LINE
-macro wrapper: F2$LINE
-defined via veq:def*
+WRAPS: %F2$LINE
+ARGS: (X-X-15 X-Y-16 X-Z-17 X-W-18)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:F2$LINE
  ;   [symbol]
@@ -7605,18 +7676,20 @@ defined via veq:def*
  ; F2$LINE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$LINE
- ;     macro wrapper: F2$LINE
- ;     defined via veq:def*
+ ;     WRAPS: %F2$LINE
+ ;     ARGS: (X-X-15 X-Y-16 X-Z-17 X-W-18)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### F2$LSPACE
 
 ```
-fx: %F2$LSPACE
-macro wrapper: F2$LSPACE
-defined via veq:fvdef*
+WRAPS: %F2$LSPACE
+ARGS: (N (VARG 2 A B) &KEY (END T))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:F2$LSPACE
  ;   [symbol]
@@ -7624,9 +7697,10 @@ defined via veq:fvdef*
  ; F2$LSPACE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$LSPACE
- ;     macro wrapper: F2$LSPACE
- ;     defined via veq:fvdef*
+ ;     WRAPS: %F2$LSPACE
+ ;     ARGS: (N (VARG 2 A B) &KEY (END T))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/lspace.lisp
 ```
 
@@ -7844,9 +7918,10 @@ destructive.
 #### F2$POINT
 
 ```
-fx: %F2$POINT
-macro wrapper: F2$POINT
-defined via veq:def*
+WRAPS: %F2$POINT
+ARGS: (X-X-4 X-Y-5)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:F2$POINT
  ;   [symbol]
@@ -7854,17 +7929,20 @@ defined via veq:def*
  ; F2$POINT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$POINT
- ;     macro wrapper: F2$POINT
- ;     defined via veq:def*
+ ;     WRAPS: %F2$POINT
+ ;     ARGS: (X-X-4 X-Y-5)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### F2$POLYGON
 
 ```
-DOCSTRING for %F2$POLYGON;
-return n-polygon of size rad. rotate by (rot 0)
+WRAPS: %F2$POLYGON
+ARGS: (N RAD &OPTIONAL (ROT 0.0))
+DOCSTRING: return n-polygon of size rad. rotate by (rot 0)
+defined via veq:DEF*
 
  ; VEQ:F2$POLYGON
  ;   [symbol]
@@ -7872,17 +7950,20 @@ return n-polygon of size rad. rotate by (rot 0)
  ; F2$POLYGON names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F2$POLYGON;
- ;     return n-polygon of size rad. rotate by (rot 0)
+ ;     WRAPS: %F2$POLYGON
+ ;     ARGS: (N RAD &OPTIONAL (ROT 0.0))
+ ;     DOCSTRING: return n-polygon of size rad. rotate by (rot 0)
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### F2$RECT
 
 ```
-fx: %F2$RECT
-macro wrapper: F2$RECT
-defined via veq:def*
+WRAPS: %F2$RECT
+ARGS: (W H)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:F2$RECT
  ;   [symbol]
@@ -7890,9 +7971,10 @@ defined via veq:def*
  ; F2$RECT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$RECT
- ;     macro wrapper: F2$RECT
- ;     defined via veq:def*
+ ;     WRAPS: %F2$RECT
+ ;     ARGS: (W H)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
@@ -8016,9 +8098,10 @@ destructive.
 #### F2$SQUARE\*
 
 ```
-fx: %F2$SQUARE*
-macro wrapper: F2$SQUARE*
-defined via veq:def*
+WRAPS: %F2$SQUARE*
+ARGS: (S)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:F2$SQUARE*
  ;   [symbol]
@@ -8026,9 +8109,10 @@ defined via veq:def*
  ; F2$SQUARE* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2$SQUARE*
- ;     macro wrapper: F2$SQUARE*
- ;     defined via veq:def*
+ ;     WRAPS: %F2$SQUARE*
+ ;     ARGS: (S)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
@@ -8265,9 +8349,10 @@ body (2): (VALUES (/ BX AX) (/ BY AY)).
 #### F2IN-BBOX
 
 ```
-fx: %F2IN-BBOX
-macro wrapper: F2IN-BBOX
-defined via veq:fvdef*
+WRAPS: %F2IN-BBOX
+ARGS: ((VARG 2 TOP-LEFT BOTTOM-RIGHT PT))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:F2IN-BBOX
  ;   [symbol]
@@ -8275,18 +8360,20 @@ defined via veq:fvdef*
  ; F2IN-BBOX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2IN-BBOX
- ;     macro wrapper: F2IN-BBOX
- ;     defined via veq:fvdef*
+ ;     WRAPS: %F2IN-BBOX
+ ;     ARGS: ((VARG 2 TOP-LEFT BOTTOM-RIGHT PT))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/checks.lisp
 ```
 
 #### F2IN-CONCAVE
 
 ```
-fx: %F2IN-CONCAVE
-macro wrapper: F2IN-CONCAVE
-defined via veq:fvdef*
+WRAPS: %F2IN-CONCAVE
+ARGS: (SHAPE (VARG 2 PT))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:F2IN-CONCAVE
  ;   [symbol]
@@ -8294,18 +8381,20 @@ defined via veq:fvdef*
  ; F2IN-CONCAVE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2IN-CONCAVE
- ;     macro wrapper: F2IN-CONCAVE
- ;     defined via veq:fvdef*
+ ;     WRAPS: %F2IN-CONCAVE
+ ;     ARGS: (SHAPE (VARG 2 PT))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/checks.lisp
 ```
 
 #### F2IN-TRIANGLE
 
 ```
-fx: %F2IN-TRIANGLE
-macro wrapper: F2IN-TRIANGLE
-defined via veq:fvdef*
+WRAPS: %F2IN-TRIANGLE
+ARGS: ((VARG 2 A B C P))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:F2IN-TRIANGLE
  ;   [symbol]
@@ -8313,9 +8402,10 @@ defined via veq:fvdef*
  ; F2IN-TRIANGLE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2IN-TRIANGLE
- ;     macro wrapper: F2IN-TRIANGLE
- ;     defined via veq:fvdef*
+ ;     WRAPS: %F2IN-TRIANGLE
+ ;     ARGS: ((VARG 2 A B C P))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/checks.lisp
 ```
 
@@ -8375,13 +8465,15 @@ note that this behaves like native lisp let*.
 #### F2LSEGX
 
 ```
-DOCSTRING for %F2LSEGX;
-lines = #( #(ax ay bx by) ... )
+WRAPS: %F2LSEGX
+ARGS: (LINES*)
+DOCSTRING: lines = #( #(ax ay bx by) ... )
 
 not entirely slow line-line intersection for all lines. this is faster than
 comparing all lines when lines are short relative to the area that the lines
 cover. it can be improved further by using binary search tree to store
 current state.
+defined via veq:FVDEF*
 
  ; VEQ:F2LSEGX
  ;   [symbol]
@@ -8389,13 +8481,15 @@ current state.
  ; F2LSEGX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F2LSEGX;
- ;     lines = #( #(ax ay bx by) ... )
+ ;     WRAPS: %F2LSEGX
+ ;     ARGS: (LINES*)
+ ;     DOCSTRING: lines = #( #(ax ay bx by) ... )
  ;
  ;     not entirely slow line-line intersection for all lines. this is faster than
  ;     comparing all lines when lines are short relative to the area that the lines
  ;     cover. it can be improved further by using binary search tree to store
  ;     current state.
+ ;     defined via veq:FVDEF*
  ;   Source file: src/checks.lisp
 ```
 
@@ -8506,8 +8600,10 @@ body (2): (VALUES (MOD AX S) (MOD AY S)).
 #### F2MROT
 
 ```
-DOCSTRING for %F2MROT;
-make 2d rotation matrix for rotating a rads
+WRAPS: %F2MROT
+ARGS: (A)
+DOCSTRING: make 2d rotation matrix for rotating a rads
+defined via veq:DEF*
 
  ; VEQ:F2MROT
  ;   [symbol]
@@ -8515,16 +8611,20 @@ make 2d rotation matrix for rotating a rads
  ; F2MROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F2MROT;
- ;     make 2d rotation matrix for rotating a rads
+ ;     WRAPS: %F2MROT
+ ;     ARGS: (A)
+ ;     DOCSTRING: make 2d rotation matrix for rotating a rads
+ ;     defined via veq:DEF*
  ;   Source file: src/mat.lisp
 ```
 
 #### F2MROT\*
 
 ```
-DOCSTRING for %F2MROT*;
-make 2d rotation matrix for rotating a rads
+WRAPS: %F2MROT*
+ARGS: (A)
+DOCSTRING: make 2d rotation matrix for rotating a rads
+defined via veq:DEF*
 
  ; VEQ:F2MROT*
  ;   [symbol]
@@ -8532,16 +8632,20 @@ make 2d rotation matrix for rotating a rads
  ; F2MROT* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F2MROT*;
- ;     make 2d rotation matrix for rotating a rads
+ ;     WRAPS: %F2MROT*
+ ;     ARGS: (A)
+ ;     DOCSTRING: make 2d rotation matrix for rotating a rads
+ ;     defined via veq:DEF*
  ;   Source file: src/mat.lisp
 ```
 
 #### F2MSCALE
 
 ```
-DOCSTRING for %F2MSCALE;
-make 2d matrix for scaling by x
+WRAPS: %F2MSCALE
+ARGS: ((VARG 2 X))
+DOCSTRING: make 2d matrix for scaling by x
+defined via veq:FVDEF*
 
  ; VEQ:F2MSCALE
  ;   [symbol]
@@ -8549,8 +8653,10 @@ make 2d matrix for scaling by x
  ; F2MSCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F2MSCALE;
- ;     make 2d matrix for scaling by x
+ ;     WRAPS: %F2MSCALE
+ ;     ARGS: ((VARG 2 X))
+ ;     DOCSTRING: make 2d matrix for scaling by x
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat.lisp
 ```
 
@@ -8606,8 +8712,10 @@ of type: FVEC
 #### F2MTRANS
 
 ```
-DOCSTRING for %F2MTRANS;
-make 2d transpose matrix for moving by x
+WRAPS: %F2MTRANS
+ARGS: ((VARG 2 X))
+DOCSTRING: make 2d transpose matrix for moving by x
+defined via veq:FVDEF*
 
  ; VEQ:F2MTRANS
  ;   [symbol]
@@ -8615,8 +8723,10 @@ make 2d transpose matrix for moving by x
  ; F2MTRANS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F2MTRANS;
- ;     make 2d transpose matrix for moving by x
+ ;     WRAPS: %F2MTRANS
+ ;     ARGS: ((VARG 2 X))
+ ;     DOCSTRING: make 2d transpose matrix for moving by x
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat.lisp
 ```
 
@@ -8759,9 +8869,12 @@ body (2): (VALUES (* AX S) (* AY S)).
 #### F2SEGDST
 
 ```
-fx: %F2SEGDST
-macro wrapper: F2SEGDST
-defined via veq:fvdef*
+WRAPS: %F2SEGDST
+ARGS: ((VARG 2 VA VB V))
+DOCSTRING: find distance between line, (va vb), and v.
+returns (values distance s) where is is the interpolation value that will
+yield the closest point on line.
+defined via veq:FVDEF*
 
  ; VEQ:F2SEGDST
  ;   [symbol]
@@ -8769,19 +8882,24 @@ defined via veq:fvdef*
  ; F2SEGDST names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F2SEGDST
- ;     macro wrapper: F2SEGDST
- ;     defined via veq:fvdef*
+ ;     WRAPS: %F2SEGDST
+ ;     ARGS: ((VARG 2 VA VB V))
+ ;     DOCSTRING: find distance between line, (va vb), and v.
+ ;     returns (values distance s) where is is the interpolation value that will
+ ;     yield the closest point on line.
+ ;     defined via veq:FVDEF*
  ;   Source file: src/checks.lisp
 ```
 
 #### F2SEGX
 
 ```
-DOCSTRING for %F2SEGX;
-find intersection between lines (a1 a2), (b1 b2).
+WRAPS: %F2SEGX
+ARGS: ((VARG 2 A1 A2 B1 B2))
+DOCSTRING: find intersection between lines (a1 a2), (b1 b2).
 returns isect? p q where p and q is the distance along each line to the
 intersection point
+defined via veq:FVDEF*
 
  ; VEQ:F2SEGX
  ;   [symbol]
@@ -8789,10 +8907,12 @@ intersection point
  ; F2SEGX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F2SEGX;
- ;     find intersection between lines (a1 a2), (b1 b2).
+ ;     WRAPS: %F2SEGX
+ ;     ARGS: ((VARG 2 A1 A2 B1 B2))
+ ;     DOCSTRING: find intersection between lines (a1 a2), (b1 b2).
  ;     returns isect? p q where p and q is the distance along each line to the
  ;     intersection point
+ ;     defined via veq:FVDEF*
  ;   Source file: src/checks.lisp
 ```
 
@@ -9201,9 +9321,10 @@ destructive.
 #### F3$LINE
 
 ```
-fx: %F3$LINE
-macro wrapper: F3$LINE
-defined via veq:def*
+WRAPS: %F3$LINE
+ARGS: (X-X-19 X-Y-20 X-Z-21 X-W-22 X-U-23 X-V-24)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:F3$LINE
  ;   [symbol]
@@ -9211,18 +9332,20 @@ defined via veq:def*
  ; F3$LINE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$LINE
- ;     macro wrapper: F3$LINE
- ;     defined via veq:def*
+ ;     WRAPS: %F3$LINE
+ ;     ARGS: (X-X-19 X-Y-20 X-Z-21 X-W-22 X-U-23 X-V-24)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### F3$LSPACE
 
 ```
-fx: %F3$LSPACE
-macro wrapper: F3$LSPACE
-defined via veq:fvdef*
+WRAPS: %F3$LSPACE
+ARGS: (N (VARG 3 A B) &KEY (END T))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:F3$LSPACE
  ;   [symbol]
@@ -9230,9 +9353,10 @@ defined via veq:fvdef*
  ; F3$LSPACE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$LSPACE
- ;     macro wrapper: F3$LSPACE
- ;     defined via veq:fvdef*
+ ;     WRAPS: %F3$LSPACE
+ ;     ARGS: (N (VARG 3 A B) &KEY (END T))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/lspace.lisp
 ```
 
@@ -9395,9 +9519,10 @@ typed.
 #### F3$POINT
 
 ```
-fx: %F3$POINT
-macro wrapper: F3$POINT
-defined via veq:def*
+WRAPS: %F3$POINT
+ARGS: (X-X-6 X-Y-7 X-Z-8)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:F3$POINT
  ;   [symbol]
@@ -9405,9 +9530,10 @@ defined via veq:def*
  ; F3$POINT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F3$POINT
- ;     macro wrapper: F3$POINT
- ;     defined via veq:def*
+ ;     WRAPS: %F3$POINT
+ ;     ARGS: (X-X-6 X-Y-7 X-Z-8)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
@@ -9913,8 +10039,10 @@ body (3): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S)).
 #### F3MROT
 
 ```
-DOCSTRING for %F3MROT;
-make 3d rotation matrix for rotating a rad around unit vector (x y z)
+WRAPS: %F3MROT
+ARGS: (A X Y Z)
+DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
+defined via veq:DEF*
 
  ; VEQ:F3MROT
  ;   [symbol]
@@ -9922,16 +10050,20 @@ make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ; F3MROT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F3MROT;
- ;     make 3d rotation matrix for rotating a rad around unit vector (x y z)
+ ;     WRAPS: %F3MROT
+ ;     ARGS: (A X Y Z)
+ ;     DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
+ ;     defined via veq:DEF*
  ;   Source file: src/mat.lisp
 ```
 
 #### F3MROT\*
 
 ```
-DOCSTRING for %F3MROT*;
-make 3d rotation matrix for rotating a rad around unit vector (x y z)
+WRAPS: %F3MROT*
+ARGS: (A X Y Z)
+DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
+defined via veq:DEF*
 
  ; VEQ:F3MROT*
  ;   [symbol]
@@ -9939,16 +10071,20 @@ make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ; F3MROT* names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F3MROT*;
- ;     make 3d rotation matrix for rotating a rad around unit vector (x y z)
+ ;     WRAPS: %F3MROT*
+ ;     ARGS: (A X Y Z)
+ ;     DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
+ ;     defined via veq:DEF*
  ;   Source file: src/mat.lisp
 ```
 
 #### F3MSCALE
 
 ```
-DOCSTRING for %F3MSCALE;
-make 3d matrix for scaling by x
+WRAPS: %F3MSCALE
+ARGS: ((VARG 3 X))
+DOCSTRING: make 3d matrix for scaling by x
+defined via veq:FVDEF*
 
  ; VEQ:F3MSCALE
  ;   [symbol]
@@ -9956,8 +10092,10 @@ make 3d matrix for scaling by x
  ; F3MSCALE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F3MSCALE;
- ;     make 3d matrix for scaling by x
+ ;     WRAPS: %F3MSCALE
+ ;     ARGS: ((VARG 3 X))
+ ;     DOCSTRING: make 3d matrix for scaling by x
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat.lisp
 ```
 
@@ -10013,8 +10151,10 @@ of type: FVEC
 #### F3MTRANS
 
 ```
-DOCSTRING for %F3MTRANS;
-make 3d transpose matrix for moving by x
+WRAPS: %F3MTRANS
+ARGS: ((VARG 3 X))
+DOCSTRING: make 3d transpose matrix for moving by x
+defined via veq:FVDEF*
 
  ; VEQ:F3MTRANS
  ;   [symbol]
@@ -10022,8 +10162,10 @@ make 3d transpose matrix for moving by x
  ; F3MTRANS names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F3MTRANS;
- ;     make 3d transpose matrix for moving by x
+ ;     WRAPS: %F3MTRANS
+ ;     ARGS: ((VARG 3 X))
+ ;     DOCSTRING: make 3d transpose matrix for moving by x
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat.lisp
 ```
 
@@ -10084,8 +10226,10 @@ make 3d
 #### F3PLANEX
 
 ```
-DOCSTRING for %F3PLANEX;
-intersection of plane (n:normal, p:point) and line (a b)
+WRAPS: %F3PLANEX
+ARGS: ((VARG 3 N P A B))
+DOCSTRING: intersection of plane (n:normal, p:point) and line (a b)
+defined via veq:FVDEF*
 
  ; VEQ:F3PLANEX
  ;   [symbol]
@@ -10093,8 +10237,10 @@ intersection of plane (n:normal, p:point) and line (a b)
  ; F3PLANEX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %F3PLANEX;
- ;     intersection of plane (n:normal, p:point) and line (a b)
+ ;     WRAPS: %F3PLANEX
+ ;     ARGS: ((VARG 3 N P A B))
+ ;     DOCSTRING: intersection of plane (n:normal, p:point) and line (a b)
+ ;     defined via veq:FVDEF*
  ;   Source file: src/checks.lisp
 ```
 
@@ -10536,9 +10682,10 @@ destructive.
 #### F4$LINE
 
 ```
-fx: %F4$LINE
-macro wrapper: F4$LINE
-defined via veq:def*
+WRAPS: %F4$LINE
+ARGS: (X-X-25 X-Y-26 X-Z-27 X-W-28 X-U-29 X-V-30 X-P-31 X-Q-32)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:F4$LINE
  ;   [symbol]
@@ -10546,18 +10693,20 @@ defined via veq:def*
  ; F4$LINE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$LINE
- ;     macro wrapper: F4$LINE
- ;     defined via veq:def*
+ ;     WRAPS: %F4$LINE
+ ;     ARGS: (X-X-25 X-Y-26 X-Z-27 X-W-28 X-U-29 X-V-30 X-P-31 X-Q-32)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
 #### F4$LSPACE
 
 ```
-fx: %F4$LSPACE
-macro wrapper: F4$LSPACE
-defined via veq:fvdef*
+WRAPS: %F4$LSPACE
+ARGS: (N (VARG 4 A B) &KEY (END T))
+DOCSTRING: [none]
+defined via veq:FVDEF*
 
  ; VEQ:F4$LSPACE
  ;   [symbol]
@@ -10565,9 +10714,10 @@ defined via veq:fvdef*
  ; F4$LSPACE names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$LSPACE
- ;     macro wrapper: F4$LSPACE
- ;     defined via veq:fvdef*
+ ;     WRAPS: %F4$LSPACE
+ ;     ARGS: (N (VARG 4 A B) &KEY (END T))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
  ;   Source file: src/lspace.lisp
 ```
 
@@ -10708,9 +10858,10 @@ typed.
 #### F4$POINT
 
 ```
-fx: %F4$POINT
-macro wrapper: F4$POINT
-defined via veq:def*
+WRAPS: %F4$POINT
+ARGS: (X-X-9 X-Y-10 X-Z-11 X-W-12)
+DOCSTRING: [none]
+defined via veq:DEF*
 
  ; VEQ:F4$POINT
  ;   [symbol]
@@ -10718,9 +10869,10 @@ defined via veq:def*
  ; F4$POINT names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     fx: %F4$POINT
- ;     macro wrapper: F4$POINT
- ;     defined via veq:def*
+ ;     WRAPS: %F4$POINT
+ ;     ARGS: (X-X-9 X-Y-10 X-Z-11 X-W-12)
+ ;     DOCSTRING: [none]
+ ;     defined via veq:DEF*
  ;   Source file: src/shapes.lisp
 ```
 
@@ -12119,8 +12271,10 @@ body (1): (+ AX (* (- BX AX) S)).
 #### FMAKE-ORTHO-PROJ-MATRIX
 
 ```
-DOCSTRING for %FMAKE-ORTHO-PROJ-MATRIX;
-make orthogonal projection matrix
+WRAPS: %FMAKE-ORTHO-PROJ-MATRIX
+ARGS: (&OPTIONAL (W 1.0) (H W) (N 0.1) (F 100.0))
+DOCSTRING: make orthogonal projection matrix
+defined via veq:FVDEF*
 
  ; VEQ:FMAKE-ORTHO-PROJ-MATRIX
  ;   [symbol]
@@ -12128,16 +12282,20 @@ make orthogonal projection matrix
  ; FMAKE-ORTHO-PROJ-MATRIX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %FMAKE-ORTHO-PROJ-MATRIX;
- ;     make orthogonal projection matrix
+ ;     WRAPS: %FMAKE-ORTHO-PROJ-MATRIX
+ ;     ARGS: (&OPTIONAL (W 1.0) (H W) (N 0.1) (F 100.0))
+ ;     DOCSTRING: make orthogonal projection matrix
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat-cam.lisp
 ```
 
 #### FMAKE-PROJ-MATRIX
 
 ```
-DOCSTRING for %FMAKE-PROJ-MATRIX;
-make projection matrix for width, height, near, far
+WRAPS: %FMAKE-PROJ-MATRIX
+ARGS: (&OPTIONAL (W 1.0) (H W) (N 0.1) (F 100.0))
+DOCSTRING: make projection matrix for width, height, near, far
+defined via veq:FVDEF*
 
  ; VEQ:FMAKE-PROJ-MATRIX
  ;   [symbol]
@@ -12145,16 +12303,20 @@ make projection matrix for width, height, near, far
  ; FMAKE-PROJ-MATRIX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %FMAKE-PROJ-MATRIX;
- ;     make projection matrix for width, height, near, far
+ ;     WRAPS: %FMAKE-PROJ-MATRIX
+ ;     ARGS: (&OPTIONAL (W 1.0) (H W) (N 0.1) (F 100.0))
+ ;     DOCSTRING: make projection matrix for width, height, near, far
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat-cam.lisp
 ```
 
 #### FMAKE-VIEW-MATRIX
 
 ```
-DOCSTRING for %FMAKE-VIEW-MATRIX;
-make view matrix for cam (w/up) looking at target
+WRAPS: %FMAKE-VIEW-MATRIX
+ARGS: ((VA 3 CAM TARGET UP))
+DOCSTRING: make view matrix for cam (w/up) looking at target
+defined via veq:FVDEF*
 
  ; VEQ:FMAKE-VIEW-MATRIX
  ;   [symbol]
@@ -12162,8 +12324,10 @@ make view matrix for cam (w/up) looking at target
  ; FMAKE-VIEW-MATRIX names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     DOCSTRING for %FMAKE-VIEW-MATRIX;
- ;     make view matrix for cam (w/up) looking at target
+ ;     WRAPS: %FMAKE-VIEW-MATRIX
+ ;     ARGS: ((VA 3 CAM TARGET UP))
+ ;     DOCSTRING: make view matrix for cam (w/up) looking at target
+ ;     defined via veq:FVDEF*
  ;   Source file: src/mat-cam.lisp
 ```
 
@@ -12350,12 +12514,12 @@ define function with veq context enabled. uses fvprogn.
 #### FVDEF\*
 
 ```
-defines a function named: %fx
-and a wrapper macro named: fx
+defines a function named: %mname
+and a wrapper macro named: mname
 veq context is enabled. uses fvprogn.
 
 the wrapper macro ensures every call to this function is done as
-(mvc #'%fx ...).
+(mvc #'%mname ...).
 
  ; VEQ:FVDEF*
  ;   [symbol]
@@ -12363,12 +12527,12 @@ the wrapper macro ensures every call to this function is done as
  ; FVDEF* names a macro:
  ;   Lambda-list: (MNAME &BODY BODY)
  ;   Documentation:
- ;     defines a function named: %fx
- ;     and a wrapper macro named: fx
+ ;     defines a function named: %mname
+ ;     and a wrapper macro named: mname
  ;     veq context is enabled. uses fvprogn.
  ;
  ;     the wrapper macro ensures every call to this function is done as
- ;     (mvc #'%fx ...).
+ ;     (mvc #'%mname ...).
  ;   Source file: src/macrolets.lisp
 ```
 
@@ -13768,12 +13932,12 @@ define function with veq context enabled. uses vprogn.
 #### VDEF\*
 
 ```
-defines a function named: %fx
-and a wrapper macro named: fx
+defines a function named: %mname
+and a wrapper macro named: mname
 veq context is enabled. uses vprogn.
 
 the wrapper macro ensures every call to this function is done as
-(mvc #'%fx ...).
+(mvc #'%mname ...).
 
  ; VEQ:VDEF*
  ;   [symbol]
@@ -13781,12 +13945,12 @@ the wrapper macro ensures every call to this function is done as
  ; VDEF* names a macro:
  ;   Lambda-list: (MNAME &BODY BODY)
  ;   Documentation:
- ;     defines a function named: %fx
- ;     and a wrapper macro named: fx
+ ;     defines a function named: %mname
+ ;     and a wrapper macro named: mname
  ;     veq context is enabled. uses vprogn.
  ;
  ;     the wrapper macro ensures every call to this function is done as
- ;     (mvc #'%fx ...).
+ ;     (mvc #'%mname ...).
  ;   Source file: src/macrolets.lisp
 ```
 

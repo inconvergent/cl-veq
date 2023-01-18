@@ -14,6 +14,15 @@
            (vlet (veqsymb 1 type "VLET"))
            (with-arrays (veqsymb 1 type "WITH-ARRAYS"))
            (indref (veqsymb dim type "$"))
+           (with `(:itr k
+                   :arr ((,a ,dim ,a))
+                   :fxs ((,mimafx ((varg ,dim x))
+                           (progn ,@(loop for i from 0 below dim
+                                          collect `(update-mima
+                                                     (:vr x ,i)
+                                                     (:vr mi ,i)
+                                                     (:vr ma ,i))))))
+                   :nxs ((,mimafx ,a))))
            (docs (format nil "find min and max for all dimensions of ~d array.
 ex: (~a &key n) returns (values xmin xmax ...).
 use n to limit to first n rows." dim exportname)))
@@ -31,15 +40,10 @@ use n to limit to first n rows." dim exportname)))
             (,vlet ((mm ,dim (,indref ,a (if inds (car inds) 0)))
                     (mi ,dim (values mm))
                     (ma ,dim (values mm)))
-              (,with-arrays (:n n :itr k
-                :arr ((,a ,dim ,a))
-                :fxs ((,mimafx ((varg ,dim x))
-                        (progn ,@(loop for i from 0 below dim
-                                       collect `(update-mima
-                                                  (:vr x ,i)
-                                                  (:vr mi ,i)
-                                                  (:vr ma ,i))))))
-                :nxs ((,mimafx ,a))))
+                ; TODO: there was s bug here where inds was not used correctly.
+                ; should rewrite with-arrays to use n if n, else inds?
+                (if inds (,with-arrays (:inds inds ,@with))
+                         (,with-arrays (:n n ,@with)))
               (values ,@(loop with res = (list)
                               for i from 0 below dim
                               do (push `(:vr mi ,i) res)
