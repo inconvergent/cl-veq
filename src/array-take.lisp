@@ -6,11 +6,11 @@
 ; increasing?
 (defmacro define-take-fx (dim type)
   (declare (symbol type) (fixnum dim))
-  (let ((fxname (veqsymb dim type "$TAKE")) ; f2$take
-        (arrmacro (veqsymb 1 type "WITH-ARRAYS")) ; fwith-arrays
-        (resarr (veqsymb 1 type "$MAKE"))
+  (let ((fxname (veqsymb dim type :$take)) ; f2$take
+        (arrmacro (veqsymb 1 type :with-arrays)) ; fwith-arrays
+        (resarr (veqsymb 1 type :$make)) ; f2$make
         (docs (format nil "returns ~ad array with rows for inds.
-use :res to put result in existing array." dim))) ; f2$make
+use :res to put result in existing array." dim)))
     `(progn
        (export ',fxname)
        (fvdef ,fxname (a inds &key res)
@@ -24,8 +24,13 @@ use :res to put result in existing array." dim))) ; f2$make
               :fxs ((acc ((varg ,dim x)) (values x)))
               :exs ((res cnt (acc a))))
               res))))))
-(define-take-fx 1 ff) (define-take-fx 2 ff) (define-take-fx 3 ff) (define-take-fx 4 ff)
-(define-take-fx 1 df) (define-take-fx 2 df) (define-take-fx 3 df) (define-take-fx 4 df)
+
+(defmacro define-takes ()
+ `(progn
+    ,@(loop for (d ty) in (group '(1 ff 2 ff 3 ff 4 ff 1 df 2 df 3 df 4 df
+                                   1 in 2 in 3 in 4 in 1 pn 2 pn 3 pn 4 pn) 2)
+            append `((define-take-fx ,d ,ty)))))
+(define-takes)
 
 ; (defmacro define-slice-fx (dim type)
 ;   (declare (symbol type) (fixnum dim))
@@ -49,6 +54,4 @@ use :res to put result in existing array." dim))) ; f2$make
 ;               :fxs ((acc ((varg ,dim x)) (values x)))
 ;               :exs ((,res cnt (acc ,a*))))
 ;               ,res)))))))
-; (define-slice-fx 1 ff) (define-slice-fx 2 ff) (define-slice-fx 3 ff) (define-slice-fx 4 ff)
-; (define-slice-fx 1 df) (define-slice-fx 2 df) (define-slice-fx 3 df) (define-slice-fx 4 df)
 

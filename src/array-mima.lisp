@@ -10,9 +10,9 @@
 ; TODO: from to as supported in with-arrays
 (defmacro -xmima (dim type)
   (awg (a mimafx)
-    (let* ((exportname (veqsymb dim type "$MIMA"))
-           (vlet (veqsymb 1 type "VLET"))
-           (with-arrays (veqsymb 1 type "WITH-ARRAYS"))
+    (let* ((exportname (veqsymb dim type :$mima))
+           (vlet (veqsymb 1 type :vlet))
+           (with-arrays (veqsymb 1 type :with-arrays))
            (indref (veqsymb dim type "$"))
            (with `(:itr k
                    :arr ((,a ,dim ,a))
@@ -27,7 +27,7 @@
 ex: (~a &key n) returns (values xmin xmax ...).
 use n to limit to first n rows." dim exportname)))
       `(progn (export ',exportname)
-       (fvdef ,exportname (,a &key (n (,(veqsymb dim nil "$NUM") ,a)) inds)
+       (fvdef ,exportname (,a &key (n (,(veqsymb dim nil :$num) ,a)) inds)
           (declare (,(arrtype type) ,a))
           ,docs
           (let ((,a ,a))
@@ -49,7 +49,6 @@ use n to limit to first n rows." dim exportname)))
                               do (push `(:vr mi ,i) res)
                                  (push `(:vr ma ,i) res)
                               finally (return (reverse res)))))))))))
-
 (-xmima 1 ff) (-xmima 2 ff) (-xmima 3 ff)
 (-xmima 1 df) (-xmima 2 df) (-xmima 3 df)
 

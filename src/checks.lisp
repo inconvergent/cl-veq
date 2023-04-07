@@ -52,6 +52,8 @@ intersection point"
   ; add first line index to sweep line state,
   ; and set sweep line position
   ; TODO: special cases: equal x pos, vertical line
+  ; TODO: some related notes on improvements:
+  ;       https://en.wikipedia.org/wiki/Bentley%E2%80%93Ottmann_algorithm
   (let ((res (make-array (length lines)
                :element-type 'list :initial-element nil :adjustable nil))
         (state (list (cdar line-points))))
@@ -59,26 +61,26 @@ intersection point"
 
     (labels
       ((-append (i c p)
-         (declare #.*opt* (pos-int i c) (ff p))
+         (declare #.*opt* (pn i c) (ff p))
          (if (aref res i) (push `(,c . ,p) (aref res i))
                           (setf (aref res i) `((,c . ,p)))))
        (-isects (i cands)
-         (declare #.*opt* (pos-int i) (list cands))
+         (declare #.*opt* (pn i) (list cands))
          "intersection test"
          (loop with line of-type fvec = (aref lines i)
-               for c of-type pos-int in cands
+               for c of-type pn in cands
                do (fvprogn (mvb (x p q) (f2segx (f2$ line 0 1)
                                                 (f2$ (aref lines c) 0 1))
                              (declare (boolean x) (ff p q))
                              (when x (-append i c p) (-append c i q))))))
        (-remove (i)
-         (declare #.*opt* (pos-int i))
+         (declare #.*opt* (pn i))
          (setf state (remove-if #'(lambda (e)
-                                    (declare (optimize speed) (pos-int e))
+                                    (declare (optimize speed) (pn e))
                                     (eql e i))
                                 state))))
 
-      (loop for (_ . i) of-type (ff . pos-int) in (cdr line-points)
+      (loop for (_ . i) of-type (ff . pn) in (cdr line-points)
             ; if i in state, kick i out of state,
             if (member i state) do (-remove i)
             ; else check i against all state, add i to state
@@ -89,7 +91,7 @@ intersection point"
 (defun -sorted-point-pairs (lines &aux (res (list)))
   (declare #.*opt* (list res) (array-fvec lines))
   (loop for line of-type fvec across lines
-        for i of-type pos-int from 0
+        for i of-type pn from 0
         do (push `(,(aref line 0) . ,i) res)
            (push `(,(aref line 2) . ,i) res))
   (sort res #'< :key #'car))
@@ -130,7 +132,7 @@ current state."
       (let* ((c 0)
              (width (- maxx minx))
              (shift (- (vref pt 0) (* 2f0 width))))
-        (declare (pos-int c) (ff width shift))
+        (declare (pn c) (ff width shift))
         (f2$with-rows (n shape)
           (lambda (i (varg 2 a))
             (declare (optimize speed) (ff a))

@@ -1,4 +1,3 @@
-
 (in-package :veq)
 
 
@@ -9,7 +8,7 @@
               (declare #.*opt* (,(arrtype type) ,a))
               ,(format nil "return values from last row of ~ad vector array." dim)
             (,(veqsymb dim type "$") ,a
-               (1- (the pos-int (,(veqsymb dim nil "$num") ,a))))))))
+               (1- (the pn (,(veqsymb dim nil "$num") ,a))))))))
 (make-last 1 ff) (make-last 2 ff) (make-last 3 ff) (make-last 4 ff)
 (make-last 1 df) (make-last 2 df) (make-last 3 df) (make-last 4 df)
 
@@ -45,7 +44,7 @@ assuming c is a structname, and a,b are ~a of dim ~a" mname (arrtype type) dim))
           (cnt (if cnt cnt (gensym "CNT"))))
       (declare (symbol itr cnt))
       (labels ((init-let (a dim &rest rest)
-                 (declare (symbol a) (pos-int dim))
+                 (declare (symbol a) (pn dim))
                  (unless a (return-from init-let nil))
                  (if rest `(,a (progn ,@rest))
                           `(,a (,(veqsymb 1 (cadr type) "$MAKE")
@@ -56,14 +55,14 @@ assuming c is a structname, and a,b are ~a of dim ~a" mname (arrtype type) dim))
 
                (get-dim (a)
                  (declare (symbol a))
-                 (the pos-int (cadr (arr-info a))))
+                 (the pn (cadr (arr-info a))))
 
                (symb-to-aref (e i)
                  (declare (symbol e))
                  (loop with hit of-type list = (arr-info e)
-                       with dim of-type pos-int = (cadr hit)
+                       with dim of-type pn = (cadr hit)
                        with a of-type symbol = (car hit)
-                       for j of-type pos-int from 0 below dim
+                       for j of-type pn from 0 below dim
                        collect `(aref ,a (+ ,j (* ,i ,dim)))))
 
                (transform-expr (expr i)
@@ -78,22 +77,22 @@ assuming c is a structname, and a,b are ~a of dim ~a" mname (arrtype type) dim))
                ; TODO: fix inefficient indexing calc in vaset/no-set?
                (vaset-loop-body (res-arr i expr)
                  (declare (cons expr))
-                 `(loop for ,itr of-type pos-int
+                 `(loop for ,itr of-type pn
                         ,@(if inds? `(in ,inds*) `(from ,start below ,n*))
-                        for ,cnt of-type pos-int from 0
+                        for ,cnt of-type pn from 0
                         ; assign result to res-arr
                         do (-vaset (,res-arr ,(get-dim res-arr) ,i)
                                    ,(transform-expr expr itr))))
 
                (no-set-loop-body (expr)
                  (declare (cons expr))
-                 `(loop for ,itr of-type pos-int
+                 `(loop for ,itr of-type pn
                         ,@(if inds? `(in ,inds*) `(from ,start below ,n*))
-                        for ,cnt of-type pos-int from 0
+                        for ,cnt of-type pn from 0
                         do ,(transform-expr expr itr))))
 
       `(let ((,n* ,n) ,@(when inds? `((,inds* ,inds))))
-         (declare (pos-int ,n*) (ignorable ,n*)
+         (declare (pn ,n*) (ignorable ,n*)
                   ,@(when inds? `((list ,inds*))))
          (let ,(mapcar #'(lambda (v) (apply #'init-let v)) arr)
            (declare (,(arrtype (cadr type)) ,@(mapcar #'car arr)))
@@ -188,7 +187,7 @@ ex:
 ;           (incf c))))
 
 (defun -with-rows (n arrs expr &key dim type)
-  (declare (pos-int dim) (list arrs))
+  (declare (pn dim) (list arrs))
   (awg (fx itr)
     (replace-varg ; < -- need this because of the (varg ...) below
       `(-with-arrays

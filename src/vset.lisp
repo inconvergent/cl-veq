@@ -79,15 +79,16 @@ use (4$ a i j ...) to return (values a[i] a[j] ...)"
     (3$vset ((a i) &rest expr) `(-vaset (,a 3 ,i) ,@expr))
     (4$vset ((a i) &rest expr) `(-vaset (,a 4 ,i) ,@expr))))
 
-(defmacro $nvset ((a n &optional (i 0)) &body body)
-  (declare (symbol a) (fixnum n))
+(defmacro $nvset ((a n &optional (i 0))
+                       &body body
+                       &aux (gs (loop for i from 0 below n collect (gensym))))
+  (declare (symbol a) (pn n))
   "set n indices in a, from a[i] with n values from body."
   (awg (i*)
-    (let ((gs (loop for i from 0 below n collect (gensym))))
-      `(let ((,i* ,i))
-         (declare (fixnum ,i*))
-         (mvb (,@(loop for s in gs collect s)) (~ ,@body)
-           (progn ,@(loop for s in gs for i from 0
-                          collect `(setf (aref ,a (+ ,i* ,i)) ,s))))
-         ,a))))
+    `(let ((,i* ,i))
+       (declare (pn ,i*))
+       (mvb (,@(loop for s in gs collect s)) (~ ,@body)
+         (progn ,@(loop for s in gs for i from 0
+                        collect `(setf (aref ,a (+ ,i* ,i)) ,s))))
+       ,a)))
 

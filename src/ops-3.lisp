@@ -33,6 +33,7 @@
                                  (- (* ax by) (* ay bx)))
 
   (:1 @3. (3!a 3!b)) (+ (* ax bx) (* ay by) (* az bz))
+  (:1 @3dot (3!a 3!b)) (+ (* ax bx) (* ay by) (* az bz))
 
   (:1 @3dst2 (3!a 3!b)) (mvc #'+ (-@3square (- bx ax) (- by ay) (- bz az)))
   (:1 @3dst (3!a 3!b)) (sqrt (the pos-@f (mvc #'+ (-@3square

@@ -40,6 +40,7 @@
   (:1 @2angle (2!a)) (mvc #'atan (-@2norm ay ax))
 
   (:1 @2. (2!a 2!b)) (+ (* ax bx) (* ay by))
+  (:1 @2dot (2!a 2!b)) (+ (* ax bx) (* ay by))
   (:2 @2cross (2!a 2!b)) (- (* ax by) (* ay bx))
 
   (:1 @2dst2 (2!a 2!b)) (mvc #'+ (-@2square (- bx ax) (- by ay)))

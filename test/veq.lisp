@@ -126,6 +126,5 @@
     (is (veq:lst a) (list 2f0 99f0))
     (is (veq:lst b) (list -7f0 33f0 3330f0)))))
 
-
 (unless (finalize) (error "error in veq tests"))
 

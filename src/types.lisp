@@ -1,9 +1,38 @@
-
 (in-package :veq)
 
-(deftype df () `double-float)
-(deftype ff () `single-float)
-(deftype in () `fixnum)
+(defun type-from-short (ty &optional (missing :nil))
+  "select type fom type hint"
+  (case (kv ty)
+    (:df (values 'df 'd)) (:d (values 'df 'd))
+    (:ff (values 'ff 'f)) (:f (values 'ff 'f))
+    (:in (values 'in 'i)) (:i (values 'in 'i))
+    (:pn (values 'pn 'p)) (:p (values 'pn 'p))
+    (:sy (values 'symbol 's)) (:s (values 'symbol 's))
+    (:kv (values 'keyword 's)) (:k (values 'keyword 'k))
+    (:ll (values 'list 'l)) (:l (values 'list 'l))
+    (:nil (values missing missing)))
+  )
+
+(defun type-default (ty &optional missing)
+  (case (kv ty)
+    (:df 0d0) (:d 0d0) (:ff 0f0) (:f 0f0)
+    (:in 0) (:i 0) (:pn 0) (:p 0)
+    (:sy 'nil) (:s 'nil) (:kv :nil) (:k :nil)
+    (:ll (list)) (:l (list))
+    (:nil missing)))
+
+(defun arrtype (ty &optional (missing :nil))
+  "select array type from type hint"
+  (case (kv ty)
+    (:df 'dvec) (:d 'dvec) (:ff 'fvec) (:f 'fvec)
+    (:in 'ivec) (:i 'ivec) (:pn 'pvec) (:p 'pvec)
+    (:sy 'svec) (:s 'svec) (:kv 'kvec) (:k 'kvec)
+    (:ll 'lvec) (:l 'lvec)
+    (:nil missing)))
+
+(deftype df () 'double-float)
+(deftype ff () 'single-float)
+(deftype in () 'fixnum)
 (deftype pn (&optional (bits 31)) `(unsigned-byte ,bits))
 (deftype pos-int (&optional (bits 31)) `(unsigned-byte ,bits)) ; TODO: rename pos-int->pn
 (deftype pos-df () `(double-float 0d0 *))
@@ -13,6 +42,9 @@
 (deftype fvec () `(simple-array ff))
 (deftype ivec () `(simple-array in))
 (deftype pvec () `(simple-array pn))
+(deftype svec () `(simple-array symbol))
+(deftype kvec () `(simple-array keyword))
+(deftype lvec () `(simple-array list))
 
 (defmacro df (&body body) `(coerce ,@body 'df))
 (defmacro ff (&body body) `(coerce ,@body 'ff))

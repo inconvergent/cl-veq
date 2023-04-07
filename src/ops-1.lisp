@@ -10,8 +10,8 @@
   (:1 @i- (ax bx)) (- bx ax)
   (:1 @i/ (ax bx)) (/ bx ax)
 
-  (:1 @scale (ax s)) (values (* ax s))
-  (:1 @iscale (ax s)) (values (/ ax s))
+  (:1 @scale (ax s)) (* ax s)
+  (:1 @iscale (ax s)) (/ ax s)
 
   (:1 @abs (ax)) (abs ax)
   (:1 @neg (ax)) (- ax)

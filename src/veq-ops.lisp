@@ -1,4 +1,3 @@
-
 (in-package :veq)
 
 (defparameter *errmsg* "~%-------------~% error in ~a:~&~a~%-------------~%")
@@ -22,8 +21,6 @@
 
 (defun body-len (n a) (and (= n (length a)) (every #'atom a)))
 
-
-
 (defun -expand-!symb (s)
   (declare (symbol s))
   "t if symbol starts with Fd! where d is a positive integer"
@@ -36,57 +33,30 @@
               collect (symb rst s))
         s)))
 
-(defun make-broadcast-name (n &aux (n (symbol-name n)))
-  (if (numberp (reread (char n 1)))
-      (symb (subseq n 0 2) #\$ (subseq n 2))
-      (symb (subseq n 0 1) #\$ (subseq n 1))))
-
 (defun -expand-and-flatten-!symbols (ss)
   (awf (loop for s in ss collect (-expand-!symb s))))
-
-(defun -get-!arrdim (args)
-  (let ((d (reread (char (symbol-name (car args)) 0))))
-    (typecase d (number d) (t 1))))
 
 (defmacro op ((type out-dim mname args) &body body)
   (declare (symbol mname) (list args))
   "build an op. see ops-1.lisp, ops-2.lisp, ..."
   (let* ((exp-args (-expand-and-flatten-!symbols args))
          (declares `(,(optype mname) ,@exp-args))
-         (arr-dim (-get-!arrdim args))
-         (br-dim (- (length exp-args) arr-dim))
          (fname (symb #\- mname))
-         (bname (make-broadcast-name mname))
-         (bname! (symb bname "!"))
          (mdocs (format nil "veq context op: ~a
 fxname: ~a
-args: ~a~%body (~a): ~a." mname fname exp-args out-dim (car body)))
-         (bdocs (format nil "veq context broadcast op: ~a
-fxname: ~a
-args: ~a~%body (~a): ~a." bname fname exp-args out-dim (car body))))
-    `(progn (export ',mname)
-            (map-symbol `(,',mname (&body mbody)
-                            `(,@(if (body-len ,,(length exp-args) mbody)
-                                  `(,',',fname)
-                                  `(mvc #',',',fname))
-                               ,@mbody)))
-            (map-docstring ',mname ,mdocs :nodesc :context)
-
-            (export ',bname)
-            (map-symbol `(,',bname (a &body mbody)
-                           (broadcast-op ,,arr-dim ,,br-dim ',',type ',',fname
-                             a mbody :out ,,out-dim)))
-            (map-docstring ',bname ,bdocs :nodesc :context)
-
-            ,@(when (= arr-dim out-dim)
-                `((export ',bname!)
-                  (map-symbol `(,',bname! (a &body mbody)
-                    (broadcast-op ,,arr-dim ,,br-dim ',',type ',',fname a mbody)))
-                  (map-docstring ',bname! ,(format nil "~a~%destructive." bdocs) :nodesc :context)))
-            ,@(unless #.*dev* `((declaim (inline ,fname))))
-            (defun ,fname ,exp-args
-              (declare ,*opt* ,declares)
-              (progn ,@body)))))
+args: ~a~%body (~a): ~a." mname fname exp-args out-dim (car body))))
+    `(progn
+       (export ',mname)
+       (map-docstring ',mname ,mdocs :nodesc :context)
+       (map-symbol `(,',mname (&body mbody)
+                       `(,@(if (body-len ,,(length exp-args) mbody)
+                             `(,',',fname)
+                             `(mvc #',',',fname))
+                          ,@mbody)))
+       ,@(unless #.*dev* `((declaim (inline ,fname))))
+       (defun ,fname ,exp-args
+         (declare ,*opt* ,declares)
+         (progn ,@body)))))
 
 (defun -placeholders (root type)
   (labels ((repl (symb type)

@@ -30,6 +30,7 @@
   (:4 @4i/ (4!a 4!b)) (values (/ bx ax) (/ by ay) (/ bz az) (/ bw aw))
 
   (:1 @4. (4!a 4!b)) (+ (* ax bx) (* ay by) (* az bz) (* aw bw))
+  (:1 @4dot (4!a 4!b)) (+ (* ax bx) (* ay by) (* az bz) (* aw bw))
 
   (:1 @4dst2 (4!a 4!b))
        (mvc #'+ (-@4square (- bx ax) (- by ay) (- bz az) (- bw aw)))

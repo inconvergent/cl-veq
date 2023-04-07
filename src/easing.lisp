@@ -11,21 +11,21 @@
                    ((consp o) (cons (num-types (car o))
                                     (num-types (cdr o)))))))
     (let ((x* (car args))
-          (in (veqsymb 1 type (symb 'ease-in- name))) ; fease-in-linear
-          (out (veqsymb 1 type (symb 'ease-out- name)))
-          (inout (veqsymb 1 type (symb 'ease-in-out- name))))
+          (in (veqsymb 1 type (symb :ease-in- name))) ; fease-in-linear
+          (out (veqsymb 1 type (symb :ease-out- name)))
+          (inout (veqsymb 1 type (symb :ease-in-out- name))))
       (num-types
         `(fvprogn (export ',in) (export ',out) (export ',inout)
                   (defun ,in ,args
                     ,(format nil "ease in:~%arg: ~a~%body: ~a" args (car body))
-                    (let ((,x* (,(veqsymb 1 type "CLAMP") ,x*))) ,@body))
+                    (let ((,x* (,(veqsymb 1 type :clamp) ,x*))) ,@body))
                   (defun ,out ,args
                     ,(format nil "ease out:~%arg: ~a~%body: ~a" args (car body))
-                    (let ((,x* (,(veqsymb 1 type "CLAMP") (- 1 ,x*))))
+                    (let ((,x* (,(veqsymb 1 type :clamp) (- 1 ,x*))))
                       (1+ (- ,@body))))
                   (defun ,inout ,args
                     ,(format nil "ease in-out:~%arg: ~a~%body: ~a" args (car body))
-                    (let ((,x* (,(veqsymb 1 type "CLAMP") ,x*)))
+                    (let ((,x* (,(veqsymb 1 type :clamp) ,x*)))
                       (if (< ,x* 1/2) (let ((,x* (* 2 ,x*))) (* 1/2 ,@body))
                                       (let ((,x* (- 1 (* 2 (- ,x* 1/2)))))
                                         (+ 1/2 (* (+ 1 (- ,@body)) 1/2)))))))))))

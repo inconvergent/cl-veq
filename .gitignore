@@ -10,3 +10,4 @@
 *weir.core
 system-index.txt
 tmp.lisp
+tmp*.lisp

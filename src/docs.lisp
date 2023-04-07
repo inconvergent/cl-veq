@@ -6,12 +6,11 @@
 
 
 (defmacro context? ()
-  "list all macrolets in veq context. that is ops available inside vprog,
-fvprogn, vdef, fvdef defined contexts/functions."
-  (awg (s)
-    `(list (sort (mapcar (lambda (,s) (describe (list ,s)) (mkstr (car ,s)))
-                         *symbols-map*)
-                 #'string-lessp))))
+  "list all macrolet symbols (ie. ops available inside vprog, fvprogn, vdef,
+fvdef defined contexts/functions) and corresponding macro body in veq
+context."
+  (awg (s) `(sort (mapcar (lambda (,s) ,s) *symbols-map*)
+                  #'string-lessp :key #'car)))
 
 (defun desc (sym)
   (declare (symbol sym))
@@ -20,14 +19,12 @@ fvprogn, vdef, fvdef defined contexts/functions."
     (apply #'mkstr (mapcar (lambda (s) (mkstr " ; " s #\Newline))
                            (butlast (split-string #\Newline d))))))
 
-; (split-sequence:split-sequence #\/ (weird:mkstr s))
-
 (defun docstrings (sym)
   (apply #'mkstr
          (mapcar (lambda (o) (mkstr o #\Newline))
-                 (remove-if-not #'identity (list (documentation sym 'function)
-                                                 (documentation sym 'setf))))))
-
+                 (remove-if-not #'identity
+                                (list (documentation sym 'function)
+                                      (documentation sym 'setf))))))
 
 (defun select-docs (sym)
   (declare (symbol sym))
@@ -42,7 +39,7 @@ fvprogn, vdef, fvdef defined contexts/functions."
       (cond (docs (format nil "```~%~a~@[~&~%~a~&~]~&```" (cadr docs) desc))
             ((and idocs (> (length idocs) 0))
               (format nil "```~%~a~@[~&~%~a~&~]~&```" idocs desc))
-            (t (format nil "```~%:missing:todo:~%~@[~&~%~a~&~]~&```" desc)))
+            (t (format nil "```~%:none:~%~@[~&~%~a~&~]~&```" desc)))
       skip context)))
 
 (defmacro pckgs ()
@@ -54,10 +51,9 @@ fvprogn, vdef, fvdef defined contexts/functions."
 (defun -md-sanitize (d)
   (let ((sp (split-string #\* d)))
     (apply #'veq::mkstr
-      (concatenate 'list (mapcar (lambda (s)
-                                  (veq::mkstr s #\\ #\*)) (butlast sp))
+      (concatenate 'list (mapcar (lambda (s) (veq::mkstr s #\\ #\*))
+                                 (butlast sp))
                    (last sp)))))
-
 
 (defmacro ext-symbols? (&optional mode)
   "list all external symbols in veq. use :verbose to inlcude docstring.

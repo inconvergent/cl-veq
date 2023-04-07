@@ -24,3 +24,5 @@
         finally (return (unless (< fails 1)
                           (sb-ext:quit :unix-status 7)))))
 
+(defmacro is-arr (&rest rest) `(is ,@rest :test #'equalp))
+

@@ -83,36 +83,5 @@
       '(4.0 4.0 4.0))
   (is (veq:f$sum (veq:f_ '(1f0 2f0 3f0 3f0 2f0 1f0))) 12.0))
 
-
-(subtest "broadcast"
-  (veq:fvprogn
-
-    (let ((z (veq:f2$zero 3)))
-      (is (veq:f2$+ z 3f0 1f0)
-          #(3f0 1f0 3f0 1f0 3f0 1f0) :test #'equalp)
-      (is z #(0f0 0f0 0f0 0f0 0f0 0f0) :test #'equalp))
-
-    (let ((z (veq:f2$zero 3)))
-      (is (veq:f2$+! z 3f0 1f0)
-          #(3f0 1f0 3f0 1f0 3f0 1f0) :test #'equalp)
-      (is z #(3f0 1f0 3f0 1f0 3f0 1f0) :test #'equalp))
-
-    (is (veq:f2$len (veq:f2$+ (veq:f2$zero 3) 3f0 1f0))
-        #(3.1622777 3.1622777 3.1622777)
-        :test #'equalp)
-
-    (is (veq:f2$+ (veq:f2$zero 3) (veq:f2rep 3f0))
-        #(3f0 3f0 3f0 3f0 3f0 3f0)
-        :test #'equalp)
-
-    (is (veq:f2$- (veq:f2$zero 3) (veq:f2rep 3f0))
-        #(-3f0 -3f0 -3f0 -3f0 -3f0 -3f0)
-        :test #'equalp)
-
-    (is (veq:f$cos-sin (veq:f$lspace 4 0f0 veq:fpii))
-        #(1.0 0.0 -0.50000006 0.8660254 -0.4999999 -0.86602545 1.0
-          1.7484555e-7)
-        :test #'equalp)))
-
 (unless (finalize) (error "error in arr tests"))
 

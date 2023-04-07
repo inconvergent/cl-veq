@@ -7,7 +7,7 @@
     "enable veq context inside this progn.
 handles propagation and resolution of uses of (varg d var) and (vref var i).
 fvprogn is faster, but has some limitations."
-    `(macrolet ,',*symbols-map* (progn ,@(replace-varg body)))))
+    `(macrolet ,',*symbols-map* (vv ,@(replace-varg body)))))
 (define-vprogn)
 
 (defmacro define-fvprogn ()
@@ -19,7 +19,7 @@ works the same way as vprogn. but removes all macrolets that are not
 directly used in body. this is faster, but may fail in some cases where
 body is complex. in the event of errors try vprogn instead."
     `(macrolet ,(filter-macrolets *symbols-map* body)
-       (progn ,@(replace-varg body)))))
+       (vv ,@(replace-varg body)))))
 (define-fvprogn)
 
 
