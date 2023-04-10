@@ -2,7 +2,9 @@
 (defpackage #:veq
   (:use #:common-lisp)
   (:export
-    #:*eps* #:dpi #:dpi5 #:dpii #:fpi #:fpi5 #:fpii
+    #:*eps*
+    #:dpi #:dpi5 #:dpii #:dpi25
+    #:fpi #:fpi5 #:fpii #:fpi25
     #:mac #:mac* #:v? #:d? #:i? #:context? #:ext-symbols?
     #:veqsymb
 

@@ -4118,6 +4118,19 @@ make 1d
  ;   Value: 3.141592653589793d0
 ```
 
+#### DPI25
+
+```
+:none:
+
+ ; VEQ:DPI25
+ ;   [symbol]
+ ;
+ ; DPI25 names a constant variable:
+ ;   Declared type: DOUBLE-FLOAT
+ ;   Value: 0.7853981633974483d0
+```
+
 #### DPI5
 
 ```
@@ -8298,6 +8311,19 @@ make 1d
  ; FPI names a constant variable:
  ;   Declared type: SINGLE-FLOAT
  ;   Value: 3.1415927
+```
+
+#### FPI25
+
+```
+:none:
+
+ ; VEQ:FPI25
+ ;   [symbol]
+ ;
+ ; FPI25 names a constant variable:
+ ;   Declared type: SINGLE-FLOAT
+ ;   Value: 0.7853982
 ```
 
 #### FPI5

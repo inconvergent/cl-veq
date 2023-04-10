@@ -67,11 +67,13 @@
 ;   (declare #.*opt* (list l))
 ;   (apply #'values (mapcar (lambda (v) (in v)) l)))
 
-(declaim (df dpi dpii dpi5) (ff fpi fpii fpi5))
+(declaim (df dpi dpii dpi25 dpi5) (ff fpi fpii fpi25 fpi5))
 (defconstant dpi #.(df pi))
 (defconstant dpi5 #.(df (* pi 0.5d0)))
+(defconstant dpi25 #.(df (* pi 0.25d0)))
 (defconstant dpii #.(df (* pi 2d0)))
 (defconstant fpi #.(ff pi))
 (defconstant fpi5 #.(ff (* pi 0.5f0)))
+(defconstant fpi25 #.(ff (* pi 0.25f0)))
 (defconstant fpii #.(ff (* pi 2f0)))
 
