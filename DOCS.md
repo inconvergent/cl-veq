@@ -764,7 +764,7 @@ typed.
 
 ```
 create DVEC vector array from body:
-((values ...) (values ...) ...).
+(D_ (values ...) (values ...) ...).
 
  ; VEQ:D$~
  ;   [symbol]
@@ -773,7 +773,7 @@ create DVEC vector array from body:
  ;   Lambda-list: ((&OPTIONAL (DIM 1)) &BODY BODY)
  ;   Documentation:
  ;     create DVEC vector array from body:
- ;     ((values ...) (values ...) ...).
+ ;     (D_ (values ...) (values ...) ...).
  ;   Source file: src/array-utils.lisp
 ```
 
@@ -4658,7 +4658,7 @@ typed.
 
 ```
 create FVEC vector array from body:
-((values ...) (values ...) ...).
+(F_ (values ...) (values ...) ...).
 
  ; VEQ:F$~
  ;   [symbol]
@@ -4667,7 +4667,7 @@ create FVEC vector array from body:
  ;   Lambda-list: ((&OPTIONAL (DIM 1)) &BODY BODY)
  ;   Documentation:
  ;     create FVEC vector array from body:
- ;     ((values ...) (values ...) ...).
+ ;     (F_ (values ...) (values ...) ...).
  ;   Source file: src/array-utils.lisp
 ```
 
@@ -8787,7 +8787,7 @@ typed.
 
 ```
 create IVEC vector array from body:
-((values ...) (values ...) ...).
+(I_ (values ...) (values ...) ...).
 
  ; VEQ:I$~
  ;   [symbol]
@@ -8796,7 +8796,7 @@ create IVEC vector array from body:
  ;   Lambda-list: ((&OPTIONAL (DIM 1)) &BODY BODY)
  ;   Documentation:
  ;     create IVEC vector array from body:
- ;     ((values ...) (values ...) ...).
+ ;     (I_ (values ...) (values ...) ...).
  ;   Source file: src/array-utils.lisp
 ```
 
@@ -9911,7 +9911,7 @@ typed.
 
 ```
 create PVEC vector array from body:
-((values ...) (values ...) ...).
+(P_ (values ...) (values ...) ...).
 
  ; VEQ:P$~
  ;   [symbol]
@@ -9920,7 +9920,7 @@ create PVEC vector array from body:
  ;   Lambda-list: ((&OPTIONAL (DIM 1)) &BODY BODY)
  ;   Documentation:
  ;     create PVEC vector array from body:
- ;     ((values ...) (values ...) ...).
+ ;     (P_ (values ...) (values ...) ...).
  ;   Source file: src/array-utils.lisp
 ```
 

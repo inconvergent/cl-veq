@@ -42,6 +42,7 @@ body is complex. in the event of errors try vprogn instead."
       (typecase (first body) (string (first body)) (t "[none]")))))
 
 ; MNAME: my-fx; FNAME: %my-fx
+; TODO: mname is not used?
 (defun make-wrap-docs (context mname fname body &aux (docs (get-docs body))
                                                      (args (first body)))
   (format nil "WRAPS: ~a~%ARGS: ~a~%DOCSTRING: ~a

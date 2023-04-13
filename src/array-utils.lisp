@@ -56,7 +56,7 @@
         (defmacro ,(nm "$~") ((&optional (dim 1)) &body body)
           (declare (fixnum dim))
           ,(format nil "create ~a vector array from body:
-((values ...) (values ...) ...)."
+(~a (values ...) (values ...) ...)."
                   (arrtype type) (nm "_"))
           (let ((symbs (loop repeat (length body) collect (gensym))))
             `(veq:fvprogn
