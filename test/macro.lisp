@@ -145,7 +145,39 @@
                                    (list x y))))
         (is-arr (_@$r1 pts) #((2 -7) (4 -3)))
         (is-arr (l_@$r2 pts) #((-7 -2) (-3 -4)))
-        (is-arr (_@$rn. pts 3) #((-6 4) (-5 -1))))))))
+        (is-arr (_@$rn. pts 3) #((-6 4) (-5 -1)))))
+
+    ; no ?@ modifiers
+    (let ((a (veq:i2$zero 5)) (i 0) (5zero (veq:i2$zero 5)))
+      (is (2!@$+ a (veq:vnrep 2 (incf i))) #(1 2 1 2 1 2 1 2 1 2) :test #'equalp)
+      (is a 5zero :test #'equalp)
+      (is (2!@$+! a (veq:vnrep 2 (incf i))) #(3 4 3 4 3 4 3 4 3 4) :test #'equalp)
+      (is a #(3 4 3 4 3 4 3 4 3 4) :test #'equalp))
+
+    ; ?@ modifiers regular ...
+    (let ((a (veq:i2$zero 5)) (i 0) (5zero (veq:i2$zero 5)))
+      (is (2!@$+ a (?@ (veq:vnrep 2 (incf i)))) #(1 2 3 4 5 6 7 8 9 10)  :test #'equalp)
+      (is a 5zero :test #'equalp)
+      (is (2!@$+! a (?@ (veq:vnrep 2 (incf i)))) #(11 12 13 14 15 16 17 18 19 20) :test #'equalp)
+      (is a #(11 12 13 14 15 16 17 18 19 20) :test #'equalp))
+
+    ; right dot
+    (let ((a (veq:i2$zero 5)) (i 0) (5zero (veq:i2$zero 5)))
+      (is (2!@$+. a (incf i)) #(1 1 1 1 1 1 1 1 1 1) :test #'equalp) ;=HERER
+      (is a 5zero :test #'equalp)
+      (is (2!@$+.! a (?@ (incf i))) #(2 2 3 3 4 4 5 5 6 6) :test #'equalp)
+      (is a #(2 2 3 3 4 4 5 5 6 6) :test #'equalp))
+
+    ; _ right dot
+    (labels ((fx (x y z) (values (+ z x) (+ (* 10 z) y))))
+
+      (let ((a (veq:i2$zero 5)) (i 0) (5zero (veq:i2$zero 5)))
+        (is (2_@$fx. a (?@ (incf i))) #(1 10 2 20 3 30 4 40 5 50) :test #'equalp)
+        (is a 5zero :test #'equalp)
+        (is (2_@$fx.! a (?@ (incf i))) #(6 60 7 70 8 80 9 90 10 100) :test #'equalp)
+        (is a #(6 60 7 70 8 80 9 90 10 100) :test #'equalp)
+        ))
+    )))
 
 (unless (finalize) (error "error in macro tests"))
 

@@ -9550,7 +9550,7 @@ returns (values 1f0 2f0 3f0)
 #### LST
 
 ```
-get all values in body as a list.
+get all (values ... ) in body as a list.
 almost like multiple-values-list, except it handles multiple arguments.
 
  ; VEQ:LST
@@ -9559,7 +9559,7 @@ almost like multiple-values-list, except it handles multiple arguments.
  ; LST names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
- ;     get all values in body as a list.
+ ;     get all (values ... ) in body as a list.
  ;     almost like multiple-values-list, except it handles multiple arguments.
  ;   Source file: src/utils.lisp
 ```
@@ -10777,6 +10777,34 @@ use %labelname to call the function directly.
  ;     are defined as if with def*.
  ;     use %labelname to call the function directly.
  ;   Source file: src/lets.lisp
+```
+
+#### VNREP
+
+```
+(~ rest1 rest2 ...)
+
+ ; VEQ:VNREP
+ ;   [symbol]
+ ;
+ ; VNREP names a macro:
+ ;   Lambda-list: (N &REST REST)
+ ;   Documentation:
+ ;     (~ rest1 rest2 ...)
+ ;   Source file: src/utils.lisp
+```
+
+#### VNVAL
+
+```
+:none:
+
+ ; VEQ:VNVAL
+ ;   [symbol]
+ ;
+ ; VNVAL names a macro:
+ ;   Lambda-list: (DIM &REST REST)
+ ;   Source file: src/utils.lisp
 ```
 
 #### VPR

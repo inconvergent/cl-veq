@@ -78,15 +78,23 @@ returns: (values 1f0 3f0 4f0 6f0)"
 ; NOTE: using (lst ...) makes things slower in some cases.  because of the
 ; consing or because the number of values is unknown?. avoid when possible.
 (defmacro lst (&body body)
-  "get all values in body as a list.
+  "get all (values ... ) in body as a list.
 almost like multiple-values-list, except it handles multiple arguments."
-  `(mvc #'list ,@body))
+  `(mvc #'list (~ ,@body)))
 (defmacro from-lst (l)
   "get values from list. equivalent to (values-list ...)."
   `(values-list ,l))
 (defmacro ~ (&rest rest)
   "wraps arguments in (mvc #'values ...)."
   `(mvc #'values ,@rest))
+
+(defmacro vnrep (n &rest rest)
+  "(~ rest1 rest2 ...)"
+  `(veq:~ ,@(loop repeat n collect `(progn ,@rest))))
+; TODO: this feels weird
+(defmacro vnval (dim &rest rest)
+  (awg (v) `(let ((,v (~ ,@rest)))
+              (values ,@(loop repeat dim collect v)))))
 
 ; (defmacro chain (fxs &rest rest &aux (rest `((~ ,@rest)))) ; TODO
 ;   (loop for f in (reverse fxs) do (setf rest `((funcall ,f ,@rest))))

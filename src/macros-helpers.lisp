@@ -33,7 +33,7 @@ implementation details." :nodesc :context)
 
 (defun replace-varg (body &optional (root-rmap (list)))
   "replace instances of varg/:varg/:va and vref/:vref/vr with
-approprite symbols for the dimension.
+appropriate symbols for the dimension.
 
 local maps vref/varg maps are propagated forwards in the list so a given
 arg/ref should be available under its scope.  it seems to work for all cases

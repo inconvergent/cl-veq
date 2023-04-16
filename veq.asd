@@ -1,8 +1,8 @@
 
 (asdf:defsystem #:veq
   :description "reasonably fast operations for 1-4d vectors, matrices, and
-                arrays of vectors."
-  :version "4.0.2"
+arrays of vectors."
+  :version "4.1.0"
   :author "anders hoff / @inconvergent / inconvergent@gmail.com"
   :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))

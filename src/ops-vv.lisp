@@ -1,53 +1,70 @@
 (in-package :veq)
 
 (declaim (character *vv-dot* *vv-arr* *vv-bang*)
-         (keyword *vv-sym* *vv-nary* *vv-ind* *vv-1ary* *vv-mvc*))
+         (keyword *vv-sym* *vv-nary* *vv-ind* *vv-proj* *vv-1ary* *vv-mvc*))
 
-(defvar *vv-sym* :!@) (defvar *vv-nary* :_@) (defvar *vv-mvc* :m@)
-(defvar *vv-1ary* :.@) (defvar *vv-ind* :@)
+(defvar *vv-sym* :!@) (defvar *vv-nary* :_@) (defvar *vv-mvc* :m@) ;(defvar *vv-)
+(defvar *vv-1ary* :.@) (defvar *vv-ind* :@) (defvar *vv-proj* :?@)
 (defvar *vv-dot* #\.) (defvar *vv-arr* #\$) (defvar *vv-bang* #\!)
 (defvar *vv-special* `(,*vv-dot* ,*vv-arr* ,*vv-bang*))
 
 (defun nvrs (a c n) (loop for k from c repeat n collect `(:vr ,a ,k)))
 (defun rec-cdr (rec b) `(~ ,@(funcall rec (cdr b))))
-(defun gk (p k &aux (res (cdr (assoc (kv k) p))))
-  (if res res (warn "VV: missing conf key: ~a~%conf: ~s" k p)))
+(defun gk (p k &optional silent &aux (res (cdr (assoc (kv k) p))))
+  (if (or silent res) res (warn "VV: missing conf key: ~a~%conf: ~s" k p)))
 (defun gk+ (p &rest keys) (every (lambda (k) (> (gk p k) 0)) keys))
 (defun gk0 (p &rest keys) (every (lambda (k) (= (gk p k) 0)) keys))
 
-(defun @? (b) (and (listp b) (eq (kv (car b)) *vv-ind*))) ; is this a slicer?
-(defun @strip (b) (cond ((@? b) (second b)) (t b))) ; remove @ wrapper
+(defun is@? (b) (and (listp b) (eq (kv (car b)) *vv-ind*))) ; is this a slicer?
+
+(defun ismod@? (b) (and (listp b) (eq (kv (car b)) *vv-proj*)))
+
+(defun @strip (b) (cond ((is@? b) (second b)) (t b))) ; remove @slice wrapper
+
+(defun mod@strip (b) (cond ((ismod@? (car b)) (cdar b)) (t b))) ; remove @mod wrapper
+
 ; TODO: document slicing
 ; TODO: fix leaky slicing bindings
 (defun @validate (b)
   (unless (every #'atom b) (error "slicers must be atoms, got: ~a" b))
   b)
-(defun @slicer (b) (if (@? b) (@validate (subseq b 2)) '(0))) ; get slicer or (0)
+(defun @slicer (b) (if (is@? b) (@validate (subseq b 2)) '(0))) ; get slicer or (0)
+; (defun ?@mod (b) (if (?@? b) t nil)) ; get slicer or (0)
 
 ; -- MVC ------------------------------------------------------------------------
 
+; TODO: project expression, not value in !@
+
+; (m@fx ...) -> (mvc fx ...)
 (defun dom@fx (rec b p) `(mvc #',(gk p :fx*) ,(rec-cdr rec b)))
+
+; -- 1ARY -----------------------------------------------------------------------
+
+; (2.@abs -1 -2) -> 1 2
+(defun do.@fx (rec b p &aux (dim (gk p :dim)))
+  (-vmvb*  (gk p :ty) dim 'arg (rec-cdr rec b)
+    `((values ,@(loop for d from 0 repeat dim
+                      collect `(,(gk p :fx*) (:vr arg ,d)))))))
 
 ; -- NARY -----------------------------------------------------------------------
 
-(defun do.@fx (rec b p &aux (dim (gk p :dim))) ; elem wise. eg for abs
-  (-vmvb* (gk p :ty) dim 'arg (rec-cdr rec b)
-    `((values ,@(loop for d from 0 repeat dim
-            collect `(,(gk p :fx*) (:vr arg ,d)))))))
-
-(defun do_@fx (rec b p &aux (dim (gk p :dim))) ; row wise. eg cross
+; (labels ((fx (x y) (values y x)))
+;   (veq:vpr (i2_@fx 1 2))) -> 2 1
+(defun do_@fx (rec b p &aux (dim (gk p :dim)))
   (-vmvb* (gk p :ty) dim 'arg (rec-cdr rec b)
     `((,(gk p :fx*) ,@(loop for d from 0 repeat dim
                             collect `(:vr arg ,d))))))
 
 ; -- VEC ---------------------------------------------------------------------
 
+; +, - etc
 (defun do!@fx (rec b p &aux (dim (gk p :dim))) ; row wise, pairs eg +
   (-vmvb* (gk p :ty) (* 2 dim) 'arg (rec-cdr rec b)
     `((values
         ,@(loop for d from 0 repeat dim
                 collect `(,(gk p :fx*) (:vr arg ,d) (:vr arg ,(+ d dim))))))))
 
+; +, - etc
 (defun do!@.fx (rec b p &aux (dim (gk p :dim)))
   (-vmvb* (gk p :ty) (+ dim (gk p :dots)) 'arg (rec-cdr rec b)
     `((values
@@ -55,11 +72,16 @@
                 for d from 0 repeat dim
                 collect `(,(gk p :fx*) ,@lhs (:vr arg ,(+ (gk p :dots) d))))))))
 
+; +, - etc
 (defun do!@fx. (rec b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
   (-vmvb* (gk p :ty) (+ dim dots) 'arg (rec-cdr rec b)
     `((values ,@(loop with rhs = (nvrs 'arg dim dots)
                       for d from 0 repeat dim
                       collect `(,(gk p :fx*) (:vr arg ,d) ,@rhs))))))
+
+; tail
+; head free | left array mod
+; left right
 
 ; -- BCAST HELPERS --------------------------------------------------------------
 
@@ -86,6 +108,7 @@
             (:out-sym . ,(gensym "OUT")) (:rep-sym . ,(gensym "REP"))
             ,@p) b))
 
+; TODO bind slicers to single eval
 (defun sliceconf (p b &aux (rng (gk p :@lft))
                            (n `(/ (length ,(gk p :lft-sym)) ,(gk p :dim))))
   (values `((:rep . ,(cond ((= 2 (length rng)) `(- ,(second rng) ,(first rng)))
@@ -97,9 +120,17 @@
   `(-$ ,(gk p :dim) ,(gk p arr) :inds (,(gk p i)) :atype ,(gk p :aty)))
 
 (defun lconf (p b &aux (v (second b)))
-  (values `((:lft . ,(@strip v)) (:@lft . ,(@slicer v)) ,@p) b))
+  (values `((:lft . ,(@strip v))
+            (:@lft . ,(@slicer v)) ; slicer defaults to zero ,sliceconf decides loop reps
+            ,@p) b))
 (defun rconf (p b &aux (v (third b)))
-  (values `((:rht . ,(@strip v)) (:@rht . ,(@slicer v)) ,@p) b))
+  (values `((:rht . ,(@strip v))
+            (:@rht . ,(@slicer v))
+            ,@p) b))
+(defun tailconf (p b)
+  (values `((:rht . ,(mod@strip (subseq b 2)))
+            (:@modrht . ,(ismod@? (car (subseq b 2))))
+            ,@p) b))
 
 (defun vec-select-itr (p &optional r)
   `(with ,(gk p :rep-sym) of-type pn = ,(gk p :rep)
@@ -113,8 +144,10 @@
     for ,(gk p :itr-out-sym) of-type pn
         ,@(if (gk+ p :!) `(= ,(gk p :itr-lft-sym)) `(from 0))))
 
-; -- ARRAY LEFT NARY ------------------------------------------------------------
+; -- ARRAY LEFT 1ARY ------------------------------------------------------------
 
+; (labels ((fx (x) (abs x)))
+;   (2.@$fx (veq:i2$line -1 -2 -3 -4)))
 (defun do.@$fx (rec b p &aux (dim (gk p :dim)) (ty (gk p :ty)) (aty (gk p :aty)))
   (let ((p (vchain (#'sliceconf #'lconf #'symconf) p b))
         (row `(values ,@(loop for d from 0 repeat dim
@@ -126,20 +159,10 @@
                            ,row)))
            finally (return ,(gk p :out-sym)))))
 
-(defun do_@$fx. (rec b p &aux (dim (gk p :dim)) (ty (gk p :ty)) (aty (gk p :aty)))
-  (let* ((p (vchain (#'sliceconf #'lconf #'symconf) p b))
-    (rhs (nvrs 'rht 0 (gk p :dots)))
-        (row `(,(gk p :fx* )
-               ,@(loop for d from 0 repeat dim collect `(:vr lft ,d))
-               ,@rhs)))
-    (-vmvb* ty (gk p :dots) 'rht `(~ ,@(funcall rec (subseq b 2)))
-     `((loop with ,(gk p :lft-sym) of-type ,aty = ,(funcall rec (gk p :lft))
-           ,@(vec-select-itr p)
-           do ,(-vmvb* ty dim 'lft ($row p :itr-lft-sym :lft-sym)
-                 `(($nvset (,(gk p :out-sym) ,dim (* ,(gk p :itr-out-sym) ,dim))
-                           ,row)))
-           finally (return ,(gk p :out-sym)))))))
+; -- ARRAY LEFT NARY ------------------------------------------------------------
 
+; (labels ((fx (x y) (values y x)))
+;   (2_@$fx (veq:i2$line 1 2 3 4))) -> #(2 1 4 3)
 (defun do_@$fx (rec b p &aux (dim (gk p :dim)) (ty (gk p :ty)) (aty (gk p :aty)))
   (let ((p (vchain (#'sliceconf #'lconf #'symconf) p b))
         (row `(,(gk p :fx* ) ,@(loop for d from 0 repeat dim
@@ -151,35 +174,69 @@
                            ,row)))
            finally (return ,(gk p :out-sym)))))
 
+; (labels ((fx (x y z) (values y (+ x z))))
+;   (2_@$fx. (veq:i2$line 1 2 3 4) 10)) -> #(2 11 4 13)
+(defun do_@$fx. (rec b p &aux (dim (gk p :dim)) (ty (gk p :ty)) (aty (gk p :aty)))
+  (let* ((p (vchain (#'sliceconf #'lconf #'tailconf #'symconf) p b))
+         (rhs (nvrs 'rht 0 (gk p :dots)))
+         (row `(,(gk p :fx* )
+                ,@(loop for d from 0 repeat dim collect `(:vr lft ,d))
+                ,@rhs))
+         (ret `(return ,(gk p :out-sym)))
+         (rht `(~ ,@(funcall rec (gk p :rht))))
+         (with `(,(gk p :lft-sym) of-type ,aty = ,(funcall rec (gk p :lft))))
+         (inner (-vmvb* ty dim 'lft ($row p :itr-lft-sym :lft-sym)
+                  `(($nvset (,(gk p :out-sym) ,dim (* ,(gk p :itr-out-sym) ,dim))
+                            ,row)))))
+     (if (gk p :@modrht t)
+         `(loop with ,@with ,@(vec-select-itr p)
+                do ,(-vmvb* ty (gk p :dots) 'rht rht `(,inner)) finally ,ret)
+         (-vmvb* ty (gk p :dots) 'rht rht
+           `((loop with ,@with ,@(vec-select-itr p)
+                   do ,inner finally ,ret))))))
+
 ; -- ARRAY LEFT vec ----------------------------------------------------------
 
+; +, - etc
 (defun do!@$fx (rec b p &aux (dim (gk p :dim)) (ty (gk p :ty)) (aty (gk p :aty)))
-  (let ((p (vchain (#'sliceconf #'lconf #'symconf) p b))
-        (row (loop for d from 0 repeat dim
-                   collect `(,(gk p :fx*) (:vr lft ,d) (:vr rht ,d)))))
-    (-vmvb* ty dim 'rht `(~ ,@(funcall rec (subseq b 2)))
-      `((loop with ,(gk p :lft-sym) of-type ,aty = ,(funcall rec (gk p :lft))
-              ,@(vec-select-itr p)
-              do ,(-vmvb* ty dim 'lft ($row p :itr-lft-sym :lft-sym)
-                    `(($nvset (,(gk p :out-sym) ,dim (* ,(gk p :itr-out-sym) ,dim))
-                              (values ,@row))))
-              finally (return ,(gk p :out-sym)))))))
+  (let* ((p (vchain (#'sliceconf #'lconf #'tailconf #'symconf) p b))
+         (row (loop for d from 0 repeat dim
+                   collect `(,(gk p :fx*) (:vr lft ,d) (:vr rht ,d))))
+         (inner (-vmvb* ty dim 'lft ($row p :itr-lft-sym :lft-sym)
+                  `(($nvset (,(gk p :out-sym) ,dim (* ,(gk p :itr-out-sym) ,dim))
+                            (values ,@row)))))
+         (rht `(~ ,@(funcall rec (gk p :rht))))
+         (ret `(return ,(gk p :out-sym)))
+         (with `(,(gk p :lft-sym) of-type ,aty = ,(funcall rec (gk p :lft)))))
 
+    (if (gk p :@modrht t)
+        `(loop with ,@with ,@(vec-select-itr p)
+               do ,(-vmvb* ty dim 'rht rht `(,inner)) finally ,ret)
+        (-vmvb* ty dim 'rht rht
+          `((loop with ,@with ,@(vec-select-itr p) do ,inner finally ,ret))))))
+
+; +, - etc
 (defun do!@$fx. (rec b p &aux (dim (gk p :dim)) (ty (gk p :ty)) (aty (gk p :aty)))
-  (let ((p (vchain (#'sliceconf #'lconf #'symconf) p b))
+  (let* ((p (vchain (#'sliceconf #'lconf #'tailconf #'symconf) p b))
         (row (loop with rhs = (nvrs 'rht 0 (gk p :dots))
                    for d from 0 repeat dim
-                   collect `(,(gk p :fx*) (:vr lft ,d) ,@rhs))))
-    (-vmvb* ty (gk p :dots) 'rht `(~ ,@(funcall rec (subseq b 2)))
-      `((loop with ,(gk p :lft-sym) of-type ,aty = ,(funcall rec (gk p :lft))
-              ,@(vec-select-itr p)
-              do ,(-vmvb* ty dim 'lft ($row p :itr-lft-sym :lft-sym)
+                   collect `(,(gk p :fx*) (:vr lft ,d) ,@rhs)))
+        (inner (-vmvb* ty dim 'lft ($row p :itr-lft-sym :lft-sym)
                     `(($nvset (,(gk p :out-sym) ,dim (* ,(gk p :itr-out-sym) ,dim))
-                              (values ,@row))))
-              finally (return ,(gk p :out-sym)))))))
+                              (values ,@row)))))
+        (with `(,(gk p :lft-sym) of-type ,aty = ,(funcall rec (gk p :lft))))
+        (rht `(~ ,@(funcall rec (gk p :rht))))
+        (ret `(return ,(gk p :out-sym))))
+
+    (if (gk p :@modrht t)
+        `(loop with ,@with ,@(vec-select-itr p)
+               do ,(-vmvb* ty (gk p :dots) 'rht rht `(,inner)) finally ,ret)
+        (-vmvb* ty (gk p :dots) 'rht rht
+          `((loop with ,@with ,@(vec-select-itr p) do ,inner finally ,ret))))))
 
 ; -- ARRAYS LEFT RIGHT vec ---------------------------------------------------
 
+; +, - etc
 (defun do!@$fx$ (rec b p &aux (dim (gk p :dim)) (ty (gk p :ty)) (aty (gk p :aty)))
   (let ((p (vchain (#'sliceconf #'lconf #'rconf #'symconf) p b))
         (row (loop for d from 0 repeat dim
@@ -298,5 +355,7 @@
 
             ((consp b) (cons (rec (car b)) (rec (cdr b))))
             (t (error "VV: unexpected expr in: ~a" b)))))
-    `(progn ,@(replace-varg (rec body)))))
+    ; `(progn ,@(replace-varg (rec body)))
+    `(progn ,@(replace-varg (rec body)))
+    ))
 

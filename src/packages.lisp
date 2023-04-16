@@ -8,7 +8,7 @@
     #:mac #:mac* #:v? #:d? #:i? #:context? #:ext-symbols?
     #:veqsymb
 
-    #:from-lst #:lst #:mvb #:dsb
+    #:from-lst #:lst #:mvb #:dsb #:vnrep #:vnval
     #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~ #:$nvset
 
     #:pos-int #:pos-df #:pos-ff

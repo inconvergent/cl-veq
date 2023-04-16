@@ -122,24 +122,21 @@ immediately."
              (loop for (ty . vars) in (cdar body)
                    do (loop for v in vars do (push `(,v . ,ty) decl)))
              decl)
+           (unpacked? (org new) (not (equal (symbol-name org) (symbol-name new))))
            (parse-declare ()
-             (handler-case
-               (if (equal (symbol-name (caar body)) "DECLARE")
-                   (values (inverse-decl) (cdr body))
-                   (values nil body))
-               (error () (values nil body)))))
+             (handler-case (if (equal (symbol-name (caar body)) "DECLARE")
+                               (values (inverse-decl) (cdr body))
+                               (values nil body))
+                           (error () (values nil body)))))
      (mvb (decl body) (parse-declare)
        (loop for (arg expr) in (reverse all-vars)
              for (ty dim var) = (lst (unpack-veqsymb arg))
-             do ; dim = 1 behaves like normal let; no gensym. we dont move
-                ; this into vmvb because we want to vmvb to be generic eg. so
-                ; that :va :vr works for all dimensions
-                (setf body `(,(if (= dim 1)
+             do (setf body `(,(if (unpacked? var arg) ; symbols without ! are treated normally
+                                  (-vmvb* (select-type decl var ty) dim var
+                                          (ensure-values expr) body)
                                   `(let ((,var ,(ensure-values expr)))
                                      (declare (,(select-type decl var ty) ,var))
-                                     ,@body)
-                                  (-vmvb* (select-type decl var ty) dim var
-                                          (ensure-values expr) body)))))
+                                     ,@body)))))
        (replace-varg (car body)))))
 
 ;;;;;;;;;;;;;;;;;; VLABELS
@@ -150,8 +147,7 @@ are defined as if with def*.
 use %labelname to call the function directly."
   (labels ((mfx (l)
              (declare (list l))
-             `(,(car l) (&rest rest)
-                        `(veq:mvc #',',(cadr l) ,@rest)))
+             `(,(car l) (&rest rest) `(veq:mvc #',',(cadr l) ,@rest)))
            (ffx (l &aux (l* (cdr l)))
              `(,(car l*) ,@(subst (car l*) (car l) (cdr l*)))))
     (let ((labnames (loop for l in labs
@@ -160,5 +156,4 @@ use %labelname to call the function directly."
       `(macrolet (,@(mapcar #'mfx labnames))
          (labels (,@(mapcar #'ffx labnames))
            ,@body)))))
-
 
