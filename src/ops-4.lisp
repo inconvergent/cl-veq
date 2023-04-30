@@ -3,6 +3,7 @@
 
 (ops
 
+  (:4 @4id (4!a)) (values ax ay az aw)
   (:4 @4abs (4!a)) (values (abs ax) (abs ay) (abs az) (abs aw))
   (:4 @4neg (4!a)) (values (- ax) (- ay) (- az) (- aw))
   (:4 @4inv (4!a)) (values (/ ax) (/ ay) (/ az) (/ aw))

@@ -3,6 +3,7 @@
 
 (ops
 
+  (:2 @2id (2!a)) (values ax ay)
   (:2 @2+ (2!a 2!b)) (values (+ ax bx) (+ ay by))
   (:2 @2- (2!a 2!b)) (values (- ax bx) (- ay by))
   (:2 @2* (2!a 2!b)) (values (* ax bx) (* ay by))

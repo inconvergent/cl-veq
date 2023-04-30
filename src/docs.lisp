@@ -38,7 +38,7 @@ context."
     (values
       (cond (docs (format nil "```~%~a~@[~&~%~a~&~]~&```" (cadr docs) desc))
             ((and idocs (> (length idocs) 0))
-              (format nil "```~%~a~@[~&~%~a~&~]~&```" idocs desc))
+              (format nil "```~%~a~@[~&~%~a~&~]~&```" desc nil)) ; nil
             (t (format nil "```~%:none:~%~@[~&~%~a~&~]~&```" desc)))
       skip context)))
 
@@ -48,6 +48,7 @@ context."
                  collect (list (mkstr ,sym) ,sym))
            #'string-lessp :key #'car)))
 
+; TODO: sanitize for _, eg d_ ?
 (defun -md-sanitize (d)
   (let ((sp (split-string #\* d)))
     (apply #'veq::mkstr
@@ -62,12 +63,10 @@ use :pretty to print verbose output to stdout in a readable form."
     (case mode
       (:pretty
         `(loop for (,str ,sym) in (pckgs)
-               do (mvb (,doc ,skip ,context) (select-docs ,sym)
-                       (unless ,skip
-                         (format t "~&#### ~:[~;:context: ~]~a~%~%~a~&~%"
-                                             ,context
-                                             (-md-sanitize ,str)
-                                             ,doc)))))
+               for (,doc ,skip ,context) = (multiple-value-list (select-docs ,sym))
+               if (not ,skip)
+               do (format t "~&#### ~:[~;:fvprogn: ~]~a~%~%~a~&~%"
+                            ,context (-md-sanitize ,str) ,doc)))
       (:pairs `(loop for (,str ,sym) in (pckgs)
                      collect (list ,str (select-docs ,sym))))
       (otherwise `(loop for (,str ,sym) in (pckgs) collect ,str)))))

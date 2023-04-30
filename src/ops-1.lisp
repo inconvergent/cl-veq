@@ -3,6 +3,7 @@
 
 (ops
 
+  (:1 @id (ax)) (values ax)
   (:1 @+ (ax bx)) (+ ax bx)
   (:1 @- (ax bx)) (- ax bx)
   (:1 @* (ax bx)) (* ax bx)

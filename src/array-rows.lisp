@@ -33,8 +33,6 @@ assuming c is a structname, and a,b are ~a of dim ~a" mname (arrtype type) dim))
 (struct-fields 1 df) (struct-fields 2 df) (struct-fields 3 df) (struct-fields 4 df)
 
 
-; TODO: with-op; simpler version of with-rows that takes input arrays and
-; creates an output array of a given dimension
 (defmacro -with-arrays ((&key type n (inds nil inds?) itr cnt arr
                               fxs exs nxs start)
                          &body body)
@@ -81,7 +79,8 @@ assuming c is a structname, and a,b are ~a of dim ~a" mname (arrtype type) dim))
                         ,@(if inds? `(in ,inds*) `(from ,start below ,n*))
                         for ,cnt of-type pn from 0
                         ; assign result to res-arr
-                        do (-vaset (,res-arr ,(get-dim res-arr) ,i)
+                        do ($nvset (,res-arr ,(get-dim res-arr)
+                                             (* ,(get-dim res-arr) ,i))
                                    ,(transform-expr expr itr))))
 
                (no-set-loop-body (expr)
@@ -168,52 +167,4 @@ ex:
                       :itr ,itr :cnt ,cnt :arr ,arr :fxs ,fxs :nxs ,nxs
                       :exs ,exs :start ,start)
                      ,@body))))
-
-
-; -------------- WITH-ROWS
-
-; TODO: for all inds?
-; TODO: THERE WAS a bug that behaved as follows:
-; if expr is a lambda that references either of the arrays passed into
-; with-rows via  arrs, then (varg xx) in fxs (below) will replace the name of
-; the array.
-; ex: shape is defined outside. but would be replaced inside the with-arrays in
-; with-rows
-; (f2$with-rows (n shape)
-;   (lambda (i (varg 2 x))
-;     (declare (optimize speed) (ff x))
-;     (when (f2segx pt shift (vref pt 1)
-;                   x (f2$ shape (mod (1+ i) n)))
-;           (incf c))))
-
-(defun -with-rows (n arrs expr &key dim type)
-  (declare (pn dim) (list arrs))
-  (awg (fx itr)
-    (replace-varg ; < -- need this because of the (varg ...) below
-      `(-with-arrays
-         (:type ',type :n ,n :itr ,itr :start 0
-          :arr (,@(mapcar (lambda (a) (list a dim a)) arrs))
-          :fxs ,(let ((arr-gensyms (mapcar ; <-- this is because of the bugfix
-                                     (lambda (x) (gensym (mkstr x)))
-                                     arrs)))
-                  `((,fx (,itr (varg ,dim ,@arr-gensyms))
-                         (,@expr ,itr ,@arr-gensyms))))
-          :nxs ((,fx ,itr ,@arrs)))))))
-
-(defmacro map-wrows (dim type)
-  (let* ((mname (veqsymb dim type "$with-rows"))
-         (docs (format nil "execute function (expr i ax ay az bx by bz ...) for
-row i and ~ad arrays a and b (...).  arrs can be one or more arrays.
-ex:
-  (labels ((cross (i (veq:varg 3 a b))
-             (veq:3$vset (c i) (veq:f3cross a b))))
-    (veq:f3$with-rows (n a b) cross))" dim)))
-    `(progn (map-docstring ',mname ,docs :nodesc :context)
-            (map-symbol `(,',mname
-                           ((n &rest arrs) &body expr) ,,docs
-                           (-with-rows n arrs expr :dim ,,dim :type ',',type))))))
-(map-wrows 1 ff) (map-wrows 2 ff) (map-wrows 3 ff) (map-wrows 4 ff)
-(map-wrows 1 df) (map-wrows 2 df) (map-wrows 3 df) (map-wrows 4 df)
-(map-wrows 1 in) (map-wrows 2 in) (map-wrows 3 in) (map-wrows 4 in)
-(map-wrows 1 pn) (map-wrows 2 pn) (map-wrows 3 pn) (map-wrows 4 pn)
 

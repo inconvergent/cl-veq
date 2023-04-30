@@ -153,8 +153,9 @@ ex: (~a '((1f0 2f0) (1f0 2f0)))." (arrtype type) (nm "$_") (nm "$_"))
 "returns indices [default: 0] from ~ad vector array (~a) as values.
 ex: (~a a i j ...) returns (values a[i] .. a[j] .. ...).
 note that the number of values depends on the dimension." dim at name)))
-                            `(defmacro ,name (a &rest rest) ,docs
-                               `(-$ ,,dim ,a :inds ,rest :atype ,',at))))))
+                            `(progn (export ',name)
+                               (defmacro ,name (a &rest rest) ,docs
+                               `(-$ ,,dim ,a :inds ,rest :atype ,',at)))))))
 (define-$)
 
 (defmacro $ (a &rest rest) `(-$ 1 ,a :inds ,rest))

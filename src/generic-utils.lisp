@@ -1,39 +1,33 @@
 (in-package :veq)
 
-; from on lisp by pg
-(defmacro mac (expr)
+(defmacro mac (expr) ; from on lisp by pg
   "expand macro."
   `(pprint (macroexpand-1 ',expr)))
 #+sbcl (defmacro mac* (expr)
          "expand macro all. only in SBCL."
          `(pprint (sb-cltl2:macroexpand-all ',expr)))
 
-;from on lisp by pg
-(defmacro aif (test-form then-form &optional else-form)
+(defmacro aif (test-form then-form &optional else-form) ;from on lisp by pg
   `(let ((it ,test-form))
      (if it ,then-form ,else-form)))
 
-; from on lisp by pg
-(defmacro abbrev (short long)
+(defmacro abbrev (short long) ; from on lisp by pg
   `(defmacro ,short (&rest args)
      `(,',long ,@args)))
 
-; from on lisp by pg
-(defun flatten (x)
+(defun flatten (x) ; from on lisp by pg
   (labels ((rec (x acc)
              (cond ((null x) acc)
                    ((atom x) (cons x acc))
                    (t (rec (car x) (rec (cdr x) acc))))))
     (rec x nil)))
 
-; modified from on lisp by pg
-(defmacro with-gensyms (syms &body body)
+(defmacro with-gensyms (syms &body body) ; modified from on lisp by pg
   `(let ,(mapcar #'(lambda (s) `(,s (gensym ,(symbol-name s))))
                  syms)
      ,@body))
 
-; modified from on lisp by pg
-(defun group (source n)
+(defun group (source n) ; modified from on lisp by pg
   (if (< n 1) (error "group error: group size is smaller than 1"))
   (labels ((rec (source acc)
              (let ((rest (nthcdr n source)))
@@ -42,27 +36,25 @@
                    (nreverse (cons source acc))))))
     (if source (rec source nil) nil)))
 
-; from on lisp by pg
-(defun mkstr (&rest args)
+(defun mkstr (&rest args) ; from on lisp by pg
   (with-output-to-string (s)
     (dolist (a args) (princ a s))))
 
-(defun match-substr (c s)
-  (declare (string c s))
-  "returns index where substring c matches s from left to right. otherwise nil."
-  (loop with lc = (length c)
+(defun match-substr (sub s)
+  (declare (string sub s))
+  "returns index where substring matches s from left to right. otherwise nil."
+  (loop with lc = (length sub)
         for i from 0 repeat (1+ (- (length s) lc))
-        if (string= c s :start2 i :end2 (+ i lc))
+        if (string= sub s :start2 i :end2 (+ i lc))
         do (return i)))
 
 (declaim (inline last*))
-(defun kv (s) (values (intern (string-upcase (mkstr s)) :keyword)))
 (defun nth* (l i &optional d &aux (v (nth i l)))
   (declare (list l) (fixnum i))
   (if v v d))
 (defun last* (l) (declare (list l)) (first (last l)))
-; from on lisp by pg
-(defun symb (&rest args) (values (intern (apply #'mkstr args))))
+(defun symb (&rest args) ; from on lisp by pg
+  (values (intern (apply #'mkstr args))))
 
 ;https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
 (defun psymb (package &rest args) (values (intern (apply #'mkstr args) package)))
@@ -74,8 +66,8 @@
                      fields)
          ,@body))))
 
-; from on lisp by pg
-(defun reread (&rest args) (values (read-from-string (apply #'mkstr args))))
+(defun reread (&rest args) ; from on lisp by pg
+  (values (read-from-string (apply #'mkstr args))))
 
 (defun lpos (l &optional (i 0) j)
   (if j (mapcar (lambda (a) (subseq a i j)) l)
@@ -152,19 +144,36 @@
       (if prune (remove-if (lambda (s) (= 0 (length s))) res)
                 res))))
 
-(defun strip-chars (s cc)
-  (declare (symbol s) (list cc))
-  (loop for spec in cc
-        do (setf s (apply #'symb (split-substr (mkstr spec) (mkstr s)))))
-  s)
+(defun fx-split-str (fx s)
+  (declare (function fx) (string s))
+  "split s into list of chars according to fx"
+  (loop for c across s if (funcall fx c) collect c into yes
+        else collect c into no finally (return (values yes no))))
 
-(defun edge-chars (ch sym &optional rht &aux (s (mkstr sym)) (c 0))
-  (declare (character ch) (symbol sym) (fixnum c))
-  "count number of padding characters ch  in sym from the left (or right)
+(defun nilpad (n l &optional (v nil) &aux (n* (length l)))
+  (declare (fixnum n n*) (list l))
+  "cons v to l intil (length l) >= n"
+  (loop repeat (- n n*) do (setf l (cons v l)) finally (return l)))
+
+(defun strip-symbols (name symbs)
+  (declare (symbol name) (list symbs))
+  (loop for c in symbs
+        for new = (split-substr (mkstr c) (mkstr name))
+        do (setf name (apply #'symb new)))
+  name)
+
+(defun edge-fx (fx sym &optional rht &aux (s (mkstr sym)) (c 0))
+  (declare (function fx) (symbol sym) (fixnum c) (boolean rht))
+  "count number of times fx is t across sym chars from the left (or right)
 returns (values c sym*), where sym* is sym with the padding characters removed"
   (when rht (setf s (reverse s)))
-  (loop repeat (length s) while (equal (char s 0) ch)
-        do (setf s (subseq s 1) c (1+ c)))
+  (loop repeat (length s) while (funcall fx (char s 0))
+        do (setf s (subseq s 1)) (incf c))
   (values c (if rht (reverse s) s)))
 
+(defun edge-chars (ch sym &optional rht)
+  (declare (character ch) (symbol sym) (boolean rht))
+  "count number of padding characters ch  in sym from the left (or right)
+returns (values c sym*), where sym* is sym with the padding characters removed"
+  (edge-fx (lambda (c) (eq ch c)) sym rht))
 

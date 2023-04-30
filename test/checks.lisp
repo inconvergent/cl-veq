@@ -1,10 +1,9 @@
 
 (in-package #:veq-tests)
 
-(plan 1)
+(plan 2)
 
-(subtest "segx"
-  (veq:fvprogn
+(subtest "segx" (veq:fvprogn
 
   (is (veq:mvb (x s)
         (veq:f2segx (veq:f2rep 1.1f0) (veq:f2 11f0 12.3f0)
@@ -13,11 +12,9 @@
       '(t 0.2984826334627212f0))
 
   (is (veq:f2segx (veq:f2 0f0 0f0) (veq:f2 100f0 0f0)
-                  (veq:f2 0f0 1f0) (veq:f2 100f0 1f0))
-      nil)
+                  (veq:f2 0f0 1f0) (veq:f2 100f0 1f0)) nil)
   (is (veq:f2segx (veq:f2 0f0 0f0) (veq:f2 1f0 1f0)
-                  (veq:f2 0f0 1f0) (veq:f2 1f0 0f0))
-      t)
+                  (veq:f2 0f0 1f0) (veq:f2 1f0 0f0)) t)
 
   (let* ((lines '((171.65283402050164f0  440.93255770900925f0
                    741.8656230212274f0 500.5731525084898f0) (
@@ -70,6 +67,13 @@
 
     (is (veq:f2in-triangle -1f0 -1f0 0f0 1f0 1f0 -1f0 0.1f0 -0.23f0) t)
     (is (veq:f2in-triangle -1f0 -1f0 0f0 1f0 1f0 -1f0 10.1f0 -0.23f0) nil))))
+
+(subtest "convex" (veq:fvprogn
+  (veq:xlet ((f2!pt (veq:f2 1f0 2f0)))
+    (is (veq:f2in-concave (f2!@$*. (veq::f12_@$fcos-sin
+                                     (veq:f$lspace 10 0f0 veq:fpii))
+                                   10f0)
+                          pt) t))))
 
 (unless (finalize) (error "error checks tests"))
 

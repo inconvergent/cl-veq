@@ -8,16 +8,10 @@
 
     (let* ((n 4) (a (veq:f3$zero n)) (b (veq:f3$zero n)) (c (veq:f3$zero n)))
       (loop for i from 0 below n
-            do (veq:3$vset (a i) (veq:f3~ (+ i 10) (1+ i) (* 2 i)))
-               (veq:3$vset (b i) (veq:f3~ (- i) (+ 3 i) (/ (+ i 3) 2))))
-
-      (labels ((cross (i (veq:varg 3 v w))
-                 (veq:3$vset (c i) (veq:f3cross v w))))
-        (veq:f3$with-rows (n a b) cross))
-        ; TODO: make a test based on error in with-rows
-        ; (veq:f3$with-rows (n a c)
-        ;   (lambda (i (veq:varg 3 v w))
-        ;     (veq:3$vset (c i) (veq:f3+ v w))))
+            do (setf (veq:3$ a i) (veq:f3~ (+ i 10) (1+ i) (* 2 i))
+                     (veq:3$ b i) (veq:f3~ (- i) (+ 3 i) (/ (+ i 3) 2))))
+      (f3%@$fx a ((i (:va 3 v))
+                  (setf (veq:3$ c i) (veq:f3cross v (veq:f3$ b i)))))
 
       (is c #(1.5 -15.0 30.0 -4.0 -24.0 46.0 -12.5 -38.0 66.0 -24.0 -57.0 90.0)
           :test #'equalp)

@@ -25,13 +25,13 @@
 
   ;> (a b) as output represents (values a b) in many of the remaining examples
 
-  (vpr (f2- 1f0 2f0 3f0 4f0)) ;> (-2.0 -2.0)
+  (vpr (f2!@- 1f0 2f0 3f0 4f0)) ;> (-2.0 -2.0)
 
-  (vpr (f2/ 1f0 2f0 3f0 4f0)) ;> (0.33333334 0.5)
+  (vpr (f2!@/ 1f0 2f0 3f0 4f0)) ;> (0.33333334 0.5)
 
-  (vpr (f2* 1f0 2f0 3f0 4f0)) ;> (3.0 8.0)
+  (vpr (f2!@* 1f0 2f0 3f0 4f0)) ;> (3.0 8.0)
 
-  (vpr (f2scale 1f0 2f0 3f0)) ;> (3.0 6.0)
+  (vpr (f2!@*. 1f0 2f0 3f0)) ;> (3.0 6.0)
 
   (vpr (f2iscale 1f0 2f0 3f0)) ;> (0.33333334 0.6666667)
 
@@ -120,7 +120,7 @@
 
     (vpr (list a b d)) ;> (3.0 32.0 6.0 34.0 4.0 3f0)
 
-    (f2vset (a) (f2 4f0 4f0)) ; set 2d vector a
+    (setf (veq:f2 a) (f2 4f0 4f0)) ; set 2d vector a
     (setf (vref b 2) 999f0) ; set z value of 3d vector b
 
     (vpr (list a b))) ;> (4.0 4.0 6.0 34.0 999.0)
@@ -141,7 +141,7 @@
                       collect (list (ff v) (ff (1+ v)))))))
 
     ; convenience function to print arrays of vectors:
-    (vpr (2$print line)) ; returns a
+    (2$print line) ; returns a
 
     (vpr (f2. (f2$ a 0) (f2$ line 1))) ; dot product
     ;> 30.0
@@ -155,7 +155,7 @@
     (vpr b)
     ;> #(0.0 1.0 1.0 2.0 2.0 3.0 3.0 4.0 4.0 5.0 5.0 6.0)
 
-    (vpr (f2$take b (list 1 2))) ; select rows (vectors)
+    (vp :take (veq::f2_@$f2id (l?@ b (list 1 2)))) ; select rows (vectors)
     ;> #(1.0 2.0 2.0 3.0)
 
   (format t "~%------------------~%~%")
@@ -165,54 +165,30 @@
       (loop for i from 0 below 3
                ; set row i of a and b
                ; f3~ is like f3, but it will coerce the type to float
-            do (3$vset (a i) (f3~ i (1+ i) (* 2 i)))
-               (3$vset (b i) (f3~ 1 (+ 3 i) (/ i 2))))
+            do (setf (veq:3$ a i) (f3~ i (1+ i) (* 2 i))
+                     (veq:3$ b i) (f3~ 1 (+ 3 i) (/ i 2))))
 
-      (labels ((cross (i (varg 3 v w))
-                 (3$vset (c i) (f3cross v w))))
+      ; execute cross on rows of a and b
+      (f3x@$fx a (i (:va 3 v))
+                 (setf (veq:3$ c i) (f3cross v (veq:f3$ b i))))
 
-        ; execute cross on rows of a and b
-        (f3$with-rows (3 a b) cross))
-
-      (vpr (3$print c))
+      (3$print c)
       ;> #(0.0 0.0 -1.0 -7.0 1.5 2.0 -17.0 2.0 7.0)
       (vpr (3$to-list c))
       ;> '((0.0 0.0 -1.0) (-7.0 1.5 2.0) (-17.0 2.0 7.0))
 
       ; add 1 to every row of a
-      (vpr (f3$+ a (f3rep 1f0))) ;> #(1.0 2.0 1.0 2.0 3.0 3.0 3.0 4.0 5.0)
+      (print (f3!@$+ a (f3rep 1f0))) ;> #(1.0 2.0 1.0 2.0 3.0 3.0 3.0 4.0 5.0)
 
       ; divide every row by [1.0 2.0 3.0]
-      (vpr (f3$/ a 1f0 2f0 3f0))
+      (print (f3!@$/ a 1f0 2f0 3f0))
 
-      (vpr (f3$len c)) ;> #(1.0 7.4330344 18.493242)
+      (print (f31_@$f3len c)) ;> #(1.0 7.4330344 18.493242)
 
-      (vpr (3$print (f$neg (f3$len c)))) ;> #(-1.0 -7.4330344 -18.493242)
+      (3$print (f.@$- (f31_@$f3len c))) ;> #(-1.0 -7.4330344 -18.493242)
 
-      (vpr ($print (f$abs (f$neg (f3$len c))))) ;> #(1.0 7.4330344 18.493242)
+      ($print (f.@$abs (f.@$- (f31_@$f3len c)))) ;> #(1.0 7.4330344 18.493242)
 
-      ($print (f$cos-sin (f$lspace 4 0f0 fpii))))
-      ;> #(1.0 0.0 -0.50000006 0.8660254 -0.4999999 -0.86602545 1.0
-      ;>   1.7484555e-7)
-
-    ; with arrays is a macro for doing more flexible manipulation of arrays.
-    ; this is mostly used internally, but it is exposed to the user as well.
-    ; the macro is more complicated than i'd like, and might be improved in the
-    ; future
-    (fwith-arrays (:n 7 :itr k ; k is 0, 1, ... 6
-      ; the third form in elements of arr can be empty, a form that will be
-      ; executed, or a symbol that refers to an array defined outside of
-      ; with-arrays
-      :arr ((a 3 (f3$one 7)) ; init a as (f3$one 7)
-            (b 3) (c 3)) ; init b,c as (f3$zero 7)
-      ; define functions to use in fxs
-      :fxs ((cross ((varg 3 v w)) (f3cross v w))
-            (init1 (i) (f3~ (1+ i) (* 2 i) (+ 2 i)))
-            (init2 (i) (f3~ (+ 2 i) (1+ i) (* 2 i))))
-      ; perform the calculations
-      :exs ((a k (init1 k)) ; init row k of a with init1
-            (b k (init2 k)) ; init row k of b with init2
-            (c k (cross a b)))) ; set row k of c to (cross a b)
-      ; use the arrays. the last form is returned, as in a progn
-      (vpr (3$print c)))))
-
+      (print (f12_@$fcos-sin (f$lspace 4 0f0 fpii))) )
+      ;> #(1.0 0.0 -0.50000006 0.8660254 -0.4999999 -0.86602545 1.0 1.7484555e-7)
+      ))

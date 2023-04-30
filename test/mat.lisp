@@ -1,7 +1,7 @@
 
 (in-package #:veq-tests)
 
-(plan 1)
+(plan 2)
 
 (subtest "mat"
   (veq:fvprogn
@@ -13,21 +13,18 @@
                            (veq:f3+ 1f0 2f0 4f0 1f0 2f0 4f0)))
         '(42f0 58f0 44f0))
 
-    (is (veq:lst (veq:f2mv (veq:f_ `(1f0 2f0 3f0 3f0))
-                           (veq:f2- 1f0 2f0 2f0 4f0)))
+    (is (veq:lst (veq:f2mv (veq:f_ `(1f0 2f0 3f0 3f0)) (veq:f2- 1f0 2f0 2f0 4f0)))
         '(-5f0 -9f0))
 
     (is (veq:lst (veq:f4mv (veq:f_ `(1f0 2f0 4f0 6f0 3f0 3f0 5f0 9f0
                                      4f0 3f0 3f0 6f0 -1f0 3f0 -3f0 8f0))
-                           (veq:f4* 1f0 2f0 -4f0 1f0 2f0 4f0 8f0 1f0)))
+                           (f4!@* 1f0 2f0 -4f0 1f0 2f0 4f0 8f0 1f0)))
         '(-104f0 -121f0 -58f0 126f0))
 
-    (is (veq:lst (veq:f4mv (veq:f4meye)
-                           (veq:f4* 1f0 2f0 -4f0 1f0 2f0 4f0 8f0 1f0)))
+    (is (veq:lst (veq:f4mv (veq:f4meye) (f4!@* 1f0 2f0 -4f0 1f0 2f0 4f0 8f0 1f0)))
         '(2f0 8f0 -32f0 1f0))
 
-    (is (veq:lst (veq:f4mv (veq:f4meye 3f0)
-                           (veq:f4* 1f0 2f0 -4f0 1f0 2f0 4f0 8f0 1f0)))
+    (is (veq:lst (veq:f4mv (veq:f4meye 3f0) (f4!@* 1f0 2f0 -4f0 1f0 2f0 4f0 8f0 1f0)))
         '(6f0 24f0 -96f0 3f0))
 
     (is (veq:f4mt! (veq:f_ `(1f0 2f0 4f0 6f0 3f0 3f0 5f0 9f0
@@ -66,8 +63,7 @@
           -0.17356777 0.038559683 0.9840667 0.0 0.0 0.0 0.0 1.0)
          :test #'equalp)
 
-    (is (veq:d2minv (veq:d_ '(1d0 2d0 3d0 31d0)))
-        #(1.24d00 -0.08d0 -0.12d0 0.04d0 )
+    (is (veq:d2minv (veq:d_ '(1d0 2d0 3d0 31d0))) #(1.24d00 -0.08d0 -0.12d0 0.04d0 )
          :test #'equalp)
 
     (is (veq:d3minv (veq:d_ '(1d0 2d0 77d0 3d0 3d0 21d0 -1.2d0 7d0 2d0)))
@@ -82,6 +78,20 @@
             0.121881254 0.018418644 0.014880082 -0.006174776 -0.00303687 0.01002225
             -0.0032401022 0.006027287 0.012368131 -0.09817857)
          :test #'equalp)))
+
+(subtest "matcam" (veq:fvprogn
+
+  (is (veq:fmake-proj-matrix 2f0 3f0 0.2 33f0)
+      #(-0.2 0.0 0.0 0.0 0.0 -0.13333334 0.0 0.0 0.0 0.0 -1.0121951 -0.40243903
+        0.0 0.0 -1.0 0.0) :test #'equalp)
+
+  (is (veq:fmake-ortho-proj-matrix 2f0 3f0 0.2 33f0)
+      #(-1.0 0.0 0.0 0.0 0.0 -0.6666667 0.0 0.0 0.0 0.0 -0.06097561 -1.0121951
+        0.0 0.0 0.0 1.0) :test #'equalp)
+
+  (is (veq:fmake-view-matrix 10f0 2f0 3f0 1f0 2f0 7f0 1f0 0f0 0f0)
+      #(-0.0 1.0 0.0 -2.0 0.40613845 0.0 0.91381156 -6.8028193 0.91381156 0.0
+        -0.40613845 -7.9197006 0.0 0.0 0.0 1.0) :test #'equalp)))
 
 (unless (finalize) (error "error mat tests"))
 

@@ -5,28 +5,26 @@
 
 (fvdef* f2$rect (w h)
   (declare #.*opt* (ff w h))
-  (f$_ `((,w ,(- h)) (,w ,h) (,(- w) ,h) (,(- w) ,(- h)))))
-(fvdef* f2$square* (s) (declare #.*opt* (ff s)) (f2$rect s s))
+  (f_ `(,w ,(- h) ,w ,h ,(- w) ,h ,(- w) ,(- h))))
+(fvdef f2$square* (s) (declare #.*opt* (ff s)) (f2$rect s s))
 
-(fvdef* f2$polygon (n rad &optional (rot 0f0))
-  (declare #.*opt* (pos-int n) (ff rad rot))
+(fvdef f2$polygon (n rad &optional (rot 0f0) (pin (/ fpii n)) (i 0f0))
+  (declare #.*opt* (pn n) (ff rad rot pin i))
   "return n-polygon of size rad. rotate by (rot 0)"
-  (f$_ (loop with pin of-type ff = (/ fpii n)
-             for i of-type pos-int from 0 below n
-             collect (lst (f2scale (fcos-sin (+ rot (ff (* i pin)))) rad)))))
+  (labels ((fcs () (fcos-sin (+ rot (ff (* (1- (incf i)) pin))))))
+    (f2!@$+! (veq:f2$zero n) (?@ (f2!@*. (fcs) rad)))))
 
-(fvdef* f2$circ (rad &optional (rs 0.5f0))
+
+(fvdef f2$circ (rad &optional (rs 0.5f0))
   (declare #.*opt* (ff rad rs))
   "return circle of size rad. (rs 0.5) is vertex density."
-  (let ((n (ceiling (the ff (* fpii (the ff (* rad rs)))))))
-    (declare (pos-int n))
-    (f2$polygon n rad)))
+  (f2$polygon (ceiling (the ff (* fpii (the ff (* rad rs))))) rad))
 
-(fvdef* f2$center (arr &aux (n (2$num arr)))
-  (declare #.*opt* (fvec arr) (pos-int n))
+(fvdef f2$center (arr)
+  (declare #.*opt* (fvec arr))
   "center 2d array according to n points in array. n is optional."
-  (veq:mvb ((varg 2 xx yy)) (f2$mima arr :n n)
-    (f2!@$+ arr (fmid xx ) (fmid yy))))
+  (veq:mvb ((:va 2 xx yy)) (f2$mima arr :n (2$num arr))
+    (f2!@$+ arr (fmid xx) (fmid yy))))
 
 (defmacro define-arr-shape (n sym)
   `(progn

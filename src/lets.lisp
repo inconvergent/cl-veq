@@ -41,8 +41,8 @@
 
 (defmacro define-vlet (dim type)
   (let* ((mname (veqsymb dim type "let"))
-         (docs (format nil "make ~ad let.~%ex: (f3let ((a (f3 1f0 3f0 4f0))) ...)
-note that this behaves like native lisp let*." dim)))
+         (docs (format nil "make ~ad let.~%ex: (~a ((a (values ...))) ...)
+note that this behaves like native lisp let*." dim mname)))
     `(progn (export ',mname)
             (map-docstring ',mname ,docs :nodesc :context)
             (map-symbol `(,',mname (all-args &body body) ,,docs
@@ -73,17 +73,17 @@ returns (values 1f0 2f0 3f0)" dim)))
 (defmacro define-rep (dim type)
   (let* ((mname (veqsymb dim type "rep"))
          (docs (format nil "repeat argument ~ad times as values.
-ex: (f3rep (fx)) corresponds to (values (fx) (fx) (fx))." dim)))
+ex: (~a (fx)) corresponds to (values (fx) ...)." dim mname)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
             (map-symbol `(,',mname (expr) ,,docs
                                    `(values ,@(loop repeat ',',dim
                                                     collect expr of-type ',',type)))))))
 (defmacro define-val (dim type)
   (awg (e)
-    (let ((mname (veqsymb dim type "val"))
-          (vals `(values ,@(loop repeat dim collect e)))
-          (docs (format nil "repeat the evaluated argument ~a times as values.
-ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v))." dim)))
+    (let* ((mname (veqsymb dim type "val"))
+           (vals `(values ,@(loop repeat dim collect e)))
+           (docs (format nil "repeat the evaluated argument ~a times as values.
+ex: (~a (fx)) corresponds to (let ((v (fx))) (values v ...))." dim mname)))
       `(progn (map-docstring ',mname ,docs :nodesc :context)
               (map-symbol `(,',mname (expr) ,,docs
                                      `(let ((,',',e ,expr))
@@ -102,19 +102,7 @@ ex: (f3rep (fx)) corresponds to (let ((v (fx))) (values v v v))." dim)))
 
 ;;;;;;;;;;;;;;;;;; XLET
 
-(defmacro xlet (all-vars &body body) ;,docs
-  "bind typed veqs, and other variables:
-(veq:xlet ((f2!a (f2 1f0 2f0)) ; 2d veq:ff/float
-           (d!b 1d0) ; 1d veq:df/double
-           (h :a)
-           (i4!c (values 1 2 3 4))) ; 4d veq:in/integer
-  (declare (keyword h))
-  (do-something a b c h))
-
-names without ! will be treated (mostly) as in a regular let.
-declare can be used to declare types.
-NOTE: xlet behaves more like CL let* in that bindings are available
-immediately."
+(defun xlet-proc (all-vars &rest body)
   (labels ((ensure-values (v) (typecase v (list v) (otherwise `(values ,v))))
            (select-type (decl var ty &aux (d (cdr (assoc var decl))))
              (if d d (type-from-short ty t)))
@@ -130,7 +118,7 @@ immediately."
                            (error () (values nil body)))))
      (mvb (decl body) (parse-declare)
        (loop for (arg expr) in (reverse all-vars)
-             for (ty dim var) = (lst (unpack-veqsymb arg))
+             for (ty var dim) = (lst (unpack-veqsymb arg))
              do (setf body `(,(if (unpacked? var arg) ; symbols without ! are treated normally
                                   (-vmvb* (select-type decl var ty) dim var
                                           (ensure-values expr) body)
@@ -138,6 +126,26 @@ immediately."
                                      (declare (,(select-type decl var ty) ,var))
                                      ,@body)))))
        (replace-varg (car body)))))
+
+(defmacro define-xlet-macro ()
+  (let ((mname 'xlet)
+        (docs "xlet is a macro to bind typed values, and other variables:
+(veq:xlet ((f2!a (f2 1f0 2f0)) ; 2d veq:ff/float
+           (d!b 1d0) ; 1d veq:df/double
+           (h :a)
+           (i4!c (values 1 2 3 4))) ; 4d veq:in/integer
+  (declare (keyword h))
+  (do-something a b c h))
+
+names without ! will be treated (mostly) as in a regular let.
+declare can be used to declare types.
+NOTE: xlet behaves more like CL let* in that bindings are available
+immediately."))
+    `(progn (export ',mname)
+            (map-docstring ',mname ,docs :nodesc)
+            (defmacro xlet (all-vars &body body) ,docs
+              (apply #'xlet-proc all-vars body)))))
+(define-xlet-macro)
 
 ;;;;;;;;;;;;;;;;;; VLABELS
 

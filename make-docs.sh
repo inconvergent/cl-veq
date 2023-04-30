@@ -12,11 +12,12 @@ cat << EOF > DOCS.md
 
 ### Explanation
 
-#### Context
+#### FVPROGN
 
-All symbols marked with \`:contex:\` are only valid inside a veq context.  veq
+All symbols marked with \`:fvprogn:\` are only valid inside a veq context.  veq
 context can be initiated using \`vprogn\`, \`fvprogn\`, \`vdef\`, \`fvdef\`,
-\`vdef*\` or \`fvdef*\`. See further documentation below.
+\`vdef*\` or \`fvdef*\`. See further documentation under the respective symbols
+below.
 
 See [examples](/examples/ex.lisp) for working examples of some use.
 

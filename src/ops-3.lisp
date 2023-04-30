@@ -3,6 +3,7 @@
 
 (ops
 
+  (:3 @3id (3!a)) (values ax ay az)
   (:3 @3abs (3!a)) (values (abs ax) (abs ay) (abs az))
   (:3 @3neg (3!a)) (values (- ax) (- ay) (- az))
   (:3 @3inv (3!a)) (values (/ ax) (/ ay) (/ az))

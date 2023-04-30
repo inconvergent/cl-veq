@@ -2,7 +2,43 @@
 
 (in-package #:veq-tests)
 
-(plan 6)
+(plan 7)
+
+(subtest "utils"
+
+  (is (veq::strip-symbols 'name!@abc '(:!@ :hi)) 'NAMEABC)
+  (is (veq::strip-symbols 'name!abc '(:! :hi)) 'NAMEABC)
+  (is (veq::strip-symbols 'name!abc? '(:! :? :hi)) 'NAMEABC)
+
+  (is (veq:lst (veq::edge-fx (lambda (c) (equal #\F c)) 'ffffhiii)) '(4 "HIII"))
+  (is (veq:lst (veq::edge-chars #\F 'ffffhiii)) '(4 "HIII"))
+
+  (is (veq:lst (veq:~ :a)) '(:a))
+  (is (veq:lst (values 3 2) (values 7 8)) '(3 2 7 8))
+  (is (veq:lst (veq:~ (values 3 2) (values 7 8))) '(3 2 7 8))
+
+  (is (veq:veqsymb 3 :ff :xxy) 'veq::f3xxy)
+  (is (veq:veqsymb 3 :ff :xxy :sep :!) 'veq::f3!xxy)
+
+  (is (veq:lst (veq:unpack-veqsymb 'f1!abc :s :!)) '(:F ABC 1 1))
+  (is (veq:lst (veq:unpack-veqsymb 'f!abc :s :!)) '(:F ABC 1 1))
+  ; (is (veq:lst (veq:unpack-veqsymb '!abc :s :!)) '(:nil ABC 1 1))
+  (is (veq:lst (veq:unpack-veqsymb 'abc :s :!)) '(:nil ABC 1 1))
+
+  (is (veq:lst (veq:unpack-veqsymb 'f1!@abc :s :!@)) '(:F ABC 1 1))
+  (is (veq:lst (veq:unpack-veqsymb 'f!@abc :s :!@)) '(:F ABC 1 1))
+  ; (is (veq:lst (veq:unpack-veqsymb '!@abc :s :!@)) '(:nil ABC 1 1))
+
+  ; (is (veq:lst (veq:unpack-veqsymb '3!abc :s :!)) '(:nil ABC 3 3))
+  (is (veq:lst (veq:unpack-veqsymb 's3!abc :s :!)) '(:s ABC 3 3))
+
+  (is (veq:lst (veq:unpack-veqsymb '33!abc :s :!)) '(:nil ABC 3 3))
+  (is (veq:lst (veq:unpack-veqsymb '32!abc :s :!)) '(:nil ABC 3 2))
+  (is (veq:lst (veq:unpack-veqsymb '12!abc :s :!)) '(:nil ABC 1 2))
+
+  (is (veq:lst (veq:unpack-veqsymb 's33!abc :s :!)) '(:s ABC 3 3))
+  (is (veq:lst (veq:unpack-veqsymb 's32!abc :s :!)) '(:s ABC 3 2))
+  (is (veq:lst (veq:unpack-veqsymb 's12!abc :s :!)) '(:s ABC 1 2)))
 
 (subtest "2d double ops"
   (veq:fvprogn
@@ -19,6 +55,16 @@
 
     (is (veq:lst (veq:d2^ (veq:d2 1d0 2d0) 3d0)) `(1d0 8d0))
     (is (veq:lst (veq:d2^ 1d0 2d0 3d0)) `(1d0 8d0))
+
+    (is (veq:lst (d2!@expt. (veq:d2 1d0 2d0) 3d0)) `(1d0 8d0))
+    (is (veq:lst (d2!@expt. 1d0 2d0 3d0)) `(1d0 8d0))
+
+    (is (veq:lst (d2!@+ 1d0 2d0 (veq:d2 1d0 3d0))) '(2d0 5d0))
+    (is (veq:lst (d2!@* 1d0 2d0 (veq:d2 1d0 3d0))) '(1d0 6d0))
+    (is (veq:lst (d2!@- 1d0 2d0 (veq:d2 1d0 3d0))) '(0d0 -1d0))
+    (is (veq:lst (d2!@/ 1d0 2d0 (veq:d2 1d0 3d0))) `(1d0 ,(/ 2d0 3d0)))
+    ; (is (veq:lst (d2!@i- 1d0 2d0 (veq:d2 1d0 3d0))) '(0d0 1d0))
+    ; (is (veq:lst (d2!@i/ 1d0 2d0 (veq:d2 1d0 3d0))) `(1d0 ,(/ 3d0 2d0)))
 
     (is (let ((a 0.4d0)
               (d -1.1d0))
@@ -60,8 +106,15 @@
     (is (veq:lst (veq:f2i- 1f0 2f0 (veq:f2 1f0 3f0))) '(0f0 1f0))
     (is (veq:lst (veq:f2i/ 1f0 2f0 (veq:f2 1f0 3f0))) `(1f0 ,(/ 3f0 2f0)))
 
-    (is (veq:lst (veq:f2^ (veq:f2 1f0 2f0) 3f0)) `(1f0 8f0))
-    (is (veq:lst (veq:f2^ 1f0 2f0 3f0)) `(1f0 8f0))
+    (is (veq:lst (f2!@+ 1f0 2f0 (veq:f2 1f0 3f0))) '(2f0 5f0))
+    (is (veq:lst (f2!@* 1f0 2f0 (veq:f2 1f0 3f0))) '(1f0 6f0))
+    (is (veq:lst (f2!@- 1f0 2f0 (veq:f2 1f0 3f0))) '(0f0 -1f0))
+    (is (veq:lst (f2!@/ 1f0 2f0 (veq:f2 1f0 3f0))) `(1f0 ,(/ 2f0 3f0)))
+    ; (is (veq:lst (f2!@i- 1f0 2f0 (veq:f2 1f0 3f0))) '(0f0 1f0))
+    ; (is (veq:lst (f2!@i/ 1f0 2f0 (veq:f2 1f0 3f0))) `(1f0 ,(/ 3f0 2f0)))
+
+    (is (veq:lst (f2!@expt. (veq:f2 1f0 2f0) 3f0)) `(1f0 8f0))
+    (is (veq:lst (f2!@expt. 1f0 2f0 3f0)) `(1f0 8f0))
 
     (is (let ((a 0.4f0)
               (d -1.1f0))
@@ -120,8 +173,9 @@
   (veq:fvprogn
     (veq:fvlet ((a 2 (veq:f2 0f0 0f0))
                 (b 3 (veq:f3 1f0 2f0 3f0)))
-      (veq:f2vset (a) (values 2f0 99f0))
-      (veq:f3vset (b) (values -7f0 33f0 3330f0))
+      (setf (veq:f2 a) (values 2f0 99f0)
+            (veq:f3 b) (values -7f0 33f0 3330f0)
+            )
 
     (is (veq:lst a) (list 2f0 99f0))
     (is (veq:lst b) (list -7f0 33f0 3330f0)))))

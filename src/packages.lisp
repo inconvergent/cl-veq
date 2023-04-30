@@ -6,35 +6,29 @@
     #:dpi #:dpi5 #:dpii #:dpi25
     #:fpi #:fpi5 #:fpii #:fpi25
     #:mac #:mac* #:v? #:d? #:i? #:context? #:ext-symbols?
-    #:veqsymb
+    #:veqsymb #:unpack-veqsymb
 
     #:from-lst #:lst #:mvb #:dsb #:vnrep #:vnval
     #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~ #:$nvset
 
-    #:pos-int #:pos-df #:pos-ff
-    #:df #:df* #:ff #:ff* #:in #:in* #:pn #:pn*
-    #:dvec #:fvec #:ivec #:pvec
+    #:df #:df* #:ff #:ff* #:pos-df #:pos-ff
+    #:in #:in* #:kv #:kv*
+    #:ll #:ll* #:pn #:pn*
+    #:sy #:sy*
+    #:dvec #:fvec #:ivec #:kvec #:lvec #:pvec #:svec
 
-    #:ffl #:dfl #:vsel
+    #:ffl #:dfl #:vsel #:xlet #:vv
 
+    #:replace-varg
     #:vdef #:vdef* #:def* #:fvdef* #:fvdef #:vlabels
     #:vprogn #:fvprogn #:varg #:vref
 
-    #:xlet #:vv
-
-    #:new-stride
-    #:$make #:$copy #:d$_ #:f$_ #:i_ #:p_
-    #:$ #:2$ #:3$ #:4$
-    #:f$ #:d$ #:f2$ #:d2$ #:f3$ #:d3$ #:f4$ #:d4$
-
-    #:$print #:2$print #:3$print #:4$print #:vpr
-    #:$num #:2$num #:3$num
-    #:$to-list #:2$to-list #:3$to-list #:4$to-list
+    #:new-stride #:$make #:$copy
 
     #:f2$center #:f2$circ #:f2$polygon #:f2$rect #:f2$square*
+    #:$to-list #:2$to-list #:3$to-list #:4$to-list
+    #:vp #:vpr #:$print #:2$print #:3$print #:4$print
 
     #:f2in-triangle #:f2in-bbox #:f2in-concave
-    #:f2segdst #:f2lsegx #:f2segx #:f3planex
-
-    #:vprod #:vsum))
+    #:f2segdst #:f2lsegx #:f2segx #:f3planex))
 

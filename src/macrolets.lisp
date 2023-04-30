@@ -6,32 +6,37 @@
   `(defmacro vprogn (&body body)
     "enable veq context inside this progn.
 handles propagation and resolution of uses of (varg d var) and (vref var i).
+also handles vv macro compiler triggers. see vv macro.
+
 fvprogn is faster, but has some limitations."
-    `(macrolet ,',*symbols-map* (vv ,@(replace-varg body)))))
+    (let ((body* (replace-varg (vv-proc body))))
+       `(macrolet ,',*symbols-map* ,@body*))))
 (define-vprogn)
 
 (defmacro define-fvprogn ()
   `(defmacro fvprogn (&body body)
     "enable veq context inside this progn.
 handles propagation and resolution of uses of (varg d var) and (vref var i).
+also handles vv macro compiler triggers. see vv macro.
 
 works the same way as vprogn. but removes all macrolets that are not
-directly used in body. this is faster, but may fail in some cases where
-body is complex. in the event of errors try vprogn instead."
-    `(macrolet ,(filter-macrolets *symbols-map* body)
-       (vv ,@(replace-varg body)))))
+directly referenced by a symbol in body. this is faster, but may fail in some
+cases where body is complex. in the event of errors try vprogn instead."
+    (let ((body* (replace-varg (vv-proc body))))
+       `(macrolet ,(filter-macrolets *symbols-map* body*)
+                  ,@body*))))
 (define-fvprogn)
 
 
 (defmacro define-vdef ()
   `(defmacro vdef (fname &body body)
-    "define function with veq context enabled. uses vprogn."
+    "define function with veq context enabled. see vprogn."
     `(vprogn (defun ,fname ,@body))))
 (define-vdef)
 
 (defmacro define-fvdef ()
   `(defmacro fvdef (fname &body body)
-     "define function with veq context enabled. uses fvprogn."
+     "define function with veq context enabled. see fvprogn."
      `(fvprogn (defun ,fname ,@body))))
 (define-fvdef)
 

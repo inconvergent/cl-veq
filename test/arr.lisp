@@ -1,7 +1,7 @@
 
 (in-package #:veq-tests)
 
-(plan 6)
+(plan 4)
 
 (subtest "array macro"
   (veq:fvprogn
@@ -36,17 +36,16 @@
 
     (let ((a (veq:f$make :dim 3 :n 5 :v 0f0)))
       (veq:f3$fxlspace (5 (veq:f3 2f0 -4f0 8f0) (veq:f3rep 2f0))
-                       (lambda (i x y z) (veq:3$vset (a i) (values x y z))))
+                       (lambda (i (:va 3 x)) (setf (veq:3$ a i) (values x))))
       (is a #(2.0 -4.0 8.0 2.0 -2.5 6.5 2.0 -1.0 5.0 2.0 0.5 3.5 2.0 2.0 2.0)
           :test #'equalp))
 
     (let ((a (veq:f$make :dim 3 :n 5 :v 0f0)))
       (veq:f3$fxlspace (5 (veq:f3 2f0 -4f0 8f0) (veq:f3rep 2f0) :end nil)
-                       (lambda (i (:va 3 x)) (veq:3$vset (a i) (values x))))
+                       (lambda (i (:va 3 x)) (setf (veq:3$ a i) (values x))))
       (is a #(2.0 -4.0 8.0 2.0 -2.8 6.8 2.0 -1.5999999 5.6 2.0 -0.39999986
               4.3999996 2.0 0.8000002 3.1999998)
           :test #'equalp))))
-
 
 (subtest "mima"
   (veq:fvprogn
@@ -65,23 +64,26 @@
                                            -10.0 -10.9   0.1
                                            10.0  -10.0   0.2
                                            0f0 0f0 0f0)) :n 3))
-                   '(-10.0 10.0 -10.9 10.088 0.1 0.2))
+                   '(-10.0 10.0 -10.9 10.088 0.1 0.2)))))
 
-
-
-      )))
-
-(subtest "take"
+(subtest "shapes"
   (veq:fvprogn
-    (let ((a (veq:f$_ '((1f0 2f0) (3f0 4f0) (5f0 6f0)
-                        (7f0 7f0) (8f0 9f0) (10f0 11f0)))))
-      (is (veq:f2$take a (list 2 4 5)) #(5.0 6.0 8.0 9.0 10.0 11.0)
-          :test #'equalp))))
+    (is (veq:f2$rect 3f0 4f0) #(3.0 -4.0 3.0 4.0 -3.0 4.0 -3.0 -4.0) :test #'equalp)
+    (is (veq:f2$polygon 5 23f0)
+        #(23.0 0.0 7.1073904 21.8743 -18.607393 13.519059
+          -18.60739 -13.519063 7.1073937 -21.874298)
+        :test #'equalp)
+    (is (veq:f2$center (veq:f2$polygon 5 23f0))
+        #(25.196304 9.536743e-7 9.303694 21.874302 -16.41109 13.51906
+          -16.411087 -13.519062 9.303698 -21.874298)
+        :test #'equalp)
+    (is (veq:f2$circ 4f0)
+      #(4.0 0.0 3.541824 1.8588928 2.2722588 3.2919354 0.48214626 3.9708354
+        -1.4184198 3.7400649 -2.994043 2.6524906 -3.8837676 0.9572618 -3.8837671
+        -0.95726335 -2.9940426 -2.652491 -1.4184183 -3.7400653 0.48214698
+        -3.9708354 2.27226 -3.291935 3.541825 -1.8588911)
+        :test #'equalp)))
 
-(subtest "reduce"
-  (is (veq:lst (veq:f3$sum (veq:f_ '(1f0 2f0 3f0 3f0 2f0 1f0))))
-      '(4.0 4.0 4.0))
-  (is (veq:f$sum (veq:f_ '(1f0 2f0 3f0 3f0 2f0 1f0))) 12.0))
 
 (unless (finalize) (error "error in arr tests"))
 

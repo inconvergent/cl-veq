@@ -1,6 +1,20 @@
 
 (in-package :veq)
 
+(defun nil-or-pckg-name (s &aux (p (symbol-package s)))
+  (if (not p) nil (package-name p)))
+
+
+(defun find-all-relevant-symbols (body &aux (ht (make-hash-table :test #'equal)))
+  (labels ((rec (b)
+             (cond ((null b) nil)
+                   ((and (symbolp b) (equal "VEQ" (mkstr (nil-or-pckg-name b))))
+                    (setf (gethash b ht) t))
+                   ((consp b) (rec (car b)) (rec (cdr b)))
+                   (t nil))))
+    (rec body) ht))
+
+
 (declaim (inline filter-macrolets))
 (defun filter-macrolets (symbols-map body)
   (declare #.*opt* (list symbols-map body))
@@ -8,11 +22,9 @@
 compilation time considerably, and makes it easier to read output code.
 
 note: it can cause errors in in cases with nested macros."
-  (let ((macrolet-symbols-in-body
-          (remove-duplicates (remove-if-not #'symbolp (awf body)))))
-    (declare (list macrolet-symbols-in-body))
-    (remove-if-not (lambda (s) (declare (symbol s))
-                               (member s macrolet-symbols-in-body))
+  (let ((hits (find-all-relevant-symbols body)))
+    (declare (hash-table hits))
+    (remove-if-not (lambda (s) (declare (symbol s)) (gethash s hits))
                    symbols-map :key #'car)))
 
 (defmacro select-macrolets ((dim type &rest names) &body body)
@@ -38,7 +50,15 @@ appropriate symbols for the dimension.
 local maps vref/varg maps are propagated forwards in the list so a given
 arg/ref should be available under its scope.  it seems to work for all cases
 i have tested. but i'm mot sure if this propagation will eventually break
-somewhere."
+somewhere.
+
+ex:
+  (print (veq:replace-varg '(mvb ((:va 2 x)) (values 1 2)
+                                 (list (:vr x 1 0)))))
+  ; will print something like:
+  ; (MVB (#:X/X-158 #:X/Y-159) (VALUES 1 2)
+  ;      (LIST #:X/Y-159 #:X/X-158))
+"
   (labels
     ((is-varg (v) (and (consp v) (member (car v) '(varg :varg :va) :test #'eq)))
      (is-vref (root) (and (listp root) (listp (car root))
@@ -49,18 +69,15 @@ somewhere."
        (loop with res = (list)
              for v in (reverse root)
              if (is-varg v)
-             do  (dsb (dim &rest va-symbs) (cdr v)
-                  (loop for name in va-symbs
-                        collect (let ((asc (cdr (assoc name rmap))))
-                                  (if (and asc (correct-dim dim asc))
-                                    ; already in rmap, with correct dim
-                                    ; use existing gensyms
-                                    (list asc)
-                                    ; make new gensyms and add to rmap
-                                    (let ((syms (-gensyms name dim)))
-                                      (push `(,name . ,syms) rmap)
-                                      syms))) into new
-                        finally (setf res `(,@(awf new) ,@res))))
+             do  (loop with (dim . va-symbs) = (cdr v)
+                      for name in va-symbs
+                      for asc = (cdr (assoc name rmap))
+                      if (and asc (correct-dim dim asc))
+                      collect (list asc) into new
+                      else collect (let ((syms (-gensyms name dim)))
+                                     (push `(,name . ,syms) rmap)
+                                     syms) into new
+                      finally (setf res `(,@(awf new) ,@res)))
              else do (push v res)
              finally (return (values res rmap))))
      (get-car-rmap (root rmap)
@@ -73,7 +90,7 @@ somewhere."
        ; these vrefs will be replaced at a later time (eg. in the call
        ; to replace-varg in -vlet)
        (aif (assoc (cadr root) rmap) ; if ref in rmap
-            (mapcar (lambda (i) (nth (the pos-int i) (cdr it))) ; (cdr it) == symbs
+            (mapcar (lambda (i) (nth (the pn i) (cdr it))) ; (cdr it) == symbs
                     (cddr root)) ; inds
             (list root))) ; do nothing
      (walk (root rmap)
