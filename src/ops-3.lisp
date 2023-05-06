@@ -46,7 +46,7 @@
   (:3 @3from (3!a 3!b s)) (-@3+ ax ay az (* bx s) (* by s) (* bz s))
   (:3 @3mid (3!a 3!b)) (values (* (+ bx ax) 1/2) (* (+ by ay) 1/2) (* (+ bz az) 1/2))
 
-  (:3 @3^ (3!a s)) (values (expt ax s) (expt ay s) (expt az s))
+  (:3 @3^ (3!a s)) (values (the @f (expt ax s)) (the @f (expt ay s)) (the @f (expt az s)))
   (:3 @3exp (3!a)) (values (exp ax) (exp ay) (exp az))
 
   (:3 @3mod (3!a s)) (values (mod ax s) (mod ay s) (mod az s))

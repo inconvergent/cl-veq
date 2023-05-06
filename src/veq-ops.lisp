@@ -36,9 +36,8 @@
 (defun -expand-and-flatten-!symbols (ss)
   (awf (loop for s in ss collect (-expand-!symb s))))
 
-; TODO: type is not used?
 (defmacro op ((type out-dim mname args) &body body)
-  (declare (symbol mname) (list args))
+  (declare (ignorable type) (symbol mname) (list args))
   "build an op. see ops-1.lisp, ops-2.lisp, ..."
   (let* ((exp-args (-expand-and-flatten-!symbols args))
          (declares `(,(optype mname) ,@exp-args))

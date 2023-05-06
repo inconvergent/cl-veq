@@ -1,6 +1,6 @@
 (in-package #:veq-tests)
 
-(plan 3)
+(plan 4)
 
 (subtest "vv" (veq:fvprogn
 
@@ -152,7 +152,6 @@
       :test #'equalp)))
 
 (subtest "vv 3" (veq:fvprogn
-  (veq:fvprogn
     (let ((a (veq:f_ '(1f0 2f0 3f0 4f0 5f0 6f0 7f0 7f0 8f0 9f0 10f0 11f0))))
       (is-arr (veq::f2_@$f2id (l?@ a (list 2 4 5))) #(5.0 6.0 8.0 9.0 10.0 11.0))
 
@@ -184,9 +183,9 @@
                                2)))
           '(18 21))
       (is (veq:lst (f3r@$+ (veq:f_ '(1f0 2f0 3f0 3f0 2f0 11f0)))) '(4.0 4.0 14.0))
-      (is (veq:lst (fr@$+ (veq:f_ '(1f0 2f0 3f0 3f0 2f0 1f0)))) '(12.0))))))
+      (is (veq:lst (fr@$+ (veq:f_ '(1f0 2f0 3f0 3f0 2f0 1f0)))) '(12.0)))))
 
-(subtest "vv 3" (veq:fvprogn
+(subtest "vv %@" (veq:fvprogn
   (let ((res (list)))
      (is-arr (2%@$fx #(1 2 3 4) ((i x y) (push (list i :xy x y) res)))
              #(((0 :XY 1 2)) NIL ((1 :XY 3 4) (0 :XY 1 2)) NIL))
@@ -198,9 +197,7 @@
 
   (is (2%@fx 1 2 ((x y) (list :xy x y))) (list :xy 1 2))
   (is (2%@fx 1 2 (((:va 2 x)) (list :xy x))) (list :xy 1 2))
-  (is (2%@fx (2!@+ 1 2 3 4) ((x y) (list :xy x y))) (list :xy 4 6))
-
-  ))
+  (is (2%@fx (2!@+ 1 2 3 4) ((x y) (list :xy x y))) (list :xy 4 6))))
 
 (unless (finalize) (error "error in vv tests"))
 

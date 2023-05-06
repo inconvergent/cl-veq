@@ -25,8 +25,8 @@ eg: (veqsymb 2 ff :lerp) yields f2lerp."
     (when pref (setf elem (cons pref elem)))
     (values (intern (string-upcase (apply #'mkstr elem)) (mkstr pkg)))))
 
-(defun unpack-veqsymb (sym &key (s :!) (niltype :nil))
-  (declare (symbol sym) ((or string keyword character) s))
+(defun unpack-veqsymb (sym &key (s :!) (niltype :nil) (symout t))
+  (declare #.*opt* (symbol sym) ((or string keyword character) s))
   "split names of type f34!var into (values :f var 3 4)"
   (labels ((find-type (p) (if p (kv (car p)) niltype))
            (find-dim (p) (if p (digit-char-p (car p)) 1)))
@@ -35,7 +35,7 @@ eg: (veqsymb 2 ff :lerp) yields f2lerp."
       (mvb (pref-digits pref-chars)
         (if pref (fx-split-str #'digit-char-p (mkstr pref)) (values nil nil))
         (values (the keyword (find-type pref-chars))
-                (the symbol (symb (string-upcase vname)))
+                (if symout (symb (string-upcase vname)) (string-upcase vname))
                 (the fixnum (find-dim pref-digits)) ; dim
                 (the fixnum (find-dim (reverse pref-digits)))))))) ; dimout
 

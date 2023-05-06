@@ -47,7 +47,8 @@
        (values (* (+ bx ax) 1/2) (* (+ by ay) 1/2)
                (* (+ bz az) 1/2) (* (+ bw aw) 1/2))
 
-  (:4 @4^ (4!a s)) (values (expt ax s) (expt ay s) (expt az s) (expt aw s))
+  (:4 @4^ (4!a s)) (values (the @f (expt ax s)) (the @f (expt ay s))
+                           (the @f (expt az s)) (the @f (expt aw s)))
   (:4 @4exp (4!a)) (values (exp ax) (exp ay) (exp az) (exp aw))
   (:4 @4mod (4!a s)) (values (mod ax s) (mod ay s) (mod az s) (mod aw s))
 

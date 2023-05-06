@@ -37,27 +37,31 @@
     (if source (rec source nil) nil)))
 
 (defun mkstr (&rest args) ; from on lisp by pg
+  (declare (optimize speed))
   (with-output-to-string (s)
     (dolist (a args) (princ a s))))
 
 (defun match-substr (sub s)
-  (declare (string sub s))
+  (declare (optimize speed) (string sub s))
   "returns index where substring matches s from left to right. otherwise nil."
-  (loop with lc = (length sub)
+  (loop with sub0 of-type character = (char sub 0)
+        with lc = (length sub)
         for i from 0 repeat (1+ (- (length s) lc))
-        if (string= sub s :start2 i :end2 (+ i lc))
-        do (return i)))
+        if (and (eq sub0 (char s i)) ; this is more efficient
+                (string= sub s :start2 (1+ i) :end2 (+ i lc) :start1 1))
+        do (return-from match-substr i)))
 
 (declaim (inline last*))
 (defun nth* (l i &optional d &aux (v (nth i l)))
   (declare (list l) (fixnum i))
   (if v v d))
 (defun last* (l) (declare (list l)) (first (last l)))
+
 (defun symb (&rest args) ; from on lisp by pg
   (values (intern (apply #'mkstr args))))
-
-;https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
-(defun psymb (package &rest args) (values (intern (apply #'mkstr args) package)))
+(defun psymb (pkg &rest args) ;https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
+  (declare (optimize speed))
+  (values (intern (apply #'mkstr args) pkg)))
 (defmacro with-struct ((name . fields) struct &body body)
   (let ((gs (gensym (string-upcase (mkstr name)))))
     `(let ((,gs ,struct))
@@ -101,7 +105,7 @@
 
 
 (defun -gensyms (name n)
-  (declare (symbol name) (fixnum n))
+  (declare (optimize speed) (symbol name) (fixnum n))
   (loop with name = (string-upcase (string name))
         for x across "XYZWUVPQRSTUVABCDEFGHIJKLMNO" repeat n
         collect (gensym (format nil "~a/~a-" name x))))
@@ -130,18 +134,18 @@
              do (return-from splt
                   (cons (subseq s 0 i) (splt (subseq s (1+ i))))))))
     (let ((res (splt (concatenate 'string s (string x)))))
-      (if prune (remove-if (lambda (s) (= 0 (length s))) res)
+      (if prune (remove-if (lambda (s) (zerop (length s))) res)
                 res))))
 
 ; this can probably be improved
 (defun split-substr (x s &key prune &aux (lx (length x)))
-  (declare (string x s) (boolean prune))
+  (declare (optimize speed) (string x s) (boolean prune))
   (labels
     ((lst (s) (typecase s (list s) (t (list s))))
-     (splt (s &aux (i (veq::match-substr x s)))
+     (splt (s &aux (i (match-substr x s)))
        (if i (cons (subseq s 0 i) (lst (splt (subseq s (+ lx i))))) s)))
     (let ((res (lst (splt s))))
-      (if prune (remove-if (lambda (s) (= 0 (length s))) res)
+      (if prune (remove-if (lambda (s) (zerop (length s))) res)
                 res))))
 
 (defun fx-split-str (fx s)
@@ -155,25 +159,28 @@
   "cons v to l intil (length l) >= n"
   (loop repeat (- n n*) do (setf l (cons v l)) finally (return l)))
 
+(defun strcat (s)
+  (declare (optimize speed) (list s))
+  (apply #'concatenate 'string s))
+
 (defun strip-symbols (name symbs)
-  (declare (symbol name) (list symbs))
-  (loop for c in symbs
-        for new = (split-substr (mkstr c) (mkstr name))
-        do (setf name (apply #'symb new)))
+  (declare (optimize speed) (string name) (list symbs))
+  (loop for c of-type string in symbs
+        do (setf name (the string (strcat (split-substr c name)))))
   name)
 
-(defun edge-fx (fx sym &optional rht &aux (s (mkstr sym)) (c 0))
-  (declare (function fx) (symbol sym) (fixnum c) (boolean rht))
+(defun edge-fx (fx s &optional rht &aux (c 0))
+  (declare (optimize speed) (function fx) (string s) (fixnum c) (boolean rht))
   "count number of times fx is t across sym chars from the left (or right)
 returns (values c sym*), where sym* is sym with the padding characters removed"
   (when rht (setf s (reverse s)))
   (loop repeat (length s) while (funcall fx (char s 0))
-        do (setf s (subseq s 1)) (incf c))
+        do (setf s (the string (subseq s 1))) (incf c))
   (values c (if rht (reverse s) s)))
 
-(defun edge-chars (ch sym &optional rht)
-  (declare (character ch) (symbol sym) (boolean rht))
-  "count number of padding characters ch  in sym from the left (or right)
-returns (values c sym*), where sym* is sym with the padding characters removed"
-  (edge-fx (lambda (c) (eq ch c)) sym rht))
+(defun edge-chars-str (ch s &optional rht)
+  (declare (optimize speed) (character ch) (string s) (boolean rht))
+  "count number of padding characters ch  in s from the left (or right)
+returns (values c sym*), where sym* is s with the padding characters removed"
+  (edge-fx (lambda (c) (eq ch c)) s rht))
 

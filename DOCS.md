@@ -1626,7 +1626,8 @@ body (3): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
 veq context op: D3^
 fxname: -D3^
 args: (AX AY AZ S)
-body (3): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S)).
+body (3): (VALUES (THE DF (EXPT AX S)) (THE DF (EXPT AY S))
+                  (THE DF (EXPT AZ S))).
 ```
 
 #### :fvprogn: D3ABS
@@ -2313,7 +2314,8 @@ body (4): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
 veq context op: D4^
 fxname: -D4^
 args: (AX AY AZ AW S)
-body (4): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S) (EXPT AW S)).
+body (4): (VALUES (THE DF (EXPT AX S)) (THE DF (EXPT AY S))
+                  (THE DF (EXPT AZ S)) (THE DF (EXPT AW S))).
 ```
 
 #### :fvprogn: D4ABS
@@ -5102,7 +5104,8 @@ body (3): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ)).
 veq context op: F3^
 fxname: -F3^
 args: (AX AY AZ S)
-body (3): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S)).
+body (3): (VALUES (THE FF (EXPT AX S)) (THE FF (EXPT AY S))
+                  (THE FF (EXPT AZ S))).
 ```
 
 #### :fvprogn: F3ABS
@@ -5805,7 +5808,8 @@ body (4): (VALUES (/ AX BX) (/ AY BY) (/ AZ BZ) (/ AW BW)).
 veq context op: F4^
 fxname: -F4^
 args: (AX AY AZ AW S)
-body (4): (VALUES (EXPT AX S) (EXPT AY S) (EXPT AZ S) (EXPT AW S)).
+body (4): (VALUES (THE FF (EXPT AX S)) (THE FF (EXPT AY S))
+                  (THE FF (EXPT AZ S)) (THE FF (EXPT AW S))).
 ```
 
 #### :fvprogn: F4ABS
@@ -8979,7 +8983,7 @@ returns (values 1f0 2f0 3f0)
  ;   Lambda-list: (BODY &OPTIONAL (ROOT-RMAP (LIST)))
  ;   Derived type: (FUNCTION (T &OPTIONAL T) (VALUES T &OPTIONAL))
  ;   Documentation:
- ;     replace instances of varg/:varg/:va and vref/:vref/vr with
+ ;     replace instances of varg/:varg/:va and vref/:vref/:vr with
  ;     appropriate symbols for the dimension.
  ;
  ;     local maps vref/varg maps are propagated forwards in the list so a given
@@ -9049,11 +9053,11 @@ returns (values 1f0 2f0 3f0)
  ;   [symbol]
  ;
  ; UNPACK-VEQSYMB names a compiled function:
- ;   Lambda-list: (SYM &KEY (S !) (NILTYPE NIL))
+ ;   Lambda-list: (SYM &KEY (S !) (NILTYPE NIL) (SYMOUT T))
  ;   Derived type: (FUNCTION
  ;                  (SYMBOL &KEY (:S (OR STRING KEYWORD CHARACTER))
- ;                   (:NILTYPE T))
- ;                  (VALUES KEYWORD SYMBOL (MOD 36) (MOD 36) &OPTIONAL))
+ ;                   (:NILTYPE T) (:SYMOUT T))
+ ;                  (VALUES KEYWORD T (MOD 36) (MOD 36) &OPTIONAL))
  ;   Documentation:
  ;     split names of type f34!var into (values :f var 3 4)
  ;   Source file: src/utils.lisp

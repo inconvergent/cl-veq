@@ -6,12 +6,12 @@
 
 (subtest "utils"
 
-  (is (veq::strip-symbols 'name!@abc '(:!@ :hi)) 'NAMEABC)
-  (is (veq::strip-symbols 'name!abc '(:! :hi)) 'NAMEABC)
-  (is (veq::strip-symbols 'name!abc? '(:! :? :hi)) 'NAMEABC)
+  (is (veq::strip-symbols (veq::mkstr 'name!@abc) (mapcar #'veq::mkstr '(:!@ :hi))) "NAMEABC")
+  (is (veq::strip-symbols (veq::mkstr 'name!abc) (mapcar #'veq::mkstr '(:! :hi))) "NAMEABC")
+  (is (veq::strip-symbols (veq::mkstr 'name!abc?) (mapcar #'veq::mkstr '(:! :? :hi))) "NAMEABC")
 
-  (is (veq:lst (veq::edge-fx (lambda (c) (equal #\F c)) 'ffffhiii)) '(4 "HIII"))
-  (is (veq:lst (veq::edge-chars #\F 'ffffhiii)) '(4 "HIII"))
+  (is (veq:lst (veq::edge-fx (lambda (c) (equal #\F c)) (veq::mkstr 'ffffhiii))) '(4 "HIII"))
+  (is (veq:lst (veq::edge-chars-str #\F (veq::mkstr 'ffffhiii))) '(4 "HIII"))
 
   (is (veq:lst (veq:~ :a)) '(:a))
   (is (veq:lst (values 3 2) (values 7 8)) '(3 2 7 8))
