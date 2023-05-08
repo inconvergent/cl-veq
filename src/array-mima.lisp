@@ -1,54 +1,29 @@
 
 (in-package :veq)
 
-
-(defmacro update-mima (v mi ma)
-  (declare (symbol v mi ma))
-  `(cond ((< ,v ,mi) (setf ,mi ,v))
-         ((> ,v ,ma) (setf ,ma ,v))))
-
-; TODO: from to as supported in with-arrays
+; TODO: make this a general macro instead?
 (defmacro -xmima (dim type)
-  (awg (a mimafx)
-    (let* ((exportname (veqsymb dim type :$mima))
-           (vlet (veqsymb 1 type :vlet))
-           (with-arrays (veqsymb 1 type :with-arrays))
-           (indref (veqsymb dim type "$"))
-           (with `(:itr k
-                   :arr ((,a ,dim ,a))
-                   :fxs ((,mimafx ((varg ,dim x))
-                           (progn ,@(loop for i from 0 below dim
-                                          collect `(update-mima
-                                                     (:vr x ,i)
-                                                     (:vr mi ,i)
-                                                     (:vr ma ,i))))))
-                   :nxs ((,mimafx ,a))))
-           (docs (format nil "find min and max for all dimensions of ~d array.
+  (let* ((exportname (vvsym type dim :$mima))
+         (fxhead `((k (:va ,dim x)) (declare (ignore k))))
+         (vvop (vvsym type dim :x@$mima))
+         (docs (format nil "find min and max for all dimensions of ~d array.
 ex: (~a &key n) returns (values xmin xmax ...).
-use n to limit to first n rows." dim exportname)))
-      `(progn (export ',exportname)
-       (fvdef ,exportname (,a &key (n (,(veqsymb dim nil :$num) ,a)) inds)
-          (declare (,(arrtype type) ,a))
-          ,docs
-          (let ((,a ,a))
-            ; TODO: what should happen when a is empty?
-            ; early exit when a is empty. returns (values 0 ...) for dim
-            (when (< (length ,a) 1)
-                  (return-from ,exportname
-                               (values ,@(loop repeat (* dim 2)
-                                               collect (coerce 0 type)))))
-            (,vlet ((mm ,dim (,indref ,a (if inds (car inds) 0)))
-                    (mi ,dim (values mm))
-                    (ma ,dim (values mm)))
-                ; TODO: there was s bug here where inds was not used correctly.
-                ; should rewrite with-arrays to use n if n, else inds?
-                (if inds (,with-arrays (:inds inds ,@with))
-                         (,with-arrays (:n n ,@with)))
-              (values ,@(loop with res = (list)
-                              for i from 0 below dim
-                              do (push `(:vr mi ,i) res)
-                                 (push `(:vr ma ,i) res)
-                              finally (return (reverse res)))))))))))
+use n to limit to first n rows." dim exportname))
+         (update-mima (loop for i from 0 repeat dim
+                            for v = `(:vr x ,i)
+                            for mi = `(:vr mi ,i) for ma = `(:vr ma ,i)
+                            collect `(cond ((< ,v ,mi) (setf ,mi ,v))
+                                           ((> ,v ,ma) (setf ,ma ,v))))))
+    `(progn (export ',exportname)
+     (fvdef ,exportname (a &key (n (,(vvsym nil dim :$num) a)) inds)
+        (declare (,(arrtype type) a)) ,docs
+        (,(vvsym type 1 :vlet)
+               ((mm ,dim (,(vvsym type dim "$") a (if inds (car inds) 0)))
+                (mi ,dim (values mm)) (ma ,dim (values mm)))
+            (if inds (,vvop (l?@ a inds) (,@fxhead ,@update-mima))
+                     (,vvop (?@ a 0 n) (,@fxhead ,@update-mima)))
+          (values ,@(loop for i from 0 below dim
+                          append `((:vr mi ,i) (:vr ma ,i)))))))))
 (-xmima 1 ff) (-xmima 2 ff) (-xmima 3 ff)
 (-xmima 1 df) (-xmima 2 df) (-xmima 3 df)
 

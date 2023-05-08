@@ -35,7 +35,7 @@ ex: (VSEL (df :w :zx 0) (values a b c d)) returns: (values d c a a)."
            (declare (ignore ,@ign) (,type ,@(remove-duplicates vals)))
            (values ,@vals))))))
 
-(defmacro define-vsel (ty &aux (mname (veqsymb 1 ty :sel)))
+(defmacro define-vsel (ty &aux (mname (vvsym ty 1 :sel)))
   `(progn
      (export ',mname)
      (defmacro ,mname ((&rest dims) &body body)

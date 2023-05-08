@@ -2,7 +2,6 @@
 
 set -e
 sbcl --quit \
-     --eval '(load "~/quicklisp/setup.lisp")'\
      --eval '(handler-case (ql:quickload :veq :verbose t)
                            (error (c) (format t "STAGE1FAIL: ~a" c)
                                       (sb-ext:quit :unix-status 2)))'\

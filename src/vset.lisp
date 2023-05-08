@@ -12,7 +12,7 @@
 
 (defmacro make-$defsetf (dim)
   (awg (a i)
-    (let* ((name (veqsymb dim nil :$))
+    (let* ((name (vvsym nil dim :$))
            (docstr (format nil "get: (~a a i) yields (values ...)~%set: (setf (~a a i) (values ...))" name name))
            (gs (loop for i from 0 below dim collect (gensym))))
       `(progn (export ',name)

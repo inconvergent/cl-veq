@@ -12,33 +12,6 @@
           (defconstant fpii (ff (* pi 2f0)))))
 (define-constants)
 
-(defun veqsymb (dim type symb &key pref (sep "") (pkg "VEQ"))
-  (declare #.*opt* (symbol type))
-  "build a symbol with correct name convention.
-eg: (veqsymb 2 ff :lerp) yields f2lerp."
-  (let ((elem (list (case (kv type)
-                          (:df :d) (:ff :f) (:in :i) (:pn :p) (:kv :k)
-                          (otherwise ""))
-                    (if (and dim (> (the pn dim) 1)) dim "")
-                    sep
-                    symb)))
-    (when pref (setf elem (cons pref elem)))
-    (values (intern (string-upcase (apply #'mkstr elem)) (mkstr pkg)))))
-
-(defun unpack-veqsymb (sym &key (s :!) (niltype :nil) (symout t))
-  (declare #.*opt* (symbol sym) ((or string keyword character) s))
-  "split names of type f34!var into (values :f var 3 4)"
-  (labels ((find-type (p) (if p (kv (car p)) niltype))
-           (find-dim (p) (if p (digit-char-p (car p)) 1)))
-    (dsb (pref vname) (nilpad 2 (split-substr (mkstr s) (mkstr sym)))
-      (unless vname (error "VEQSYMB: missing tail: ~a" sym))
-      (mvb (pref-digits pref-chars)
-        (if pref (fx-split-str #'digit-char-p (mkstr pref)) (values nil nil))
-        (values (the keyword (find-type pref-chars))
-                (if symout (symb (string-upcase vname)) (string-upcase vname))
-                (the fixnum (find-dim pref-digits)) ; dim
-                (the fixnum (find-dim (reverse pref-digits)))))))) ; dimout
-
 (defmacro mvcgrp ((dim fx) &body body)
   "call fx on body in groups of dim.
 ex: (labels ((fx ((:va 3 x)) (fsel (:xy) x)))

@@ -11,11 +11,11 @@
 
     (let ((a (veq:d2$point 100.2d0 2d0)))
       (is a #(100.2d0 2d0) :test #'equalp)
-      (is (veq:lst (veq:d2+ (veq:d2$ a) 2d0 3d0)) '(102.2d0 5d0)))
+      (is (veq:lst (d2!@+ (veq:d2$ a) 2d0 3d0)) '(102.2d0 5d0)))
 
     (let ((a (veq:f2$point 100.2f0 2f0)))
       (is a #(100.2f0 2f0) :test #'equalp)
-      (is (veq:lst (veq:f2+ (veq:f2$ a) 2f0 3f0)) '(102.2f0 5f0)))
+      (is (veq:lst (f2!@+ (veq:f2$ a) 2f0 3f0)) '(102.2f0 5f0)))
 
     (is (veq:d$_ (loop for i from 0 below 3
                       collect (list (veq:df i)

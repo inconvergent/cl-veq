@@ -4,7 +4,7 @@
 ; mat * v ; (f3mtv mat x)
 (defmacro make-mat-mv (dim type &optional transpose)
   (awg (mm m v)
-    (let ((exportname (veqsymb dim type (if transpose "mtv" "mv"))))
+    (let ((exportname (vvsym type dim (if transpose "mtv" "mv"))))
       (labels ((stp (i k) (if transpose (+ i (* k dim)) (+ (* i dim) k)))
                (make-row-sum (i)
                 `(+ ,@(loop for k from 0 below dim
@@ -30,7 +30,7 @@
 
 ; eye(n) ; (f3eye n)
 (defmacro make-mat-eye (dim type &aux (exportname
-                                    (veqsymb dim type "meye")))
+                                    (vvsym type dim "meye")))
   (labels ((eye ()
             (loop for i from 0 below (* dim dim)
                   collect (if (= (mod i dim) (/ (- i (mod i dim)) dim))
@@ -62,7 +62,7 @@
                                         res))
                           finally (return res))))
 
-      (let ((exportname (veqsymb dim type "mt!")))
+      (let ((exportname (vvsym type dim "mt!")))
         `(progn (export ',exportname)
                 (defmacro ,exportname (,a)
                   ,(format nil "transpose ~ad matrix in-place." dim)
@@ -82,7 +82,7 @@
                               collect
                                 `(* (aref ,a ,(if ta (matind k i) (matind i k)))
                                     (aref ,b ,(if tb (matind j k) (matind k j)))))))
-      (let ((exportname (veqsymb dim type (format nil "m~:[~;t~]m~:[~;t~]" ta tb))))
+      (let ((exportname (vvsym type dim (format nil "m~:[~;t~]m~:[~;t~]" ta tb))))
         `(progn (export ',exportname)
            (defmacro ,exportname (,a* ,b*)
              ,(format nil
@@ -90,7 +90,7 @@
                 ta tb (arrtype type))
              `(let* ((,',a ,,a*)
                      (,',b ,,b*)
-                     (,',c (,',(veqsymb  dim type "$zero") ,,dim)))
+                     (,',c (,',(vvsym type dim "$zero") ,,dim)))
                  (declare (,',(arrtype type) ,',a ,',b ,',c))
                 ,',(cons 'progn
                      (loop with res = (list)
@@ -114,12 +114,12 @@
 
 ; make transpose matrix (mtrans x)
 (defmacro make-mat-trans (dim type)
-  (let ((exportname (veqsymb dim type "mtrans")))
+  (let ((exportname (vvsym type dim "mtrans")))
     `(progn (export ',exportname)
             (fvdef* ,exportname ((varg ,dim x))
               (declare #.*opt* (,type x))
               ,(format nil "make ~ad transpose matrix for moving by x" dim)
-              (let ((res (,(veqsymb (1+ dim) type "meye"))))
+              (let ((res (,(vvsym type (1+ dim) :meye))))
                 (declare (,(arrtype type) res))
                 ,@(loop for i from 1 to dim
                         collect `(setf (aref res ,(1- (* (1+ dim) i)))
@@ -130,12 +130,12 @@
 
 ; make scale matrix (mascale s)
 (defmacro make-mat-scale (dim type)
-  (let ((exportname (veqsymb dim type "mscale")))
+  (let ((exportname (vvsym type dim "mscale")))
     `(progn (export ',exportname)
             (fvdef* ,exportname ((varg ,dim x))
               (declare #.*opt* (,type x))
               ,(format nil "make ~ad matrix for scaling by x" dim)
-              (let ((res (,(veqsymb (1+ dim) type "meye"))))
+              (let ((res (,(vvsym type (1+ dim) :meye))))
                 (declare (,(arrtype type) res))
                 ,@(loop for i from 0 below dim
                         collect `(setf (aref res ,(+ i (* (1+ dim) i)))
@@ -149,7 +149,7 @@
 ; and i couldn't get it to work ...
 ; make rot matrix
 (defmacro make-2mrot (type &optional w)
-  (let ((exportname (veqsymb 2 type (format nil "mrot~:[*~;~]" w)))
+  (let ((exportname (vvsym type 2 (format nil "mrot~:[*~;~]" w)))
         (z0 (coerce 0 type)) (one (coerce 1 type)))
      `(progn (export ',exportname)
         (def* ,exportname (a)
@@ -157,14 +157,15 @@
          "make 2d rotation matrix for rotating a rads"
          (let ((cosa (cos a)) (sina (sin a)))
            (declare (,type cosa sina))
-           (f_ (list cosa (- sina) ,@(if w `(,z0)) sina cosa
-                     ,@(if w `(,z0 ,z0 ,z0 ,one)))))))))
+           (,(vvsym type 1 :$~) (,(if w 9 4))
+                 cosa (- sina) ,@(if w `(,z0)) sina cosa
+               ,@(if w `(,z0 ,z0 ,z0 ,one))))))))
 (make-2mrot ff) (make-2mrot ff t) (make-2mrot df) (make-2mrot df t)
 
 ; make rot matrix
 ; NOTE: f3mrot* is the 3x3 matrix version. f3mrot is 4x4 matrix, with w
 (defmacro make-3mrot (type &optional w)
-  (let ((exportname (veqsymb 3 type (format nil "mrot~:[*~;~]" w)))
+  (let ((exportname (vvsym type 3 (format nil "mrot~:[*~;~]" w)))
         (z0 (coerce 0 type)) (one (coerce 1 type)))
     `(progn (export ',exportname)
        (def* ,exportname (a x y z)
@@ -172,7 +173,8 @@
          "make 3d rotation matrix for rotating a rad around unit vector (x y z)"
          (let* ((coa (cos a)) (sia (sin a)) (1-coa (- ,one coa)))
            (declare (,type coa sia 1-coa))
-           (f_ (list (+ coa (* (* x x) 1-coa))
+           (,(vvsym type 1 :$~) (,(if w 16 9))
+                     (+ coa (* (* x x) 1-coa))
                      (- (* x y 1-coa) (* z sia))
                      (+ (* x z 1-coa) (* y sia)) ,@(if w `(,z0))
 
@@ -183,6 +185,6 @@
                      (- (* z x 1-coa) (* y sia))
                      (+ (* z y 1-coa) (* x sia))
                      (+ coa (* (* z z) 1-coa))
-                     ,@(if w `(,z0 ,z0 ,z0 ,z0 ,one)))))))))
+                     ,@(if w `(,z0 ,z0 ,z0 ,z0 ,one))))))))
 (make-3mrot ff) (make-3mrot ff t) (make-3mrot df) (make-3mrot df t)
 

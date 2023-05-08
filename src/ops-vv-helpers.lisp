@@ -55,7 +55,7 @@
 
 (defun vvconf (b &key (vv-sym *vv-sym*))
   (declare (optimize speed) (list b))
-  (mvb (short-ty fx-full-str dim dimout) (unpack-veqsymb (car b)
+  (mvb (short-ty fx-full-str dim dimout) (unpack-vvsym (car b)
                                            :s vv-sym :symout nil)
     (declare (pn dim dimout))
     (let* ((pkg (symbol-package (car b)))
@@ -166,7 +166,7 @@
   (declare (optimize speed))
   (let ((with-out (if (gk+ p :!) (gk p :lft-sym)
                       `($make :n (* ,(gk p :dimout) ,(gk p :rep-sym))
-                              :type ,(gk p :ty) :v ,(type-default (gk p :ty))))))
+                              :type ,(gk p :ty) :v ,(type-default (gk p :ty) nil)))))
     `(,@(gk p :@lft t) ,@(gk p :@rht t) ; rep, lft, rht itr via lconf/rconf
      ,@(when (gk p :out t) ; output array
          `(with ,(gk p :out-sym) of-type ,(gk p :aty) = ,with-out))

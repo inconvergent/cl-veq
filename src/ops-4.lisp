@@ -4,9 +4,6 @@
 (ops
 
   (:4 @4id (4!a)) (values ax ay az aw)
-  (:4 @4abs (4!a)) (values (abs ax) (abs ay) (abs az) (abs aw))
-  (:4 @4neg (4!a)) (values (- ax) (- ay) (- az) (- aw))
-  (:4 @4inv (4!a)) (values (/ ax) (/ ay) (/ az) (/ aw))
   (:4 @4square (4!a)) (values (the pos-@f (* ax ax))
                               (the pos-@f (* ay ay))
                               (the pos-@f (* az az))
@@ -22,30 +19,21 @@
   (:1 @4max (4!a)) (max ax ay az aw)
   (:1 @4min (4!a)) (min ax ay az aw)
 
-  (:4 @4+ (4!a 4!b)) (values (+ ax bx) (+ ay by) (+ az bz) (+ aw bw))
-  (:4 @4- (4!a 4!b)) (values (- ax bx) (- ay by) (- az bz) (- aw bw))
-  (:4 @4* (4!a 4!b)) (values (* ax bx) (* ay by) (* az bz) (* aw bw))
-  (:4 @4/ (4!a 4!b)) (values (/ ax bx) (/ ay by) (/ az bz) (/ aw bw))
-
   (:4 @4i- (4!a 4!b)) (values (- bx ax) (- by ay) (- bz az) (- bw aw))
   (:4 @4i/ (4!a 4!b)) (values (/ bx ax) (/ by ay) (/ bz az) (/ bw aw))
 
-  (:1 @4. (4!a 4!b)) (+ (* ax bx) (* ay by) (* az bz) (* aw bw))
   (:1 @4dot (4!a 4!b)) (+ (* ax bx) (* ay by) (* az bz) (* aw bw))
 
-  (:1 @4dst2 (4!a 4!b))
-       (mvc #'+ (-@4square (- bx ax) (- by ay) (- bz az) (- bw aw)))
-  (:1 @4dst (4!a 4!b))
-       (sqrt (the pos-@f (mvc #'+ (-@4square (- bx ax) (- by ay)
-                                             (- bz az) (- bw aw)))))
+  (:1 @4dst2 (4!a 4!b)) (mvc #'+ (-@4square (- bx ax) (- by ay) (- bz az) (- bw aw)))
+  (:1 @4dst (4!a 4!b)) (sqrt (the pos-@f (mvc #'+ (-@4square (- bx ax) (- by ay)
+                                                             (- bz az) (- bw aw)))))
 
-  (:4 @4lerp (4!a 4!b s))
-      (-@4+ ax ay az aw (* (- bx ax) s) (* (- by ay) s) (* (- bz az) s) (* (- bw aw) s))
-  (:4 @4from (4!a 4!b s))
-       (-@4+ ax ay az aw (* bx s) (* by s) (* bz s) (* bw s))
-  (:4 @4mid (4!a 4!b))
-       (values (* (+ bx ax) 1/2) (* (+ by ay) 1/2)
-               (* (+ bz az) 1/2) (* (+ bw aw) 1/2))
+  (:4 @4lerp (4!a 4!b s)) (values (+ ax (* (- bx ax) s)) (+ ay (* (- by ay) s))
+                                  (+ az (* (- bz az) s)) (+ aw (* (- bw aw) s)))
+  (:4 @4from (4!a 4!b s)) (values (+ ax (* bx s)) (+ ay (* by s))
+                                  (+ az (* bz s)) (+ aw (* bw s)))
+  (:4 @4mid (4!a 4!b)) (values (* (+ ax bx) 1/2) (* (+ ay by) 1/2)
+                               (* (+ az bz) 1/2) (* (+ aw bw) 1/2))
 
   (:4 @4^ (4!a s)) (values (the @f (expt ax s)) (the @f (expt ay s))
                            (the @f (expt az s)) (the @f (expt aw s)))

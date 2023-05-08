@@ -4,9 +4,6 @@
 (ops
 
   (:3 @3id (3!a)) (values ax ay az)
-  (:3 @3abs (3!a)) (values (abs ax) (abs ay) (abs az))
-  (:3 @3neg (3!a)) (values (- ax) (- ay) (- az))
-  (:3 @3inv (3!a)) (values (/ ax) (/ ay) (/ az))
   (:3 @3square (3!a)) (values (the pos-@f (* ax ax))
                               (the pos-@f (* ay ay))
                               (the pos-@f (* az az)))
@@ -21,11 +18,6 @@
   (:1 @3max (3!a)) (max ax ay az)
   (:1 @3min (3!a)) (min ax ay az)
 
-  (:3 @3+ (3!a 3!b)) (values (+ ax bx) (+ ay by) (+ az bz))
-  (:3 @3- (3!a 3!b)) (values (- ax bx) (- ay by) (- az bz))
-  (:3 @3* (3!a 3!b)) (values (* ax bx) (* ay by) (* az bz))
-  (:3 @3/ (3!a 3!b)) (values (/ ax bx) (/ ay by) (/ az bz))
-
   (:3 @3i- (3!a 3!b)) (values (- bx ax) (- by ay) (- bz az))
   (:3 @3i/ (3!a 3!b)) (values (/ bx ax) (/ by ay) (/ bz az))
 
@@ -33,18 +25,19 @@
                                  (- (* az bx) (* ax bz))
                                  (- (* ax by) (* ay bx)))
 
-  (:1 @3. (3!a 3!b)) (+ (* ax bx) (* ay by) (* az bz))
   (:1 @3dot (3!a 3!b)) (+ (* ax bx) (* ay by) (* az bz))
 
   (:1 @3dst2 (3!a 3!b)) (mvc #'+ (-@3square (- bx ax) (- by ay) (- bz az)))
   (:1 @3dst (3!a 3!b)) (sqrt (the pos-@f (mvc #'+ (-@3square
                                                     (- bx ax) (- by ay) (- bz az)))))
 
-  (:3 @3lerp (3!a 3!b s)) (-@3+ ax ay az (* (- bx ax) s)
-                                         (* (- by ay) s)
-                                         (* (- bz az) s))
-  (:3 @3from (3!a 3!b s)) (-@3+ ax ay az (* bx s) (* by s) (* bz s))
-  (:3 @3mid (3!a 3!b)) (values (* (+ bx ax) 1/2) (* (+ by ay) 1/2) (* (+ bz az) 1/2))
+  (:3 @3lerp (3!a 3!b s)) (values (+ ax (* (- bx ax) s)) (+ ay (* (- by ay) s))
+                                  (+ az (* (- bz az) s)))
+
+  (:3 @3from (3!a 3!b s)) (values (+ ax (* bx s)) (+ ay (* by s))
+                                  (+ az (* bz s)))
+  (:3 @3mid (3!a 3!b)) (values (* (+ ax bx) 1/2) (* (+ ay by) 1/2)
+                               (* (+ az bz) 1/2))
 
   (:3 @3^ (3!a s)) (values (the @f (expt ax s)) (the @f (expt ay s)) (the @f (expt az s)))
   (:3 @3exp (3!a)) (values (exp ax) (exp ay) (exp az))
@@ -64,8 +57,8 @@
          (mvc #'-@3from
               (mvc #'-@3from (-@3scale ax ay az cosa)
                              (-@3cross nx ny nz ax ay az) (sin a))
-              nx ny nz (* (-@3. nx ny nz ax ay az) (- 1 cosa))))
+              nx ny nz (* (-@3dot nx ny nz ax ay az) (- 1 cosa))))
   (:3 @3rots (3!a 3!n a 3!s))
-       (mvc #'-@3+ (mvc #'-@3rot (-@3- ax ay az sx sy sz) nx ny nz a)
-            sx sy sz))
+       (mvb (rx ry rz) (mvc #'-@3rot (- ax sx) (- ay sy) (- az sz) nx ny nz a)
+            (values (+ (the @f rx) sx) (+ (the @f ry) sy) (+ (the @f rz) sz))))
 

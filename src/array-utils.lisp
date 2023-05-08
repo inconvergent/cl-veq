@@ -17,34 +17,37 @@
   "shift arr from stride to stride."
   (unless (> to from 0) (error "NEW-STRIDE: must have (> to from 0)"))
   `(fvprogn
-    (let ((n (/ (,(veqsymb 1 type :$num) ,arr) ,from))
+    (let ((n (/ (,(vvsym type 1 :$num) ,arr) ,from))
           (v* (coerce ,v ',(psymb :veq type))))
       (declare (fixnum n))
-      (,(veqsymb 1 type :with-arrays)
+      (,(vvsym type 1 :with-arrays)
         (:n n :cnt c :itr i
          :arr ((arr* ,from ,arr)
-               (res ,to (,(veqsymb nil type :$zero) (* ,to n))))
+               (res ,to (,(vvsym type nil :$zero) (* ,to n))))
          :fxs ((fx ((:va ,from o)) (values o ,@(loop repeat (- to from)
                                                      collect 'v*))))
          :exs ((res c (fx arr*))))
         res))))
 
 (defmacro define-constr (type)
-  (labels ((nm (n) (veqsymb 1 type n)))
+  (labels ((nm (n) (vvsym type 1 n)))
     (awg (a l)
       `(progn
-        (export ',(nm "$make")) (export ',(nm "$copy"))
-        (export ',(nm "_")) (export ',(nm "$~")) (export ',(nm "$_"))
+        (export ',(nm "$make"))
         (defmacro ,(nm "$make") (&key (dim 1) (n 1) (v ,(coerce 0 type)))
           ,(format nil
             "create ~a vector array with size n * dim, and initial value v."
             (arrtype type))
           `($make :dim ,dim :n ,n :v ,v :type ,',type))
+
+        (export ',(nm "$copy"))
         (defun ,(nm "$copy") (,a)
           (declare #.*opt* (,(arrtype type) ,a))
           ,(format nil "copy ~a vector array." (arrtype type))
           (make-array (length ,a) :initial-contents ,a
                       :element-type ',type :adjustable nil))
+
+        (export ',(nm "_"))
         (defmacro ,(nm "_") (&body body)
           ,(format nil "create ~a vector array from body: (~a '(a b c ...))."
                   (arrtype type) (nm "_"))
@@ -53,17 +56,21 @@
             (make-array (length ,',l) :initial-contents ,',l
                         :element-type ',',type :adjustable nil)))
 
-        (defmacro ,(nm "$~") ((&optional (dim 1)) &body body)
-          (declare (fixnum dim))
-          ,(format nil "create ~a vector array from body:
-(~a (values ...) (values ...) ...)."
-                  (arrtype type) (nm "_"))
-          (let ((symbs (loop repeat (length body) collect (gensym))))
-            `(veq:fvprogn
-               (,',(nm "vlet") (,@(loop for s in symbs
-                                   for b in body collect (list s dim b)))
-               (,',(nm "_") (list ,@symbs))))))
+        (export ',(nm "$~"))
+        (defmacro ,(nm "$~") ((&optional (n 1)) &body body)
+          (declare (pn n))
+          ,(format nil "create ~a vector array from n values in body." (arrtype type))
+          (let ((symbs (loop repeat n collect (gensym))))
+            `(let ((,',a ($make :n ,n :type ,',type :v (coerce 0 ',',type))))
+               (declare (,',(arrtype type) ,',a))
+               (mvb (,@symbs) (~ ,@body)
+                    (declare (,',type ,@symbs))
+                    (setf ,@(loop for i from 0 repeat n
+                                  for s in symbs
+                                  append `((aref ,',a ,i) ,s))))
+               ,',a)))
 
+        (export ',(nm "$_"))
         (defun ,(nm "$_") (body)
           ,(format nil
             "create ~a vector array from body. where body is a list of lists.
@@ -85,7 +92,7 @@ ex: (~a '((1f0 2f0) (1f0 2f0)))." (arrtype type) (nm "$_") (nm "$_"))
 ;;;;;;;;;;;;;;;;;; INIT ARRAY OF VEC
 
 (defmacro define-arr-num (dim)
-  (labels ((nm (n) (veqsymb dim nil n)))
+  (labels ((nm (n) (vvsym nil dim n)))
     (awg (a)
       `(progn (export ',(nm "$num"))
               (defun ,(nm "$num") (,a)
@@ -95,7 +102,7 @@ ex: (~a '((1f0 2f0) (1f0 2f0)))." (arrtype type) (nm "$_") (nm "$_"))
 (define-arr-num 1) (define-arr-num 2) (define-arr-num 3) (define-arr-num 4)
 
 (defmacro define-arr-util ( dim type )
-  (labels ((nm (n) (veqsymb dim type n)))
+  (labels ((nm (n) (vvsym type dim n)))
     (awg (a n)
       `(progn
          (export ',(nm "$num"))
@@ -107,17 +114,17 @@ ex: (~a '((1f0 2f0) (1f0 2f0)))." (arrtype type) (nm "$_") (nm "$_"))
          (defun ,(nm "$one") (&optional (,n 1))
            (declare #.*opt* (pn ,n))
            ,(format nil "make ~ad array of ones.~%typed." dim)
-           (,(veqsymb 1 type "$make") :dim ,dim :n ,n :v ,(coerce 1 type)))
+           (,(vvsym type 1 "$make") :dim ,dim :n ,n :v ,(coerce 1 type)))
          (export ',(nm "$val"))
          (defun ,(nm "$val") (v &optional (,n 1))
            (declare #.*opt* (,type v) (pn ,n))
            ,(format nil "make ~ad array of val.~%typed." dim)
-           (,(veqsymb 1 type "$make") :dim ,dim :n ,n :v v))
+           (,(vvsym type 1 "$make") :dim ,dim :n ,n :v v))
          (export ',(nm "$zero"))
          (defun ,(nm "$zero") (&optional (,n 1))
            (declare #.*opt* (pn ,n))
            ,(format nil "make ~ad vector array of zeros.~%typed." dim)
-           (,(veqsymb 1 type "$make") :dim ,dim :n ,n))))))
+           (,(vvsym type 1 "$make") :dim ,dim :n ,n))))))
 (define-arr-util 1 ff) (define-arr-util 2 ff) (define-arr-util 3 ff) (define-arr-util 4 ff)
 (define-arr-util 1 df) (define-arr-util 2 df) (define-arr-util 3 df) (define-arr-util 4 df)
 (define-arr-util 1 in) (define-arr-util 2 in) (define-arr-util 3 in) (define-arr-util 4 in)
@@ -147,7 +154,7 @@ ex: (~a '((1f0 2f0) (1f0 2f0)))." (arrtype type) (nm "$_") (nm "$_"))
   `(progn ,@(loop for (dim type)
                   in (group '(1 ff 2 ff 3 ff 4 ff 1 df 2 df 3 df 4 df
                               1 in 2 in 3 in 4 in 1 pn 2 pn 3 pn 4 pn) 2)
-                  collect (let* ((name (veqsymb dim type "$"))
+                  collect (let* ((name (vvsym type dim "$"))
                                  (at (arrtype type))
                                  (docs (format nil
 "returns indices [default: 0] from ~ad vector array (~a) as values.

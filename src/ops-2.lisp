@@ -4,10 +4,6 @@
 (ops
 
   (:2 @2id (2!a)) (values ax ay)
-  (:2 @2+ (2!a 2!b)) (values (+ ax bx) (+ ay by))
-  (:2 @2- (2!a 2!b)) (values (- ax bx) (- ay by))
-  (:2 @2* (2!a 2!b)) (values (* ax bx) (* ay by))
-  (:2 @2/ (2!a 2!b)) (values (/ ax bx) (/ ay by))
 
   (:2 @2i- (2!a 2!b)) (values (- bx ax) (- by ay))
   (:2 @2i/ (2!a 2!b)) (values (/ bx ax) (/ by ay))
@@ -24,9 +20,6 @@
   (:2 @2scale (2!a s)) (values (* ax s) (* ay s))
   (:2 @2iscale (2!a s)) (values (/ ax s) (/ ay s))
 
-  (:2 @2abs (2!a)) (values (abs ax) (abs ay))
-  (:2 @2neg (2!a)) (values (- ax) (- ay))
-  (:2 @2inv (2!a)) (values (/ ax) (/ ay))
   (:2 @2perp (2!a)) (values ay (- ax))
   (:2 @2perp* (2!a)) (values (- ay) ax)
   (:2 @2flip (2!a)) (values ay ax)
@@ -40,7 +33,6 @@
 
   (:1 @2angle (2!a)) (mvc #'atan (-@2norm ay ax))
 
-  (:1 @2. (2!a 2!b)) (+ (* ax bx) (* ay by))
   (:1 @2dot (2!a 2!b)) (+ (* ax bx) (* ay by))
   (:2 @2cross (2!a 2!b)) (- (* ax by) (* ay bx))
 
@@ -48,9 +40,9 @@
   (:1 @2dst  (2!a 2!b)) (sqrt (the pos-@f (mvc #'+ (-@2square (- bx ax)
                                                               (- by ay)))))
 
-  (:2 @2lerp (2!a 2!b s)) (-@2+ ax ay (* (- bx ax) s) (* (- by ay) s))
-  (:2 @2from (2!a 2!b s)) (-@2+ ax ay (* bx s) (* by s))
-  (:2 @2mid (2!a 2!b)) (values (* 1/2 (+ ax bx)) (* 1/2 (+ ay by)))
+  (:2 @2lerp (2!a 2!b s)) (values (+ ax (* (- bx ax) s)) (+ ay (* (- by ay) s)))
+  (:2 @2from (2!a 2!b s)) (values (+ ax (* bx s)) (+ ay (* by s)))
+  (:2 @2mid (2!a 2!b)) (values (* (+ ax bx) 1/2) (* (+ ay by) 1/2))
 
   ; ;: OTHER
 
@@ -62,6 +54,6 @@
       (declare (@f cosa sina))
       (values (- (* ax cosa) (* ay sina))
               (+ (* ax sina) (* ay cosa))))
-  (:2 @2rots (2!a angle 2!s))
-     (mvc #'-@2+ (mvc #'-@2rot (-@2- ax ay sx sy) angle) sx sy))
+  (:2 @2rots (2!a angle 2!s)) (mvb (rx ry) (mvc #'-@2rot (- ax sx) (- ay sy) angle)
+                                   (+ sx rx) (+ sy ry)))
 

@@ -31,7 +31,7 @@
 (defmacro sy* (&body body) `(values ,@(mapcar (lambda (v) `(sy ,v)) body)))
 
 (defun type-from-short (ty &optional (missing :nil))
-  "select type fom type hint"
+  "select type fom type hint."
   (case (kv ty) (:df (values 'df 'd)) (:d (values 'df 'd))
                 (:ff (values 'ff 'f)) (:f (values 'ff 'f))
                 (:in (values 'in 'i)) (:i (values 'in 'i))
@@ -41,7 +41,9 @@
                 (:ll (values 'list 'l)) (:l (values 'list 'l))
                 (:nil (values missing missing))))
 
-(defun type-default (ty &optional missing)
+(defun type-default (ty &optional (missing :nil))
+  "default value for array with elements of type (hint) ty.
+eg: 0 0f0 0d0 nil :val"
   (case (kv ty) (:df 0d0) (:d 0d0) (:ff 0f0) (:f 0f0)
                 (:in 0) (:i 0) (:pn 0) (:p 0)
                 (:ll (list)) (:l (list))
@@ -49,7 +51,8 @@
                 (:nil missing) (t missing)))
 
 (defun arrtype (ty &optional (missing :nil))
-  "select array type from type hint"
+  "select array type from type hint.
+eg: :ff :df 'f 'i"
   (case (kv ty) (:df 'dvec) (:d 'dvec) (:ff 'fvec) (:f 'fvec)
                 (:in 'ivec) (:i 'ivec) (:pn 'pvec) (:p 'pvec)
                 (:sy 'svec) (:s 'svec) (:kv 'kvec) (:k 'kvec)
@@ -65,4 +68,32 @@
   (declare (list l))
   "return (values (df a) (df b ..) from (list a b ..)."
   (apply #'values (mapcar (lambda (v) (df v)) l)))
+
+
+(defun vvsym (type dim symb &key pref (sep "") (pkg "VEQ"))
+  (declare #.*opt* (symbol type))
+  "build a symbol with correct name convention.
+eg: (vvsym ff 2 :lerp) yields f2lerp."
+  (let ((elem (list (case (kv type)
+                          (:df :d) (:ff :f) (:in :i) (:pn :p) (:kv :k)
+                          (otherwise ""))
+                    (if (and dim (> (the pn dim) 1)) dim "")
+                    sep
+                    symb)))
+    (when pref (setf elem (cons pref elem)))
+    (values (intern (string-upcase (apply #'mkstr elem)) (mkstr pkg)))))
+
+(defun unpack-vvsym (sym &key (s :!) (niltype :nil) (symout t))
+  (declare #.*opt* (symbol sym) ((or string keyword character) s))
+  "split names of type f34!var into (values :f var 3 4)"
+  (labels ((find-type (p) (if p (kv (car p)) niltype))
+           (find-dim (p) (if p (digit-char-p (car p)) 1)))
+    (dsb (pref vname) (nilpad 2 (split-substr (mkstr s) (mkstr sym)))
+      (unless vname (error "UNPACK-VVSYM missing tail: ~a" sym))
+      (mvb (pref-digits pref-chars)
+        (if pref (fx-split-str #'digit-char-p (mkstr pref)) (values nil nil))
+        (values (the keyword (find-type pref-chars))
+                (if symout (symb (string-upcase vname)) (string-upcase vname))
+                (the fixnum (find-dim pref-digits)) ; dim
+                (the fixnum (find-dim (reverse pref-digits)))))))) ; dimout
 

@@ -1,9 +1,8 @@
 (in-package :veq)
 
-; TODO: inefficient use of xdlerp
-
 (defun -wrapnum (n) (typecase n (cons n) (t `(values ,n))))
 
+; TODO: inefficient use of xdlerp
 (defun -fxlspace (n a b fx &key dim type (end t))
   (declare (pn dim) (symbol type) (boolean end))
   (awg (i n* stp s fx* a* b*)
@@ -18,11 +17,11 @@
                (,b* ,dim ,(-wrapnum b)))
          (loop for ,i of-type pn from 0 below ,n*
                for ,s of-type ,type from ,(coerce 0 type)
-               do (mvc ,fx* ,i (,(veqsymb dim type "LERP")
+               do (mvc ,fx* ,i (,(vvsym type dim :lerp)
                                  ,a* ,b* (* ,s ,stp)))))))))
 
 (defmacro map-fxlspace (dim type)
-  (let* ((mname (veqsymb dim type "$fxlspace"))
+  (let* ((mname (vvsym type dim "$fxlspace"))
          (docs (format nil "args: ((n a b &key (end t)) &body fx)
 for ~ad points a, b.
 assumes the last form in fx is a function and does
@@ -37,22 +36,16 @@ ex: (~a (n a b) (lambda (i (:va ~a a b)) (vpr i a b)))" dim mname dim)))
 
 
 ; TODO: inefficient use of xdlerp
-
-(defmacro -lspace (dim type)
-  (let ((exportname (veqsymb dim type "$LSPACE"))
-        (with-arrays (veqsymb 1 type "WITH-ARRAYS")))
-    `(progn
-      (export ',exportname)
-      (fvdef* ,exportname (n (varg ,dim a b) &key (end t))
-        (declare (pn n) (,type a b) (boolean end))
-        (let ((stp (,type (if end (/ (1- n)) (/ n)))))
-          (declare (,type stp))
-          (,with-arrays (:n n :itr k
-           :arr ((arr ,dim))
-           :fxs ((lspacefx (i) (,(veqsymb dim type "LERP") a b
-                                  (,type (* i stp)))))
-           :exs ((arr k (lspacefx k))))
-             arr))))))
+(defmacro -lspace (dim type &aux (exportname (vvsym type dim :$lspace)))
+  `(progn (export ',exportname)
+          (fvdef* ,exportname (n (varg ,dim a b) &key (end t))
+            (declare (pn n) (,type a b) (boolean end))
+              (let ((stp (,type (if end (/ (1- n)) (/ n)))))
+                (declare (,type stp))
+                 (,(vvsym type dim :%@$lspfx) ; this uses vv compiler
+                   ($make :n (* ,dim n) :type ,type :v  ,(coerce 0 type))
+                   ((i (:va ,dim x)) (declare (ignore x))
+                      (,(vvsym type dim :lerp) a b (,type (* i stp)))))))))
 (-lspace 1 ff) (-lspace 2 ff) (-lspace 3 ff) (-lspace 4 ff)
 (-lspace 1 df) (-lspace 2 df) (-lspace 3 df) (-lspace 4 df)
 

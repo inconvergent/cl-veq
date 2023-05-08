@@ -40,7 +40,7 @@
     (pvlet (all-args &body body) (-vlet* 'pn all-args body))))
 
 (defmacro define-vlet (dim type)
-  (let* ((mname (veqsymb dim type "let"))
+  (let* ((mname (vvsym type dim "let"))
          (docs (format nil "make ~ad let.~%ex: (~a ((a (values ...))) ...)
 note that this behaves like native lisp let*." dim mname)))
     `(progn (export ',mname)
@@ -54,14 +54,14 @@ note that this behaves like native lisp let*." dim mname)))
   (if type (mapcar (lambda (v) (if (numberp v) (coerce v type) v)) a) a))
 
 (defmacro define-td (dim type)
-  (let* ((mname (veqsymb dim type ""))
+  (let* ((mname (vvsym type dim ""))
          (docs (format nil "strict make ~ad vector in veq context." dim)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
             (map-symbol `(,',mname (&body body) ,,docs
                                    `(values ,@(dim? body ',',dim :type ',',type)))))))
 
 (defmacro define-td~ (dim type)
-  (let* ((mname (veqsymb dim type "~"))
+  (let* ((mname (vvsym type dim "~"))
          (dimtype `(,dim ,type))
          (docs (format nil "make ~ad vector in veq context.
 wraps body in mvc so that (f3~~ 1 (f2~~ 2f0 3))
@@ -71,7 +71,7 @@ returns (values 1f0 2f0 3f0)" dim)))
                                    `(mvcmap ,',',dimtype ,@body))))))
 ; TODO: nrep/nrep* typed/untyped
 (defmacro define-rep (dim type)
-  (let* ((mname (veqsymb dim type "rep"))
+  (let* ((mname (vvsym type dim "rep"))
          (docs (format nil "repeat argument ~ad times as values.
 ex: (~a (fx)) corresponds to (values (fx) ...)." dim mname)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
@@ -80,7 +80,7 @@ ex: (~a (fx)) corresponds to (values (fx) ...)." dim mname)))
                                                     collect expr of-type ',',type)))))))
 (defmacro define-val (dim type)
   (awg (e)
-    (let* ((mname (veqsymb dim type "val"))
+    (let* ((mname (vvsym type dim "val"))
            (vals `(values ,@(loop repeat dim collect e)))
            (docs (format nil "repeat the evaluated argument ~a times as values.
 ex: (~a (fx)) corresponds to (let ((v (fx))) (values v ...))." dim mname)))
@@ -118,7 +118,7 @@ ex: (~a (fx)) corresponds to (let ((v (fx))) (values v ...))." dim mname)))
                            (error () (values nil body)))))
      (mvb (decl body) (parse-declare)
        (loop for (arg expr) in (reverse all-vars)
-             for (ty var dim) = (lst (unpack-veqsymb arg))
+             for (ty var dim) = (lst (unpack-vvsym arg))
              do (setf body `(,(if (unpacked? var arg) ; symbols without ! are treated normally
                                   (-vmvb* (select-type decl var ty) dim var
                                           (ensure-values expr) body)

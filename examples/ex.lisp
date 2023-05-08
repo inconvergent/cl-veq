@@ -12,7 +12,7 @@
 
   ; ---- BASIC OPERATIONS ----
 
-  (vpr (f2+ 1f0 2f0 3f0 4f0))
+  (vpr (f2!@+ 1f0 2f0 3f0 4f0))
   ;> (4.0 6.0)
 
   ; actually it returns (values 4.0 6.0). this means that if you want to use
@@ -35,9 +35,9 @@
 
   (vpr (f2iscale 1f0 2f0 3f0)) ;> (0.33333334 0.6666667)
 
-  (vpr (f2neg 1f0 2f0)) ;> (-1.0 -2.0)
+  (vpr (f2.@- 1f0 2f0)) ;> (-1.0 -2.0)
 
-  (vpr (f2abs -1f0 2f0)) ;> (1.0 2.0)
+  (vpr (f2.@abs -1f0 2f0)) ;> (1.0 2.0)
 
   (vpr (f2dst 1f0 2f0 3f0 4f0)) ;> 2.828427
 
@@ -45,7 +45,7 @@
 
   (vpr (f2norm 1f0 2f0)) ;> (0.4472136 0.8944272)
 
-  (vpr (f2. 1f0 2f0 3f0 4f0)) ;> 11.0
+  (vpr (f2dot 1f0 2f0 3f0 4f0)) ;> 11.0
 
   (vpr (f2cross 1f0 2f0 3f0 4f0)) ;> -2.0
 
@@ -58,9 +58,9 @@
   ; prefixed with d. eg. (d2+ 1d0 4d0 4d0 3d0)
 
   ; 1d and 3d operations look like:
-  (vpr (fabs -3f0)) ;> 3.0
+  (vpr (f.@abs -3f0)) ;> 3.0
   ; and
-  (vpr (f3+ 1f0 2f0 3f0 4f0 5f0 6f0))) ;> (5f0 7f0 9f0)
+  (vpr (f3!@+ 1f0 2f0 3f0 4f0 5f0 6f0))) ;> (5f0 7f0 9f0)
   ; respectively.
 
   ; see /src/ops-1.lisp, /src/ops-2.lisp and /src/ops-3.lisp
@@ -91,30 +91,30 @@
 
   (format t "~%------------------~%~%")
   ; call print-some-values with two 2d vectors [1f0 2f0] and [4f0 7f0]
-  (print-some-values (f2+ 1f0 2f0 4f0 7f0))
+  (print-some-values (f2!@+ 1f0 2f0 4f0 7f0))
 
   ; this is equivalent to the above. f2 is avaliable in the event that the
   ; context requires that the vector is a single form
-  (print-some-values (f2+ (f2 1d0 2f0) 4f0 7f0))
+  (print-some-values (f2!@+ (f2 1d0 2f0) 4f0 7f0))
 
   ; ---- LET ----
 
   ; such as when using the available lets:
   (f2let ((a (f2 3f0 32f0)) ; you can also just write (values 3f0 32f0)
-          (b (f2+ a 3f0 2f0)))
+          (b (f2!@+ a 3f0 2f0)))
     (vpr (list a b))) ;> (list 3.0 32.0 6.0 34.0)
 
   ; in practice veq will translate this into something similar to:
   ; (alexandria:with-gensyms (ax ay bx bz)
   ;   `(multiple-value-bind (,ax ,ay) (values 3f0 32f0)
-  ;     (multiple-value-bind (,bx ,by) (f2+ ,ax ,ay 3f0 2f0)
+  ;     (multiple-value-bind (,bx ,by) (f2!@+ ,ax ,ay 3f0 2f0)
   ;       (list ,ax ,ay ,bx ,by)))))
 
   (format t "~%------------------~%~%")
   ; there is also a let that accepts different dimensions for each binding:
   (fvlet ((a 2 (f2 3f0 32f0))
-          (b 3 (f3+ a 0f0 3f0 2f0 4f0))
-          (c 3 (f3+ (vref a 0) 3f0 (vref b 2)
+          (b 3 (f3!@+ a 0f0 3f0 2f0 4f0))
+          (c 3 (f3!@+ (vref a 0) 3f0 (vref b 2)
                     1f0 (vref b 1 1)))
           (d 1 (f 3f0)))
 
@@ -143,7 +143,7 @@
     ; convenience function to print arrays of vectors:
     (2$print line) ; returns a
 
-    (vpr (f2. (f2$ a 0) (f2$ line 1))) ; dot product
+    (vpr (f2dot (f2$ a 0) (f2$ line 1))) ; dot product
     ;> 30.0
 
     (vpr (f2cross (f2$ line 0 1))) ; cross product
@@ -169,8 +169,8 @@
                      (veq:3$ b i) (f3~ 1 (+ 3 i) (/ i 2))))
 
       ; execute cross on rows of a and b
-      (f3x@$fx a (i (:va 3 v))
-                 (setf (veq:3$ c i) (f3cross v (veq:f3$ b i))))
+      (f3x@$fx a ((i (:va 3 v))
+                  (setf (veq:3$ c i) (f3cross v (veq:f3$ b i)))))
 
       (3$print c)
       ;> #(0.0 0.0 -1.0 -7.0 1.5 2.0 -17.0 2.0 7.0)

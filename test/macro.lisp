@@ -4,7 +4,7 @@
 
 (subtest "macro" (veq:fvprogn
   (labels ((fx1 (h (:va 3 a)) (declare (ignore h))
-             (veq:f3+ a 1f0 2f0 0f0)))
+             (f3!@+ a 1f0 2f0 0f0)))
     (is (veq:lst (fx1 0f0 1f0 1f0 2f0)) '(2f0 3f0 2f0)))
 
   (veq:mvb (x (veq:varg 2 a)) (veq:f3 4f0 3f0 1f0)
@@ -33,7 +33,7 @@
 
   (veq:f2let ((a (veq:f2 1f0 2f0))
               (b (veq:f2 10 20))
-              (a (veq:f2+ a b)))
+              (a (f2!@+ a b)))
 
     (is (veq:lst a) (list 11f0 22f0))
     (is (veq:lst b) (list 10f0 20f0)))))

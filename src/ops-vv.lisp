@@ -2,6 +2,8 @@
 
 ; TODO: x@ count lambda arguments. compare to current dim?
 ; TODO: use lambda forms instead of ?@ modifier for _@ dotmodes?
+; TODO: (?@ :zero n) init empty zero array, :val n v etc. use eg z?@
+
 
 ; -- MVC ------------------------------------------------------------------------
 
@@ -303,6 +305,9 @@
 "the vv macro implements a DSL for manipulating packs of values and/or row
 vectors. it is called as a part of vprogn, fvprogn, vdef and fvdef. but can
 also be used explicitly via the (vv ...) macro or (veq::vv-proc ...) function.
+
+you can read about the motivation behind vv at:
+https://inconvergent.net/2023/a-vector-dsl/
 
 the DSL uses triggers to broadcast a function (symbol name) or code across
 packs of 1-9 values and/or rows of 1-9 item vectors.

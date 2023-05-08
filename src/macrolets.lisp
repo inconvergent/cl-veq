@@ -47,8 +47,7 @@ cases where body is complex. in the event of errors try vprogn instead."
       (typecase (first body) (string (first body)) (t "[none]")))))
 
 ; MNAME: my-fx; FNAME: %my-fx
-; TODO: mname is not used?
-(defun make-wrap-docs (context mname fname body &aux (docs (get-docs body))
+(defun make-wrap-docs (context fname body &aux (docs (get-docs body))
                                                      (args (first body)))
   (format nil "WRAPS: ~a~%ARGS: ~a~%DOCSTRING: ~a
 defined via veq:~a" fname args docs context))
@@ -65,7 +64,7 @@ the wrapper macro ensures every call to this function is done as
       `(vprogn ; replace internal references to mname
                (defun ,fname ,@(subst fname mname body))
                (defmacro ,mname (&rest rest)
-                 ,(make-wrap-docs :vdef* mname fname body)
+                 ,(make-wrap-docs :vdef* fname body)
                  `(mvc #',',fname ,@rest))))))
 (define-vdef*)
 
@@ -81,7 +80,7 @@ the wrapper macro ensures every call to this function is done as
       `(fvprogn ; replace internal references to mname
                 (defun ,fname ,@(subst fname mname body))
                 (defmacro ,mname (&rest rest)
-                  ,(make-wrap-docs :fvdef* mname fname body)
+                  ,(make-wrap-docs :fvdef* fname body)
                   `(mvc #',',fname ,@rest))))))
 (define-fvdef*)
 
@@ -95,7 +94,7 @@ the wrapper macro ensures every call to this function is done as
     (let ((fname (symb "%" mname)))
       `(progn (defun ,fname ,@body)
               (defmacro ,mname (&rest rest)
-                ,(make-wrap-docs :def* mname fname body)
+                ,(make-wrap-docs :def* fname body)
                 `(mvc #',',fname ,@rest))))))
 (define-def*)
 

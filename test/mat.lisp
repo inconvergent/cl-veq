@@ -6,14 +6,14 @@
 (subtest "mat"
   (veq:fvprogn
     (is (veq:lst (veq:f3mtv (veq:f_ `(1f0 2f0 4f0 3f0 3f0 5f0 4f0 3f0 3f0))
-                            (veq:f3+ 1f0 2f0 4f0 1f0 2f0 4f0)))
+                            (f3!@+ 1f0 2f0 4f0 1f0 2f0 4f0)))
         '(46f0 40f0 52f0))
 
     (is (veq:lst (veq:f3mv (veq:f_ `(1f0 2f0 4f0 3f0 3f0 5f0 4f0 3f0 3f0))
-                           (veq:f3+ 1f0 2f0 4f0 1f0 2f0 4f0)))
+                           (f3!@+ 1f0 2f0 4f0 1f0 2f0 4f0)))
         '(42f0 58f0 44f0))
 
-    (is (veq:lst (veq:f2mv (veq:f_ `(1f0 2f0 3f0 3f0)) (veq:f2- 1f0 2f0 2f0 4f0)))
+    (is (veq:lst (veq:f2mv (veq:f_ `(1f0 2f0 3f0 3f0)) (f2!@- 1f0 2f0 2f0 4f0)))
         '(-5f0 -9f0))
 
     (is (veq:lst (veq:f4mv (veq:f_ `(1f0 2f0 4f0 6f0 3f0 3f0 5f0 9f0

@@ -5,7 +5,8 @@ It suports single vectors or arrays of vectors, with some broadcasting and
 reduction operations.
 
 VEQ was written to be the vector library used in my generative art library
-[weird](https://github.com/inconvergent/weird).
+[auxin](https://github.com/inconvergent/auxin), and in
+[cl-grph](https://github.com/inconvergent/cl-grph).
 
 ## Examples and Documentation
 
@@ -54,13 +55,4 @@ For more examples go to [examples](examples/ex.lisp).
 You can also see some usagee in the [tests](test/veq.lisp).
 
 See [docs](DOCS.md) for automatically generated symbol documentation.
-
-## Versions, Issues and feature requests
-
-The most recent stable version is v2.2.0.
-
-This code is still immature, and the interface might change in the future.
-
-To report issues, or suggest features use:
-[Github](https://github.com/inconvergent/cl-veq).
 

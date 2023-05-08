@@ -125,6 +125,7 @@ current state."
 (fvdef* f2in-concave (shape (varg 2 pt))
   (declare #.*opt* (fvec shape) (ff pt))
   (let ((n (2$num shape)))
+    (declare (pn n))
     (mvb (minx maxx miny maxy) (f2$mima shape :n n)
       (declare (ff minx maxx miny maxy))
       (unless (f2in-bbox minx miny maxx maxy pt) ; pt outside bbox -> outside shape

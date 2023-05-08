@@ -6,7 +6,9 @@
     #:dpi #:dpi5 #:dpii #:dpi25
     #:fpi #:fpi5 #:fpii #:fpi25
     #:mac #:mac* #:v? #:d? #:i? #:context? #:ext-symbols?
-    #:veqsymb #:unpack-veqsymb
+
+    #:type-from-short #:arrtype #:type-default
+    #:unpack-vvsym #:vvsym
 
     #:from-lst #:lst #:mvb #:dsb #:vnrep #:vnval
     #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~ #:$nvset
