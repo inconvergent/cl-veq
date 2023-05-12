@@ -4,7 +4,7 @@
 ; TODO: make this a general macro instead?
 (defmacro -xmima (dim type)
   (let* ((exportname (vvsym type dim :$mima))
-         (fxhead `((k (:va ,dim x)) (declare (ignore k))))
+         (fxhead `(((:va ,dim x))))
          (vvop (vvsym type dim :x@$mima))
          (docs (format nil "find min and max for all dimensions of ~d array.
 ex: (~a &key n) returns (values xmin xmax ...).

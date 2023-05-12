@@ -3771,10 +3771,10 @@ ex: (F2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
  ;   [symbol]
  ;
  ; F2$POLYGON names a compiled function:
- ;   Lambda-list: (N RAD &OPTIONAL (ROT 0.0) (PIN (/ FPII N)) (I 0.0))
+ ;   Lambda-list: (N RAD &OPTIONAL (ROT 0.0) (PIN (/ FPII N)))
  ;   Derived type: (FUNCTION
  ;                  ((UNSIGNED-BYTE 31) SINGLE-FLOAT &OPTIONAL
- ;                   SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT)
+ ;                   SINGLE-FLOAT SINGLE-FLOAT)
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     return n-polygon of size rad. rotate by (rot 0)
@@ -8415,6 +8415,21 @@ of dim n in vprogn, fvprog, fvdef*, vdef*, def*.  see replace-varg for
 implementation details.
 ```
 
+#### VCHAIN
+
+```
+ ; VEQ:VCHAIN
+ ;   [symbol]
+ ;
+ ; VCHAIN names a macro:
+ ;   Lambda-list: (FXS &REST REST)
+ ;   Documentation:
+ ;      chain functions, on all values.
+ ;     eg: (vchain #'a #'b (values 1 2))
+ ;     corresponds to: (~ #'a (~ #b (values 1 2)))
+ ;   Source file: src/utils.lisp
+```
+
 #### VDEF
 
 ```
@@ -8470,20 +8485,20 @@ implementation details.
  ; VNREP names a macro:
  ;   Lambda-list: (N &REST REST)
  ;   Documentation:
- ;     (~ rest1 rest2 ...)
+ ;     corresponds to (~ r1 ... rn)
  ;   Source file: src/utils.lisp
 ```
 
 #### VNVAL
 
 ```
-:none:
-
  ; VEQ:VNVAL
  ;   [symbol]
  ;
  ; VNVAL names a macro:
- ;   Lambda-list: (DIM &REST REST)
+ ;   Lambda-list: (N &REST REST)
+ ;   Documentation:
+ ;     returns (values v ...), where v is (progn ,@rest) evaluated once.
  ;   Source file: src/utils.lisp
 ```
 

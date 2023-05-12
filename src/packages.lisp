@@ -10,8 +10,10 @@
     #:type-from-short #:arrtype #:type-default
     #:unpack-vvsym #:vvsym
 
-    #:from-lst #:lst #:mvb #:dsb #:vnrep #:vnval
-    #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~ #:$nvset
+    #:from-lst #:lst
+    #:mvb #:dsb
+    #:vnrep #:vnval #:vchain
+    #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~
 
     #:df #:df* #:ff #:ff* #:pos-df #:pos-ff
     #:in #:in* #:kv #:kv*
@@ -27,6 +29,7 @@
 
     #:new-stride #:$make #:$copy
 
+    #:$nvset
     #:f2$center #:f2$circ #:f2$polygon #:f2$rect #:f2$square*
     #:$to-list #:2$to-list #:3$to-list #:4$to-list
     #:vp #:vpr #:$print #:2$print #:3$print #:4$print

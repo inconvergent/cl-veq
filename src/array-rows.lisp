@@ -1,6 +1,5 @@
 (in-package :veq)
 
-
 (defmacro make-last (dim type)
   (awg (a)
     `(progn (export ',(vvsym type dim "$last"))

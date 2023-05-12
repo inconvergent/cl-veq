@@ -42,8 +42,7 @@ ex: (~a (n a b) (lambda (i (:va ~a a b)) (vpr i a b)))" dim mname dim)))
             (declare (pn n) (,type a b) (boolean end))
               (let ((stp (,type (if end (/ (1- n)) (/ n)))))
                 (declare (,type stp))
-                 (,(vvsym type dim :%@$lspfx) ; this uses vv compiler
-                   ($make :n (* ,dim n) :type ,type :v  ,(coerce 0 type))
+                 (,(vvsym type dim :%@$lspfx) (z?@ n) ; this uses vv compiler
                    ((i (:va ,dim x)) (declare (ignore x))
                       (,(vvsym type dim :lerp) a b (,type (* i stp)))))))))
 (-lspace 1 ff) (-lspace 2 ff) (-lspace 3 ff) (-lspace 4 ff)

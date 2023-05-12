@@ -111,7 +111,11 @@
     (is-arr (2!@$+. a (incf i)) #(1 1 1 1 1 1 1 1 1 1))
     (is-arr a 5zero)
     (is-arr (2!@$+.! a (?@ (incf i))) #(2 2 3 3 4 4 5 5 6 6))
-    (is-arr a #(2 2 3 3 4 4 5 5 6 6)))))
+    (is-arr a #(2 2 3 3 4 4 5 5 6 6)))
+
+  (is-arr (2!@$+ (z?@ 1) 7 8) #(7 8))
+  (is-arr (2!@$+ (z?@ 3) 7 8) #(7 8 7 8 7 8))
+  (is-arr (f2!@$+ (z?@ 3) 7f0 8f0) #(7f0 8f0 7f0 8f0 7f0 8f0))))
 
 (subtest "vv 2" (veq:fvprogn
 
@@ -186,18 +190,23 @@
       (is (veq:lst (fr@$+ (veq:f_ '(1f0 2f0 3f0 3f0 2f0 1f0)))) '(12.0)))))
 
 (subtest "vv %@" (veq:fvprogn
-  (let ((res (list)))
-     (is-arr (2%@$fx #(1 2 3 4) ((i x y) (push (list i :xy x y) res)))
-             #(((0 :XY 1 2)) NIL ((1 :XY 3 4) (0 :XY 1 2)) NIL))
-
-     (is res '((1 :XY 3 4) (0 :XY 1 2)))
-
-     (is-arr (2x@$fx #(1 2 3 4) ((i x y) (push (list i :xy x y) res)))
-             nil))
 
   (is (2%@fx 1 2 ((x y) (list :xy x y))) (list :xy 1 2))
   (is (2%@fx 1 2 (((:va 2 x)) (list :xy x))) (list :xy 1 2))
-  (is (2%@fx (2!@+ 1 2 3 4) ((x y) (list :xy x y))) (list :xy 4 6))))
+  (is (2%@fx (2!@+ 1 2 3 4) ((x y) (list :xy x y))) (list :xy 4 6))
+
+  (let ((res (list)))
+     (is-arr (2%@$fx #(1 2 3 4) ((i x y) (push (list i :xy x y) res)))
+             #(((0 :XY 1 2)) NIL ((1 :XY 3 4) (0 :XY 1 2)) NIL))
+     (is res '((1 :XY 3 4) (0 :XY 1 2))))
+
+  (let ((res (list)))
+    (is (2x@$fx #(1 2 3 4) ((i x y) (push (list i :xy x y) res))) nil)
+    (is res '((1 :XY 3 4) (0 :XY 1 2))))
+
+  (let ((res (list)))
+    (is (2x@$fx #(1 2 3 4) ((x y) (push (list :xy x y) res))) nil)
+    (is res '((:XY 3 4) (:XY 1 2))))))
 
 (unless (finalize) (error "error in vv tests"))
 

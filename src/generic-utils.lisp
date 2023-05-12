@@ -36,13 +36,15 @@
                    (nreverse (cons source acc))))))
     (if source (rec source nil) nil)))
 
+(declaim (inline mkstr))
 (defun mkstr (&rest args) ; from on lisp by pg
-  (declare (optimize speed))
+  (declare (optimize speed (safety 2)))
   (with-output-to-string (s)
     (dolist (a args) (princ a s))))
 
+(declaim (inline match-substr))
 (defun match-substr (sub s)
-  (declare (optimize speed) (string sub s))
+  (declare (optimize speed (safety 2)) (string sub s))
   "returns index where substring matches s from left to right. otherwise nil."
   (loop with sub0 of-type character = (char sub 0)
         with lc = (length sub)

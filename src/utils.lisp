@@ -59,14 +59,20 @@ almost like multiple-value-list, except it handles multiple arguments."
   `(mvc #'values ,@rest))
 
 (defmacro vnrep (n &rest rest)
-  "(~ rest1 rest2 ...)"
+  (declare (pn n))
+  "corresponds to (~ r1 ... rn)"
   `(veq:~ ,@(loop repeat n collect `(progn ,@rest))))
-; TODO: this feels weird
-(defmacro vnval (dim &rest rest)
-  (awg (v) `(let ((,v (~ ,@rest)))
-              (values ,@(loop repeat dim collect v)))))
+
+(defmacro vnval (n &rest rest)
+  (declare (pn n))
+  "returns (values v ...), where v is (progn ,@rest) evaluated once."
+  (awg (v) `(let ((,v (progn ,@rest)))
+              (values ,@(loop repeat n collect v)))))
 
 (defmacro vchain (fxs &rest rest &aux (rest `((~ ,@rest))))
+  " chain functions, on all values.
+eg: (vchain #'a #'b (values 1 2))
+corresponds to: (~ #'a (~ #b (values 1 2)))"
   (loop for f in (reverse fxs) do (setf rest `((mvc ,f ,@rest))))
   `(progn ,@rest))
 

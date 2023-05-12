@@ -8,11 +8,11 @@
   (f$~ (8) w (- h) w h (- w) h (- w) (- h)))
 (fvdef f2$square* (s) (declare #.*opt* (ff s)) (f2$rect s s))
 
-(fvdef f2$polygon (n rad &optional (rot 0f0) (pin (/ fpii n)) (i 0f0))
-  (declare #.*opt* (pn n) (ff rad rot pin i))
+(fvdef f2$polygon (n rad &optional (rot 0f0) (pin (/ fpii n)))
+  (declare #.*opt* (pn n) (ff rad rot pin))
   "return n-polygon of size rad. rotate by (rot 0)"
-  (labels ((fcs () (fcos-sin (+ rot (ff (* (1- (incf i)) pin))))))
-    (f2!@$+! (veq:f2$zero n) (?@ (f2!@*. (fcs) rad)))))
+  (labels ((fcs (i) (fcos-sin (+ rot (ff (* i pin))))))
+    (f2!@$+! (z?@ n) (?@ (f2!@*. (fcs veq::ind) rad)))))
 
 
 (fvdef f2$circ (rad &optional (rs 0.5f0))

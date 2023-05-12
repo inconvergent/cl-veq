@@ -6,8 +6,8 @@
 (in-package #:veq-tests)
 
 (defvar *files* `(#P"test/veq.lisp" #P"test/macro.lisp"
-                  #P"test/macro-vv.lisp" #P"test/arr-with.lisp"
-                  #P"test/arr.lisp" #P"test/checks.lisp" #P"test/mat.lisp"))
+                  #P"test/macro-vv.lisp" #P"test/arr.lisp"
+                  #P"test/checks.lisp" #P"test/mat.lisp"))
 
 ; TODO: print test file runtime?
 (defun run-tests ()

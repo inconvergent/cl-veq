@@ -1,98 +1,103 @@
 (in-package :veq)
 
-; TODO: x@ count lambda arguments. compare to current dim?
-; TODO: use lambda forms instead of ?@ modifier for _@ dotmodes?
-; TODO: (?@ :zero n) init empty zero array, :val n v etc. use eg z?@
-
-
 ; -- MVC ------------------------------------------------------------------------
 
 ; (m@fx ...) -> (mvc fx (mvc #'values ...))
-(defun procm@fx (rec b p) `(mvc #',(gk p :fx*) ,(rec-cdr rec b)))
+(defun procm@fx (b p) `(mvc #',(gk p :fx*) (~ ,@(cdr b))))
 
 ; -- 1ARY -----------------------------------------------------------------------
 
 ; (2.@abs -1 -2) -> (abs -1) (abs -1) -> 1 2
-(defun proc.@fx (rec b p &aux (dim (gk p :dim)))
+(defun proc.@fx (b p &aux (dim (gk p :dim)))
   (declare (optimize speed) (pn dim))
-  (-vmvb* (gk p :ty) dim 'arg (rec-cdr rec b)
+  (-vmvb* (gk p :ty) dim 'arg `(~ ,@(cdr b))
     `((values ,@(loop for d of-type pn from 0 repeat dim
                       collect `(,(gk p :fx*) (:vr arg ,d)))))))
 
 ; -- NARY -----------------------------------------------------------------------
 
 ; (labels ((fx (x y) (values y x))) (i2_@fx 1 2)) -> (fx 1 2) -> 2 1
-(defun proc_@fx (rec b p &aux (dim (gk p :dim)))
+(defun proc_@fx (b p &aux (dim (gk p :dim)))
   (declare (optimize speed) (pn dim))
-  (-vmvb* (gk p :ty) dim 'arg (rec-cdr rec b)
+  (-vmvb* (gk p :ty) dim 'arg `(~ ,@(cdr b))
     `((,(gk p :fx*) (:vr arg ,@(loop for d of-type pn from 0 repeat dim collect d))))))
 
 
-(defun proc%@fx (rec b p)
+(defun proc%@fx (b p)
   (declare (optimize speed))
   `(labels ((,(gk p :fx*) ,@(first (last b))))
-     ,(-vmvb* (gk p :ty) (gk p :dim) 'lft (rec-cdr rec (butlast b))
+     ,(-vmvb* (gk p :ty) (gk p :dim) 'lft `(~ ,@(cdr (butlast b)))
               `((,(gk p :fx*) lft)))))
 
 ; -- VEC ------------------------------------------------------------------------
 
 ; row wise element pair wise
-(defun proc!@fx (rec b p &aux (dim (gk p :dim)))
+(defun proc!@fx (b p &aux (dim (gk p :dim)))
   (declare (optimize speed) (pn dim))
-  (-vmvb* (gk p :ty) (the pn (* 2 dim)) 'arg (rec-cdr rec b)
+  (-vmvb* (gk p :ty) (the pn (* 2 dim)) 'arg `(~ ,@(cdr b))
     `((values
         ,@(loop for d of-type pn from 0 repeat dim
                 collect `(,(gk p :fx*) (:vr arg ,d) (:vr arg ,(+ d dim))))))))
 
-(defun proc!@.fx (rec b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
+(defun proc!@.fx (b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
   (declare (optimize speed) (pn dim dots))
-  (-vmvb* (gk p :ty) (the pn (+ dim dots)) 'arg (rec-cdr rec b)
+  (-vmvb* (gk p :ty) (the pn (+ dim dots)) 'arg `(~ ,@(cdr b))
     `((values
         ,@(loop with lhs = (nvrs 'arg 0 dots)
                 for d of-type pn from 0 repeat dim
                 collect `(,(gk p :fx*) ,@lhs (:vr arg ,(+ dots d))))))))
 
-(defun proc!@fx. (rec b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
+(defun proc!@fx. (b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
   (declare (optimize speed) (pn dim dots))
-  (-vmvb* (gk p :ty) (+ dim dots) 'arg (rec-cdr rec b)
+  (-vmvb* (gk p :ty) (+ dim dots) 'arg `(~ ,@(cdr b))
     `((values ,@(loop with rhs = (nvrs 'arg dim dots)
                       for d of-type pn from 0 repeat dim
                       collect `(,(gk p :fx*) (:vr arg ,d) ,@rhs))))))
 
 ; -- ARRAY LEFT MAP -------------------------------------------------------------
 
-; HERE
-(defun proc%@$fx (rec b p &aux (dimout (gk p :dimout)))
-  (declare (optimize speed) (function rec) (pn dimout))
-  (let ((p (vchain (#'lconf #'tailconf) p b)))
-    `(labels ((,(gk p :fx*) ,@(car (gk p :rht))))
-       (loop with ,(gk p :lft-sym) of-type ,(gk p :aty) = ,(funcall rec (gk p :lft))
-             ,@(vec-select-itr p)
-             do ,(-vmvb* (gk p :ty) (gk p :dim) 'lft ($row p :itr-lft-sym :lft-sym)
-                   `(($nvset (,(gk p :out-sym) ,dimout
-                               (* ,(gk p :itr-out-sym) ,dimout))
-                             (,(gk p :fx*) veq::ind lft))))
-             finally (return ,(gk p :out-sym))))))
+(defun fx@conf (p b &aux (dim (gk p :dim)))
+  (declare (list p b) (pn dim))
+  (dsb (args . body) (replace-varg (car (gk p :rht)))
+    (declare (ignore body))
+    (let ((l (length args)))
+      (unless (or (<= dim l (1+ dim)))
+              (error "x@ / %@: incorrect number of args in ~%~a.
+expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
+      (values `((:fx@-ind . ,(cond ((= l dim) `(lft))
+                                   ((= l (1+ dim)) `(ind lft))))
+                ,@p) b))))
 
-(defun procx@$fx (rec b p)
-  (declare (optimize speed) (function rec))
-  (let ((p (vchain (#'niloutconf #'lconf #'tailconf) p b)))
+
+(defun proc%@$fx (b p &aux (dimout (gk p :dimout)))
+  (declare (optimize speed) (pn dimout))
+  (let ((p (vchain (#'fx@conf #'lconf #'tailconf) p b)))
+  `(labels ((,(gk p :fx*) ,@(car (gk p :rht))))
+     (loop ,@(vec-select-itr p)
+           do ,(-vmvb* (gk p :ty) (gk p :dim) 'lft ($row p :itr-lft-sym :lft-sym)
+                 `(($nvset (,(gk p :out-sym) ,dimout
+                             (* ,(gk p :itr-out-sym) ,dimout))
+                           (,(gk p :fx*) ,@(gk p :fx@-ind t)))))
+           finally (return ,(gk p :out-sym))))))
+
+
+(defun procx@$fx (b p)
+  (declare (optimize speed))
+  (let ((p (vchain (#'fx@conf #'niloutconf #'lconf #'tailconf) p b)))
     `(labels ((,(gk p :fx*) ,@(car (gk p :rht))))
-       (loop with ,(gk p :lft-sym) of-type ,(gk p :aty) = ,(funcall rec (gk p :lft))
-             ,@(vec-select-itr p)
+       (loop ,@(vec-select-itr p)
              do ,(-vmvb* (gk p :ty) (gk p :dim) 'lft ($row p :itr-lft-sym :lft-sym)
-                         `((,(gk p :fx*) veq::ind lft)))))))
+                         `((,(gk p :fx*) ,@(gk p :fx@-ind t))))))))
 
 ; -- ARRAY LEFT REDUCE ----------------------------------------------------------
 
-(defun procr@$fx (rec b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
-  (declare (optimize speed) (pn dim dimout) (function rec))
+(defun procr@$fx (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
+  (declare (optimize speed) (pn dim dimout))
   (let ((p (vchain (#'niloutconf #'lconf) p b))
         (d0 (type-default (gk p :ty) 0)))
     (-vmvb* (gk p :ty) dim 'agg `(values ,@(loop repeat dimout
                                                  collect d0))
-     `((loop with ,(gk p :lft-sym) of-type ,(gk p :aty) = ,(funcall rec (gk p :lft))
-             ,@(vec-select-itr p)
+     `((loop ,@(vec-select-itr p)
              do ,(-vmvb* (gk p :ty) dim 'lft ($row p :itr-lft-sym :lft-sym)
                    `((setf ,@(loop for i of-type pn from 0 below dimout
                                    nconc `((:vr agg ,i)
@@ -104,13 +109,12 @@
 
 ; (labels ((fx (x) (abs x)))
 ;   (2.@$fx (veq:i2$line -1 -2 -3 -4)))
-(defun proc.@$fx (rec b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
-  (declare (optimize speed) (pn dim dimout) (function rec))
+(defun proc.@$fx (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
+  (declare (optimize speed) (pn dim dimout))
   (let ((p (vchain (#'lconf) p b))
         (row `(values ,@(loop for d of-type pn from 0 repeat dim
                               collect `(,(gk p :fx*) (:vr lft ,d))))))
-    `(loop with ,(gk p :lft-sym) of-type ,(gk p :aty) = ,(funcall rec (gk p :lft))
-           ,@(vec-select-itr p)
+    `(loop ,@(vec-select-itr p)
            do ,(-vmvb* (gk p :ty) dim 'lft ($row p :itr-lft-sym :lft-sym)
                  `(($nvset (,(gk p :out-sym) ,dimout
                             (* ,(gk p :itr-out-sym) ,dimout))
@@ -120,13 +124,12 @@
 ; -- ARRAY LEFT NARY ------------------------------------------------------------
 
 ; (labels ((fx (x y) (values y x))) (2_@$fx (veq:i2$line 1 2 3 4))) -> #(2 1 4 3)
-(defun proc_@$fx (rec b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
-  (declare (optimize speed) (pn dim dimout) (function rec))
+(defun proc_@$fx (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
+  (declare (optimize speed) (pn dim dimout))
   (let ((p (vchain (#'lconf) p b))
         (row `(,(gk p :fx* ) ,@(loop for d of-type pn from 0 repeat dim
                                      collect `(:vr lft ,d)))))
-    `(loop with ,(gk p :lft-sym) of-type ,(gk p :aty) = ,(funcall rec (gk p :lft))
-           ,@(vec-select-itr p)
+    `(loop ,@(vec-select-itr p)
            do ,(-vmvb* (gk p :ty) dim 'lft ($row p :itr-lft-sym :lft-sym)
                  `(($nvset (,(gk p :out-sym) ,dimout
                             (* ,(gk p :itr-out-sym) ,dimout))
@@ -134,31 +137,31 @@
            finally (return ,(gk p :out-sym)))))
 
 ; (labels ((fx (x y z) (values y (+ x z)))) (2_@$fx. (veq:i2$line 1 2 3 4) 10)) -> #(2 11 4 13)
-(defun proc_@$fx. (rec b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)) (ty (gk p :ty)))
-  (declare (optimize speed) (pn dim dimout) (function rec))
+(defun proc_@$fx. (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout))
+                            (ty (gk p :ty)))
+  (declare (optimize speed) (pn dim dimout))
   (let* ((p (vchain (#'lconf #'tailconf) p b))
          (rhs (nvrs 'rht 0 (gk p :dots)))
          (row `(,(gk p :fx* )
                 ,@(loop for d of-type pn from 0 repeat dim collect `(:vr lft ,d))
                 ,@rhs))
          (ret `(return ,(gk p :out-sym)))
-         (rht `(~ ,@(funcall rec (gk p :rht))))
-         (with `(,(gk p :lft-sym) of-type ,(gk p :aty) = ,(funcall rec (gk p :lft))))
+         (rht `(~ ,@(gk p :rht)))
          (inner (-vmvb* ty dim 'lft ($row p :itr-lft-sym :lft-sym)
                   `(($nvset (,(gk p :out-sym) ,dimout
                              (* ,(gk p :itr-out-sym) ,dimout))
                             ,row)))))
      (if (gk p :@modrht t)
-         `(loop with ,@with ,@(vec-select-itr p)
+         `(loop ,@(vec-select-itr p)
                 do ,(-vmvb* ty (gk p :dots) 'rht rht `(,inner)) finally ,ret)
          (-vmvb* ty (gk p :dots) 'rht rht
-           `((loop with ,@with ,@(vec-select-itr p)
+           `((loop  ,@(vec-select-itr p)
                    do ,inner finally ,ret))))))
 
 ; -- ARRAY LEFT vec -------------------------------------------------------------
 
-(defun proc!@$fx (rec b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)) (ty (gk p :ty)))
-  (declare (optimize speed) (pn dim dimout) (function rec))
+(defun proc!@$fx (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)) (ty (gk p :ty)))
+  (declare (optimize speed) (pn dim dimout))
   (let* ((p (vchain (#'lconf #'tailconf) p b))
          (row (loop for d of-type pn from 0 repeat dim
                     collect `(,(gk p :fx*) (:vr lft ,d) (:vr rht ,d))))
@@ -166,18 +169,17 @@
                   `(($nvset (,(gk p :out-sym) ,dimout
                              (* ,(gk p :itr-out-sym) ,dimout))
                             (values ,@row)))))
-         (rht `(~ ,@(funcall rec (gk p :rht))))
-         (ret `(return ,(gk p :out-sym)))
-         (with `(,(gk p :lft-sym) of-type ,(gk p :aty) = ,(funcall rec (gk p :lft)))))
+         (rht `(~ ,@(gk p :rht)))
+         (ret `(return ,(gk p :out-sym))))
     (if (gk p :@modrht t)
-        `(loop with ,@with ,@(vec-select-itr p)
+        `(loop ,@(vec-select-itr p)
                do ,(-vmvb* ty dim 'rht rht `(,inner)) finally ,ret)
         (-vmvb* ty dim 'rht rht
-          `((loop with ,@with ,@(vec-select-itr p) do ,inner finally ,ret))))))
+          `((loop ,@(vec-select-itr p) do ,inner finally ,ret))))))
 
-(defun proc!@$fx. (rec b p &aux (dim (gk p :dim)) (dimout (gk p :dimout))
-                                (ty (gk p :ty)))
-  (declare (optimize speed) (pn dim dimout) (function rec))
+(defun proc!@$fx. (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout))
+                            (ty (gk p :ty)))
+  (declare (optimize speed) (pn dim dimout) )
   (let* ((p (vchain (#'lconf #'tailconf) p b))
         (row (loop with rhs = (nvrs 'rht 0 (gk p :dots))
                    for d of-type pn from 0 repeat dim
@@ -186,26 +188,24 @@
                     `(($nvset (,(gk p :out-sym) ,dimout
                                (* ,(gk p :itr-out-sym) ,dimout))
                               (values ,@row)))))
-        (with `(,(gk p :lft-sym) of-type ,(gk p :aty) = ,(funcall rec (gk p :lft))))
-        (rht `(~ ,@(funcall rec (gk p :rht))))
+        (rht `(~ ,@(gk p :rht)))
         (ret `(return ,(gk p :out-sym))))
 
     (if (gk p :@modrht t)
-        `(loop with ,@with ,@(vec-select-itr p)
+        `(loop ,@(vec-select-itr p)
                do ,(-vmvb* ty (gk p :dots) 'rht rht `(,inner)) finally ,ret)
         (-vmvb* ty (gk p :dots) 'rht rht
-          `((loop with ,@with ,@(vec-select-itr p) do ,inner finally ,ret))))))
+          `((loop ,@(vec-select-itr p) do ,inner finally ,ret))))))
 
 ; -- ARRAYS LEFT RIGHT vec ------------------------------------------------------
 
-(defun proc!@$fx$ (rec b p &aux (dim (gk p :dim)) (dimout (gk p :dimout))
-                                (ty (gk p :ty)) (aty (gk p :aty)))
-  (declare (optimize speed) (pn dim dimout) (function rec))
+(defun proc!@$fx$ (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout))
+                            (ty (gk p :ty)) (aty (gk p :aty)))
+  (declare (optimize speed) (pn dim dimout))
   (let ((p (vchain (#'lconf #'rconf) p b))
         (row (loop for d of-type pn from 0 repeat dim
                    collect `(,(gk p :fx*) (:vr lft ,d) (:vr rht ,d)))))
-    `(loop with ,(gk p :rht-sym) of-type ,aty = ,(funcall rec (gk p :rht))
-           with ,(gk p :lft-sym) of-type ,aty = ,(funcall rec (gk p :lft))
+    `(loop with ,(gk p :rht-sym) of-type ,aty = ,(gk p :rht)
           ,@(vec-select-itr p)
            do ,(-vmvb* ty dim 'rht ($row p :itr-rht-sym :rht-sym)
                  `(,(-vmvb* ty dim 'lft ($row p :itr-lft-sym :lft-sym)
@@ -215,88 +215,87 @@
            finally (return ,(gk p :out-sym)))))
 
 (defun vv-proc (body)
-  (declare (optimize speed))
+  (declare (optimize speed (safety 2)))
   (labels
     ((err (p b msg) (error (format nil "VV: ~a, for: ~s~%in: ~s " msg (gk p :fx) b)))
-    ; TODO: config tests for array positions etc
-    (tx-mvc (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-mvc*)))) (procm@fx #'rec b p)) ; m@
-    (tx-red (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-red*)))) (procr@$fx #'rec b p)) ; r@
-    (tx-map (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-map*)))) ; %@
-      (cond
-        ((not (gk0 p :$r :.r :.l)) (err p b "%@: bad configuration"))
+     (tx-m@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-m@*)))) (procm@fx b p)) ; m@
+     (tx-r@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-r@*)))) (procr@$fx b p)) ; r@
 
-        ((gk+ p :$l)
-         (unless (= (length b) 3) (err p b "%@: bad number of elements") )
-         (proc%@$fx #'rec b p))
+     (tx-!@ (b &aux (p (vvconf b)))
+       (cond
+         ((> (the pn (gk p :arrs)) 1) (err p b "!@: invalid input, too many $"))
+         ((gk+ p :.l :.r) (err p b "!@: vec broadcasting on both sides"))
+         ((gk+ p :.l :$r) (err p b "!@: .fx$ not implemented"))
 
-        (t (proc%@fx #'rec b p))))
+         ((gk+ p :$l :$r)
+          (unless (= 3 (length b)) (err p b "!@: bad # of elements"))
+          (proc!@$fx$ b p))
 
-    (tx-xmap (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-xmap*)))) ; x@
-      (procx@$fx #'rec b p))
+         ((gk+ p :$l :.r)
+          (unless (> (length b) 2) (err p b "!@: missing vecs"))
+          (proc!@$fx. b p))
+         ((gk+ p :$r) (err p b "!@: fx$ not implemented"))
 
-    (tx-1ary (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-1ary*)))) ; .@
-      (cond
-        ((gk0 p :$l :$r :.l :.r) (proc.@fx #'rec b p))
+         ((gk+ p :$l)
+          (unless (> (length b) 2) (err p b "!@: missing vecs"))
+          (proc!@$fx b p))
+         ((gk+ p :.r) (proc!@fx. b p))
+         ((gk+ p :.l) (proc!@.fx b p))
 
-        ((gk+ p :$l)
-         (unless (= 2 (length b)) (err p b ".@: bad # of elements"))
-         (proc.@$fx #'rec b p))
+         ((gk0 p :$l :$r :.l :.r) (proc!@fx b p))
+         (t (err p b "!@: unexpected input"))))
 
-        (t (err p b ".@: unexpected input"))))
+     (tx-_@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-_@*))))
+       (cond
+         ((> (the pn (gk p :arrs)) 1) (err p b "_@: invalid input, too many $"))
+         ((gk+ p :.l :.r) (err p b "_@: vec broadcasting on both sides"))
 
-    (tx-nary (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-nary*)))) ; _@
-      (cond
-        ((> (the pn (gk p :arrs)) 1) (err p b "_@: invalid input, too many $"))
-        ((gk+ p :.l :.r) (err p b "_@: vec broadcasting on both sides"))
+         ((gk+ p :$l :.r) (proc_@$fx. b p))
 
-        ((gk+ p :$l :.r)
-         ; (unless (> (length b) 2) (err p b "!@: missing vecs"))
-         (proc_@$fx. #'rec b p))
+         ((gk+ p :$l)
+          (unless (= 2 (length b)) (err p b "_@: bad # of elements"))
+          (proc_@$fx b p))
 
-        ((gk+ p :$l)
-         (unless (= 2 (length b)) (err p b "_@: bad # of elements"))
-         (proc_@$fx #'rec b p))
+         ((gk0 p :$l :$r :.l :.r) (proc_@fx b p))
+         (t (err p b "_@: unexpected input"))))
 
-        ((gk0 p :$l :$r :.l :.r) (proc_@fx #'rec b p))
-        (t (err p b "_@: unexpected input"))))
+     (tx-.@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-.@*))))
+       (cond
+         ((gk0 p :$l :$r :.l :.r) (proc.@fx b p))
 
-    (tx-vec (b &aux (p (vvconf b))) ; !@
-      (cond
-        ((> (the pn (gk p :arrs)) 1) (err p b "!@: invalid input, too many $"))
-        ((gk+ p :.l :.r) (err p b "!@: vec broadcasting on both sides"))
-        ((gk+ p :.l :$r) (err p b "!@: not implemented")) ; skip .fx$
+         ((gk+ p :$l)
+          (unless (= 2 (length b)) (err p b ".@: bad # of elements"))
+          (proc.@$fx b p))
 
-        ((gk+ p :$l :$r)
-         (unless (= 3 (length b)) (err p b "!@: bad # of elements"))
-         (proc!@$fx$ #'rec b p))
+         (t (err p b ".@: unexpected input"))))
 
-        ((gk+ p :$l :.r)
-         (unless (> (length b) 2) (err p b "!@: missing vecs"))
-         (proc!@$fx. #'rec b p))
-        ((gk+ p :$r) (err p b "!@: not implemented")) ; skip fx$
+     (tx-x@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-x@*)))) (procx@$fx b p))
+     (tx-%@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-%@*))))
+        (cond
+          ((not (gk0 p :$r :.r :.l)) (err p b "%@: bad configuration"))
 
-        ((gk+ p :$l)
-         (unless (> (length b) 2) (err p b "!@: missing vecs"))
-         (proc!@$fx #'rec b p))
-        ((gk+ p :.r) (proc!@fx. #'rec b p))
-        ((gk+ p :.l) (proc!@.fx #'rec b p))
+          ((gk+ p :$l)
+           (unless (= (length b) 3) (err p b "%@: bad number of elements") )
+           (proc%@$fx b p))
 
-        ((gk0 p :$l :$r :.l :.r) (proc!@fx #'rec b p))
-        (t (err p b "!@: unexpected input")))) ; not sure if this can happen
+          (t (proc%@fx b p))))
 
-    (rec (b)
-      (cond ((atom b) b)
-            ; ((and (consp b) (not (symbolp (car b))))
-            ;  (cons (rec (car b)) (rec (cdr b))))
-            ((car-match-trigger #.(mkstr *vv-sym*) b) (tx-vec b))
-            ((car-match-trigger #.(mkstr *vv-nary*) b) (tx-nary b))
-            ((car-match-trigger #.(mkstr *vv-1ary*) b) (tx-1ary b))
-            ((car-match-trigger #.(mkstr *vv-red*) b) (tx-red b))
-            ((car-match-trigger #.(mkstr *vv-map*) b) (tx-map b))
-            ((car-match-trigger #.(mkstr *vv-xmap*) b) (tx-xmap b))
-            ((car-match-trigger #.(mkstr *vv-mvc*) b) (tx-mvc b))
-            ((consp b) (cons (rec (car b)) (rec (cdr b))))
-            (t (error "VV: unexpected expr in: ~a" b))))) ; sbcl says this cant happen
+     (rec (b) ; this messy, but much faster to define s as late as possible,
+              ; and once only (before it was hidden in fxs)
+       (cond ((or (null b) (atom b)) (return-from rec b))
+             ((not (and (listp b) (symbolp (car b))))
+              (return-from rec (cons (rec (car b)) (rec (cdr b))))))
+
+       (let ((s (mkstr (car b))))
+         (declare (string s))
+         (cond ((match-substr #.(mkstr *vv-!@*) s) (rec (tx-!@ b)))
+               ((match-substr #.(mkstr *vv-_@*) s) (rec (tx-_@ b)))
+               ((match-substr #.(mkstr *vv-.@*) s) (rec (tx-.@ b)))
+               ((match-substr #.(mkstr *vv-r@*) s) (rec (tx-r@ b)))
+               ((match-substr #.(mkstr *vv-%@*) s) (rec (tx-%@ b)))
+               ((match-substr #.(mkstr *vv-x@*) s) (rec (tx-x@ b)))
+               ((match-substr #.(mkstr *vv-m@*) s) (rec (tx-m@ b)))
+               (t (cons (rec (car b)) (rec (cdr b))))))))
     (rec body)))
 
 (defmacro define-vv-macro ()
