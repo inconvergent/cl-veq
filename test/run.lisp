@@ -5,11 +5,12 @@
 
 (in-package #:veq-tests)
 
-(defvar *files* `(#P"test/veq.lisp" #P"test/macro.lisp"
-                  #P"test/macro-vv.lisp" #P"test/arr.lisp"
-                  #P"test/checks.lisp" #P"test/mat.lisp"))
+(defparameter *files*
+  (mapcar (lambda (p) (asdf:system-relative-pathname "veq/tests" p))
+          '(#P"test/veq.lisp" #P"test/macro.lisp"
+            #P"test/macro-vv.lisp" #P"test/arr.lisp"
+            #P"test/checks.lisp" #P"test/mat.lisp")))
 
-; TODO: print test file runtime?
 (defun run-tests ()
   (loop with fails = 0
         for f in *files*
@@ -17,8 +18,7 @@
            (unless (prove:run f :reporter :fiveam)
                    (incf fails))
            (format t "~&done: ~a~%" (veq::mkstr f))
-        finally (return (unless (< fails 1)
-                          (sb-ext:quit :unix-status 7)))))
+        finally (return (unless (< fails 1) (uiop:quit 7)))))
 
 (defmacro is-arr (&rest rest) `(is ,@rest :test #'equalp))
 

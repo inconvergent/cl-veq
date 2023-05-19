@@ -13,21 +13,16 @@
           :adjustable nil))))
 
 (defmacro new-stride ((from to type &optional (v 0)) arr)
-  (declare (fixnum from to) (symbol arr))
+  (declare (fixnum from to))
   "shift arr from stride to stride."
   (unless (> to from 0) (error "NEW-STRIDE: must have (> to from 0)"))
-  `(fvprogn
-    (let ((n (/ (,(vvsym type 1 :$num) ,arr) ,from))
-          (v* (coerce ,v ',(psymb :veq type))))
-      (declare (fixnum n))
-      (,(vvsym type 1 :with-arrays)
-        (:n n :cnt c :itr i
-         :arr ((arr* ,from ,arr)
-               (res ,to (,(vvsym type nil :$zero) (* ,to n))))
-         :fxs ((fx ((:va ,from o)) (values o ,@(loop repeat (- to from)
-                                                     collect 'v*))))
-         :exs ((res c (fx arr*))))
-        res))))
+  `(fvprogn ; TODO: to less than from
+    (let ((v* (coerce ,v ',(psymb :veq type))))
+      (declare (,(psymb :veq type) v*))
+      (labels ((fx ((:va ,from x))
+                 (values (:vr x ,@(loop for i from 0 repeat from collect i))
+                         ,@(loop repeat (- to from) collect 'v*))))
+        (,(vvsym type 1 (mkstr from to :_@$fx)) ,arr)))))
 
 (defmacro define-constr (type)
   (labels ((nm (n) (vvsym type 1 n)))

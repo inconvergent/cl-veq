@@ -17,14 +17,18 @@
       (is a #(100.2f0 2f0) :test #'equalp)
       (is (veq:lst (f2!@+ (veq:f2$ a) 2f0 3f0)) '(102.2f0 5f0)))
 
-    (is (veq:d$_ (loop for i from 0 below 3
-                      collect (list (veq:df i)
-                                    (veq:df (1+ i)))))
-        #(0d0 1d0 1d0 2d0 2d0 3d0)
-        :test #'equalp)
+    (is-arr (veq:d$_ (loop for i from 0 below 3
+                           collect (list (veq:df i) (veq:df (1+ i)))))
+            #(0d0 1d0 1d0 2d0 2d0 3d0))
 
-    (is (veq:d_ '(1d0 2d0 3d0 4d0)) #(1d0 2d0 3d0 4d0) :test #'equalp)
-    (let ((a (list 1d0 2d0))) (is (veq:d_ a) #(1d0 2d0) :test #'equalp))))
+    (is-arr (veq:d_ '(1d0 2d0 3d0 4d0)) #(1d0 2d0 3d0 4d0))
+    (let ((a (list 1d0 2d0))) (is-arr (veq:d_ a) #(1d0 2d0)))
+
+    (is-arr (veq:new-stride (2 3 :ff) (veq:f$~ (6) 1f0 2f0 3f0 4f0 5f0 6f0))
+            #(1f0 2f0 0f0 3f0 4f0 0f0 5f0 6f0 0f0))
+
+    (is-arr (veq:new-stride (2 4 :ff 2f0) (veq:f$~ (6) 1f0 2f0 3f0 4f0 5f0 6f0))
+            #(1.0 2.0 2.0 2.0 3.0 4.0 2.0 2.0 5.0 6.0 2.0 2.0))))
 
 
 (subtest "lerp"

@@ -180,7 +180,7 @@ returns (values c sym*), where sym* is sym with the padding characters removed"
         do (setf s (the string (subseq s 1))) (incf c))
   (values c (if rht (reverse s) s)))
 
-(defun edge-chars-str (ch s &optional rht)
+(defun edge-str (ch s &optional rht)
   (declare (optimize speed) (character ch) (string s) (boolean rht))
   "count number of padding characters ch  in s from the left (or right)
 returns (values c sym*), where sym* is s with the padding characters removed"

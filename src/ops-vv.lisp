@@ -214,88 +214,70 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
                                 (values ,@row))))))
            finally (return ,(gk p :out-sym)))))
 
+(defmacro vverr-len (b wanted got)
+  `(unless ,wanted
+     (vverr ,b (format nil "bad # of elements. wanted ~a, got: ~a" ',wanted ,got))))
+
 (defun vv-proc (body)
   (declare (optimize speed (safety 2)))
   (labels
-    ((err (p b msg) (error (format nil "VV: ~a, for: ~s~%in: ~s " msg (gk p :fx) b)))
-     (tx-m@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-m@*)))) (procm@fx b p)) ; m@
-     (tx-r@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-r@*)))) (procr@$fx b p)) ; r@
+    ((m@ (b &aux (p (vvconf b #.(mkstr *vv-m@*)))) (procm@fx b p))
+     (r@ (b &aux (p (vvconf b #.(mkstr *vv-r@*)))) (procr@$fx b p))
+     (x@ (b &aux (p (vvconf b #.(mkstr *vv-x@*)))) (procx@$fx b p))
+     (%@ (b &aux (p (vvconf b #.(mkstr *vv-%@*))) (l (length b)))
+       (cond ((not (gk0 p :$r :.r :.l)) (vverr b "bad configuration"))
+             ((gk+ p :$l)
+              (vverr-len b (= l 3) l)
+              (proc%@$fx b p))
+             (t (proc%@fx b p))))
 
-     (tx-!@ (b &aux (p (vvconf b)))
-       (cond
-         ((> (the pn (gk p :arrs)) 1) (err p b "!@: invalid input, too many $"))
-         ((gk+ p :.l :.r) (err p b "!@: vec broadcasting on both sides"))
-         ((gk+ p :.l :$r) (err p b "!@: .fx$ not implemented"))
+     (!@ (b &aux (p (vvconf b #.(mkstr *vv-!@*))) (l (length b)))
+       (cond ((gk+ p :.l :$r) (vverr b "not implemented"))
+             ((gk+ p :$l :$r)
+              (vverr-len b (= l 3) l)
+              (proc!@$fx$ b p))
+             ((gk+ p :$l :.r)
+              (vverr-len b (> l 2) l)
+              (proc!@$fx. b p))
+             ((gk+ p :$r) (vverr b "not implemented"))
+             ((gk+ p :$l)
+              (vverr-len b (> l 2) l)
+              (proc!@$fx b p))
+             ((gk+ p :.r) (proc!@fx. b p))
+             ((gk+ p :.l) (proc!@.fx b p))
+             ((gk0 p :$l :$r :.l :.r) (proc!@fx b p))
+             (t (vverr b "unexpected input"))))
 
-         ((gk+ p :$l :$r)
-          (unless (= 3 (length b)) (err p b "!@: bad # of elements"))
-          (proc!@$fx$ b p))
+     (_@ (b &aux (p (vvconf b #.(mkstr *vv-_@*))) (l (length b)))
+       (cond ((gk+ p :$l :.r) (proc_@$fx. b p))
+             ((gk+ p :$l)
+              (vverr-len b (= l 2) l)
+              (proc_@$fx b p))
+             ((gk0 p :$l :$r :.l :.r) (proc_@fx b p))
+             (t (vverr b "unexpected input"))))
+     (.@ (b &aux (p (vvconf b #.(mkstr *vv-.@*))) (l (length b)))
+       (cond ((gk0 p :$l :$r :.l :.r) (proc.@fx b p))
+             ((gk+ p :$l)
+              (vverr-len b (= l 2) l)
+              (proc.@$fx b p))
+             (t (vverr b "unexpected input"))))
 
-         ((gk+ p :$l :.r)
-          (unless (> (length b) 2) (err p b "!@: missing vecs"))
-          (proc!@$fx. b p))
-         ((gk+ p :$r) (err p b "!@: fx$ not implemented"))
-
-         ((gk+ p :$l)
-          (unless (> (length b) 2) (err p b "!@: missing vecs"))
-          (proc!@$fx b p))
-         ((gk+ p :.r) (proc!@fx. b p))
-         ((gk+ p :.l) (proc!@.fx b p))
-
-         ((gk0 p :$l :$r :.l :.r) (proc!@fx b p))
-         (t (err p b "!@: unexpected input"))))
-
-     (tx-_@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-_@*))))
-       (cond
-         ((> (the pn (gk p :arrs)) 1) (err p b "_@: invalid input, too many $"))
-         ((gk+ p :.l :.r) (err p b "_@: vec broadcasting on both sides"))
-
-         ((gk+ p :$l :.r) (proc_@$fx. b p))
-
-         ((gk+ p :$l)
-          (unless (= 2 (length b)) (err p b "_@: bad # of elements"))
-          (proc_@$fx b p))
-
-         ((gk0 p :$l :$r :.l :.r) (proc_@fx b p))
-         (t (err p b "_@: unexpected input"))))
-
-     (tx-.@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-.@*))))
-       (cond
-         ((gk0 p :$l :$r :.l :.r) (proc.@fx b p))
-
-         ((gk+ p :$l)
-          (unless (= 2 (length b)) (err p b ".@: bad # of elements"))
-          (proc.@$fx b p))
-
-         (t (err p b ".@: unexpected input"))))
-
-     (tx-x@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-x@*)))) (procx@$fx b p))
-     (tx-%@ (b &aux (p (vvconf b :vv-sym #.(mkstr *vv-%@*))))
-        (cond
-          ((not (gk0 p :$r :.r :.l)) (err p b "%@: bad configuration"))
-
-          ((gk+ p :$l)
-           (unless (= (length b) 3) (err p b "%@: bad number of elements") )
-           (proc%@$fx b p))
-
-          (t (proc%@fx b p))))
-
+     (split (b) (cons (rec (car b)) (rec (cdr b))))
      (rec (b) ; this messy, but much faster to define s as late as possible,
-              ; and once only (before it was hidden in fxs)
        (cond ((or (null b) (atom b)) (return-from rec b))
              ((not (and (listp b) (symbolp (car b))))
-              (return-from rec (cons (rec (car b)) (rec (cdr b))))))
+              (return-from rec (split b))))
 
        (let ((s (mkstr (car b))))
          (declare (string s))
-         (cond ((match-substr #.(mkstr *vv-!@*) s) (rec (tx-!@ b)))
-               ((match-substr #.(mkstr *vv-_@*) s) (rec (tx-_@ b)))
-               ((match-substr #.(mkstr *vv-.@*) s) (rec (tx-.@ b)))
-               ((match-substr #.(mkstr *vv-r@*) s) (rec (tx-r@ b)))
-               ((match-substr #.(mkstr *vv-%@*) s) (rec (tx-%@ b)))
-               ((match-substr #.(mkstr *vv-x@*) s) (rec (tx-x@ b)))
-               ((match-substr #.(mkstr *vv-m@*) s) (rec (tx-m@ b)))
-               (t (cons (rec (car b)) (rec (cdr b))))))))
+         (cond ((match-substr #.(mkstr *vv-!@*) s) (rec (!@ b)))
+               ((match-substr #.(mkstr *vv-_@*) s) (rec (_@ b)))
+               ((match-substr #.(mkstr *vv-.@*) s) (rec (.@ b)))
+               ((match-substr #.(mkstr *vv-r@*) s) (rec (r@ b)))
+               ((match-substr #.(mkstr *vv-%@*) s) (rec (%@ b)))
+               ((match-substr #.(mkstr *vv-x@*) s) (rec (x@ b)))
+               ((match-substr #.(mkstr *vv-m@*) s) (rec (m@ b)))
+               (t (split b))))))
     (rec body)))
 
 (defmacro define-vv-macro ()
