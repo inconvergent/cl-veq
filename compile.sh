@@ -6,4 +6,4 @@ time sbcl --quit \
           --eval '(load "veq.asd")'\
           --eval '(handler-case (time (ql:quickload :veq :verbose t))
                     (error (c) (print c) (sb-ext:quit :unix-status 2)))'\
-  >compile.sh.tmp 2>&1
+     > compile.sh.tmp 2>&1

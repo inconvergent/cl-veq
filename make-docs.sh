@@ -1,7 +1,6 @@
 #!/bin/bash
 
 sbcl --quit \
-     --eval '(load "~/quicklisp/setup.lisp")'\
      --eval '(ql:quickload :veq :silent t)'\
      --eval '(handler-case (veq:ext-symbols? :pretty)
                            (error (c) (print c) (sb-ext:quit :unix-status 2)))'\

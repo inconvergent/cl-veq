@@ -42,10 +42,6 @@ argument.
  ; VEQ:$
  ;   [symbol]
  ;
- ; $ names a macro:
- ;   Lambda-list: (A &REST REST)
- ;   Source file: src/array-utils.lisp
- ;
  ; (SETF $) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
  ;   Documentation:
@@ -122,7 +118,7 @@ argument.
  ;     start at row (start 0).
  ;     negative start counts backwards from the last row
  ;     use s to overrid output stream.
- ;   Source file: src/array-print.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### $TO-LIST
@@ -137,7 +133,7 @@ argument.
  ;                  (VALUES LIST &OPTIONAL))
  ;   Documentation:
  ;     return array as a list of lists of length dim.
- ;   Source file: src/array-print.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### \*EPS\*
@@ -158,10 +154,6 @@ argument.
 ```
  ; VEQ:2$
  ;   [symbol]
- ;
- ; 2$ names a macro:
- ;   Lambda-list: (A &REST REST)
- ;   Source file: src/array-utils.lisp
  ;
  ; (SETF 2$) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
@@ -198,7 +190,7 @@ argument.
  ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 2d array. returns array.
- ;   Source file: src/array-print.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### 2$TO-LIST
@@ -212,7 +204,7 @@ argument.
  ;   Derived type: (FUNCTION (T) *)
  ;   Documentation:
  ;     return array as a list of lists of length 2.
- ;   Source file: src/array-print.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### 3$
@@ -220,10 +212,6 @@ argument.
 ```
  ; VEQ:3$
  ;   [symbol]
- ;
- ; 3$ names a macro:
- ;   Lambda-list: (A &REST REST)
- ;   Source file: src/array-utils.lisp
  ;
  ; (SETF 3$) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
@@ -260,7 +248,7 @@ argument.
  ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 3d array. returns array.
- ;   Source file: src/array-print.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### 3$TO-LIST
@@ -274,7 +262,7 @@ argument.
  ;   Derived type: (FUNCTION (T) *)
  ;   Documentation:
  ;     return array as a list of lists of length 3.
- ;   Source file: src/array-print.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### 4$
@@ -282,10 +270,6 @@ argument.
 ```
  ; VEQ:4$
  ;   [symbol]
- ;
- ; 4$ names a macro:
- ;   Lambda-list: (A &REST REST)
- ;   Source file: src/array-utils.lisp
  ;
  ; (SETF 4$) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
@@ -322,7 +306,7 @@ argument.
  ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 4d array. returns array.
- ;   Source file: src/array-print.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### 4$TO-LIST
@@ -336,7 +320,7 @@ argument.
  ;   Derived type: (FUNCTION (T) *)
  ;   Documentation:
  ;     return array as a list of lists of length 4.
- ;   Source file: src/array-print.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### ARRTYPE
@@ -507,7 +491,7 @@ ex: (D$FXLSPACE (n a b) (lambda (i (:va 1 a b)) (vpr i a b)))
  ;     find min and max for all dimensions of 1 array.
  ;     ex: (D$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: src/array-mima.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### D$NUM
@@ -707,7 +691,7 @@ ex: (D2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
  ;     find min and max for all dimensions of 2 array.
  ;     ex: (D2$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: src/array-mima.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### D2$NUM
@@ -1389,7 +1373,7 @@ ex: (D3$FXLSPACE (n a b) (lambda (i (:va 3 a b)) (vpr i a b)))
  ;     find min and max for all dimensions of 3 array.
  ;     ex: (D3$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: src/array-mima.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### D3$NUM
@@ -3484,7 +3468,7 @@ ex: (F$FXLSPACE (n a b) (lambda (i (:va 1 a b)) (vpr i a b)))
  ;     find min and max for all dimensions of 1 array.
  ;     ex: (F$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: src/array-mima.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### F$NUM
@@ -3713,7 +3697,7 @@ ex: (F2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
  ;     find min and max for all dimensions of 2 array.
  ;     ex: (F2$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: src/array-mima.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### F2$NUM
@@ -4547,7 +4531,7 @@ ex: (F3$FXLSPACE (n a b) (lambda (i (:va 3 a b)) (vpr i a b)))
  ;     find min and max for all dimensions of 3 array.
  ;     ex: (F3$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: src/array-mima.lisp
+ ;   Source file: src/array-extra.lisp
 ```
 
 #### F3$NUM

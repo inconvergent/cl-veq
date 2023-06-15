@@ -2,8 +2,11 @@
 
 ; -- MVC ------------------------------------------------------------------------
 
-; (m@fx ...) -> (mvc fx (mvc #'values ...))
+; (m@fx ...) -> (mvc #'fx (mvc #'values ...))
 (defun procm@fx (b p) `(mvc #',(gk p :fx*) (~ ,@(cdr b))))
+
+; almost the same: (f@fx ...) -> (mvc fx (mvc #'values ...))
+(defun procf@fx (b p) `(mvc (the function ,(gk p :fx*)) (~ ,@(cdr b))))
 
 ; -- 1ARY -----------------------------------------------------------------------
 
@@ -221,7 +224,9 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
 (defun vv-proc (body)
   (declare (optimize speed (safety 2)))
   (labels
-    ((m@ (b &aux (p (vvconf b #.(mkstr *vv-m@*)))) (procm@fx b p))
+    (
+     (m@ (b &aux (p (vvconf b #.(mkstr *vv-m@*)))) (procm@fx b p))
+     (f@ (b &aux (p (vvconf b #.(mkstr *vv-f@*)))) (procf@fx b p))
      (r@ (b &aux (p (vvconf b #.(mkstr *vv-r@*)))) (procr@$fx b p))
      (x@ (b &aux (p (vvconf b #.(mkstr *vv-x@*)))) (procx@$fx b p))
      (%@ (b &aux (p (vvconf b #.(mkstr *vv-%@*))) (l (length b)))
@@ -277,6 +282,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
                ((match-substr #.(mkstr *vv-%@*) s) (rec (%@ b)))
                ((match-substr #.(mkstr *vv-x@*) s) (rec (x@ b)))
                ((match-substr #.(mkstr *vv-m@*) s) (rec (m@ b)))
+               ((match-substr #.(mkstr *vv-f@*) s) (rec (f@ b)))
                (t (split b))))))
     (rec body)))
 

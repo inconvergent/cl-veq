@@ -59,7 +59,8 @@ next symb: ~a" char (peek-char t stream t nil t)))
   (error "Delimiter ~S shouldn't be read alone.
 next symb: ~a" char (peek-char t stream t nil t)))
 
-(set-macro-character #\} 'read-delimiter)
+(set-macro-character #\} '-read-delimiter)
+; (set-macro-character #\] '-read-delimiter)
 
 ; adapted from https://gist.github.com/chaitanyagupta/9324402
 (defun read-next-object (sep del &optional (stream *standard-input*))
@@ -75,14 +76,14 @@ next symb: ~a" char (peek-char t stream t nil t)))
           o))))
 
 ; adapted from https://gist.github.com/chaitanyagupta/9324402
-(defun -read-left-brace (stream char)
+(defun -read-left-curly-brace (stream char)
   (declare (ignore char))
   (let ((*readtable* (copy-readtable)))
     (set-macro-character #\Space '-read-separator)
-    (loop for object = (read-next-object #\Space  #\} stream)
+    (loop for object = (read-next-object #\Space #\} stream)
           while object
           collect object into objects
           finally (return `(values ,@objects)))))
 
-(set-macro-character #\{ '-read-left-brace)
+(set-macro-character #\{ '-read-left-curly-brace)
 

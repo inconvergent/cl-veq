@@ -2,10 +2,12 @@
 
 (declaim (character *vv-dot* *vv-arr* *vv-bang*)
          (keyword *vv-!@* *vv-_@* *vv-?@* *vv-.@*
-                  *vv-m@* *vv-r@* *vv-%@* *vv-x@*))
+                  *vv-m@* *vv-f@*
+                  *vv-r@* *vv-%@* *vv-x@*))
 
 (defvar *vv-!@* :!@) (defvar *vv-_@* :_@)
-(defvar *vv-m@* :m@) (defvar *vv-r@* :r@)
+(defvar *vv-m@* :m@) (defvar *vv-f@* :f@)
+(defvar *vv-r@* :r@)
 (defvar *vv-%@* :%@) (defvar *vv-x@* :x@)
 (defvar *vv-.@* :.@) (defvar *vv-?@* :?@)
 (defvar *vv-dot* #\.) (defvar *vv-arr* #\$) (defvar *vv-bang* #\!)
