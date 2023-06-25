@@ -77,7 +77,7 @@ ex: (~a (fx)) corresponds to (values (fx) ...)." dim mname)))
     `(progn (map-docstring ',mname ,docs :nodesc :context)
             (map-symbol `(,',mname (expr) ,,docs
                                    `(values ,@(loop repeat ',',dim
-                                                    collect expr of-type ',',type)))))))
+                                                    collect expr)))))))
 (defmacro define-val (dim type)
   (awg (e)
     (let* ((mname (vvsym type dim "val"))
