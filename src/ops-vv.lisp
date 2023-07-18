@@ -34,18 +34,24 @@
 
 ; -- VEC ------------------------------------------------------------------------
 
+(defun values! (p b body) ; TODO: other places than !@ ?
+  (cond ((and (gk+ p :!) (symbolp (car b)))
+         `(setf (values ,(car b)) (values ,@body)))
+        ((gk0 p :!) `(values ,@body))
+        (t (vverr b "unexpected use of !"))))
+
 ; row wise element pair wise
 (defun proc!@fx (b p &aux (dim (gk p :dim)))
   (declare (optimize speed) (pn dim))
   (-vmvb* (gk p :ty) (the pn (* 2 dim)) 'arg `(~ ,@(cdr b))
-    `((values
-        ,@(loop for d of-type pn from 0 repeat dim
-                collect `(,(gk p :fx*) (:vr arg ,d) (:vr arg ,(+ d dim))))))))
+   `(,(values! p (cdr b)
+        (loop for d of-type pn from 0 repeat dim
+              collect `(,(gk p :fx*) (:vr arg ,d) (:vr arg ,(+ d dim))))))))
 
 (defun proc!@.fx (b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
   (declare (optimize speed) (pn dim dots))
   (-vmvb* (gk p :ty) (the pn (+ dim dots)) 'arg `(~ ,@(cdr b))
-    `((values
+    `((values ; values! does not make sense here
         ,@(loop with lhs = (nvrs 'arg 0 dots)
                 for d of-type pn from 0 repeat dim
                 collect `(,(gk p :fx*) ,@lhs (:vr arg ,(+ dots d))))))))
@@ -53,7 +59,8 @@
 (defun proc!@fx. (b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
   (declare (optimize speed) (pn dim dots))
   (-vmvb* (gk p :ty) (+ dim dots) 'arg `(~ ,@(cdr b))
-    `((values ,@(loop with rhs = (nvrs 'arg dim dots)
+    `(,(values! p (cdr b) ; test this
+         (loop with rhs = (nvrs 'arg dim dots)
                       for d of-type pn from 0 repeat dim
                       collect `(,(gk p :fx*) (:vr arg ,d) ,@rhs))))))
 
@@ -318,7 +325,7 @@ packs of 1-9 values and/or rows of 1-9 item vectors.
 
 ; here are other possible configurations for !@
 
-  ; same behaviouir as above
+  ; same behaviour as above
   (2!@*  1 2 3 4)  ; -> (values (* 1 3) (* 2 4))
   ; project last value
   (2!@*. 1 2 3)    ; -> (values (* 1 3) (* 2 3))
@@ -473,8 +480,9 @@ modifier. here are some examples of behaviour. the types are described below.
 
 TYPES
 
-all vv vv expressions (except m@ where it does not make sense) can be explicity
-typed. the supported types, wtih corresponding array type are as follows
+all vv expressions (except `f@` and `m@`, where it does not make sense) can be
+explicity typed. the supported types, wtih corresponding array type are as
+follows
 
  - f: veq:ff, single-float; veq:fvec
  - d: veq:df, double-float; veq:dvec
@@ -501,12 +509,15 @@ the code in veq:mac, which displays the code after it has been expanded:
 
 alternatively, use:
 
-  (print (veq::vv-proc '(2!@$*. #(1 2 3 4) 5)))
-"
-          ))
+  (print (veq::vv-proc '(2!@$*. #(1 2 3 4) 5))) ; which prints generated code;
+  ; or:
+  (veq::vvdb (2!@$*. #(1 2 3 4) 5)) ; which prints and executes generated code
+"))
     `(progn (export ',mname)
             (map-docstring ',mname ,docs :nodesc)
             (defmacro ,mname (&body body) ,docs
-              `(progn ,@(replace-varg (vv-proc body)))))))
+              `(progn ,@(replace-varg (vv-proc body))))
+            (defmacro ,(symb mname :db) (&body body)
+              `(progn ,@(replace-varg (print (vv-proc body))))))))
 (define-vv-macro)
 

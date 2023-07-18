@@ -42,6 +42,10 @@ argument.
  ; VEQ:$
  ;   [symbol]
  ;
+ ; $ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Source file: src/array-utils.lisp
+ ;
  ; (SETF $) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
  ;   Documentation:
@@ -155,6 +159,10 @@ argument.
  ; VEQ:2$
  ;   [symbol]
  ;
+ ; 2$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Source file: src/array-utils.lisp
+ ;
  ; (SETF 2$) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
  ;   Documentation:
@@ -213,6 +221,10 @@ argument.
  ; VEQ:3$
  ;   [symbol]
  ;
+ ; 3$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Source file: src/array-utils.lisp
+ ;
  ; (SETF 3$) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
  ;   Documentation:
@@ -270,6 +282,10 @@ argument.
 ```
  ; VEQ:4$
  ;   [symbol]
+ ;
+ ; 4$ names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Source file: src/array-utils.lisp
  ;
  ; (SETF 4$) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
@@ -8583,7 +8599,7 @@ packs of 1-9 values and/or rows of 1-9 item vectors.
 
 ; here are other possible configurations for !@
 
-  ; same behaviouir as above
+  ; same behaviour as above
   (2!@*  1 2 3 4)  ; -> (values (* 1 3) (* 2 4))
   ; project last value
   (2!@*. 1 2 3)    ; -> (values (* 1 3) (* 2 3))
@@ -8738,8 +8754,9 @@ modifier. here are some examples of behaviour. the types are described below.
 
 TYPES
 
-all vv vv expressions (except m@ where it does not make sense) can be explicity
-typed. the supported types, wtih corresponding array type are as follows
+all vv expressions (except `f@` and `m@`, where it does not make sense) can be
+explicity typed. the supported types, wtih corresponding array type are as
+follows
 
  - f: veq:ff, single-float; veq:fvec
  - d: veq:df, double-float; veq:dvec
@@ -8766,7 +8783,9 @@ the code in veq:mac, which displays the code after it has been expanded:
 
 alternatively, use:
 
-  (print (veq::vv-proc '(2!@$*. #(1 2 3 4) 5)))
+  (print (veq::vv-proc '(2!@$*. #(1 2 3 4) 5))) ; which prints generated code;
+  ; or:
+  (veq::vvdb (2!@$*. #(1 2 3 4) 5)) ; which prints and executes generated code
 ```
 
 #### VVSYM

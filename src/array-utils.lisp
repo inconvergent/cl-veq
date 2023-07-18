@@ -160,8 +160,8 @@ note that the number of values depends on the dimension." dim at name)))
                                `(-$ ,,dim ,a :inds ,rest :atype ,',at)))))))
 (define-$)
 
-; (defmacro $ (a &rest rest) `(-$ 1 ,a :inds ,rest))
-; (defmacro 2$ (a &rest rest) `(-$ 2 ,a :inds ,rest))
-; (defmacro 3$ (a &rest rest) `(-$ 3 ,a :inds ,rest))
-; (defmacro 4$ (a &rest rest) `(-$ 4 ,a :inds ,rest))
+(defmacro $ (a &rest rest) `(-$ 1 ,a :inds ,rest))
+(defmacro 2$ (a &rest rest) `(-$ 2 ,a :inds ,rest))
+(defmacro 3$ (a &rest rest) `(-$ 3 ,a :inds ,rest))
+(defmacro 4$ (a &rest rest) `(-$ 4 ,a :inds ,rest))
 
