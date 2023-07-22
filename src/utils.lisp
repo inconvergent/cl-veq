@@ -37,12 +37,13 @@ returns: (values 1f0 3f0 4f0 6f0)"
 (defmacro vpr (&rest rest)
   "print input code with resulting values, return values."
   (awg (res) `(let ((,res (lst ,@rest)))
-                (format t "~&;; ~{~a~^ | ~}~&>> ~{~a~^ | ~}~&" ',rest ,res)
+                (silent? :rt
+                  (format t "~&;; ~{~a~^ | ~}~&>> ~{~a~^ | ~}~&" ',rest ,res))
                 (apply #'values ,res))))
 (defmacro vp (&rest rest)
   "print values and return values, return values."
   (awg (res) `(let ((,res (lst ,@rest)))
-                (format t "~&; vp: ~{~a~^ | ~}~&" ,res)
+                (silent? :rt (format t "~&>> ~{~a~^ | ~}~&" ,res))
                 (apply #'values ,res))))
 
 ; NOTE: using (lst ...) makes things slower in some cases.  because of the

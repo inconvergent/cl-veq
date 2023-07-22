@@ -15,3 +15,12 @@
 (defun d? (f) "describe argument" (describe f))
 (defun i? (f) "inspect argument" (inspect f))
 
+; runtime / compile time
+(declaim (boolean *silent-rt* *silent-ct*))
+(defvar *silent* nil) (defvar *silent-rt* nil) (defvar *silent-ct* nil)
+
+(defmacro silent? (&optional (mode :rt) &rest rest)
+  `(unless (or *silent* ,(ecase mode (:rt *silent-rt*)
+                                     (:ct *silent-ct*)))
+           (progn ,@rest)))
+

@@ -1,19 +1,17 @@
 (in-package :veq)
 
-(defmacro mac (expr) ; from on lisp by pg
+(defmacro mac (expr) ; modified from on lisp by pg
   "expand macro."
-  `(pprint (macroexpand-1 ',expr)))
+  `(silent? :ct (pprint (macroexpand-1 ',expr))))
 #+sbcl (defmacro mac* (expr)
          "expand macro all. only in SBCL."
-         `(pprint (sb-cltl2:macroexpand-all ',expr)))
+         `(silent? :ct (pprint (sb-cltl2:macroexpand-all ',expr))))
 
-(defmacro aif (test-form then-form &optional else-form) ;from on lisp by pg
-  `(let ((it ,test-form))
-     (if it ,then-form ,else-form)))
+(defmacro aif (test-form then-form &optional else-form) ; from on lisp by pg
+  `(let ((it ,test-form)) (if it ,then-form ,else-form)))
 
 (defmacro abbrev (short long) ; from on lisp by pg
-  `(defmacro ,short (&rest args)
-     `(,',long ,@args)))
+  `(defmacro ,short (&rest args) `(,',long ,@args)))
 
 (defun flatten (x) ; from on lisp by pg
   (labels ((rec (x acc)
@@ -61,7 +59,7 @@
 
 (defun symb (&rest args) ; from on lisp by pg
   (values (intern (apply #'mkstr args))))
-(defun psymb (pkg &rest args) ;https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
+(defun psymb (pkg &rest args) ; https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
   (declare (optimize speed))
   (values (intern (apply #'mkstr args) pkg)))
 (defmacro with-struct ((name . fields) struct &body body)
