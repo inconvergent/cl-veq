@@ -8795,9 +8795,14 @@ alternatively, use:
  ;   [symbol]
  ;
  ; VVSYM names a compiled function:
- ;   Lambda-list: (TYPE DIM SYMB &KEY PREF (SEP ) (PKG VEQ))
+ ;   Lambda-list: (TYPE DIM SYMB &KEY PREF (SEP )
+ ;                 (PKG
+ ;                  (ETYPECASE SYMB
+ ;                    (KEYWORD VEQ)
+ ;                    (SYMBOL (SYMBOL-PACKAGE SYMB))
+ ;                    (STRING VEQ))))
  ;   Derived type: (FUNCTION (SYMBOL T T &KEY (:PREF T) (:SEP T) (:PKG T))
- ;                  (VALUES SYMBOL &OPTIONAL))
+ ;                  (VALUES T &OPTIONAL))
  ;   Documentation:
  ;     build a symbol with correct name convention.
  ;     eg: (vvsym ff 2 :lerp) yields f2lerp.

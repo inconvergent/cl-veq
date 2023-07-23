@@ -70,7 +70,11 @@ eg: :ff :df 'f 'i"
   (apply #'values (mapcar (lambda (v) (df v)) l)))
 
 
-(defun vvsym (type dim symb &key pref (sep "") (pkg "VEQ"))
+(defun vvsym (type dim symb
+              &key pref (sep "")
+                   (pkg (etypecase symb (keyword "VEQ")
+                                        (symbol (symbol-package symb))
+                                        (string "VEQ"))))
   (declare #.*opt* (symbol type))
   "build a symbol with correct name convention.
 eg: (vvsym ff 2 :lerp) yields f2lerp."
@@ -81,7 +85,7 @@ eg: (vvsym ff 2 :lerp) yields f2lerp."
                     sep
                     symb)))
     (when pref (setf elem (cons pref elem)))
-    (values (intern (string-upcase (apply #'mkstr elem)) (mkstr pkg)))))
+    (values (psymb pkg (string-upcase (apply #'mkstr elem))))))
 
 (defun unpack-vvsym (sym &key (s :!) (niltype :nil) (symout t))
   (declare #.*opt* (symbol sym) ((or string keyword character) s))
@@ -93,7 +97,8 @@ eg: (vvsym ff 2 :lerp) yields f2lerp."
       (mvb (pref-digits pref-chars)
         (if pref (fx-split-str #'digit-char-p (mkstr pref)) (values nil nil))
         (values (the keyword (find-type pref-chars))
-                (if symout (symb (string-upcase vname)) (string-upcase vname))
+                (if symout (psymb (symbol-package sym) (string-upcase vname))
+                           (string-upcase vname))
                 (the fixnum (find-dim pref-digits)) ; dim
                 (the fixnum (find-dim (reverse pref-digits)))))))) ; dimout
 
