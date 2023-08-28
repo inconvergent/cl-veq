@@ -5,13 +5,32 @@
 (defun -vmvb (type dim arg expr body &key (repvarg t))
   (declare (symbol arg) (list expr) (fixnum dim))
   "returns (mvb ((:va dim arg)) expr body)"
-  (let ((body `(mvb ((:va ,dim ,arg)) ,expr
-                    ,@(unless (or (null type) (equal :nil type))
-                              `((declare (,type ,arg))))
+  (labels ((-mvb ()
+             `(mvb ((:va ,dim ,arg)) ,expr
+                   ,(if (or (null type) (equal :nil type))
+                        `(declare (ignorable ,arg))
+                        `(declare (ignorable ,arg) (,type ,arg)))
+                    ,@body))
+           (-mvb-strict ()
+              `(mvb ((:va ,dim ,arg))  (values ,@(cdr expr))
+                   ,(if (or (null type) (equal :nil type))
+                        `(declare (ignorable ,arg))
+                        `(declare (ignorable ,arg) (,type ,arg)))
                     ,@body)))
-    (if repvarg (replace-varg body) body)))
+
+   (let ((body (if (and #+:veq-strict t
+                        #-:veq-strict nil
+                        (eq (car expr) 'veq:~) (= (length expr) (1+ dim)))
+                 (-mvb-strict) (-mvb))
+          ))
+    (if repvarg (replace-varg body) body))))
 (defun -vmvb* (type dim arg expr body)
+  ; this is used in eg vv where it is convenient to be able to refer to the
+  ; symbol 'arg elswhere in the macro (in body) before it is replaced with dim
+  ; (gensyms) by replace-varg. as such, replace-varg must be explicity called
+  ; on the result of -vmvb*
   (-vmvb type dim arg expr body :repvarg nil))
+
 
 (defun -vlet (type dim all-args body)
   (let ((sme (some (lambda (a) (not (= (length a) 2))) all-args)))
@@ -103,7 +122,15 @@ ex: (~a (fx)) corresponds to (let ((v (fx))) (values v ...))." dim mname)))
 ;;;;;;;;;;;;;;;;;; XLET
 
 (defun xlet-proc (all-vars &rest body)
-  (labels ((ensure-values (v) (typecase v (list v) (otherwise `(values ,v))))
+  (labels ((ensure-values (ty dim v)
+             (typecase v (list v)
+                         (number `(values ,@(loop with ty = (type-from-short ty)
+                                                  repeat dim collect (if (eq ty :nil) v (coerce v ty)))))
+                         (atom `(values ,@(loop with ty = (type-from-short ty)
+                                                repeat dim collect (if (eq ty :nil) v `(the ,ty ,v)))))
+                         (otherwise `(values ,v)))
+
+             )
            (select-type (decl var ty &aux (d (cdr (assoc var decl))))
              (if d d (type-from-short ty t)))
            (inverse-decl (&aux (decl (list)))
@@ -121,8 +148,8 @@ ex: (~a (fx)) corresponds to (let ((v (fx))) (values v ...))." dim mname)))
              for (ty var dim) = (lst (unpack-vvsym arg))
              do (setf body `(,(if (unpacked? var arg) ; symbols without ! are treated normally
                                   (-vmvb* (select-type decl var ty) dim var
-                                          (ensure-values expr) body)
-                                  `(let ((,var ,(ensure-values expr)))
+                                          (ensure-values ty dim expr) body)
+                                  `(let ((,var ,(ensure-values ty dim expr)))
                                      (declare (,(select-type decl var ty) ,var))
                                      ,@body)))))
        (replace-varg (car body)))))

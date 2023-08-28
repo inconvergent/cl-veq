@@ -39,11 +39,6 @@
   (:3 @3mid (3!a 3!b)) (values (* (+ ax bx) 1/2) (* (+ ay by) 1/2)
                                (* (+ az bz) 1/2))
 
-  (:3 @3^ (3!a s)) (values (the @f (expt ax s)) (the @f (expt ay s)) (the @f (expt az s)))
-  (:3 @3exp (3!a)) (values (exp ax) (exp ay) (exp az))
-
-  (:3 @3mod (3!a s)) (values (mod ax s) (mod ay s) (mod az s))
-
   (:3 @3scale (3!a s)) (values (* ax s) (* ay s) (* az s))
   (:3 @3iscale (3!a s)) (values (/ ax s) (/ ay s) (/ az s))
 

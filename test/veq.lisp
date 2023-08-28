@@ -1,5 +1,6 @@
 
 
+
 (in-package #:veq-tests)
 
 (plan 7)
@@ -53,8 +54,8 @@
     (is (veq:lst (veq:d2i- 1d0 2d0 (veq:d2 1d0 3d0))) '(0d0 1d0))
     (is (veq:lst (veq:d2i/ 1d0 2d0 (veq:d2 1d0 3d0))) `(1d0 ,(/ 3d0 2d0)))
 
-    (is (veq:lst (veq:d2^ (veq:d2 1d0 2d0) 3d0)) `(1d0 8d0))
-    (is (veq:lst (veq:d2^ 1d0 2d0 3d0)) `(1d0 8d0))
+    (is (veq:lst (d2!@expt. (veq:d2 1d0 2d0) 3d0)) `(1d0 8d0))
+    (is (veq:lst (d2!@expt. 1d0 2d0 3d0)) `(1d0 8d0))
 
     (is (veq:lst (d2!@expt. (veq:d2 1d0 2d0) 3d0)) `(1d0 8d0))
     (is (veq:lst (d2!@expt. 1d0 2d0 3d0)) `(1d0 8d0))

@@ -4,14 +4,10 @@
 (ops
 
   (:4 @4id (4!a)) (values ax ay az aw)
-  (:4 @4square (4!a)) (values (the pos-@f (* ax ax))
-                              (the pos-@f (* ay ay))
-                              (the pos-@f (* az az))
-                              (the pos-@f (* aw aw)))
-  (:4 @4sqrt (4!a)) (values (the pos-@f (sqrt (the pos-@f ax)))
-                            (the pos-@f (sqrt (the pos-@f ay)))
-                            (the pos-@f (sqrt (the pos-@f az)))
-                            (the pos-@f (sqrt (the pos-@f aw))))
+  (:4 @4square (4!a)) (values (the pos-@f (* ax ax)) (the pos-@f (* ay ay))
+                              (the pos-@f (* az az)) (the pos-@f (* aw aw)))
+  (:4 @4sqrt (4!a)) (values (the pos-@f (sqrt (the pos-@f ax))) (the pos-@f (sqrt (the pos-@f ay)))
+                            (the pos-@f (sqrt (the pos-@f az))) (the pos-@f (sqrt (the pos-@f aw))))
 
   (:1 @4len2 (4!a)) (the pos-@f (mvc #'+ (-@4square ax ay az aw)))
   (:1 @4len (4!a)) (the pos-@f (sqrt (the pos-@f (mvc #'+ (-@4square ax ay az aw)))))
@@ -34,11 +30,6 @@
                                   (+ az (* bz s)) (+ aw (* bw s)))
   (:4 @4mid (4!a 4!b)) (values (* (+ ax bx) 1/2) (* (+ ay by) 1/2)
                                (* (+ az bz) 1/2) (* (+ aw bw) 1/2))
-
-  (:4 @4^ (4!a s)) (values (the @f (expt ax s)) (the @f (expt ay s))
-                           (the @f (expt az s)) (the @f (expt aw s)))
-  (:4 @4exp (4!a)) (values (exp ax) (exp ay) (exp az) (exp aw))
-  (:4 @4mod (4!a s)) (values (mod ax s) (mod ay s) (mod az s) (mod aw s))
 
   (:4 @4scale (4!a s)) (values (* ax s) (* ay s) (* az s) (* aw s))
   (:4 @4iscale (4!a s)) (values (/ ax s) (/ ay s) (/ az s) (/ aw s))

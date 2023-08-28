@@ -1,31 +1,31 @@
 (in-package :veq)
 
-(defmacro mac (expr) ; modified from on lisp by pg
+(defmacro mac (expr)
   "expand macro."
   `(silent? :ct (pprint (macroexpand-1 ',expr))))
 #+sbcl (defmacro mac* (expr)
          "expand macro all. only in SBCL."
          `(silent? :ct (pprint (sb-cltl2:macroexpand-all ',expr))))
 
-(defmacro aif (test-form then-form &optional else-form) ; from on lisp by pg
+(defmacro aif (test-form then-form &optional else-form)
   `(let ((it ,test-form)) (if it ,then-form ,else-form)))
 
-(defmacro abbrev (short long) ; from on lisp by pg
+(defmacro abbrev (short long)
   `(defmacro ,short (&rest args) `(,',long ,@args)))
 
-(defun flatten (x) ; from on lisp by pg
+(defun flatten (x)
   (labels ((rec (x acc)
              (cond ((null x) acc)
                    ((atom x) (cons x acc))
                    (t (rec (car x) (rec (cdr x) acc))))))
     (rec x nil)))
 
-(defmacro with-gensyms (syms &body body) ; modified from on lisp by pg
+(defmacro with-gensyms (syms &body body)
   `(let ,(mapcar #'(lambda (s) `(,s (gensym ,(symbol-name s))))
                  syms)
      ,@body))
 
-(defun group (source n) ; modified from on lisp by pg
+(defun group (source n)
   (if (< n 1) (error "group error: group size is smaller than 1"))
   (labels ((rec (source acc)
              (let ((rest (nthcdr n source)))
@@ -35,7 +35,7 @@
     (if source (rec source nil) nil)))
 
 (declaim (inline mkstr))
-(defun mkstr (&rest args) ; from on lisp by pg
+(defun mkstr (&rest args)
   (declare (optimize speed (safety 2)))
   (with-output-to-string (s)
     (dolist (a args) (princ a s))))
@@ -57,7 +57,7 @@
   (if v v d))
 (defun last* (l) (declare (list l)) (first (last l)))
 
-(defun symb (&rest args) ; from on lisp by pg
+(defun symb (&rest args)
   (values (intern (apply #'mkstr args))))
 (defun psymb (pkg &rest args) ; https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
   (declare (optimize speed))
@@ -70,7 +70,7 @@
                      fields)
          ,@body))))
 
-(defun reread (&rest args) ; from on lisp by pg
+(defun reread (&rest args)
   (values (read-from-string (apply #'mkstr args))))
 
 (defun lpos (l &optional (i 0) j)

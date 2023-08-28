@@ -55,14 +55,21 @@ almost like multiple-value-list, except it handles multiple arguments."
 (defmacro from-lst (l)
   "return list as values. equivalent to (values-list ...)."
   `(values-list ,l))
+
 (defmacro ~ (&rest rest)
   "wraps arguments in (mvc #'values ...)."
   `(mvc #'values ,@rest))
 
+(defmacro n~ (n &rest rest)
+  ; make flag to disable this in strict mode?
+  (cond ((= (length rest) n) `(values ,@rest))
+        ; (?) ; possibly remove other uses of ~?
+        (t `(~ ,@rest))))
+
 (defmacro vnrep (n &rest rest)
   (declare (pn n))
   "corresponds to (~ r1 ... rn)"
-  `(veq:~ ,@(loop repeat n collect `(progn ,@rest))))
+  `(values ,@(loop repeat n collect `(progn ,@rest))))
 
 (defmacro vnval (n &rest rest)
   (declare (pn n))

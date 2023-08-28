@@ -13,10 +13,6 @@
   (:1 @2len2 (2!a)) (the pos-@f (mvc #'+ (-@2square ax ay)))
   (:1 @2len (2!a)) (the pos-@f (sqrt (the pos-@f (mvc #'+ (-@2square ax ay)))))
 
-  (:2 @2^ (2!a s)) (values (expt ax s) (expt ay s))
-
-  (:2 @2exp (2!a)) (values (exp ax) (exp ay))
-  (:2 @2mod (2!a s)) (values (mod ax s) (mod ay s))
   (:2 @2scale (2!a s)) (values (* ax s) (* ay s))
   (:2 @2iscale (2!a s)) (values (/ ax s) (/ ay s))
 

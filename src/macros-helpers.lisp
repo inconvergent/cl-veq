@@ -35,8 +35,10 @@ fvprogn, fvdef*, vdef*, def*. see replace-varg for implementation details."
 of dim n in vprogn, fvprog, fvdef*, vdef*, def*.  see replace-varg for
 implementation details." :nodesc :context)
 
-(defun replace-varg (body &optional (root-rmap (list)))
+
+(defun replace-varg (body &optional (root-rmap (list)) (only nil))
   (declare #.*opt*)
+  ; TODO: document only, vskp
 
   "replace instances of varg/:varg/:va and vref/:vref/:vr with
 appropriate symbols for the dimension.
@@ -47,14 +49,15 @@ i have tested. but i'm mot sure if this propagation will eventually break
 somewhere.
 
 ex:
-  (print (veq:replace-varg '(mvb ((:va 2 x)) (values 1 2)
-                                 (list (:vr x 1 0)))))
-  ; will print something like:
+  (veq:replace-varg '(mvb ((:va 2 x)) (values 1 2)
+                       (list (:vr x 1 0))))
+  ; will return something like:
   ; (MVB (#:X/X-158 #:X/Y-159) (VALUES 1 2)
   ;      (LIST #:X/Y-159 #:X/X-158))
 "
   (labels
-    ((is-varg (v) (and (consp v) (member (car v) '(varg :varg :va) :test #'eq)))
+    ((is-skip (v) (and (consp v) (member (car v) '(vskp) :test #'eq)))
+     (is-varg (v) (and (consp v) (member (car v) '(varg :varg :va) :test #'eq)))
      (is-vref (root) (and (listp root) (listp (car root))
                           (member (caar root) '(vref :vref :vr) :test #'eq)))
      (correct-dim (d symbs) (declare (pn d) (list symbs)) (= d (length symbs)))
@@ -63,7 +66,8 @@ ex:
        (declare (list root rmap))
        (loop with res = (list)
              for v in (reverse root)
-             if (is-varg v)
+             if (is-skip v) do (push (second v) res)
+             else if (and (is-varg v) (not only))
              do (loop with (dim . va-symbs) = (cdr v)
                       for name in va-symbs
                       for asc = (cdr (gk name rmap))

@@ -20,10 +20,6 @@
   (:1 @len2 (ax)) (the pos-@f (mvc #'+ (-@square ax)))
   (:1 @len (ax)) (the pos-@f ax)
 
-  (:1 @^ (ax s)) (expt ax s)
-  (:1 @mod (ax s)) (mod ax s)
-  (:1 @exp (ax)) (values (exp ax))
-
   (:1 @lerp (ax bx s)) (+ ax (* (- bx ax) s))
   (:1 @from (ax bx s)) (+ ax (* bx s))
   (:1 @mid (ax bx)) (* (+ ax bx) 1/2)

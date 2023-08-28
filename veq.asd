@@ -3,12 +3,14 @@
   :description "reasonably fast operations for 1-4d vectors, matrices, and
 arrays of vectors."
   :author "anders hoff / @inconvergent / inconvergent@gmail.com"
-  :version "4.6.1" :licence "MIT"
+  :version "4.7.0" :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))
   :pathname "src/" :serial nil
-  :depends-on (#+SBCL #:sb-cltl2)
+  :depends-on (#+SBCL #:sb-cltl2
+               #+:veq-simd #:sb-simd)
   :components ((:file "packages")
-              #+:veq-reader-macros(:file "reader-macros" :depends-on ("packages"))
+               #+:veq-reader-macros(:file "reader-macros"
+                                    :depends-on ("packages"))
                (:file "init" :depends-on ("packages"))
                (:file "config" :depends-on ("init"))
                (:file "generic-utils" :depends-on ("config"))
@@ -44,7 +46,7 @@ arrays of vectors."
 
 (asdf:defsystem #:veq/tests
   :depends-on (#:veq #:prove #:asdf #:uiop)
-  :version "4.6.1"
+  :version "4.7.0"
   :perform (asdf:test-op (o s) (uiop:symbol-call ':veq-tests '#:run-tests))
   :pathname "test/" :serial t
   :components ((:file "run")))

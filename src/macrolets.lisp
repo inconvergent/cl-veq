@@ -9,7 +9,7 @@ handles propagation and resolution of uses of (varg d var) and (vref var i).
 also handles vv macro compiler triggers. see vv macro.
 
 fvprogn is faster, but has some limitations."
-    (let ((body* (replace-varg (vv-proc body))))
+    (let ((body* (replace-varg (proc-vv body))))
        `(macrolet ,',*symbols-map* ,@body*))))
 (define-vprogn)
 
@@ -22,7 +22,7 @@ also handles vv macro compiler triggers. see vv macro.
 works the same way as vprogn. but removes all macrolets that are not
 directly referenced by a symbol in body. this is faster, but may fail in some
 cases where body is complex. in the event of errors try vprogn instead."
-    (let ((body* (replace-varg (vv-proc body))))
+    (let ((body* (replace-varg (proc-vv body))))
        `(macrolet ,(filter-macrolets *symbols-map* body*)
                   ,@body*))))
 (define-fvprogn)

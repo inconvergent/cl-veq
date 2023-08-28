@@ -1,17 +1,21 @@
 (in-package :veq)
 
 (deftype df () 'double-float) (deftype ff () 'single-float)
-(deftype in () 'fixnum)
-(deftype pn (&optional (bits 31)) `(unsigned-byte ,bits))
+; TODO: make smaller ints and uints?
+(deftype in (&optional (bits 32)) `(signed-byte ,bits))
+(deftype pn (&optional (bits 32)) `(unsigned-byte ,bits))
 (deftype kv () 'keyword) (deftype sy () 'symbol)
 (deftype ll () 'list)
 (deftype pos-df () `(double-float 0d0 *))
 (deftype pos-ff () `(single-float 0f0 *))
 
-(deftype dvec () `(simple-array df)) (deftype fvec () `(simple-array ff))
-(deftype ivec () `(simple-array in)) (deftype pvec () `(simple-array pn))
-(deftype kvec () `(simple-array kv)) (deftype svec () `(simple-array sy))
-(deftype lvec () `(simple-array ll))
+(deftype dvec (&optional n) `(simple-array df ,n))
+(deftype fvec (&optional n) `(simple-array ff ,n))
+(deftype ivec (&optional n) `(simple-array in ,n))
+(deftype pvec (&optional n) `(simple-array pn ,n))
+(deftype kvec (&optional n) `(simple-array kv ,n))
+(deftype svec (&optional n) `(simple-array sy ,n))
+(deftype lvec (&optional n) `(simple-array ll ,n))
 
 (declaim (inline df ff in pn ll kv sy))
 (defun df (v) (coerce v 'df))
@@ -20,6 +24,7 @@
 (defun pn (v) (coerce v 'pn))
 (defun ll (v) (coerce v 'll))
 (defun kv (v) (values (intern (string-upcase (mkstr v)) :keyword)))
+(defun keyw (&rest args) (values (intern (string-upcase (apply #'mkstr args)) :keyword)))
 (defun sy (v) (values (intern (string-upcase (mkstr v)) :keyword)))
 
 (defmacro df* (&body body) `(values ,@(mapcar (lambda (v) `(df ,v)) body)))

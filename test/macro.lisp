@@ -42,15 +42,18 @@
   (veq:xlet ((d2!a (veq:f2 1f0 2f0))
              (b :kkkk)
              (x 7d0)
+             (f2!some-val 1)
+             (f2!some-wal veq:fpi)
              (2!dd (values :a :b))
              (i8!c (values 1 2 3 4 5 6 7 8))
              (f2!hh (veq:f2 11f0 12f0))
              (f3!gg (veq:~ hh 99f0))
              (f!uu 13f0))
      (declare (veq:ff a) (symbol b) (keyword dd))
-     (is (veq:lst a b x dd c hh uu gg)
+     (is (veq:lst a b x dd c hh uu gg some-val some-wal)
          '(1.0 2.0 :KKKK 7.0d0 :A :B 1 2 3 4 5 6 7 8
-           11.0 12.0 13.0 11.0 12.0 99.0)))))
+           11.0 12.0 13.0 11.0 12.0 99.0 1f0 1f0
+           3.1415927 3.1415927)))))
 
 (unless (finalize) (error "error in macro tests"))
 

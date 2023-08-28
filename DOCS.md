@@ -85,7 +85,7 @@ argument.
  ; $NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION (SIMPLE-ARRAY)
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 1d array.
  ;     untyped.
@@ -101,7 +101,7 @@ argument.
  ; $NVSET names a macro:
  ;   Lambda-list: ((A N &OPTIONAL (I 0)) &BODY BODY)
  ;   Documentation:
- ;     set n indices in a, from a[i] with n values from body.
+ ;     set n indices in a, from a[i] with n values. body must yield n values
  ;   Source file: src/vset.lisp
 ```
 
@@ -112,10 +112,11 @@ argument.
  ;   [symbol]
  ;
  ; $PRINT names a compiled function:
- ;   Lambda-list: (A &KEY (DIM 1) (START 0) N (S T))
+ ;   Lambda-list: (A &KEY (DIM 1) (START 0) (N 16) (S T))
  ;   Derived type: (FUNCTION
- ;                  (SIMPLE-ARRAY &KEY (:DIM (UNSIGNED-BYTE 31))
- ;                   (:START FIXNUM) (:N T) (:S T))
+ ;                  (SIMPLE-ARRAY &KEY (:DIM (UNSIGNED-BYTE 32))
+ ;                   (:START (SIGNED-BYTE 32)) (:N (UNSIGNED-BYTE 32))
+ ;                   (:S T))
  ;                  (VALUES (SIMPLE-ARRAY * (*)) &OPTIONAL))
  ;   Documentation:
  ;     pretty print n, or all, rows from vector array of dim.
@@ -123,6 +124,20 @@ argument.
  ;     negative start counts backwards from the last row
  ;     use s to overrid output stream.
  ;   Source file: src/array-extra.lisp
+```
+
+#### $ROWSET
+
+```
+ ; VEQ:$ROWSET
+ ;   [symbol]
+ ;
+ ; $ROWSET names a macro:
+ ;   Lambda-list: ((A N &OPTIONAL (I 0)) &BODY BODY)
+ ;   Documentation:
+ ;     performs (setf (aref a i) row0 (aref a (1+ i) r1 ...))
+ ;     n must be less than or equal to (length row)
+ ;   Source file: src/vset.lisp
 ```
 
 #### $TO-LIST
@@ -133,7 +148,7 @@ argument.
  ;
  ; $TO-LIST names a compiled function:
  ;   Lambda-list: (A &KEY (DIM 1))
- ;   Derived type: (FUNCTION (SIMPLE-ARRAY &KEY (:DIM (UNSIGNED-BYTE 31)))
+ ;   Derived type: (FUNCTION (SIMPLE-ARRAY &KEY (:DIM (UNSIGNED-BYTE 32)))
  ;                  (VALUES LIST &OPTIONAL))
  ;   Documentation:
  ;     return array as a list of lists of length dim.
@@ -180,7 +195,7 @@ argument.
  ; 2$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION (SIMPLE-ARRAY)
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 2d array.
  ;     untyped.
@@ -194,7 +209,7 @@ argument.
  ;   [symbol]
  ;
  ; 2$PRINT names a compiled function:
- ;   Lambda-list: (A &KEY N (S T))
+ ;   Lambda-list: (A &KEY (N 16) (S T))
  ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 2d array. returns array.
@@ -242,7 +257,7 @@ argument.
  ; 3$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION (SIMPLE-ARRAY)
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 3d array.
  ;     untyped.
@@ -256,7 +271,7 @@ argument.
  ;   [symbol]
  ;
  ; 3$PRINT names a compiled function:
- ;   Lambda-list: (A &KEY N (S T))
+ ;   Lambda-list: (A &KEY (N 16) (S T))
  ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 3d array. returns array.
@@ -304,7 +319,7 @@ argument.
  ; 4$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION (SIMPLE-ARRAY)
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 4d array.
  ;     untyped.
@@ -318,7 +333,7 @@ argument.
  ;   [symbol]
  ;
  ; 4$PRINT names a compiled function:
- ;   Lambda-list: (A &KEY N (S T))
+ ;   Lambda-list: (A &KEY (N 16) (S T))
  ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 4d array. returns array.
@@ -519,7 +534,7 @@ ex: (D$FXLSPACE (n a b) (lambda (i (:va 1 a b)) (vpr i a b)))
  ; D$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 1d array.
  ;     typed.
@@ -534,7 +549,7 @@ ex: (D$FXLSPACE (n a b) (lambda (i (:va 1 a b)) (vpr i a b)))
  ;
  ; D$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 1d array of ones.
@@ -576,7 +591,7 @@ assuming c is a structname, and a,b are DVEC of dim 1
  ;
  ; D$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (DOUBLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (DOUBLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 1d array of val.
@@ -592,7 +607,7 @@ assuming c is a structname, and a,b are DVEC of dim 1
  ;
  ; D$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 1d vector array of zeros.
@@ -719,7 +734,7 @@ ex: (D2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
  ; D2$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 2d array.
  ;     typed.
@@ -734,7 +749,7 @@ ex: (D2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
  ;
  ; D2$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 2d array of ones.
@@ -776,7 +791,7 @@ assuming c is a structname, and a,b are DVEC of dim 2
  ;
  ; D2$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (DOUBLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (DOUBLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 2d array of val.
@@ -792,21 +807,12 @@ assuming c is a structname, and a,b are DVEC of dim 2
  ;
  ; D2$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 2d vector array of zeros.
  ;     typed.
  ;   Source file: src/array-utils.lisp
-```
-
-#### :fvprogn: D2^
-
-```
-veq context op: D2^
-fxname: -D2^
-args: (AX AY S)
-body (2): (VALUES (EXPT AX S) (EXPT AY S)).
 ```
 
 #### :fvprogn: D2ANGLE
@@ -852,15 +858,6 @@ veq context op: D2DST2
 fxname: -D2DST2
 args: (AX AY BX BY)
 body (1): (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))).
-```
-
-#### :fvprogn: D2EXP
-
-```
-veq context op: D2EXP
-fxname: -D2EXP
-args: (AX AY)
-body (2): (VALUES (EXP AX) (EXP AY)).
 ```
 
 #### :fvprogn: D2FLIP
@@ -1035,15 +1032,6 @@ body (1): (MIN AX AY).
  ;     multiply mat * (transpose mat)
  ;     of type: DVEC
  ;   Source file: src/mat.lisp
-```
-
-#### :fvprogn: D2MOD
-
-```
-veq context op: D2MOD
-fxname: -D2MOD
-args: (AX AY S)
-body (2): (VALUES (MOD AX S) (MOD AY S)).
 ```
 
 #### D2MROT
@@ -1401,7 +1389,7 @@ ex: (D3$FXLSPACE (n a b) (lambda (i (:va 3 a b)) (vpr i a b)))
  ; D3$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 3d array.
  ;     typed.
@@ -1416,7 +1404,7 @@ ex: (D3$FXLSPACE (n a b) (lambda (i (:va 3 a b)) (vpr i a b)))
  ;
  ; D3$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 3d array of ones.
@@ -1458,7 +1446,7 @@ assuming c is a structname, and a,b are DVEC of dim 3
  ;
  ; D3$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (DOUBLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (DOUBLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 3d array of val.
@@ -1474,22 +1462,12 @@ assuming c is a structname, and a,b are DVEC of dim 3
  ;
  ; D3$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 3d vector array of zeros.
  ;     typed.
  ;   Source file: src/array-utils.lisp
-```
-
-#### :fvprogn: D3^
-
-```
-veq context op: D3^
-fxname: -D3^
-args: (AX AY AZ S)
-body (3): (VALUES (THE DF (EXPT AX S)) (THE DF (EXPT AY S))
-                  (THE DF (EXPT AZ S))).
 ```
 
 #### :fvprogn: D3CROSS
@@ -1528,15 +1506,6 @@ veq context op: D3DST2
 fxname: -D3DST2
 args: (AX AY AZ BX BY BZ)
 body (1): (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
-```
-
-#### :fvprogn: D3EXP
-
-```
-veq context op: D3EXP
-fxname: -D3EXP
-args: (AX AY AZ)
-body (3): (VALUES (EXP AX) (EXP AY) (EXP AZ)).
 ```
 
 #### :fvprogn: D3FROM
@@ -1703,15 +1672,6 @@ body (1): (MIN AX AY AZ).
  ;     multiply mat * (transpose mat)
  ;     of type: DVEC
  ;   Source file: src/mat.lisp
-```
-
-#### :fvprogn: D3MOD
-
-```
-veq context op: D3MOD
-fxname: -D3MOD
-args: (AX AY AZ S)
-body (3): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S)).
 ```
 
 #### D3MROT
@@ -2020,7 +1980,7 @@ ex: (D4$FXLSPACE (n a b) (lambda (i (:va 4 a b)) (vpr i a b)))
  ; D4$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 4d array.
  ;     typed.
@@ -2035,7 +1995,7 @@ ex: (D4$FXLSPACE (n a b) (lambda (i (:va 4 a b)) (vpr i a b)))
  ;
  ; D4$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 4d array of ones.
@@ -2077,7 +2037,7 @@ assuming c is a structname, and a,b are DVEC of dim 4
  ;
  ; D4$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (DOUBLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (DOUBLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 4d array of val.
@@ -2093,22 +2053,12 @@ assuming c is a structname, and a,b are DVEC of dim 4
  ;
  ; D4$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 4d vector array of zeros.
  ;     typed.
  ;   Source file: src/array-utils.lisp
-```
-
-#### :fvprogn: D4^
-
-```
-veq context op: D4^
-fxname: -D4^
-args: (AX AY AZ AW S)
-body (4): (VALUES (THE DF (EXPT AX S)) (THE DF (EXPT AY S))
-                  (THE DF (EXPT AZ S)) (THE DF (EXPT AW S))).
 ```
 
 #### :fvprogn: D4DOT
@@ -2138,15 +2088,6 @@ veq context op: D4DST2
 fxname: -D4DST2
 args: (AX AY AZ AW BX BY BZ BW)
 body (1): (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
-```
-
-#### :fvprogn: D4EXP
-
-```
-veq context op: D4EXP
-fxname: -D4EXP
-args: (AX AY AZ AW)
-body (4): (VALUES (EXP AX) (EXP AY) (EXP AZ) (EXP AW)).
 ```
 
 #### :fvprogn: D4FROM
@@ -2317,15 +2258,6 @@ body (1): (MIN AX AY AZ AW).
  ;   Source file: src/mat.lisp
 ```
 
-#### :fvprogn: D4MOD
-
-```
-veq context op: D4MOD
-fxname: -D4MOD
-args: (AX AY AZ AW S)
-body (4): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S) (MOD AW S)).
-```
-
 #### D4MT!
 
 ```
@@ -2467,15 +2399,6 @@ returns (values 1f0 2f0 3f0)
  ;   Documentation:
  ;     describe argument
  ;   Source file: src/config.lisp
-```
-
-#### :fvprogn: D^
-
-```
-veq context op: D^
-fxname: -D^
-args: (AX S)
-body (1): (EXPT AX S).
 ```
 
 #### D_
@@ -3026,15 +2949,6 @@ body (1): (* DPI (/ D 180.0d0)).
  ;   Source file: src/macrolets.lisp
 ```
 
-#### :fvprogn: DEXP
-
-```
-veq context op: DEXP
-fxname: -DEXP
-args: (AX)
-body (1): (VALUES (EXP AX)).
-```
-
 #### DF
 
 ```
@@ -3161,15 +3075,6 @@ veq context op: DMID
 fxname: -DMID
 args: (AX BX)
 body (1): (* (+ AX BX) 0.5d0).
-```
-
-#### :fvprogn: DMOD
-
-```
-veq context op: DMOD
-fxname: -DMOD
-args: (AX S)
-body (1): (MOD AX S).
 ```
 
 #### DPI
@@ -3311,8 +3216,8 @@ ex: (DVAL (fx)) corresponds to (let ((v (fx))) (values v ...)).
  ;   [symbol]
  ;
  ; DVEC names a type-specifier:
- ;   Lambda-list: ()
- ;   Expansion: (SIMPLE-ARRAY VEQ:DF)
+ ;   Lambda-list: (&OPTIONAL N)
+ ;   Expansion: (SIMPLE-ARRAY VEQ:DF *)
 ```
 
 #### DVLET
@@ -3496,7 +3401,7 @@ ex: (F$FXLSPACE (n a b) (lambda (i (:va 1 a b)) (vpr i a b)))
  ; F$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 1d array.
  ;     typed.
@@ -3511,7 +3416,7 @@ ex: (F$FXLSPACE (n a b) (lambda (i (:va 1 a b)) (vpr i a b)))
  ;
  ; F$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 1d array of ones.
@@ -3553,7 +3458,7 @@ assuming c is a structname, and a,b are FVEC of dim 1
  ;
  ; F$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 1d array of val.
@@ -3569,7 +3474,7 @@ assuming c is a structname, and a,b are FVEC of dim 1
  ;
  ; F$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 1d vector array of zeros.
@@ -3725,7 +3630,7 @@ ex: (F2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
  ; F2$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 2d array.
  ;     typed.
@@ -3740,7 +3645,7 @@ ex: (F2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
  ;
  ; F2$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 2d array of ones.
@@ -3773,7 +3678,7 @@ ex: (F2$FXLSPACE (n a b) (lambda (i (:va 2 a b)) (vpr i a b)))
  ; F2$POLYGON names a compiled function:
  ;   Lambda-list: (N RAD &OPTIONAL (ROT 0.0) (PIN (/ FPII N)))
  ;   Derived type: (FUNCTION
- ;                  ((UNSIGNED-BYTE 31) SINGLE-FLOAT &OPTIONAL
+ ;                  ((UNSIGNED-BYTE 32) SINGLE-FLOAT &OPTIONAL
  ;                   SINGLE-FLOAT SINGLE-FLOAT)
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
@@ -3829,7 +3734,7 @@ assuming c is a structname, and a,b are FVEC of dim 2
  ;
  ; F2$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 2d array of val.
@@ -3845,21 +3750,12 @@ assuming c is a structname, and a,b are FVEC of dim 2
  ;
  ; F2$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 2d vector array of zeros.
  ;     typed.
  ;   Source file: src/array-utils.lisp
-```
-
-#### :fvprogn: F2^
-
-```
-veq context op: F2^
-fxname: -F2^
-args: (AX AY S)
-body (2): (VALUES (EXPT AX S) (EXPT AY S)).
 ```
 
 #### :fvprogn: F2ANGLE
@@ -3905,15 +3801,6 @@ veq context op: F2DST2
 fxname: -F2DST2
 args: (AX AY BX BY)
 body (1): (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))).
-```
-
-#### :fvprogn: F2EXP
-
-```
-veq context op: F2EXP
-fxname: -F2EXP
-args: (AX AY)
-body (2): (VALUES (EXP AX) (EXP AY)).
 ```
 
 #### :fvprogn: F2FLIP
@@ -4157,15 +4044,6 @@ body (1): (MIN AX AY).
  ;     multiply mat * (transpose mat)
  ;     of type: FVEC
  ;   Source file: src/mat.lisp
-```
-
-#### :fvprogn: F2MOD
-
-```
-veq context op: F2MOD
-fxname: -F2MOD
-args: (AX AY S)
-body (2): (VALUES (MOD AX S) (MOD AY S)).
 ```
 
 #### F2MROT
@@ -4559,7 +4437,7 @@ ex: (F3$FXLSPACE (n a b) (lambda (i (:va 3 a b)) (vpr i a b)))
  ; F3$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 3d array.
  ;     typed.
@@ -4574,7 +4452,7 @@ ex: (F3$FXLSPACE (n a b) (lambda (i (:va 3 a b)) (vpr i a b)))
  ;
  ; F3$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 3d array of ones.
@@ -4616,7 +4494,7 @@ assuming c is a structname, and a,b are FVEC of dim 3
  ;
  ; F3$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 3d array of val.
@@ -4632,22 +4510,12 @@ assuming c is a structname, and a,b are FVEC of dim 3
  ;
  ; F3$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 3d vector array of zeros.
  ;     typed.
  ;   Source file: src/array-utils.lisp
-```
-
-#### :fvprogn: F3^
-
-```
-veq context op: F3^
-fxname: -F3^
-args: (AX AY AZ S)
-body (3): (VALUES (THE FF (EXPT AX S)) (THE FF (EXPT AY S))
-                  (THE FF (EXPT AZ S))).
 ```
 
 #### :fvprogn: F3CROSS
@@ -4686,15 +4554,6 @@ veq context op: F3DST2
 fxname: -F3DST2
 args: (AX AY AZ BX BY BZ)
 body (1): (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
-```
-
-#### :fvprogn: F3EXP
-
-```
-veq context op: F3EXP
-fxname: -F3EXP
-args: (AX AY AZ)
-body (3): (VALUES (EXP AX) (EXP AY) (EXP AZ)).
 ```
 
 #### :fvprogn: F3FROM
@@ -4861,15 +4720,6 @@ body (1): (MIN AX AY AZ).
  ;     multiply mat * (transpose mat)
  ;     of type: FVEC
  ;   Source file: src/mat.lisp
-```
-
-#### :fvprogn: F3MOD
-
-```
-veq context op: F3MOD
-fxname: -F3MOD
-args: (AX AY AZ S)
-body (3): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S)).
 ```
 
 #### F3MROT
@@ -5194,7 +5044,7 @@ ex: (F4$FXLSPACE (n a b) (lambda (i (:va 4 a b)) (vpr i a b)))
  ; F4$NUM names a compiled function:
  ;   Lambda-list: (A0)
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 4d array.
  ;     typed.
@@ -5209,7 +5059,7 @@ ex: (F4$FXLSPACE (n a b) (lambda (i (:va 4 a b)) (vpr i a b)))
  ;
  ; F4$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 4d array of ones.
@@ -5251,7 +5101,7 @@ assuming c is a structname, and a,b are FVEC of dim 4
  ;
  ; F4$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 4d array of val.
@@ -5267,22 +5117,12 @@ assuming c is a structname, and a,b are FVEC of dim 4
  ;
  ; F4$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 4d vector array of zeros.
  ;     typed.
  ;   Source file: src/array-utils.lisp
-```
-
-#### :fvprogn: F4^
-
-```
-veq context op: F4^
-fxname: -F4^
-args: (AX AY AZ AW S)
-body (4): (VALUES (THE FF (EXPT AX S)) (THE FF (EXPT AY S))
-                  (THE FF (EXPT AZ S)) (THE FF (EXPT AW S))).
 ```
 
 #### :fvprogn: F4DOT
@@ -5312,15 +5152,6 @@ veq context op: F4DST2
 fxname: -F4DST2
 args: (AX AY AZ AW BX BY BZ BW)
 body (1): (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
-```
-
-#### :fvprogn: F4EXP
-
-```
-veq context op: F4EXP
-fxname: -F4EXP
-args: (AX AY AZ AW)
-body (4): (VALUES (EXP AX) (EXP AY) (EXP AZ) (EXP AW)).
 ```
 
 #### :fvprogn: F4FROM
@@ -5491,15 +5322,6 @@ body (1): (MIN AX AY AZ AW).
  ;   Source file: src/mat.lisp
 ```
 
-#### :fvprogn: F4MOD
-
-```
-veq context op: F4MOD
-fxname: -F4MOD
-args: (AX AY AZ AW S)
-body (4): (VALUES (MOD AX S) (MOD AY S) (MOD AZ S) (MOD AW S)).
-```
-
 #### F4MT!
 
 ```
@@ -5627,15 +5449,6 @@ ex: (F4VAL (fx)) corresponds to (let ((v (fx))) (values v ...)).
 make 4d vector in veq context.
 wraps body in mvc so that (f3~ 1 (f2~ 2f0 3))
 returns (values 1f0 2f0 3f0)
-```
-
-#### :fvprogn: F^
-
-```
-veq context op: F^
-fxname: -F^
-args: (AX S)
-body (1): (EXPT AX S).
 ```
 
 #### F_
@@ -6162,15 +5975,6 @@ body (1): (* FPI (/ D 180.0)).
  ;   Source file: src/easing.lisp
 ```
 
-#### :fvprogn: FEXP
-
-```
-veq context op: FEXP
-fxname: -FEXP
-args: (AX)
-body (1): (VALUES (EXP AX)).
-```
-
 #### FF
 
 ```
@@ -6347,15 +6151,6 @@ args: (AX BX)
 body (1): (* (+ AX BX) 0.5).
 ```
 
-#### :fvprogn: FMOD
-
-```
-veq context op: FMOD
-fxname: -FMOD
-args: (AX S)
-body (1): (MOD AX S).
-```
-
 #### FPI
 
 ```
@@ -6526,8 +6321,8 @@ ex: (FVAL (fx)) corresponds to (let ((v (fx))) (values v ...)).
  ;   [symbol]
  ;
  ; FVEC names a type-specifier:
- ;   Lambda-list: ()
- ;   Expansion: (SIMPLE-ARRAY VEQ:FF)
+ ;   Lambda-list: (&OPTIONAL N)
+ ;   Expansion: (SIMPLE-ARRAY VEQ:FF *)
 ```
 
 #### FVLET
@@ -6596,7 +6391,7 @@ strict make 1d vector in veq context.
  ; I$_ names a compiled function:
  ;   Lambda-list: (BODY)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     create IVEC vector array from body. where body is a list of lists.
  ;     ex: (I$_ (loop repeat 2 collect `(1f0 2f0)))
@@ -6612,8 +6407,8 @@ strict make 1d vector in veq context.
  ;
  ; I$COPY names a compiled function:
  ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY FIXNUM))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (SIGNED-BYTE 32)))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     copy IVEC vector array.
  ;   Source file: src/array-utils.lisp
@@ -6656,8 +6451,8 @@ strict make 1d vector in veq context.
  ;
  ; I$NUM names a compiled function:
  ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY FIXNUM))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (SIGNED-BYTE 32)))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 1d array.
  ;     typed.
@@ -6672,8 +6467,8 @@ strict make 1d vector in veq context.
  ;
  ; I$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 1d array of ones.
  ;     typed.
@@ -6704,8 +6499,9 @@ strict make 1d vector in veq context.
  ;
  ; I$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (FIXNUM &OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION
+ ;                  ((SIGNED-BYTE 32) &OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 1d array of val.
  ;     typed.
@@ -6720,8 +6516,8 @@ strict make 1d vector in veq context.
  ;
  ; I$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 1d vector array of zeros.
  ;     typed.
@@ -6786,8 +6582,8 @@ strict make 2d vector in veq context.
  ;
  ; I2$NUM names a compiled function:
  ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY FIXNUM))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (SIGNED-BYTE 32)))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 2d array.
  ;     typed.
@@ -6802,8 +6598,8 @@ strict make 2d vector in veq context.
  ;
  ; I2$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 2d array of ones.
  ;     typed.
@@ -6834,8 +6630,9 @@ strict make 2d vector in veq context.
  ;
  ; I2$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (FIXNUM &OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION
+ ;                  ((SIGNED-BYTE 32) &OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 2d array of val.
  ;     typed.
@@ -6850,8 +6647,8 @@ strict make 2d vector in veq context.
  ;
  ; I2$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 2d vector array of zeros.
  ;     typed.
@@ -6933,8 +6730,8 @@ strict make 3d vector in veq context.
  ;
  ; I3$NUM names a compiled function:
  ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY FIXNUM))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (SIGNED-BYTE 32)))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 3d array.
  ;     typed.
@@ -6949,8 +6746,8 @@ strict make 3d vector in veq context.
  ;
  ; I3$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 3d array of ones.
  ;     typed.
@@ -6981,8 +6778,9 @@ strict make 3d vector in veq context.
  ;
  ; I3$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (FIXNUM &OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION
+ ;                  ((SIGNED-BYTE 32) &OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 3d array of val.
  ;     typed.
@@ -6997,8 +6795,8 @@ strict make 3d vector in veq context.
  ;
  ; I3$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 3d vector array of zeros.
  ;     typed.
@@ -7080,8 +6878,8 @@ strict make 4d vector in veq context.
  ;
  ; I4$NUM names a compiled function:
  ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY FIXNUM))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (SIGNED-BYTE 32)))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 4d array.
  ;     typed.
@@ -7096,8 +6894,8 @@ strict make 4d vector in veq context.
  ;
  ; I4$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 4d array of ones.
  ;     typed.
@@ -7128,8 +6926,9 @@ strict make 4d vector in veq context.
  ;
  ; I4$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (FIXNUM &OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION
+ ;                  ((SIGNED-BYTE 32) &OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 4d array of val.
  ;     typed.
@@ -7144,8 +6943,8 @@ strict make 4d vector in veq context.
  ;
  ; I4$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY FIXNUM (*)) &OPTIONAL))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     make 4d vector array of zeros.
  ;     typed.
@@ -7219,13 +7018,13 @@ returns (values 1f0 2f0 3f0)
  ;
  ; IN names a compiled function:
  ;   Lambda-list: (V)
- ;   Derived type: (FUNCTION (T) (VALUES FIXNUM &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES (SIGNED-BYTE 32) &OPTIONAL))
  ;   Inline proclamation: INLINE (inline expansion available)
  ;   Source file: src/types.lisp
  ;
  ; IN names a type-specifier:
- ;   Lambda-list: ()
- ;   Expansion: FIXNUM
+ ;   Lambda-list: (&OPTIONAL (BITS 32))
+ ;   Expansion: (SIGNED-BYTE 32)
 ```
 
 #### IN\*
@@ -7279,8 +7078,8 @@ ex: (IVAL (fx)) corresponds to (let ((v (fx))) (values v ...)).
  ;   [symbol]
  ;
  ; IVEC names a type-specifier:
- ;   Lambda-list: ()
- ;   Expansion: (SIMPLE-ARRAY VEQ:IN)
+ ;   Lambda-list: (&OPTIONAL N)
+ ;   Expansion: (SIMPLE-ARRAY VEQ:IN *)
 ```
 
 #### IVLET
@@ -7341,8 +7140,8 @@ returns (values 1f0 2f0 3f0)
  ;   [symbol]
  ;
  ; KVEC names a type-specifier:
- ;   Lambda-list: ()
- ;   Expansion: (SIMPLE-ARRAY VEQ:KV)
+ ;   Lambda-list: (&OPTIONAL N)
+ ;   Expansion: (SIMPLE-ARRAY VEQ:KV *)
 ```
 
 #### LL
@@ -7400,8 +7199,8 @@ returns (values 1f0 2f0 3f0)
  ;   [symbol]
  ;
  ; LVEC names a type-specifier:
- ;   Lambda-list: ()
- ;   Expansion: (SIMPLE-ARRAY VEQ:LL)
+ ;   Lambda-list: (&OPTIONAL N)
+ ;   Expansion: (SIMPLE-ARRAY VEQ:LL *)
 ```
 
 #### MAC
@@ -7540,7 +7339,7 @@ strict make 1d vector in veq context.
  ; P$_ names a compiled function:
  ;   Lambda-list: (BODY)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     create PVEC vector array from body. where body is a list of lists.
@@ -7557,8 +7356,8 @@ strict make 1d vector in veq context.
  ;
  ; P$COPY names a compiled function:
  ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 31)))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 32)))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     copy PVEC vector array.
@@ -7602,8 +7401,8 @@ strict make 1d vector in veq context.
  ;
  ; P$NUM names a compiled function:
  ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 31)))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 32)))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 1d array.
  ;     typed.
@@ -7618,8 +7417,8 @@ strict make 1d vector in veq context.
  ;
  ; P$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 1d array of ones.
@@ -7652,8 +7451,8 @@ strict make 1d vector in veq context.
  ; P$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
  ;   Derived type: (FUNCTION
- ;                  ((UNSIGNED-BYTE 31) &OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                  ((UNSIGNED-BYTE 32) &OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 1d array of val.
@@ -7669,8 +7468,8 @@ strict make 1d vector in veq context.
  ;
  ; P$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 1d vector array of zeros.
@@ -7736,8 +7535,8 @@ strict make 2d vector in veq context.
  ;
  ; P2$NUM names a compiled function:
  ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 31)))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 32)))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 2d array.
  ;     typed.
@@ -7752,8 +7551,8 @@ strict make 2d vector in veq context.
  ;
  ; P2$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 2d array of ones.
@@ -7786,8 +7585,8 @@ strict make 2d vector in veq context.
  ; P2$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
  ;   Derived type: (FUNCTION
- ;                  ((UNSIGNED-BYTE 31) &OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                  ((UNSIGNED-BYTE 32) &OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 2d array of val.
@@ -7803,8 +7602,8 @@ strict make 2d vector in veq context.
  ;
  ; P2$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 2d vector array of zeros.
@@ -7887,8 +7686,8 @@ strict make 3d vector in veq context.
  ;
  ; P3$NUM names a compiled function:
  ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 31)))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 32)))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 3d array.
  ;     typed.
@@ -7903,8 +7702,8 @@ strict make 3d vector in veq context.
  ;
  ; P3$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 3d array of ones.
@@ -7937,8 +7736,8 @@ strict make 3d vector in veq context.
  ; P3$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
  ;   Derived type: (FUNCTION
- ;                  ((UNSIGNED-BYTE 31) &OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                  ((UNSIGNED-BYTE 32) &OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 3d array of val.
@@ -7954,8 +7753,8 @@ strict make 3d vector in veq context.
  ;
  ; P3$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 3d vector array of zeros.
@@ -8038,8 +7837,8 @@ strict make 4d vector in veq context.
  ;
  ; P4$NUM names a compiled function:
  ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 31)))
- ;                  (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 32)))
+ ;                  (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Documentation:
  ;     number of elements in 4d array.
  ;     typed.
@@ -8054,8 +7853,8 @@ strict make 4d vector in veq context.
  ;
  ; P4$ONE names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 4d array of ones.
@@ -8088,8 +7887,8 @@ strict make 4d vector in veq context.
  ; P4$VAL names a compiled function:
  ;   Lambda-list: (V &OPTIONAL (N1 1))
  ;   Derived type: (FUNCTION
- ;                  ((UNSIGNED-BYTE 31) &OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;                  ((UNSIGNED-BYTE 32) &OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 4d array of val.
@@ -8105,8 +7904,8 @@ strict make 4d vector in veq context.
  ;
  ; P4$ZERO names a compiled function:
  ;   Lambda-list: (&OPTIONAL (N1 1))
- ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 31))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 31) (*))
+ ;   Derived type: (FUNCTION (&OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     make 4d vector array of zeros.
@@ -8167,13 +7966,13 @@ returns (values 1f0 2f0 3f0)
  ;
  ; PN names a compiled function:
  ;   Lambda-list: (V)
- ;   Derived type: (FUNCTION (T) (VALUES (UNSIGNED-BYTE 31) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Inline proclamation: INLINE (inline expansion available)
  ;   Source file: src/types.lisp
  ;
  ; PN names a type-specifier:
- ;   Lambda-list: (&OPTIONAL (BITS 31))
- ;   Expansion: (UNSIGNED-BYTE 31)
+ ;   Lambda-list: (&OPTIONAL (BITS 32))
+ ;   Expansion: (UNSIGNED-BYTE 32)
 ```
 
 #### PN\*
@@ -8222,6 +8021,20 @@ repeat argument 1d times as values.
 ex: (PREP (fx)) corresponds to (values (fx) ...).
 ```
 
+#### PROC-VV
+
+```
+:none:
+
+ ; VEQ:PROC-VV
+ ;   [symbol]
+ ;
+ ; PROC-VV names a compiled function:
+ ;   Lambda-list: (BODY)
+ ;   Derived type: (FUNCTION (T) (VALUES T &OPTIONAL))
+ ;   Source file: src/ops-vv.lisp
+```
+
 #### PSEL
 
 ```
@@ -8253,8 +8066,8 @@ ex: (PVAL (fx)) corresponds to (let ((v (fx))) (values v ...)).
  ;   [symbol]
  ;
  ; PVEC names a type-specifier:
- ;   Lambda-list: ()
- ;   Expansion: (SIMPLE-ARRAY VEQ:PN)
+ ;   Lambda-list: (&OPTIONAL N)
+ ;   Expansion: (SIMPLE-ARRAY VEQ:PN *)
 ```
 
 #### PVLET
@@ -8281,8 +8094,8 @@ returns (values 1f0 2f0 3f0)
  ;   [symbol]
  ;
  ; REPLACE-VARG names a compiled function:
- ;   Lambda-list: (BODY &OPTIONAL (ROOT-RMAP (LIST)))
- ;   Derived type: (FUNCTION (T &OPTIONAL T) (VALUES T &OPTIONAL))
+ ;   Lambda-list: (BODY &OPTIONAL (ROOT-RMAP (LIST)) (ONLY NIL))
+ ;   Derived type: (FUNCTION (T &OPTIONAL T T) (VALUES T &OPTIONAL))
  ;   Documentation:
  ;     replace instances of varg/:varg/:va and vref/:vref/:vr with
  ;     appropriate symbols for the dimension.
@@ -8293,9 +8106,9 @@ returns (values 1f0 2f0 3f0)
  ;     somewhere.
  ;
  ;     ex:
- ;       (print (veq:replace-varg '(mvb ((:va 2 x)) (values 1 2)
- ;                                      (list (:vr x 1 0)))))
- ;       ; will print something like:
+ ;       (veq:replace-varg '(mvb ((:va 2 x)) (values 1 2)
+ ;                            (list (:vr x 1 0))))
+ ;       ; will return something like:
  ;       ; (MVB (#:X/X-158 #:X/Y-159) (VALUES 1 2)
  ;       ;      (LIST #:X/Y-159 #:X/X-158))
  ;
@@ -8311,8 +8124,8 @@ returns (values 1f0 2f0 3f0)
  ;   [symbol]
  ;
  ; SVEC names a type-specifier:
- ;   Lambda-list: ()
- ;   Expansion: (SIMPLE-ARRAY VEQ:SY)
+ ;   Lambda-list: (&OPTIONAL N)
+ ;   Expansion: (SIMPLE-ARRAY VEQ:SY *)
 ```
 
 #### SY
@@ -8570,109 +8383,155 @@ fvprogn, fvdef*, vdef*, def*. see replace-varg for implementation details.
 #### VV
 
 ```
-the vv macro implements a DSL for manipulating packs of values and/or row
-vectors. it is called as a part of vprogn, fvprogn, vdef and fvdef. but can
-also be used explicitly via the (vv ...) macro or (veq::vv-proc ...) function.
+## INTRODUCTION
 
-you can read about the motivation behind vv at:
-https://inconvergent.net/2023/a-vector-dsl/
+  ; the vv macro implements a DSL for manipulating packs of values (point
+  ; vectors) and arrays of point vectors (vecs). it is a core part of veq, and as
+  ; such it is already integrated into vprogn, fvprogn, vdef and fvdef. but the
+  ; DSL can also be used explicitly via the (vv ...) macro or (proc-vv ...)
+  ; function.
 
-the DSL uses triggers to broadcast a function (symbol name) or code across
-packs of 1-9 values and/or rows of 1-9 item vectors.
+  ; you can read a litte more about the motivation behind vv at:
+  ; https://inconvergent.net/2023/a-vector-dsl/
 
-; lets start with a simple example
+  ; the DSL uses triggers to broadcast a function [symbol name] or code across
+  ; packs of 1-9 values and/or rows of 1-9 item vectors.
+
+  ; there is a complete list of triggers, modes [see MODES], modifiers and
+  ; types [see TYPES] below. but it might be easier to get a sense of how to use
+  ; the DSL with som examples.
+
+## EXAMPLES OF USE
+
+  ; the best way to get an idea of how the DSL works might be to see some
+  ; examples n the following examples we use ; -> to indicate output. it is not a
+  ; part of the DSL. let us start with something simple:
 
   (i2!@+ 1 2 3 4) ; -> (values (+ 1 3) (+ 2 4))
 
-; where:
-;  - i is the type (fixnum)
-;  - 2 is the dimension / size of the value packs
-;  - !@ is the trigger for this particular mode; and
-;  - + is the function name
+  ; here:
+  ;  - i is the type [integer / fixnum]
+  ;  - 2 is the dimension / size of the value packs
+  ;  - !@ is the trigger for this particular mode; and
+  ;  - + is the function to call. in this case the native +
 
-; i2!@+ requires 4 values, but it is agnostic to the grouping of the values in
-; the input
+  ; as you can see this mode corresponds to calling a function on the
+  ; corresponding scalars of each dimension of two point vectors. in this case +.
 
-  (i2!@+ (values 1 2) 3 4)       ; -> (values (+ 1 3) (+ 2 4))
-  (i2!@+ 1 (values 1 2 3 4))     ; -> (values (+ 1 3) (+ 2 4))
-  (i2!@+ 1 (values 2 3) (+ 7 8)) ; -> (values (+ 1 3) (+ 2 (+ 7 8)))
+  ; the type is optional, and the function name can be any valid function that
+  ; accepts two arguments and returns one scalar. so you can do the following:
 
-; here are other possible configurations for !@
+  (labels (my-fx (x y) (/ y x))
+    ; no type, local function
+    (2!@my-fx 1 2 3 4)) ; -> (values (/ 3 1) (/ 2 4))
 
-  ; same behaviour as above
+  ; i2!@+ requires 4 [(* 2 dim)] values, but it is agnostic [unless veq is loaded
+  ; in in strict mode] to the grouping of the values in the input:
+
+  (2!@+ 1 (values 1 2 3 4))     ; -> (values (+ 1 3) (+ 2 4))
+  (2!@+ 1 (values 2 3) (+ 7 8)) ; -> (values (+ 1 3) (+ 2 (+ 7 8)))
+  (3!@+ (values 1 2) 3          ; -> (values (+ 1 4) (+ 2 5) (+ 3 6))
+        (values 4 5) 6)
+
+  ; here are other possible configurations for !@:
+
+  ; same behaviour as above for comparison:
   (2!@*  1 2 3 4)  ; -> (values (* 1 3) (* 2 4))
-  ; project last value
-  (2!@*. 1 2 3)    ; -> (values (* 1 3) (* 2 3))
-  ; project first value
+  ; project [.] last value:
+  (2!@*. 1 2 9)    ; -> (values (* 1 9) (* 2 9))
+  ; project [.] first value
   (2!@.* 1 2 3)    ; -> (values (* 1 2) (* 1 3))
-  ; project two values on r side
+  ; project [.] two values on rhs
   (2!@*.. 1 2 3 4) ; -> (values (* 1 3 4) (* 2 3 4))
+  ; aggregate value in-place [!]:
+  (veq:xlet ((f2!a (values 2f0 3f0))) ; bind ax = 2f0 and ay = 3f0
+    (loop repeat 10 do (2!@+! a 1f0 2f0))
+    (values a)) ; -> (values 12f0 23f0)
 
-; several modes also support arrays ($)
+  ; several modes also work on vecs [$]. vecs are simple-arrays with a
+  ; corresponding type [more on types below].
 
-  ; array on l side
-  (2!@$* #(1 2 3 4) 5 6) ; -> #((* 1 5) (* 2 6)
-                         ;      (* 3 5) (* 4 6))
-  (2!@$*. #(1 2 3 4) 5)  ; -> #((* 1 5) (* 2 5)
-                         ;      (* 3 5) (* 4 5))
-  ; array on both sides
+  ; vec on l side
+  (2!@$*  #(1 2 3 4) 5 6) ; -> #((* 1 5) (* 2 6)
+                          ;      (* 3 5) (* 4 6))
+  (2!@$*. #(1 2 3 4) 5)   ; -> #((* 1 5) (* 2 5)
+                          ;      (* 3 5) (* 4 5))
+  ; vec on both sides
   (2!@$+$! #(1 2 3 4) #(10 20 30 40)) ; -> #(11 22 33 44)
-  ; array on r side only is currently not supported
 
-; expressions can be nested, so a 2d dot product might look like this
+  ; [NOTE: vec on r side only is currently not supported.]
 
-  (2_@+ (2!@* (values 1 2)
-              (values 3 4))) ; -> (+ (* 1 3) (* 2 4))
+  ; expressions can be arbitrarily nested, so a 2d dot product might look like
+  ; this:
 
-; here we introduce another mode (_@) that will call the function on the input
-; values. a simpler example
+  (2_@+ (2!@* (values 1 2)   ; -> (+ (* 1 3) (* 2 4))
+              (values 3 4)))
+
+  ; here we introduce another mode (_@) that will call the function [+] with all
+  ; values as arguments. in other words it is roughly equivalent to
+  ; multiple-value-call [mvc]. here is a naive example:
 
   (2_@+ (values 2 3)) ; -> 5
 
-; so, if you have two arrays, you can do row-wise dot products in a similar way
+  ; so, if you have two vecs, you can do row-wise dot products as above. except
+  ; now we use $ to indicate vecs:
 
-  (21_@$+ (2!@$*$ #(2 2 3 4)
-                  #(4 3 2 1))) ; -> #(14 10)
+  (21_@$+ (2!@$*$ #(2 2 3 4)   ; -> #(14 10)
+                  #(4 3 2 1)))
 
-; notice that 21_@$+ has two dimension digits. the second digit is the expected
-; output dimension. as such this command will reduce the number of columns from
-; 2 to 1. by default the output dim is the same as the input dim. output
-; dimension is supported on all array ($) modes.
+  ; notice that 21_@$+ has two dimension digits. the second digit is the expected
+  ; output dimension. as such this command will reduce the number of columns from
+  ; 2 to 1. by default the output dim is the same as the input dim. output
+  ; dimension is supported on all vec ($) modes.
 
-; here are some slightly more involved examples using the _@ mode
+  ; here are some slightly more involved examples using the _@ mode:
 
   (labels ((swap (x y) (values y x))
            (do-thing (x y z) (values (+ y z) (+ x z))))
-    ; swap columns on each row
-    (2_@$swap #(2 1 4 3))       ; -> #(1 2 3 4)
-    ; swap columns on each row
-    (2_@$swap (?@ #(2 1 4 3)))  ; -> #(1 2 3 4)
-    ; swap columns in place (!) on all rows except 0
-    (2_@$swap! (?@ #(2 1 4 3 6 5) 1)) ; -> #(2 1 3 4 5 6)
-    ; project 5 and call do-thing on each row
-    (2_@$do-thing. #(1 2 3 4) 5)) ; -> #((+ 2 5) (+ 1 5)
-                                  ;      (+ 4 5) (+ 3 5))
 
-; as opposed to calling a function on rows or values, you can use .@ to call a function
-on all elements
+  ; swap columns on each row
+  (2_@$swap #(2 1 4 3))       ; -> #(1 2 3 4)
+
+  ; swap columns in place [!] from row 1 and up. the ?@ modifier is used for
+  ; indexing on all modes that support vecs [$]
+  (2_@$swap! (?@ #(2 1 4 3 6 5) 1)) ; -> #(2 1 3 4 5 6)
+
+  ; project 5 and call do-thing on each row
+  (2_@$do-thing. #(1 2 3 4) 5)) ; -> #((+ 2 5) (+ 1 5)
+                                ;      (+ 4 5) (+ 3 5))
+
+  ; as opposed to calling a function on values or rows of values, you can use
+  ; .@ to call a function individually on all elements:
 
   (2.@abs -1 -2)           ; -> (values (abs -1) (abs -2))
 
-; or with arrays
+  ; or with vecs:
 
   (2.@$abs #(-1 -2 -3 -4)) ; -> #((abs -1) (abs -2)
                            ;      (abs -3) (abs -4))
 
-; slicing will still work as in the previous examples
+  ; [NOTE: it might seem unnecessary to to include the dimension indicator here,
+  ; and it is in many cases. but including the dimension indicator makes it
+  ; possible to do some compile time evaluation. and it will be more efficient in
+  ; some cases. in particular when SIMD support is implemented.]
 
-  (2.@$abs! (?@ #(-1 -2 -3 -4) 1)) ; -> #(-1 -2 (abs -3) (abs -4))
+# MORE ADVANCED EXAMPLES
 
-  (m@list 1 (values 2 3) 4) ; -> '(1 2 3 4)
+  ; for convenience it is also possible to call lambda forms on vecs. there are
+  ; two modes:
 
-  ; prints array in two rows with row number:
+  ; x@ calls the lambda form on the right with every row as argument.
+  ; this this example will print two rows with row number:
   (2x@$fx #(1 2 3 4) ((i x y) (print (list i :xy x y)))) ; -> nil
-  ; > (0 :xy 1 2)
-  ; > (1 :xy 3 4)
+
+  ; %@ calls the lambda form on every row in vec. returns a
+  ; new vec, or alters [!] the vec in place:
+  (2%@$fx #(1 2 3 4) ((x y) (values y x))) ; -> #(2 1 4 3)
+
+  ; if the lambda form has one more arguemnt than the dimension, the row number
+  ; will be passed in as the first arguemnt. eg:
+  (2%@$fx #(1 2 3 4) ((i x y) (print i) (values y x))) ; -> #(2 1 4 3)
+  ; this applies to x@ as well
 
   ; fcos-sin returns points on a circle at 10 angles,
   ; then scales the circle by 8f0
@@ -8690,102 +8549,108 @@ on all elements
   ; or, using an index list:
   (2r@$+ (l?@ #(0 1 2 3 4 5 6 7 8 9) '(0 1 3))) ; -> (values (+ 0 2 6) (+ 1 3 7))
 
-MODES
+# SUMMARY OF MODES
 
-the current modes and corresponding triggers are as follows:
+most of the modes are introduced with examples above, but here is a summary of
+all the modes:
 
-  -- d!@: call fx on pairs of values and/or rows of values from arrays
+  -- !@: call fx on pairs of values and/or vec rows
+   - [f][d]!@fx[!]  : d values; d values
+   - [f][d]!@fx.[!] : d values; [number of dots] values
+   - [f][d]!@.fx : d values; [number of dots] values
+   - [f][d]!@$fx[!] : d vec; d values
+   - [f][d]!@$fx[!].: d vec; [number of dots] values
+   - [f][d]!@$fx$[!]: d vec; d vec
 
-   - d!@fx:   d values, d values
-   - d!@fx.:  d values, [number of dots] values
-   - d!@$fx:  d array, d values
-   - d!@$fx$: d array, d array
-   - d!@$fx.: d array, [number of dots] values
+  -- _@: call fx on n values, or vec rows
+   - [f][d]_@fx  :  d values
+   - [f][d]_@$fx : d vec
+   - [f][d]_@$fx.: d vec; [number of dots] values
 
-  -- _@: call fx on n values, or rows of values from array
+  -- .@: call fx on individual elements from values, vec rows
+   - [f][d].@fx : d values
+   - [f][d].@$fx: d vec
 
-   - d_@fx:   d values
-   - d_@$fx:  d array
-   - d_@$fx.: d array, [number of dots] values
+  -- %@: map lambda form across values or vec rows.
+         returns new or altered [!] vec:
+   - [f][d]%@$fx[!]: d vec
 
-  -- d.@: call fx on individual elements from values, rows of values from array
+  -- x@: map lambda form across values or rows of values from vec.
+         returns nil:
+   - [f][d]x@$fx: d vec
 
-   - d.@fx:  d values
-   - d.@$fx: d array
+  -- r@: reduces rows with fx vertically. [TODO/INCOMPLETE]
+   - [f][d]r@$fx: d vec
 
-the following modes have more specific behaviour:
-
-  - d%@$fx: map fx across rows of values from array. see below.
-  - dr@$fx: reduce rows with fx vertically. see below.
-
-  - m@fx: translates to (mvc #'fx ...)
-
-  - ?@ is a modifier used to alter the behaviour of a specific mode.
+  -- mvc/funcall
+   - m@fx: translates to (mvc #'fx ...)
+   - f@fx: translates to (mvc fx ...)
 
 
-MODE MODIFIERS: ARRAY SLICING/INDEXING
+# SUMMARY OF MODIFIERS
 
-modes that involve arrays ($) support slicing rows by wrapping the array in
+  ; ?@ is a modifier used to alter the behaviour of a specific mode. modes that
+  ; involve vecs ($) support slicing rows by wrapping the vec in the ?@ modifier:
 
   (?@ arr from [to])
 
-for ivec, pvec, list or vector indices, append i, p, l or v respective to the
-modifier. here are some examples of behaviour. the types are described below.
+  ; for ivec, pvec, list or vector indices, append i, p, l or v respectively to the
+  ; modifier. here are some examples of behaviour:
 
-  (labels ((take2 ((:va 2 x)) (values x)))
+  (labels ((take2 (x y) (values x y)))
 
-    ; slice from index
+    ; slice from index:
     (2_@$take2 (?@ #(1 2 3 4 5 6 7 8) 2))                ; -> #(5 6 7 8)
-    ; slice to from index
+    ; slice to from index:
     (2_@$take2 (?@ #(1 2 3 4 5 6 7 8) 2 3))              ; -> #(5 6)
 
-    ; vector index
+    ; vector index:
     (2_@$take2 (v?@ #(1 2 3 4 5 6 7 8) #(0 3)))          ; -> #(1 2 7 8)
-    ; list index
+    ; list index:
     (2_@$take2 (l?@ #(1 2 3 4 5 6 7 8) '(0 3)))          ; -> #(1 2 7 8)
 
-    ; individual modifiers can be used for l or r side
+    ; individual modifiers can be used for lhs or rhs:
     (2!@$+$ (?@ #(1 2 3 4) 1) (?@ #(10 20 30 40) 0 1))   ; -> #(13 24)
 
-    ; if the operation is in-place (!) the l array will
-    ; be changed, by the l index
+    ; if the operation is in-place (!) the lhs vec will be changed,
+    ; by the lhs index:
     (2!@$+$! (?@ #(1 2 3 4) 1) (?@ #(10 20 30 40) 0 1))) ; -> #(1 2 13 24)
 
 
-TYPES
+# SUMMARY OF TYPES
 
-all vv expressions (except `f@` and `m@`, where it does not make sense) can be
-explicity typed. the supported types, wtih corresponding array type are as
-follows
+  ; all vv expressions [except f@ and m@, where it does not make sense] can be
+  ; explicity typed. the supported types, wtih corresponding array type are as
+  ; follows:
 
- - f: veq:ff, single-float; veq:fvec
- - d: veq:df, double-float; veq:dvec
- - i: veq:in, fixnum, veq:ivec
- - p: veq:pn, (unsigned-byte 31); veq:pvec
- - s: veq:sy, symbol; veq:svec
- - k: veq:kv, keyword; veq:kvec
- - l: veq:ll, list; veq:lvec
- - none; vector
+  -- f: veq:ff, single-float; veq:fvec
+  -- d: veq:df, double-float; veq:dvec
+  -- i: veq:in, fixnum, veq:ivec
+  -- p: veq:pn, (unsigned-byte 31); veq:pvec
+  -- s: veq:sy, symbol; veq:svec
+  -- k: veq:kv, keyword; veq:kvec
+  -- l: veq:ll, list; veq:lvec
+  -- none; vector
 
-fvec, ivec, etc are simple-arrays with the coresponding type. ie. veq:fvec
-means (simple-array veq:ff). when type is omitted, the code will be more
-forgiving, but less efficeint. in which case the corresponding array type is
-'vector.
+  ; fvec, ivec, etc are simple-arrays with the coresponding type. ie. veq:fvec
+  ; means (simple-array veq:ff). when type is omitted, the code will be more
+  ; forgiving, but less efficeint. in which case the corresponding array type is
+  ; 'vector.
 
 
-INSPECT CODE
+## INSPECT GENERATED CODE
 
-the code that is actually generated is usually a little more involved than what
-these examples imply. in order to see the expanded code, the easiset is to wrap
-the code in veq:mac, which displays the code after it has been expanded:
+  ; the code that is actually generated is usually a little more involved than
+  ; what these examples imply. in order to see the expanded code use:
 
-  (veq:fvprogn (veq:mac (2!@$*. #(1 2 3 4) 5)))
+  (print (veq:proc-vv '(2!@$*. #(1 2 3 4) 5)))
+  ; which prints generated code, or:
 
-alternatively, use:
-
-  (print (veq::vv-proc '(2!@$*. #(1 2 3 4) 5))) ; which prints generated code;
-  ; or:
-  (veq::vvdb (2!@$*. #(1 2 3 4) 5)) ; which prints and executes generated code
+  (veq:vvdb (:exec t) (2!@$*. #(1 2 3 4) 5))
+  ; which prints and executes generated code. [see vvdb for more details.]
+  ; it can also be helful to use (veq:vp ...) or (veq:vpr ...) [see docs.]
+  ; vp will print all values, and return all values; while vpr will print
+  ; the expression, the resulting values, and then return the values.
 ```
 
 #### VVSYM

@@ -1,4 +1,6 @@
 
+#+:veq-simd (defpackage #:avx (:use #:sb-simd-avx2))
+
 (defpackage #:veq
   (:use #:common-lisp)
   (:export
@@ -7,33 +9,34 @@
     #:fpi #:fpi5 #:fpii #:fpi25
     #:mac #:mac* #:v? #:d? #:i? #:context? #:ext-symbols?
 
-    #:type-from-short #:arrtype #:type-default
-    #:unpack-vvsym #:vvsym
-
-    #:from-lst #:lst
-    #:mvb #:dsb
-    #:vnrep #:vnval #:vchain
-    #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~
-
     #:df #:df* #:ff #:ff* #:pos-df #:pos-ff
+    #:ffl #:dfl
     #:in #:in* #:kv #:kv*
     #:ll #:ll* #:pn #:pn*
     #:sy #:sy*
     #:dvec #:fvec #:ivec #:kvec #:lvec #:pvec #:svec
+    #:vsel
 
-    #:ffl #:dfl #:vsel #:xlet #:vv
+    #:type-from-short #:arrtype #:type-default
+    #:unpack-vvsym #:vvsym
 
-    #:replace-varg
+    #:from-lst #:lst
+    #:mvb #:dsb #:xlet
+    #:vnrep #:vnval #:vchain
+    #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~
+
     #:vdef #:vdef* #:def* #:fvdef* #:fvdef #:vlabels
     #:vprogn #:fvprogn #:varg #:vref
+    #:vv #:proc-vv #:replace-varg
 
     #:new-stride #:$make #:$copy
 
-    #:$nvset
+    #:$nvset #:$rowset
     #:f2$center #:f2$circ #:f2$polygon #:f2$rect #:f2$square*
     #:$to-list #:2$to-list #:3$to-list #:4$to-list
     #:vp #:vpr #:$print #:2$print #:3$print #:4$print
 
     #:f2in-triangle #:f2in-bbox #:f2in-concave
     #:f2segdst #:f2lsegx #:f2segx #:f3planex))
+
 

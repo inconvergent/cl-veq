@@ -10,10 +10,11 @@
 (defvar *vv-r@* :r@)
 (defvar *vv-%@* :%@) (defvar *vv-x@* :x@)
 (defvar *vv-.@* :.@) (defvar *vv-?@* :?@)
-(defvar *vv-dot* #\.) (defvar *vv-arr* #\$) (defvar *vv-bang* #\!)
+(defvar *vv-dot* #\.) (defvar *vv-bang* #\!)
+(defvar *vv-arr* #\$) (defvar *vv-simd* #\&)
 
 (defvar *vv-special*
-        (mapcar #'mkstr `(,*vv-dot* ,*vv-arr* ,*vv-bang*)))
+  (mapcar #'mkstr `(,*vv-dot*  ,*vv-bang* ,*vv-arr* ,*vv-simd*)))
 
 (defun nvrs (a c n) (loop for k from c repeat n collect `(:vr ,a ,k)))
 
@@ -68,12 +69,16 @@
            (fx (psymb pkg sfx)) (fx* (fx-strip sfx pkg))
            (ldots (edge-str *vv-dot* sfx)) (rdots (edge-str *vv-dot* sfx t))
            (larrs (edge-str *vv-arr* sfx)) (rarrs (edge-str *vv-arr* sfx t))
+           (lsimd (edge-str *vv-simd* sfx)) (rsimd (edge-str *vv-simd* sfx t))
            (bangs (edge-str *vv-bang* sfx-full t)))
-      (declare (symbol fx) (string sfx) (pn ldots rdots larrs rarrs bangs))
+      (declare (symbol fx) (string sfx)
+               (pn ldots rdots larrs rarrs bangs lsimd rsimd))
       (when (and (> bangs 0) (not (= dim dimout))) (vverr b "bad outdim"))
       (when (< (length sfx) 1) (vverr b "missing fx name"))
       (when (> (* larrs rarrs) 1) (vverr b "too many arrays ($)"))
       (when (> (* ldots rdots) 0) (vverr b "broadcasting (.) on both sides"))
+      (when (or (> (* larrs rsimd) 0) (> (* lsimd rarrs) 0))
+            (vverr b "must use either $ or & for broadcasts, not both"))
 
       `((:dim . ,dim) (:dimout . ,dimout) (:pkg . ,pkg) (:fx . ,fx) (:fx* . ,fx*)
         (:ty . ,(type-from-short short-ty t)) (:aty . ,(arrtype short-ty 'vector))
@@ -156,9 +161,35 @@
 
 ; -- ARRAY HELPERS --------------------------------------------------------------
 
-(defun $row (p i arr)
-  (declare (keyword arr i))
-  `(-$ ,(gk p :dim) ,(gk p arr) :inds (,(gk p i)) :atype ,(gk p :aty)))
+(defun $mvb-row (p side body &aux (ty (gk p :ty)) (dim (gk p :dim)))
+  (let* ((here (gensym "IND"))
+         (vars (loop for i from 0 repeat dim
+                    collect `(,(gensym) (aref ,(gk p (keyw side :-sym))
+                                              (the veq:pn (+ ,here ,i))))))
+         (names (mapcar #'car vars)))
+    `(let* ((,here (* ,dim ,(gk p (keyw :itr- side :-sym)))) ,@vars)
+       (declare (veq:pn ,here) (ignorable ,@names)
+                ,@(unless (or (null ty) (equal :nil ty)) `((,ty ,@names))))
+       ; only replace references to side in row/body
+       ,@(replace-varg body (list (cons side names)) t))))
+
+; NOTE: this can only be used in !@$fx$, unless modified
+(defun $$mvb-row (p row &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
+  (awg (ind-lft ind-rht ind-out)
+    (labels (($ (a i j) `(aref ,(gk p a) (the veq:pn (+ ,i ,j)))))
+      (let ((lft-arefs (loop for i from 0 repeat dimout
+                             collect ($ :lft-sym ind-lft i)))
+            (rht-arefs (loop for i from 0 repeat dimout
+                             collect ($ :rht-sym ind-rht i)))
+            (full-row  (loop for i from 0 for r in row repeat dimout
+                             nconc `(,($ :out-sym ind-out i) ,r))))
+       ; TODO: only use one index when possible.
+       `(let ((,ind-lft (* ,dim ,(gk p :itr-lft-sym)))
+              (,ind-rht (* ,dim ,(gk p :itr-rht-sym)))
+              (,ind-out (* ,dimout ,(gk p :itr-out-sym))))
+          (declare (veq:pn ,ind-lft ,ind-rht ,ind-out))
+          ,(replace-varg `(setf ,@full-row)
+                         `((lft ,@lft-arefs) (rht ,@rht-arefs)) t))))))
 
 (defun vec-select-itr (p)
   (declare (optimize speed))

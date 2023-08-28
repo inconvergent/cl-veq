@@ -13,7 +13,7 @@
           :adjustable nil))))
 
 (defmacro new-stride ((from to type &optional (v 0)) arr)
-  (declare (fixnum from to))
+  (declare (veq:pn from to))
   "shift arr from stride to stride."
   (unless (> to from 0) (error "NEW-STRIDE: must have (> to from 0)"))
   `(fvprogn ; TODO: to less than from
@@ -127,24 +127,27 @@ ex: (~a '((1f0 2f0) (1f0 2f0)))." (arrtype type) (nm "$_") (nm "$_"))
 
 ;;;;;;;;;;;;;;;;;;;;;; ACCESS
 
+(defun proc-$ (dim a inds atype)
+  (declare (pn dim))
+  (awg (a*)
+    (let* ((inds (loop for r in inds
+                       if (numberp r) collect `(nil ,(* dim r))
+                       else collect `(,(gensym "IND") (* ,dim ,r))))
+           (unknown (remove-if #'not inds :key #'car)))
+      `(let ((,a* ,a) ,@unknown)
+         (declare ,@(when atype `((,atype ,a*))) (pn ,@(mapcar #'car unknown)))
+         (values
+           ,@(loop for (sym ind) in inds
+                   if sym nconc (loop for i from 0 repeat dim
+                                      collect `(aref ,a* (the veq:pn (+ ,sym ,i))))
+                   else nconc (loop for i from 0 repeat dim ; pre calc ind
+                                    collect `(aref ,a* ,(+ ind i)))))))))
+
 (defmacro -$ (dim a &key inds atype)
   (declare (pn dim) (list inds))
   (unless inds (setf inds '(0)))
-  (awg (a*)
-    (let ((lets (loop for r in inds
-                      collect (let ((gs (gensym)))
-                                `((,gs ,(typecase r (fixnum (* dim r))
-                                                    (t `(* ,dim ,r))))
-                                  ,@(loop for i from 0 below dim
-                                          collect `(+ ,gs ,i)))))))
-    `(let ((,a* ,a) ,@(loop for ss in lets collect (car ss)))
-       (declare ,@(when atype `((,atype ,a*)))
-                (pn ,@(loop for ss in lets collect (caar ss))))
-       (values ,@(loop with res = (list)
-                       for ss in lets
-                       do (loop for s in (cdr ss)
-                                do (push `(aref ,a* ,s) res))
-                       finally (return (reverse res))))))))
+  (proc-$ dim a inds atype))
+
 (defmacro define-$ ()
   `(progn ,@(loop for (dim type)
                   in (group '(1 ff 2 ff 3 ff 4 ff 1 df 2 df 3 df 4 df
