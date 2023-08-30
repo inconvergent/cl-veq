@@ -13,26 +13,25 @@
 (defvar *vv-dot* #\.) (defvar *vv-bang* #\!)
 (defvar *vv-arr* #\$) (defvar *vv-simd* #\&)
 
-(defvar *vv-special*
-  (mapcar #'mkstr `(,*vv-dot*  ,*vv-bang* ,*vv-arr* ,*vv-simd*)))
+(defvar *vv-special* (mapcar #'mkstr `(,*vv-dot*  ,*vv-bang* ,*vv-arr* ,*vv-simd*)))
 
 (defun nvrs (a c n) (loop for k from c repeat n collect `(:vr ,a ,k)))
 
 (defun gk (p k &optional silent &aux (hit (cdr (assoc k p))))
-  (declare (optimize speed (safety 2)) (list p) (keyword k))
+  (declare #.*opt* (list p) (keyword k))
   (if (or silent hit) hit (warn "VV: missing conf key: ~a~%conf: ~s" k p)))
 (defun gk+ (p &rest keys)
-  ; (declare (optimize speed (safety 2)) (list p keys))
+  (declare #.*opt* (list p keys))
   (every (lambda (k) (> (gk p k) 0)) keys))
 (defun gk0 (p &rest keys)
-  ; (declare (optimize speed (safety 2)) (list p keys))
+  (declare #.*opt* (list p keys))
   (every (lambda (k) (= (gk p k) 0)) keys))
 
 (defun vverr (expr msg)
   (error "~&VV error at~%sym: ~a~%msg: ~a~%expr:~s~&" (car expr) msg expr))
 
 (defun car-match-modifier (mod b)
-  (declare (optimize speed (safety 2)) (symbol mod))
+  (declare #.*opt* (symbol mod))
   "returns (values prefix-ind prefix opt/d b). eg: 1 x (0) arr"
   (unless (and (listp b) (symbolp (car b)))
           (return-from car-match-modifier (values nil nil nil b)))
@@ -51,7 +50,7 @@
 (defun niloutconf (p b) (values `((:out . nil) ,@p) b))
 
 (defun tailconf (p b &aux (b2 (subseq b 2)))
-  (declare (optimize speed) (list p b))
+  (declare #.*opt* (optimize speed) (list p b))
   (mvb (ismod ind) (car-match-modifier *vv-?@* (car b2))
 
     (values `((:rht . ,(if ismod (cdar b2) b2)) (:@modrht . ,ismod)
@@ -61,7 +60,7 @@
 (defun fx-strip (fx pkg) (when fx (psymb pkg (strip-symbols fx *vv-special*))))
 
 (defun vvconf (b vv-sym &aux (s (car b)))
-  (declare (optimize speed (safety 2)) (list b) (symbol s))
+  (declare #.*opt* (list b) (symbol s))
   (mvb (short-ty sfx-full dim dimout) (unpack-vvsym s :s vv-sym :symout nil)
     (declare (pn dim dimout))
     (let* ((pkg (symbol-package s))
@@ -96,7 +95,7 @@
 
 ; NOTE: rep is controlled by the lft iterator
 (defun lconf (p b &aux (dim (gk p :dim)) (ty (gk p :ty t)))
-  (declare (optimize speed) (list p b) (pn dim))
+  (declare #.*opt* (list p b) (pn dim))
   (awg (lmod-a lmod-b)
     (labels ((pad-slice (slice &aux (n `(/ (length ,(gk p :lft-sym)) ,dim)))
                (declare (list slice) )
@@ -133,7 +132,7 @@
            b))))))
 
 (defun rconf (p b)
-  (declare (optimize speed) (list p b))
+  (declare #.*opt* (list p b))
   (awg (rmod-a)
     (labels ((pad-slice (slice) ; we never need the second slicer for rht
                (declare (list slice))
@@ -162,6 +161,7 @@
 ; -- ARRAY HELPERS --------------------------------------------------------------
 
 (defun $mvb-row (p side body &aux (ty (gk p :ty)) (dim (gk p :dim)))
+  (declare #.*opt*)
   (let* ((here (gensym "IND"))
          (vars (loop for i from 0 repeat dim
                     collect `(,(gensym) (aref ,(gk p (keyw side :-sym))
@@ -175,6 +175,7 @@
 
 ; NOTE: this can only be used in !@$fx$, unless modified
 (defun $$mvb-row (p row &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
+  (declare #.*opt*)
   (awg (ind-lft ind-rht ind-out)
     (labels (($ (a i j) `(aref ,(gk p a) (the veq:pn (+ ,i ,j)))))
       (let ((lft-arefs (loop for i from 0 repeat dimout
@@ -192,7 +193,7 @@
                          `((lft ,@lft-arefs) (rht ,@rht-arefs)) t))))))
 
 (defun vec-select-itr (p)
-  (declare (optimize speed))
+  (declare #.*opt*)
   (let ((with-out (if (gk+ p :!) (gk p :lft-sym)
                     `($make :n (* ,(gk p :dimout) ,(gk p :rep-sym))
                             :type ,(gk p :ty) :v ,(type-default (gk p :ty) nil)))))

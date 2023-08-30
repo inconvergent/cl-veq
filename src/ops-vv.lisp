@@ -12,7 +12,7 @@
 
 ; (2.@abs -1 -2) -> (abs -1) (abs -1) -> 1 2
 (defun proc.@fx (b p &aux (dim (gk p :dim)))
-  (declare (optimize speed) (pn dim))
+  (declare #.*opt* (pn dim))
   (-vmvb* (gk p :ty) dim 'arg `(~ ,@(cdr b))
     `((values ,@(loop for d of-type pn from 0 repeat dim
                       collect `(,(gk p :fx*) (:vr arg ,d)))))))
@@ -21,13 +21,13 @@
 
 ; (labels ((fx (x y) (values y x))) (i2_@fx 1 2)) -> (fx 1 2) -> 2 1
 (defun proc_@fx (b p &aux (dim (gk p :dim)))
-  (declare (optimize speed) (pn dim))
+  (declare #.*opt* (pn dim))
   (-vmvb* (gk p :ty) dim 'arg `(~ ,@(cdr b))
     `((,(gk p :fx*) (:vr arg ,@(loop for d of-type pn from 0 repeat dim collect d))))))
 
 
 (defun proc%@fx (b p)
-  (declare (optimize speed))
+  (declare #.*opt* )
   `(labels ((,(gk p :fx*) ,@(first (last b))))
      ,(-vmvb* (gk p :ty) (gk p :dim) 'lft `(~ ,@(cdr (butlast b)))
               `((,(gk p :fx*) lft)))))
@@ -42,14 +42,14 @@
 
 ; row wise element pair wise
 (defun proc!@fx (b p &aux (dim (gk p :dim)))
-  (declare (optimize speed) (pn dim))
+  (declare #.*opt* (pn dim))
   (-vmvb* (gk p :ty) (the pn (* 2 dim)) 'arg `(~ ,@(cdr b))
    `(,(values! p (cdr b)
         (loop for d of-type pn from 0 repeat dim
               collect `(,(gk p :fx*) (:vr arg ,d) (:vr arg ,(+ d dim))))))))
 
 (defun proc!@.fx (b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
-  (declare (optimize speed) (pn dim dots))
+  (declare #.*opt* (pn dim dots))
   (-vmvb* (gk p :ty) (the pn (+ dim dots)) 'arg `(~ ,@(cdr b))
     `((values ; values! does not make sense here
         ,@(loop with lhs = (nvrs 'arg 0 dots)
@@ -57,7 +57,7 @@
                 collect `(,(gk p :fx*) ,@lhs (:vr arg ,(+ dots d))))))))
 
 (defun proc!@fx. (b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
-  (declare (optimize speed) (pn dim dots))
+  (declare #.*opt* (pn dim dots))
   (-vmvb* (gk p :ty) (+ dim dots) 'arg `(~ ,@(cdr b))
     `(,(values! p (cdr b) ; test this
          (loop with rhs = (nvrs 'arg dim dots)
@@ -67,7 +67,7 @@
 ; -- ARRAY LEFT MAP -------------------------------------------------------------
 
 (defun fx@conf (p b &aux (dim (gk p :dim)))
-  (declare (list p b) (pn dim))
+  (declare #.*opt* (list p b) (pn dim))
   (dsb (args . body) (replace-varg (car (gk p :rht)))
     (declare (ignore body))
     (let ((l (length args)))
@@ -80,7 +80,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
 
 ; (2%@fx 1 2 ((x y) (list :xy x y))) -> (list :xy 1 2)
 (defun proc%@$fx (b p &aux (dimout (gk p :dimout)))
-  (declare (optimize speed) (pn dimout))
+  (declare #.*opt* (pn dimout))
   (let ((p (vchain (#'fx@conf #'lconf #'tailconf) p b)))
   `(labels ((,(gk p :fx*) ,@(car (gk p :rht))))
      (loop ,@(vec-select-itr p)
@@ -92,7 +92,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
 
 ; (2x@$fx #(1 2 3 4) ((i x y) (print (list i :xy x y)))) -> nil
 (defun procx@$fx (b p)
-  (declare (optimize speed))
+  (declare #.*opt*)
   (let ((p (vchain (#'fx@conf #'niloutconf #'lconf #'tailconf) p b)))
     `(labels ((,(gk p :fx*) ,@(car (gk p :rht))))
        (loop ,@(vec-select-itr p)
@@ -101,7 +101,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
 ; -- ARRAY LEFT REDUCE ----------------------------------------------------------
 
 (defun procr@$fx (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
-  (declare (optimize speed) (pn dim dimout))
+  (declare #.*opt* (pn dim dimout))
   (let ((p (vchain (#'niloutconf #'lconf) p b))
         (d0 (type-default (gk p :ty) 0)))
     (-vmvb* (gk p :ty) dim 'agg `(values ,@(loop repeat dimout
@@ -119,7 +119,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
 ; (labels ((fx (x) (abs x)))
 ;   (2.@$fx (veq:i2$line -1 -2 -3 -4)))
 (defun proc.@$fx (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
-  (declare (optimize speed) (pn dim dimout))
+  (declare #.*opt* (pn dim dimout))
   (let ((p (vchain (#'lconf) p b))
         (row (loop for d of-type pn from 0 repeat dim
                    collect `(,(gk p :fx*) (:vr lft ,d)))))
@@ -134,7 +134,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
 ; (labels ((fx (x y) (values y x))) **
 ;   (2_@$fx (veq:i2$line 1 2 3 4))) -> #(2 1 4 3)
 (defun proc_@$fx (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
-  (declare (optimize speed) (pn dim dimout))
+  (declare #.*opt* (pn dim dimout))
   (let ((p (vchain (#'lconf) p b))
         (row `(,(gk p :fx* ) ,@(loop for d of-type pn from 0 repeat dim
                                      collect `(:vr lft ,d)))))
@@ -146,9 +146,8 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
 
 ; (labels ((fx (x y z) (values y (+ x z)))) **
 ;   (2_@$fx. (veq:i2$line 1 2 3 4) 10)) -> #(2 11 4 13)
-(defun proc_@$fx. (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout))
-                            (ty (gk p :ty)))
-  (declare (optimize speed) (pn dim dimout))
+(defun proc_@$fx. (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)) (ty (gk p :ty)))
+  (declare #.*opt* (pn dim dimout))
   (let* ((p (vchain (#'lconf #'tailconf) p b))
          (rhs (nvrs 'rht 0 (gk p :dots)))
          (row `(,(gk p :fx* )
@@ -165,13 +164,13 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
          `(loop ,@(vec-select-itr p)
                 do ,(-vmvb* ty (gk p :dots) 'rht rht `(,inner)) finally ,ret)
          (-vmvb* ty (gk p :dots) 'rht rht
-           `((loop  ,@(vec-select-itr p)
+           `((loop ,@(vec-select-itr p)
                    do ,inner finally ,ret))))))
 
 ; -- ARRAY LEFT vec -------------------------------------------------------------
 
 (defun proc!@$fx (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)) (ty (gk p :ty)))
-  (declare (optimize speed) (pn dim dimout))
+  (declare #.*opt* (pn dim dimout))
   (let* ((p (vchain (#'lconf #'tailconf) p b))
          (row (loop for d of-type pn from 0 repeat dim
                     collect `(,(gk p :fx*) (:vr lft ,d) (:vr rht ,d))))
@@ -188,7 +187,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
 
 (defun proc!@$fx. (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout))
                             (ty (gk p :ty)))
-  (declare (optimize speed) (pn dim dimout) )
+  (declare #.*opt* (pn dim dimout) )
   (let* ((p (vchain (#'lconf #'tailconf) p b))
         (row (loop with rhs = (nvrs 'rht 0 (gk p :dots))
                    for d of-type pn from 0 repeat dim
@@ -208,7 +207,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
 ; -- ARRAYS LEFT RIGHT vec ------------------------------------------------------
 
 (defun proc!@$fx$ (b p &aux (dim (gk p :dim)) (aty (gk p :aty)))
-  (declare (optimize speed) (pn dim))
+  (declare #.*opt* (pn dim))
   (let ((p (vchain (#'lconf #'rconf) p b))
         (row (loop for d of-type pn from 0 repeat dim
                    collect `(,(gk p :fx*) (:vr lft ,d) (:vr rht ,d)))))
@@ -222,55 +221,44 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
      (vverr ,b (format nil "bad # of elements. wanted ~a, got: ~a" ',wanted ,got))))
 
 (defun proc-vv (body)
-  (declare (optimize speed (safety 2)))
+  (declare #.*opt*)
   (labels
-    ((m@ (b &aux (p (vvconf b #.(mkstr *vv-m@*)))) (procm@fx b p))
+    ((split (b) (cons (rec (car b)) (rec (cdr b))))
+
+     (m@ (b &aux (p (vvconf b #.(mkstr *vv-m@*)))) (procm@fx b p))
      (f@ (b &aux (p (vvconf b #.(mkstr *vv-f@*)))) (procf@fx b p))
      (r@ (b &aux (p (vvconf b #.(mkstr *vv-r@*)))) (procr@$fx b p))
      (x@ (b &aux (p (vvconf b #.(mkstr *vv-x@*)))) (procx@$fx b p))
      (%@ (b &aux (p (vvconf b #.(mkstr *vv-%@*))) (l (length b)))
        (cond ((not (gk0 p :$r :.r :.l)) (vverr b "bad configuration"))
-             ((gk+ p :$l)
-              (vverr-len b (= l 3) l)
-              (proc%@$fx b p))
-             (t (proc%@fx b p))))
+             ((gk+ p :$l)               (vverr-len b (= l 3) l) (proc%@$fx b p))
+             (t                                                 (proc%@fx b p))))
 
      (!@ (b &aux (p (vvconf b #.(mkstr *vv-!@*))) (l (length b)))
        (cond ((gk+ p :.l :$r) (vverr b "not implemented"))
-             ((gk+ p :$l :$r)
-              (vverr-len b (= l 3) l)
-              (proc!@$fx$ b p))
-             ((gk+ p :$l :.r)
-              (vverr-len b (> l 2) l)
-              (proc!@$fx. b p))
-             ((gk+ p :$r) (vverr b "not implemented"))
-             ((gk+ p :$l)
-              (vverr-len b (> l 2) l)
-              (proc!@$fx b p))
-             ((gk+ p :.r) (proc!@fx. b p))
-             ((gk+ p :.l) (proc!@.fx b p))
-             ((gk0 p :$l :$r :.l :.r) (proc!@fx b p))
+             ((gk+ p :$l :$r) (vverr-len b (= l 3) l)      (proc!@$fx$ b p))
+             ((gk+ p :$l :.r) (vverr-len b (> l 2) l)      (proc!@$fx. b p))
+             ((gk+ p :$r)     (vverr b "not implemented"))
+             ((gk+ p :$l)     (vverr-len b (> l 2) l)      (proc!@$fx b p))
+             ((gk+ p :.r)                                  (proc!@fx. b p))
+             ((gk+ p :.l)                                  (proc!@.fx b p))
+             ((gk0 p :$l :$r :.l :.r)                      (proc!@fx b p))
              (t (vverr b "unexpected input"))))
 
      (_@ (b &aux (p (vvconf b #.(mkstr *vv-_@*))) (l (length b)))
-       (cond ((gk+ p :$l :.r) (proc_@$fx. b p))
-             ((gk+ p :$l)
-              (vverr-len b (= l 2) l)
-              (proc_@$fx b p))
-             ((gk0 p :$l :$r :.l :.r) (proc_@fx b p))
-             (t (vverr b "unexpected input"))))
-     (.@ (b &aux (p (vvconf b #.(mkstr *vv-.@*))) (l (length b)))
-       (cond ((gk0 p :$l :$r :.l :.r) (proc.@fx b p))
-             ((gk+ p :$l)
-              (vverr-len b (= l 2) l)
-              (proc.@$fx b p))
+       (cond ((gk+ p :$l :.r)                     (proc_@$fx. b p))
+             ((gk+ p :$l) (vverr-len b (= l 2) l) (proc_@$fx b p))
+             ((gk0 p :$l :$r :.l :.r)             (proc_@fx b p))
              (t (vverr b "unexpected input"))))
 
-     (split (b) (cons (rec (car b)) (rec (cdr b))))
+     (.@ (b &aux (p (vvconf b #.(mkstr *vv-.@*))) (l (length b)))
+       (cond ((gk0 p :$l :$r :.l :.r)             (proc.@fx b p))
+             ((gk+ p :$l) (vverr-len b (= l 2) l) (proc.@$fx b p))
+             (t (vverr b "unexpected input"))))
+
      (rec (b) ; this messy, but much faster to define s as late as possible,
        (cond ((or (null b) (atom b)) (return-from rec b))
-             ((not (and (listp b) (symbolp (car b))))
-              (return-from rec (split b))))
+             ((not (and (listp b) (symbolp (car b)))) (return-from rec (split b))))
 
        (let ((s (mkstr (car b))))
          (declare (string s))

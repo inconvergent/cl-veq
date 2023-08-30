@@ -40,7 +40,6 @@
   (with-output-to-string (s)
     (dolist (a args) (princ a s))))
 
-(declaim (inline match-substr))
 (defun match-substr (sub s)
   (declare (optimize speed (safety 2)) (string sub s))
   "returns index where substring matches s from left to right. otherwise nil."
@@ -58,9 +57,10 @@
 (defun last* (l) (declare (list l)) (first (last l)))
 
 (defun symb (&rest args)
+  (declare (optimize speed (safety 1)))
   (values (intern (apply #'mkstr args))))
 (defun psymb (pkg &rest args) ; https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
-  (declare (optimize speed))
+  (declare (optimize speed (safety 1)))
   (values (intern (apply #'mkstr args) pkg)))
 (defmacro with-struct ((name . fields) struct &body body)
   (let ((gs (gensym (string-upcase (mkstr name)))))

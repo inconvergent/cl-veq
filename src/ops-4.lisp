@@ -6,8 +6,6 @@
   (:4 @4id (4!a)) (values ax ay az aw)
   (:4 @4square (4!a)) (values (the pos-@f (* ax ax)) (the pos-@f (* ay ay))
                               (the pos-@f (* az az)) (the pos-@f (* aw aw)))
-  (:4 @4sqrt (4!a)) (values (the pos-@f (sqrt (the pos-@f ax))) (the pos-@f (sqrt (the pos-@f ay)))
-                            (the pos-@f (sqrt (the pos-@f az))) (the pos-@f (sqrt (the pos-@f aw))))
 
   (:1 @4len2 (4!a)) (the pos-@f (mvc #'+ (-@4square ax ay az aw)))
   (:1 @4len (4!a)) (the pos-@f (sqrt (the pos-@f (mvc #'+ (-@4square ax ay az aw)))))

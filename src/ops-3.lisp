@@ -7,16 +7,11 @@
   (:3 @3square (3!a)) (values (the pos-@f (* ax ax))
                               (the pos-@f (* ay ay))
                               (the pos-@f (* az az)))
-  (:3 @3sqrt (3!a)) (values (the pos-@f (sqrt (the pos-@f ax)))
-                            (the pos-@f (sqrt (the pos-@f ay)))
-                            (the pos-@f (sqrt (the pos-@f az))))
-
 
   (:1 @3len2 (3!a)) (the pos-@f (mvc #'+ (-@3square ax ay az)))
   (:1 @3len (3!a)) (the pos-@f (sqrt (the pos-@f (mvc #'+ (-@3square ax ay az)))))
 
-  (:1 @3max (3!a)) (max ax ay az)
-  (:1 @3min (3!a)) (min ax ay az)
+  (:1 @3max (3!a)) (max ax ay az) (:1 @3min (3!a)) (min ax ay az)
 
   (:3 @3i- (3!a 3!b)) (values (- bx ax) (- by ay) (- bz az))
   (:3 @3i/ (3!a 3!b)) (values (/ bx ax) (/ by ay) (/ bz az))
@@ -43,8 +38,6 @@
   (:3 @3iscale (3!a s)) (values (/ ax s) (/ ay s) (/ az s))
 
   (:3 @3norm (3!a)) (mvc #'-@3iscale ax ay az (the pos-@f (mvc #'-@3len ax ay az)))
-
-; ;:;;;;;;;;;;;;;;;;;; other
 
   (:3 @3rot (3!a 3!n a))
        (let ((cosa (cos a)))

@@ -66,7 +66,6 @@ intersection point"
                           (setf (aref res i) `((,c . ,p)))))
        (-isects (i cands)
          (declare #.*opt* (pn i) (list cands))
-         "intersection test"
          (loop with line of-type fvec = (aref lines i)
                for c of-type pn in cands
                do (fvprogn (mvb (x p q) (f2segx (f2$ line 0 1)

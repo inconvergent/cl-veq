@@ -14,7 +14,6 @@
     (rec body)
     ht))
 
-(declaim (inline filter-macrolets))
 (defun filter-macrolets (symbols-map body)
   (declare #.*opt* (list symbols-map body))
   "remove macrolet tuples that are not present in body. this speeds up
@@ -53,8 +52,7 @@ ex:
                        (list (:vr x 1 0))))
   ; will return something like:
   ; (MVB (#:X/X-158 #:X/Y-159) (VALUES 1 2)
-  ;      (LIST #:X/Y-159 #:X/X-158))
-"
+  ;      (LIST #:X/Y-159 #:X/X-158))"
   (labels
     ((is-skip (v) (and (consp v) (member (car v) '(vskp) :test #'eq)))
      (is-varg (v) (and (consp v) (member (car v) '(varg :varg :va) :test #'eq)))

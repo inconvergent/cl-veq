@@ -1247,16 +1247,6 @@ args: (AX AY S)
 body (2): (VALUES (* AX S) (* AY S)).
 ```
 
-#### :fvprogn: D2SQRT
-
-```
-veq context op: D2SQRT
-fxname: -D2SQRT
-args: (AX AY)
-body (2): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
-                  (THE POS-DF (SQRT (THE POS-DF AY)))).
-```
-
 #### :fvprogn: D2SQUARE
 
 ```
@@ -1856,17 +1846,6 @@ args: (AX AY AZ S)
 body (3): (VALUES (* AX S) (* AY S) (* AZ S)).
 ```
 
-#### :fvprogn: D3SQRT
-
-```
-veq context op: D3SQRT
-fxname: -D3SQRT
-args: (AX AY AZ)
-body (3): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
-                  (THE POS-DF (SQRT (THE POS-DF AY)))
-                  (THE POS-DF (SQRT (THE POS-DF AZ)))).
-```
-
 #### :fvprogn: D3SQUARE
 
 ```
@@ -2348,18 +2327,6 @@ veq context op: D4SCALE
 fxname: -D4SCALE
 args: (AX AY AZ AW S)
 body (4): (VALUES (* AX S) (* AY S) (* AZ S) (* AW S)).
-```
-
-#### :fvprogn: D4SQRT
-
-```
-veq context op: D4SQRT
-fxname: -D4SQRT
-args: (AX AY AZ AW)
-body (4): (VALUES (THE POS-DF (SQRT (THE POS-DF AX)))
-                  (THE POS-DF (SQRT (THE POS-DF AY)))
-                  (THE POS-DF (SQRT (THE POS-DF AZ)))
-                  (THE POS-DF (SQRT (THE POS-DF AW)))).
 ```
 
 #### :fvprogn: D4SQUARE
@@ -3180,15 +3147,6 @@ veq context op: DSIN-COS
 fxname: -DSIN-COS
 args: (AX)
 body (2): (VALUES (SIN AX) (COS AX)).
-```
-
-#### :fvprogn: DSQRT
-
-```
-veq context op: DSQRT
-fxname: -DSQRT
-args: (AX)
-body (1): (THE POS-DF (SQRT (THE POS-DF AX))).
 ```
 
 #### :fvprogn: DSQUARE
@@ -4295,16 +4253,6 @@ body (2): (VALUES (* AX S) (* AY S)).
  ;   Source file: src/checks.lisp
 ```
 
-#### :fvprogn: F2SQRT
-
-```
-veq context op: F2SQRT
-fxname: -F2SQRT
-args: (AX AY)
-body (2): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
-                  (THE POS-FF (SQRT (THE POS-FF AY)))).
-```
-
 #### :fvprogn: F2SQUARE
 
 ```
@@ -4920,17 +4868,6 @@ args: (AX AY AZ S)
 body (3): (VALUES (* AX S) (* AY S) (* AZ S)).
 ```
 
-#### :fvprogn: F3SQRT
-
-```
-veq context op: F3SQRT
-fxname: -F3SQRT
-args: (AX AY AZ)
-body (3): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
-                  (THE POS-FF (SQRT (THE POS-FF AY)))
-                  (THE POS-FF (SQRT (THE POS-FF AZ)))).
-```
-
 #### :fvprogn: F3SQUARE
 
 ```
@@ -5412,18 +5349,6 @@ veq context op: F4SCALE
 fxname: -F4SCALE
 args: (AX AY AZ AW S)
 body (4): (VALUES (* AX S) (* AY S) (* AZ S) (* AW S)).
-```
-
-#### :fvprogn: F4SQRT
-
-```
-veq context op: F4SQRT
-fxname: -F4SQRT
-args: (AX AY AZ AW)
-body (4): (VALUES (THE POS-FF (SQRT (THE POS-FF AX)))
-                  (THE POS-FF (SQRT (THE POS-FF AY)))
-                  (THE POS-FF (SQRT (THE POS-FF AZ)))
-                  (THE POS-FF (SQRT (THE POS-FF AW)))).
 ```
 
 #### :fvprogn: F4SQUARE
@@ -6254,15 +6179,6 @@ veq context op: FSIN-COS
 fxname: -FSIN-COS
 args: (AX)
 body (2): (VALUES (SIN AX) (COS AX)).
-```
-
-#### :fvprogn: FSQRT
-
-```
-veq context op: FSQRT
-fxname: -FSQRT
-args: (AX)
-body (1): (THE POS-FF (SQRT (THE POS-FF AX))).
 ```
 
 #### :fvprogn: FSQUARE
@@ -8111,7 +8027,6 @@ returns (values 1f0 2f0 3f0)
  ;       ; will return something like:
  ;       ; (MVB (#:X/X-158 #:X/Y-159) (VALUES 1 2)
  ;       ;      (LIST #:X/Y-159 #:X/X-158))
- ;
  ;   Source file: src/macros-helpers.lisp
 ```
 

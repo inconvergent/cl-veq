@@ -19,11 +19,8 @@
   (:2 @2perp (2!a)) (values ay (- ax))
   (:2 @2perp* (2!a)) (values (- ay) ax)
   (:2 @2flip (2!a)) (values ay ax)
-  (:2 @2sqrt (2!a)) (values (the pos-@f (sqrt (the pos-@f ax)))
-                            (the pos-@f (sqrt (the pos-@f ay))))
 
-  (:1 @2max (2!a)) (max ax ay)
-  (:1 @2min (2!a)) (min ax ay)
+  (:1 @2max (2!a)) (max ax ay) (:1 @2min (2!a)) (min ax ay)
 
   (:2 @2norm (2!a)) (mvc #'-@2iscale ax ay (mvc #'-@2len ax ay))
 
