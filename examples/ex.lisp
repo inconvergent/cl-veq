@@ -12,6 +12,8 @@
 
   ; ---- BASIC OPERATIONS ----
 
+  ; TODO: rewrite this to describe vv macro
+
   (vpr (f2!@+ 1f0 2f0 3f0 4f0))
   ;> (4.0 6.0)
 
@@ -63,8 +65,11 @@
   (vpr (f3!@+ 1f0 2f0 3f0 4f0 5f0 6f0))) ;> (5f0 7f0 9f0)
   ; respectively.
 
-  ; see /src/ops-1.lisp, /src/ops-2.lisp and /src/ops-3.lisp
-  ; for all available operations
+  ; see /src/ops-1.lisp, /src/ops-2.lisp and /src/ops-3.lisp and
+  ; the docs for vv macro for all available operations. most typical
+  ; vector operations have been removed as functions from veq and should be
+  ; done using the vv macro. the vv DSL generates better, more efficient, code
+  ; and it is more lightweight and practial.
 
 
 ; ---- FUNCTIONS ----

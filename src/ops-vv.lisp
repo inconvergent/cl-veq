@@ -3,10 +3,10 @@
 ; -- MVC ------------------------------------------------------------------------
 
 ; (m@fx ...) -> (mvc #'fx (mvc #'values ...))
-(defun procm@fx (b p) `(mvc #',(gk p :fx*) (~ ,@(cdr b))))
+(defun procm@fx (b p) `(mvc #',(assert-fx-sym b p) (~ ,@(cdr b))))
 
 ; almost the same: (f@fx ...) -> (mvc fx (mvc #'values ...))
-(defun procf@fx (b p) `(mvc (the function ,(gk p :fx*)) (~ ,@(cdr b))))
+(defun procf@fx (b p) `(mvc (the function ,(assert-fx-sym b p)) (~ ,@(cdr b))))
 
 ; -- 1ARY -----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@
   (declare #.*opt* (pn dim))
   (-vmvb* (gk p :ty) dim 'arg `(~ ,@(cdr b))
     `((values ,@(loop for d of-type pn from 0 repeat dim
-                      collect `(,(gk p :fx*) (:vr arg ,d)))))))
+                      collect `(,(assert-fx-sym b p) (:vr arg ,d)))))))
 
 ; -- NARY -----------------------------------------------------------------------
 
@@ -23,14 +23,15 @@
 (defun proc_@fx (b p &aux (dim (gk p :dim)))
   (declare #.*opt* (pn dim))
   (-vmvb* (gk p :ty) dim 'arg `(~ ,@(cdr b))
-    `((,(gk p :fx*) (:vr arg ,@(loop for d of-type pn from 0 repeat dim collect d))))))
+    `((,(assert-fx-sym b p)
+       (:vr arg ,@(loop for d of-type pn from 0 repeat dim collect d))))))
 
 
-(defun proc%@fx (b p)
+(defun proc%@fx (b p &aux (fx (ensure-fx-sym p)))
   (declare #.*opt* )
-  `(labels ((,(gk p :fx*) ,@(first (last b))))
+  `(labels ((,fx ,@(first (last b))))
      ,(-vmvb* (gk p :ty) (gk p :dim) 'lft `(~ ,@(cdr (butlast b)))
-              `((,(gk p :fx*) lft)))))
+              `((,fx lft)))))
 
 ; -- VEC ------------------------------------------------------------------------
 
@@ -46,7 +47,7 @@
   (-vmvb* (gk p :ty) (the pn (* 2 dim)) 'arg `(~ ,@(cdr b))
    `(,(values! p (cdr b)
         (loop for d of-type pn from 0 repeat dim
-              collect `(,(gk p :fx*) (:vr arg ,d) (:vr arg ,(+ d dim))))))))
+              collect `(,(assert-fx-sym b p) (:vr arg ,d) (:vr arg ,(+ d dim))))))))
 
 (defun proc!@.fx (b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
   (declare #.*opt* (pn dim dots))
@@ -54,7 +55,7 @@
     `((values ; values! does not make sense here
         ,@(loop with lhs = (nvrs 'arg 0 dots)
                 for d of-type pn from 0 repeat dim
-                collect `(,(gk p :fx*) ,@lhs (:vr arg ,(+ dots d))))))))
+                collect `(,(assert-fx-sym b p) ,@lhs (:vr arg ,(+ dots d))))))))
 
 (defun proc!@fx. (b p &aux (dim (gk p :dim)) (dots (gk p :dots)))
   (declare #.*opt* (pn dim dots))
@@ -62,7 +63,7 @@
     `(,(values! p (cdr b) ; test this
          (loop with rhs = (nvrs 'arg dim dots)
                for d of-type pn from 0 repeat dim
-               collect `(,(gk p :fx*) (:vr arg ,d) ,@rhs))))))
+               collect `(,(assert-fx-sym b p) (:vr arg ,d) ,@rhs))))))
 
 ; -- ARRAY LEFT MAP -------------------------------------------------------------
 
@@ -70,33 +71,35 @@
   (declare #.*opt* (list p b) (pn dim))
   (dsb (args . body) (replace-varg (car (gk p :rht)))
     (declare (ignore body))
-    (let ((l (length args)))
-      (unless (or (<= dim l (1+ dim)))
-              (error "x@ / %@: incorrect number of args in ~%~a.
-expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
+    (let ((l (length (the list args)))
+          (msg "bad # of fx args. expecting: ~a,~a, got: ~a"))
       (values `((:fx@-ind . ,(cond ((= l dim) `(lft))
-                                   ((= l (1+ dim)) `(ind lft))))
+                                   ((= l (1+ dim)) `(ind lft))
+                                   (t (vverr b (format nil msg dim (1+ dim) l)))))
+                (:fx* . ,(ensure-fx-sym p))
                 ,@p) b))))
 
 ; (2%@fx 1 2 ((x y) (list :xy x y))) -> (list :xy 1 2)
 (defun proc%@$fx (b p &aux (dimout (gk p :dimout)))
   (declare #.*opt* (pn dimout))
-  (let ((p (vchain (#'fx@conf #'lconf #'tailconf) p b)))
-  `(labels ((,(gk p :fx*) ,@(car (gk p :rht))))
+  (let* ((p (vchain (#'fx@conf #'lconf #'tailconf) p b))
+         (fx (assert-fx-sym b p)))
+  `(labels ((,fx ,@(car (gk p :rht))))
      (loop ,@(vec-select-itr p)
            do ,($mvb-row p 'lft
                  `(($nvset (,(gk p :out-sym) ,dimout
                              (* ,(gk p :itr-out-sym) ,dimout))
-                           (,(gk p :fx*) ,@(gk p :fx@-ind t)))))
+                           (,fx ,@(gk p :fx@-ind t)))))
            finally (return ,(gk p :out-sym))))))
 
 ; (2x@$fx #(1 2 3 4) ((i x y) (print (list i :xy x y)))) -> nil
 (defun procx@$fx (b p)
   (declare #.*opt*)
-  (let ((p (vchain (#'fx@conf #'niloutconf #'lconf #'tailconf) p b)))
-    `(labels ((,(gk p :fx*) ,@(car (gk p :rht))))
+  (let* ((p (vchain (#'fx@conf #'niloutconf #'lconf #'tailconf) p b))
+         (fx (assert-fx-sym b p)))
+    `(labels ((,fx ,@(car (gk p :rht))))
        (loop ,@(vec-select-itr p)
-             do ,($mvb-row p 'lft `((,(gk p :fx*) ,@(gk p :fx@-ind t))))))))
+             do ,($mvb-row p 'lft `((,fx ,@(gk p :fx@-ind t))))))))
 
 ; -- ARRAY LEFT REDUCE ----------------------------------------------------------
 
@@ -110,7 +113,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
              do ,($mvb-row p 'lft
                    `((setf ,@(loop for i of-type pn from 0 below dimout
                                    nconc `((:vr agg ,i)
-                                           (,(gk p :fx*) (:vr agg ,i) (:vr lft ,i)))))))
+                                           (,(assert-fx-sym b p) (:vr agg ,i) (:vr lft ,i)))))))
              finally (return (values agg)))))))
 
 
@@ -122,7 +125,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
   (declare #.*opt* (pn dim dimout))
   (let ((p (vchain (#'lconf) p b))
         (row (loop for d of-type pn from 0 repeat dim
-                   collect `(,(gk p :fx*) (:vr lft ,d)))))
+                   collect `(,(assert-fx-sym b p) (:vr lft ,d)))))
     `(loop ,@(vec-select-itr p)
            do ,($mvb-row p 'lft `(,(proc-$rowset (gk p :out-sym) dimout
                                     `(* ,(gk p :itr-out-sym) ,dimout)
@@ -136,7 +139,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
 (defun proc_@$fx (b p &aux (dim (gk p :dim)) (dimout (gk p :dimout)))
   (declare #.*opt* (pn dim dimout))
   (let ((p (vchain (#'lconf) p b))
-        (row `(,(gk p :fx* ) ,@(loop for d of-type pn from 0 repeat dim
+        (row `(,(assert-fx-sym b p) ,@(loop for d of-type pn from 0 repeat dim
                                      collect `(:vr lft ,d)))))
     `(loop ,@(vec-select-itr p)
            do ,($mvb-row p 'lft ; must use nvset **
@@ -150,7 +153,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
   (declare #.*opt* (pn dim dimout))
   (let* ((p (vchain (#'lconf #'tailconf) p b))
          (rhs (nvrs 'rht 0 (gk p :dots)))
-         (row `(,(gk p :fx* )
+         (row `(,(assert-fx-sym b p)
                 ,@(loop for d of-type pn from 0 repeat dim collect `(:vr lft ,d))
                 ,@rhs))
          (ret `(return ,(gk p :out-sym)))
@@ -173,7 +176,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
   (declare #.*opt* (pn dim dimout))
   (let* ((p (vchain (#'lconf #'tailconf) p b))
          (row (loop for d of-type pn from 0 repeat dim
-                    collect `(,(gk p :fx*) (:vr lft ,d) (:vr rht ,d))))
+                    collect `(,(assert-fx-sym b p) (:vr lft ,d) (:vr rht ,d))))
          (inner ($mvb-row p 'lft `(,(proc-$rowset (gk p :out-sym) dimout
                                      `(* ,(gk p :itr-out-sym) ,dimout)
                                      row))))
@@ -191,7 +194,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
   (let* ((p (vchain (#'lconf #'tailconf) p b))
         (row (loop with rhs = (nvrs 'rht 0 (gk p :dots))
                    for d of-type pn from 0 repeat dim
-                   collect `(,(gk p :fx*) (:vr lft ,d) ,@rhs)))
+                   collect `(,(assert-fx-sym b p) (:vr lft ,d) ,@rhs)))
         (inner ($mvb-row p 'lft `(,(proc-$rowset (gk p :out-sym) dimout
                                      `(* ,(gk p :itr-out-sym) ,dimout)
                                      row))))
@@ -210,56 +213,58 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
   (declare #.*opt* (pn dim))
   (let ((p (vchain (#'lconf #'rconf) p b))
         (row (loop for d of-type pn from 0 repeat dim
-                   collect `(,(gk p :fx*) (:vr lft ,d) (:vr rht ,d)))))
+                   collect `(,(assert-fx-sym b p) (:vr lft ,d) (:vr rht ,d)))))
     `(loop with ,(gk p :rht-sym) of-type ,aty = ,(gk p :rht)
           ,@(vec-select-itr p)
            do ,($$mvb-row p row)
            finally (return ,(gk p :out-sym)))))
 
-(defmacro vverr-len (b wanted got)
-  `(unless ,wanted
-     (vverr ,b (format nil "bad # of elements. wanted ~a, got: ~a" ',wanted ,got))))
-
 (defun proc-vv (body)
   (declare #.*opt*)
   (labels
-    ((split (b) (cons (rec (car b)) (rec (cdr b))))
-
-     (m@ (b &aux (p (vvconf b #.(mkstr *vv-m@*)))) (procm@fx b p))
+    ((m@ (b &aux (p (vvconf b #.(mkstr *vv-m@*)))) (procm@fx b p))
      (f@ (b &aux (p (vvconf b #.(mkstr *vv-f@*)))) (procf@fx b p))
-     (r@ (b &aux (p (vvconf b #.(mkstr *vv-r@*)))) (procr@$fx b p))
-     (x@ (b &aux (p (vvconf b #.(mkstr *vv-x@*)))) (procx@$fx b p))
+
+     (r@ (b &aux (p (vvconf b #.(mkstr *vv-r@*)))) ; TODO: incomplete
+         (cond ((gk+ p :$r :.r :.l :!) (vverr b "bad configuration"))
+               ((gk+ p :$l)            (procr@$fx b p))
+               (t                      (vverr b "bad configuration"))))
+
+     (x@ (b &aux (p (vvconf b #.(mkstr *vv-x@*))) (l (length b)))
+         (cond ((gk+ p :$r :.r :.l :!) (vverr b "bad configuration"))
+               ((gk+ p :$l)            (vverr-len b (= l 3) l) (procx@$fx b p))
+               (t                      (vverr b "bad configuration"))))
      (%@ (b &aux (p (vvconf b #.(mkstr *vv-%@*))) (l (length b)))
-       (cond ((not (gk0 p :$r :.r :.l)) (vverr b "bad configuration"))
-             ((gk+ p :$l)               (vverr-len b (= l 3) l) (proc%@$fx b p))
-             (t                                                 (proc%@fx b p))))
+         (cond ((gk+ p :$r :.r :.l :!) (vverr b "bad configuration"))
+               ((gk+ p :$l)            (vverr-len b (= l 3) l) (proc%@$fx b p))
+               (t                      (proc%@fx b p))))
 
      (!@ (b &aux (p (vvconf b #.(mkstr *vv-!@*))) (l (length b)))
-       (cond ((gk+ p :.l :$r) (vverr b "not implemented"))
-             ((gk+ p :$l :$r) (vverr-len b (= l 3) l)      (proc!@$fx$ b p))
-             ((gk+ p :$l :.r) (vverr-len b (> l 2) l)      (proc!@$fx. b p))
-             ((gk+ p :$r)     (vverr b "not implemented"))
-             ((gk+ p :$l)     (vverr-len b (> l 2) l)      (proc!@$fx b p))
-             ((gk+ p :.r)                                  (proc!@fx. b p))
-             ((gk+ p :.l)                                  (proc!@.fx b p))
-             ((gk0 p :$l :$r :.l :.r)                      (proc!@fx b p))
-             (t (vverr b "unexpected input"))))
+         (cond ((gk+ p :.l :$r) (vverr b "not implemented"))
+               ((gk+ p :$l :$r) (vverr-len b (= l 3) l)      (proc!@$fx$ b p))
+               ((gk+ p :$l :.r) (vverr-len b (> l 2) l)      (proc!@$fx. b p))
+               ((gk+ p :$r)     (vverr b "not implemented"))
+               ((gk+ p :$l)     (vverr-len b (> l 2) l)      (proc!@$fx b p))
+               ((gk+ p :.r)                                  (proc!@fx. b p))
+               ((gk+ p :.l)                                  (proc!@.fx b p))
+               ((gk0 p :$l :$r :.l :.r)                      (proc!@fx b p))
+               (t (vverr b "unexpected input"))))
 
      (_@ (b &aux (p (vvconf b #.(mkstr *vv-_@*))) (l (length b)))
-       (cond ((gk+ p :$l :.r)                     (proc_@$fx. b p))
-             ((gk+ p :$l) (vverr-len b (= l 2) l) (proc_@$fx b p))
-             ((gk0 p :$l :$r :.l :.r)             (proc_@fx b p))
-             (t (vverr b "unexpected input"))))
+         (cond ((gk+ p :$l :.r)                     (proc_@$fx. b p))
+               ((gk+ p :$l) (vverr-len b (= l 2) l) (proc_@$fx b p))
+               ((gk0 p :$l :$r :.l :.r)             (proc_@fx b p))
+               (t (vverr b "unexpected input"))))
 
      (.@ (b &aux (p (vvconf b #.(mkstr *vv-.@*))) (l (length b)))
-       (cond ((gk0 p :$l :$r :.l :.r)             (proc.@fx b p))
-             ((gk+ p :$l) (vverr-len b (= l 2) l) (proc.@$fx b p))
-             (t (vverr b "unexpected input"))))
+         (cond ((gk0 p :$l :$r :.l :.r)             (proc.@fx b p))
+               ((gk+ p :$l) (vverr-len b (= l 2) l) (proc.@$fx b p))
+               (t (vverr b "unexpected input"))))
 
+     (nxt (b) (cons (rec (car b)) (rec (cdr b))))
      (rec (b) ; this messy, but much faster to define s as late as possible,
        (cond ((or (null b) (atom b)) (return-from rec b))
-             ((not (and (listp b) (symbolp (car b)))) (return-from rec (split b))))
-
+             ((not (and (listp b) (symbolp (car b)))) (return-from rec (nxt b))))
        (let ((s (mkstr (car b))))
          (declare (string s))
          (cond ((match-substr #.(mkstr *vv-!@*) s) (rec (!@ b)))
@@ -270,7 +275,7 @@ expecting ~a or ~a, got: ~a)" b dim (1+ dim) l))
                ((match-substr #.(mkstr *vv-x@*) s) (rec (x@ b)))
                ((match-substr #.(mkstr *vv-m@*) s) (rec (m@ b)))
                ((match-substr #.(mkstr *vv-f@*) s) (rec (f@ b)))
-               (t (split b))))))
+               (t (nxt b))))))
     (rec body)))
 
 (defmacro define-vv-macro ()

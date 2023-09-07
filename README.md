@@ -1,8 +1,9 @@
 # VEQ
 
-VEQ is a set of convenience utilities for writing (1d/)2d/3d vector mathematics.
-It suports single vectors or arrays of vectors, with some broadcasting and
-reduction operations.
+VEQ is a DSL and a set of utilities for doing dealing with (primarily)
+1d/2d/3d/nd point vectors and  arrays of point vectors. It includes some
+geometry utilities like intersection tests, and other things related to
+graphics programming.
 
 VEQ was written to be the vector library used in my generative art library
 [auxin](https://github.com/inconvergent/auxin), and in
@@ -14,15 +15,35 @@ Here are some examples of use:
 
 ```lisp
 (in-package :veq)
-(fvprogn
-  (xlet ((f2!a (f2 1f0 2f0))
-         (f2!b (f2 3f0 100f0))
-         (line (f2$line 3f0 40f0 7f0 3f0))
-         (va (f$_ (loop for v from 0 below 6
-                        collect (list (ff v) (ff (1+ v)))))))
 
-    ; veq:vp pretty prints input code and output values
-    (vp (f2len (f2!@*. (f2+ a b) 0.1f0)))
+; fvprogn is a compiler for the veq DSL, and and environment that cointains
+; many of the vector tools. among other things it handles the !@ triggers for
+; common nd point vector operations such as f2!@+ for 2d single float point
+; vector addition, and so on
+
+; see [docs](DOCS.md) for vv macro for more info about !@, _@, .@ compiler
+; and other triggers. the documentations also contains an automatically
+; generated symbol documentation.
+
+; here are some examples:
+
+(fvprogn
+  ; xlet makes it convenient to declare typed value packs ("veqs") with the
+  ; trigger [t][d]![var], eg. f2!varname. the variable will the be replaced by
+  ; the n values inside the scope.
+  (xlet ((f2!a (f2 1 2))                                      ; (values 1f0 2f0)
+         (f3!varname 0)                                       ; (values 0.0 0.0 0.0)
+         (f2!b (f2 3 100))                                    ; (values 3f0 100f0)
+         (line (f2$line 3f0 40f0 7f0 3f0))                    ; #(3f0 40f0 7f0 3f0)
+         (xx :s)                                              ; just :s, as you expect
+         (i3!integervar) (values 1 7 3)                       ; (values 1 7 3)
+         (va (f$_ (loop for v from 0 below 6                  ; #(0.0 1.0 1.0
+                        collect (list (ff v) (ff (1+ v))))))) ;   2.0 2.0 3.0
+                                                              ;   3.0 4.0 4.0
+                                                              ;   5.0 5.0 6.0)
+    ; vp pretty prints input code and output values
+    (vp (f2len (f2!@*. (f2!@+ a b) 0.1)))
+    ; f2!@*. scales the vector by 0.1 by broadcasting [.] the value over the veq
 
     ; convenience function to print arrays of vectors:
     (2$print line) ; returns line
@@ -32,7 +53,11 @@ Here are some examples of use:
     ; only return vb from index to below 5
     (vp (f2!@$+ (?@ va 2 5) 3f0 100f0))
 
-    (vp (f2. (f2$ va 0) (f2$ line 1))) ; dot product
+    (vp (f2dot (f2$ va) (f2$ line 1)))   ; dot product
+    ; can also be written as:
+    (f!@+ (f2!@* (f2$ va) (f2$ line 1))
+    ; where (f2$ va) is the first veq in va, and (f2$ line 1) is the second
+    ; veq in line
 
     (vp (f2cross (f2$ line 0 1))) ; cross product
     ; equivalent to:
@@ -43,8 +68,6 @@ Here are some examples of use:
     (vp (f21_@$f2len (f2!@$+ (f2$zero 3) 3f0 1f0)))
 
     (vp (f21_@$+ vb))
-    ; see documentation for vv macro for more info about !@, _@, .@ compiler
-    ; triggers
 
    ; TODO, improve example for new features
     ))
@@ -53,6 +76,3 @@ Here are some examples of use:
 For more examples go to [examples](examples/ex.lisp).
 
 You can also see some usagee in the [tests](test/veq.lisp).
-
-See [docs](DOCS.md) for automatically generated symbol documentation.
-

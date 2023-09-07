@@ -18,22 +18,15 @@ arrays of vectors."
                (:file "utils" :depends-on ("types"))
                (:file "docs" :depends-on ("utils"))
                (:file "vset" :depends-on ("utils"))
-               (:file "lets" :depends-on ("veq-ops"))
                (:file "macros-helpers" :depends-on ("utils" ))
-               (:file "veq-ops" :depends-on ("macros-helpers"))
-               (:file "ops-1" :depends-on ("veq-ops"))
-               (:file "ops-2" :depends-on ("veq-ops"))
-               (:file "ops-3" :depends-on ("veq-ops"))
-               (:file "ops-4" :depends-on ("veq-ops"))
-               (:file "macrolets"
-                :depends-on ("macros-helpers" "veq-ops"
-                             "ops-1" "ops-2" "ops-3" "ops-4"))
+               (:file "ops-helpers" :depends-on ("macros-helpers"))
+               (:file "ops" :depends-on ("ops-helpers"))
+               (:file "lets" :depends-on ("ops"))
+               (:file "macrolets" :depends-on ("macros-helpers" "ops"))
                (:file "ops-vv-helpers" :depends-on ("macrolets"))
                (:file "ops-vv" :depends-on ("ops-vv-helpers"))
-
                (:file "array-utils" :depends-on ("utils"))
                (:file "array-rows" :depends-on ("utils"))
-
                (:file "select-dim" :depends-on ("utils"))
                (:file "fxlspace" :depends-on ("macrolets"))
                (:file "mat" :depends-on ("macrolets"))

@@ -15,6 +15,13 @@
 
 (defvar *vv-special* (mapcar #'mkstr `(,*vv-dot*  ,*vv-bang* ,*vv-arr* ,*vv-simd*)))
 
+(defvar *vverr-msg* "~&██ VV error at: ~a~%██ msg: ~a~%██ xpr: ~s~&")
+(defun vverr (expr msg) (error *vverr-msg* (car expr) msg expr))
+(defmacro vverr-len (b wanted got)
+  `(unless ,wanted
+     (vverr ,b (format nil "bad # of elements. wanted ~a, got: ~a" ',wanted ,got))))
+
+
 (defun nvrs (a c n) (loop for k from c repeat n collect `(:vr ,a ,k)))
 
 (defun gk (p k &optional silent &aux (hit (cdr (assoc k p))))
@@ -27,8 +34,6 @@
   (declare #.*opt* (list p keys))
   (every (lambda (k) (= (gk p k) 0)) keys))
 
-(defun vverr (expr msg)
-  (error "~&VV error at~%sym: ~a~%msg: ~a~%expr:~s~&" (car expr) msg expr))
 
 (defun car-match-modifier (mod b)
   (declare #.*opt* (symbol mod))
@@ -45,19 +50,27 @@
                     (second b))
           (values nil nil nil b))))
 
+; NOTE/ TODO: "$"/"" -> ||
+(defun ensure-fx-sym (p &aux (fx (gk p :fx*)))
+  "return gensym :fx* is the empty string. otherwise the symbol will be ||"
+  (if (< (length (mkstr fx)) 1) (gensym "VV-NONAME") fx))
+(defun assert-fx-sym (b p &aux (fx (gk p :fx*)))
+  "error when :fx* is empty"
+  (if (< (length (mkstr fx)) 1) (vverr b "missing fx name") fx))
+(defun strip-fx-psymb (sfx pkg)
+  (declare (string sfx))
+  (psymb pkg (strip-symbols sfx *vv-special*)))
+
 ; -- ARRAY CONF -----------------------------------------------------------------
 
 (defun niloutconf (p b) (values `((:out . nil) ,@p) b))
 
 (defun tailconf (p b &aux (b2 (subseq b 2)))
-  (declare #.*opt* (optimize speed) (list p b))
+  (declare #.*opt* (list p b))
   (mvb (ismod ind) (car-match-modifier *vv-?@* (car b2))
-
     (values `((:rht . ,(if ismod (cdar b2) b2)) (:@modrht . ,ismod)
               ,@(when (and ismod (> (the pn ismod) 0)) `((:ind . ,ind)))
               ,@p) b)))
-
-(defun fx-strip (fx pkg) (when fx (psymb pkg (strip-symbols fx *vv-special*))))
 
 (defun vvconf (b vv-sym &aux (s (car b)))
   (declare #.*opt* (list b) (symbol s))
@@ -65,7 +78,7 @@
     (declare (pn dim dimout))
     (let* ((pkg (symbol-package s))
            (sfx (nth-value 1 (edge-str *vv-bang* sfx-full t)))
-           (fx (psymb pkg sfx)) (fx* (fx-strip sfx pkg))
+           (fx (psymb pkg sfx)) (fx* (strip-fx-psymb sfx pkg))
            (ldots (edge-str *vv-dot* sfx)) (rdots (edge-str *vv-dot* sfx t))
            (larrs (edge-str *vv-arr* sfx)) (rarrs (edge-str *vv-arr* sfx t))
            (lsimd (edge-str *vv-simd* sfx)) (rsimd (edge-str *vv-simd* sfx t))
@@ -73,11 +86,11 @@
       (declare (symbol fx) (string sfx)
                (pn ldots rdots larrs rarrs bangs lsimd rsimd))
       (when (and (> bangs 0) (not (= dim dimout))) (vverr b "bad outdim"))
-      (when (< (length sfx) 1) (vverr b "missing fx name"))
-      (when (> (* larrs rarrs) 1) (vverr b "too many arrays ($)"))
+      (when (> (+ larrs rarrs) 2) (vverr b "too many arrays ($)"))
       (when (> (* ldots rdots) 0) (vverr b "broadcasting (.) on both sides"))
+      ; TODO: SIMD is not implemented for any cases!!
       (when (or (> (* larrs rsimd) 0) (> (* lsimd rarrs) 0))
-            (vverr b "must use either $ or & for broadcasts, not both"))
+            (vverr b "must use either $ or & (not implemented) for broadcasts, not both"))
 
       `((:dim . ,dim) (:dimout . ,dimout) (:pkg . ,pkg) (:fx . ,fx) (:fx* . ,fx*)
         (:ty . ,(type-from-short short-ty t)) (:aty . ,(arrtype short-ty 'vector))
