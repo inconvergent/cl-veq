@@ -46,6 +46,22 @@ returns: (values 1f0 3f0 4f0 6f0)"
                 (silent? :rt (format t "~&>> ~{~a~^ | ~}~&" ,res))
                 (apply #'values ,res))))
 
+; TODO: finish this
+; (defmacro vpr1 (v &optional (prefix ">> "))
+;   (awg (vpr1) `(let ((,vpr1 ,v))
+;                  (silent? :rt (format t "~a ~a" ,prefix ,vpr1))
+;                  ,vpr1)))
+; (defmacro vp (&rest rest &aux (prefix ">> "))
+;   "print values and return values, return values."
+;   `(progn (silent? :rt (format t "~&"))
+;     (values ,@(loop for v in rest
+;                    if (keywordp v)
+;                    collect (progn (setf prefix (format nil "~a >> " (string-downcase (mkstr v))))
+;                                    `(format t "~&"))
+;                    ; collect `(format t "~&~a >>: " ,(string-downcase (mkstr v)))
+;                    else collect `(vpr1 ,v ,prefix)
+;     ))))
+
 ; NOTE: using (lst ...) makes things slower in some cases.  because of the
 ; consing or because the number of values is unknown?. avoid when possible.
 (defmacro lst (&body body)
@@ -80,7 +96,7 @@ almost like multiple-value-list, except it handles multiple arguments."
 (defmacro vchain (fxs &rest rest &aux (rest `((~ ,@rest))))
   " chain functions, on all values.
 eg: (vchain #'a #'b (values 1 2))
-corresponds to: (~ #'a (~ #b (values 1 2)))"
+corresponds to: (mvc #'a (mvc #'b (values 1 2)))"
   (loop for f in (reverse fxs) do (setf rest `((mvc ,f ,@rest))))
   `(progn ,@rest))
 

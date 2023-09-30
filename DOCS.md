@@ -8154,7 +8154,7 @@ implementation details.
  ;   Documentation:
  ;      chain functions, on all values.
  ;     eg: (vchain #'a #'b (values 1 2))
- ;     corresponds to: (~ #'a (~ #b (values 1 2)))
+ ;     corresponds to: (mvc #'a (mvc #'b (values 1 2)))
  ;   Source file: src/utils.lisp
 ```
 
