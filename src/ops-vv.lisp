@@ -8,6 +8,9 @@
 ; almost the same: (f@fx ...) -> (mvc fx (mvc #'values ...))
 (defun procf@fx (b p) `(mvc (the function ,(assert-fx-sym b p)) (~ ,@(cdr b))))
 
+
+(defun proca@fx (b p) `(apply #',(assert-fx-sym b p) ,@(cdr b)))
+
 ; -- 1ARY -----------------------------------------------------------------------
 
 ; (2.@abs -1 -2) -> (abs -1) (abs -1) -> 1 2
@@ -222,7 +225,9 @@
 (defun proc-vv (body)
   (declare #.*opt*)
   (labels
-    ((m@ (b &aux (p (vvconf b #.(mkstr *vv-m@*)))) (procm@fx b p))
+    (
+     (a@ (b &aux (p (vvconf b #.(mkstr *vv-a@*)))) (proca@fx b p))
+     (m@ (b &aux (p (vvconf b #.(mkstr *vv-m@*)))) (procm@fx b p))
      (f@ (b &aux (p (vvconf b #.(mkstr *vv-f@*)))) (procf@fx b p))
 
      (r@ (b &aux (p (vvconf b #.(mkstr *vv-r@*)))) ; TODO: incomplete
@@ -274,6 +279,7 @@
                ((match-substr #.(mkstr *vv-%@*) s) (rec (%@ b)))
                ((match-substr #.(mkstr *vv-x@*) s) (rec (x@ b)))
                ((match-substr #.(mkstr *vv-m@*) s) (rec (m@ b)))
+               ((match-substr #.(mkstr *vv-a@*) s) (rec (a@ b)))
                ((match-substr #.(mkstr *vv-f@*) s) (rec (f@ b)))
                (t (nxt b))))))
     (rec body)))
@@ -453,36 +459,36 @@ most of the modes are introduced with examples above, but here is a summary of
 all the modes:
 
   -- !@: call fx on pairs of values and/or vec rows
-   - [f][d]!@fx[!]  : d values; d values
-   - [f][d]!@fx.[!] : d values; [number of dots] values
-   - [f][d]!@.fx : d values; [number of dots] values
-   - [f][d]!@$fx[!] : d vec; d values
-   - [f][d]!@$fx[!].: d vec; [number of dots] values
-   - [f][d]!@$fx$[!]: d vec; d vec
+   - [f][d]!@fx[!]   : d values; d values
+   - [f][d]!@fx.[!]  : d values; [number of dots] values
+   - [f][d]!@.fx     : d values; [number of dots] values
+   - [f][d]!@$fx[!]  : d vec; d values
+   - [f][d]!@$fx[!]. : d vec; [number of dots] values
+   - [f][d]!@$fx$[!] : d vec; d vec
 
   -- _@: call fx on n values, or vec rows
-   - [f][d]_@fx  :  d values
-   - [f][d]_@$fx : d vec
-   - [f][d]_@$fx.: d vec; [number of dots] values
+   - [f][d]_@fx   :  d values
+   - [f][d]_@$fx  : d vec
+   - [f][d]_@$fx. : d vec; [number of dots] values
 
   -- .@: call fx on individual elements from values, vec rows
-   - [f][d].@fx : d values
-   - [f][d].@$fx: d vec
+   - [f][d].@fx  : d values
+   - [f][d].@$fx : d vec
 
   -- %@: map lambda form across values or vec rows.
          returns new or altered [!] vec:
-   - [f][d]%@$fx[!]: d vec
+   - [f][d]%@$fx[!] : d vec
 
   -- x@: map lambda form across values or rows of values from vec.
          returns nil:
-   - [f][d]x@$fx: d vec
+   - [f][d]x@$fx : d vec
 
   -- r@: reduces rows with fx vertically. [TODO/INCOMPLETE]
-   - [f][d]r@$fx: d vec
+   - [f][d]r@$fx : d vec
 
   -- mvc/funcall
-   - m@fx: translates to (mvc #'fx ...)
-   - f@fx: translates to (mvc fx ...)
+   - m@fx : translates to (mvc #'fx ...)
+   - f@fx : translates to (mvc fx ...)
 
 
 # SUMMARY OF MODIFIERS

@@ -6,7 +6,8 @@
                   *vv-r@* *vv-%@* *vv-x@*))
 
 (defvar *vv-!@* :!@) (defvar *vv-_@* :_@)
-(defvar *vv-m@* :m@) (defvar *vv-f@* :f@)
+(defvar *vv-m@* :m@) (defvar *vv-f@* :f@) (defvar *vv-a@* :a@)
+
 (defvar *vv-r@* :r@)
 (defvar *vv-%@* :%@) (defvar *vv-x@* :x@)
 (defvar *vv-.@* :.@) (defvar *vv-?@* :?@)

@@ -100,3 +100,10 @@ corresponds to: (mvc #'a (mvc #'b (values 1 2)))"
   (loop for f in (reverse fxs) do (setf rest `((mvc ,f ,@rest))))
   `(progn ,@rest))
 
+(defmacro mutate! (vars &body body)
+  (let ((vars* (loop for v of-type symbol
+                     in (etypecase vars (cons vars) (symbol (list vars)))
+                     collect `(,v ,(gensym (string-upcase (mkstr v)))))))
+    `(mvb (,@(mapcar #'second vars*)) (progn ,@body)
+          (setf ,@(awf vars*)))))
+

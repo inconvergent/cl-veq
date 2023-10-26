@@ -22,7 +22,7 @@
 
     #:from-lst #:lst
     #:mvb #:dsb #:xlet
-    #:vnrep #:vnval #:vchain
+    #:vnrep #:vnval #:vchain #:mutate!
     #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~
 
     #:vdef #:vdef* #:def* #:fvdef* #:fvdef #:vlabels
