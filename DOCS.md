@@ -7145,6 +7145,21 @@ returns (values 1f0 2f0 3f0)
  ;   Source file: src/generic-utils.lisp
 ```
 
+#### MUTATE!
+
+```
+ ; VEQ:MUTATE!
+ ;   [symbol]
+ ;
+ ; MUTATE! names a macro:
+ ;   Lambda-list: (VARS &BODY BODY)
+ ;   Documentation:
+ ;     ex: (mutate! (a b) (values 1 2))
+ ;     is equivalent to (mvb (a* b*) (values 1 2) (setf a a* b b*))
+ ;     where a* and b* are gensyms
+ ;   Source file: src/utils.lisp
+```
+
 #### MVB
 
 ```

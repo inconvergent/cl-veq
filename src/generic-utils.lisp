@@ -93,7 +93,7 @@
 (abbrev awg with-gensyms)
 (abbrev awf flatten)
 
-(defun dotted-listp (l)
+(defun dotted-listp (l) ; TODO: rewrite with rec to require first call to be cons
   (cond ((null l) nil)
         ((atom l) t)
         (t (dotted-listp (cdr l)))))
@@ -162,6 +162,13 @@
 (defun strcat (s)
   (declare (optimize speed) (list s))
   (apply #'concatenate 'string s))
+
+(defun repl (s from to)
+  (declare (string s to from))
+  "replace from with to in s"
+  (let ((s (veq::strcat (mapcar (lambda (s) (mkstr s to))
+                                (split-substr from s)))))
+    (subseq s 0 (1- (length s)))))
 
 (defun strip-symbols (name symbs)
   (declare (optimize speed) (string name) (list symbs))

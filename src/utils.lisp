@@ -21,12 +21,11 @@ ex: (labels ((fx ((:va 3 x)) (fsel (:xz) x)))
       (vpr (mvcgrp (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
 returns: (values 1f0 3f0 4f0 6f0)"
   (awg (gsfx rest x)
-    `(fvprogn
-       (labels ((,gsfx (&rest ,rest)
-         (apply #'values
-           (awf (loop for ((:va  ,dim ,x)) in (group ,rest ,dim)
-                      collect (lst (mvc ,fx ,x)))))))
-         (mvc #',gsfx ,@body)))))
+    `(fvprogn (labels ((,gsfx (&rest ,rest)
+                          (apply #'values
+                             (awf (loop for ((:va  ,dim ,x)) in (group ,rest ,dim)
+                                        collect (lst (mvc ,fx ,x)))))))
+                (mvc #',gsfx ,@body)))))
 
 (defmacro mvcmap ((dim fx) &body body)
   "returns (values (fx i) (fx j) ...) for dim values from body."
@@ -46,8 +45,7 @@ returns: (values 1f0 3f0 4f0 6f0)"
                 (silent? :rt (format t "~&>> ~{~a~^ | ~}~&" ,res))
                 (apply #'values ,res))))
 
-; TODO: finish this
-; (defmacro vpr1 (v &optional (prefix ">> "))
+; (defmacro vpr1 (v &optional (prefix ">> ")) ; TODO: finish this
 ;   (awg (vpr1) `(let ((,vpr1 ,v))
 ;                  (silent? :rt (format t "~a ~a" ,prefix ,vpr1))
 ;                  ,vpr1)))
@@ -76,11 +74,9 @@ almost like multiple-value-list, except it handles multiple arguments."
   "wraps arguments in (mvc #'values ...)."
   `(mvc #'values ,@rest))
 
-(defmacro n~ (n &rest rest)
-  ; make flag to disable this in strict mode?
+(defmacro n~ (n &rest rest) ; make flag to disable this in strict mode?
   (cond ((= (length rest) n) `(values ,@rest))
-        ; (?) ; possibly remove other uses of ~?
-        (t `(~ ,@rest))))
+        (t `(~ ,@rest)))) ; possibly remove other uses of ~?
 
 (defmacro vnrep (n &rest rest)
   (declare (pn n))
@@ -101,6 +97,9 @@ corresponds to: (mvc #'a (mvc #'b (values 1 2)))"
   `(progn ,@rest))
 
 (defmacro mutate! (vars &body body)
+  "ex: (mutate! (a b) (values 1 2))
+is equivalent to (mvb (a* b*) (values 1 2) (setf a a* b b*))
+where a* and b* are gensyms"
   (let ((vars* (loop for v of-type symbol
                      in (etypecase vars (cons vars) (symbol (list vars)))
                      collect `(,v ,(gensym (string-upcase (mkstr v)))))))
