@@ -8,6 +8,7 @@
     #:dpi #:dpi5 #:dpii #:dpi25
     #:fpi #:fpi5 #:fpii #:fpi25
     #:mac #:mac* #:v? #:d? #:i? #:context? #:ext-symbols?
+    #:group #:ungroup #:strip-arg-keys #:get-arg-key
 
     #:df #:df* #:ff #:ff* #:pos-df #:pos-ff
     #:ffl #:dfl
@@ -22,7 +23,7 @@
 
     #:from-lst #:lst
     #:mvb #:dsb #:xlet
-    #:vnrep #:vnval #:vchain #:mutate!
+    #:vnrep #:vnval #:vchain #:mutate! #:with-symbs #:vector-rearrange #:lpos
     #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~
 
     #:vdef #:vdef* #:def* #:fvdef* #:fvdef #:vlabels

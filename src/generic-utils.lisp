@@ -25,14 +25,20 @@
                  syms)
      ,@body))
 
-(defun group (source n)
+(defun group (l n)
+  (declare (list l) (fixnum n))
+  "group l into lists of n elements. see ungroup."
   (if (< n 1) (error "group error: group size is smaller than 1"))
-  (labels ((rec (source acc)
-             (let ((rest (nthcdr n source)))
+  (labels ((rec (l acc)
+             (let ((rest (nthcdr n l)))
                (if (consp rest)
-                   (rec rest (cons (subseq source 0 n) acc))
-                   (nreverse (cons source acc))))))
-    (if source (rec source nil) nil)))
+                   (rec rest (cons (subseq l 0 n) acc))
+                   (nreverse (cons l acc))))))
+    (if l (rec l nil) nil)))
+(defun ungroup (l &aux (res (list)))
+  (declare (list l res)) "inverse of group."
+  (loop for s in l do (loop for k in s do (push k res)))
+  (reverse res))
 
 (declaim (inline mkstr))
 (defun mkstr (&rest args)
@@ -170,11 +176,58 @@
                                 (split-substr from s)))))
     (subseq s 0 (1- (length s)))))
 
+(defun filter-by-predicate (l fx &key (key #'identity))
+  (declare (optimize speed (safety 2)) (list l) (function fx key))
+  "split l into (values yes no) according to fx"
+  (loop for x in l
+        if (funcall fx (funcall key x)) collect x into yes
+        else collect x into no
+        finally (return (values yes no))))
+
+(defun tree-find-all (root fx &optional (res (list)))
+  (declare (optimize speed) (function fx) (list res))
+  "find all instances where fx is t in root."
+  (cond ((funcall fx root) (return-from tree-find-all (cons root res)))
+        ((atom root) nil)
+        (t (let ((l (tree-find-all (car root) fx res))
+                 (r (tree-find-all (cdr root) fx res)))
+             (when l (setf res `(,@l ,@res)))
+             (when r (setf res `(,@r ,@res))))
+           res)))
+
+(defun tree-replace (tree from to &optional (comparefx #'equal))
+  "compares tree to from (with comparefx); replaces matches with to."
+  (cond ((funcall comparefx tree from) to)
+        ((null tree) nil) ((atom tree) tree)
+        (t (mapcar (lambda (x) (tree-replace x from to))
+                   tree))))
+
+(defun tree-replace-fx (tree fxmatch fxtransform)
+  "compares elements with (comparefx); repaces matches with (fxmatch hit)."
+  (cond ((funcall fxmatch tree)
+           (tree-replace-fx (funcall fxtransform tree) fxmatch fxtransform))
+        ((null tree) nil)
+        ((atom tree) tree)
+        (t (mapcar (lambda (x) (tree-replace-fx x fxmatch fxtransform))
+                   tree))))
+
+(defun replace-pairs (body pairs)
+  (declare (list body pairs)) "replace ((ato afrom) (bto bfrom) ...) in body."
+             (loop for (to from) in pairs do (setf body (tree-replace body from to)))
+             body)
+
 (defun strip-symbols (name symbs)
   (declare (optimize speed) (string name) (list symbs))
   (loop for c of-type string in symbs
         do (setf name (the string (strcat (split-substr c name)))))
   name)
+
+(defun strip-arg-keys (ll kk &aux (ll (group ll 2)))
+  "strip keywords in kk from ll where ll is a list of kw function args."
+  (ungroup (remove-if (lambda (k) (member k kk :test #'eq)) ll :key #'car)))
+(defun get-arg-key (ll k &optional d)
+  "get the value of keyword k in ll where ll is a list of kw function args."
+  (aif (second (find k (group ll 2) :key #'car)) it d))
 
 (defun edge-fx (fx s &optional rht &aux (c 0))
   (declare (optimize speed) (function fx) (string s) (fixnum c) (boolean rht))

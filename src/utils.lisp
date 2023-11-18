@@ -71,7 +71,7 @@ almost like multiple-value-list, except it handles multiple arguments."
   `(values-list ,l))
 
 (defmacro ~ (&rest rest)
-  "wraps arguments in (mvc #'values ...)."
+  "wraps rest in (mvc #'values ...)."
   `(mvc #'values ,@rest))
 
 (defmacro n~ (n &rest rest) ; make flag to disable this in strict mode?
@@ -79,23 +79,37 @@ almost like multiple-value-list, except it handles multiple arguments."
         (t `(~ ,@rest)))) ; possibly remove other uses of ~?
 
 (defmacro vnrep (n &rest rest)
-  (declare (pn n))
-  "corresponds to (~ r1 ... rn)"
+  (declare (pn n)) "corresponds to (values [rest n times]). see vnval."
   `(values ,@(loop repeat n collect `(progn ,@rest))))
-
 (defmacro vnval (n &rest rest)
-  (declare (pn n))
-  "returns (values v ...), where v is (progn ,@rest) evaluated once."
+  (declare (pn n)) "returns (values v ...), where v is (progn ,@rest) evaluated once. see vnrep."
   (awg (v) `(let ((,v (progn ,@rest)))
               (values ,@(loop repeat n collect v)))))
 
 (defmacro vchain (fxs &rest rest &aux (rest `((~ ,@rest))))
-  " chain functions, on all values.
-eg: (vchain #'a #'b (values 1 2))
-corresponds to: (mvc #'a (mvc #'b (values 1 2)))"
+  "chain functions, on all values.
+eg: (vchain #'a #'b (values 1 2)) equals: (mvc #'a (mvc #'b (values 1 2)))"
   (loop for f in (reverse fxs) do (setf rest `((mvc ,f ,@rest))))
   `(progn ,@rest))
 
+(defmacro lpos (l &optional (i 0) j)
+  "get list of index i or subseq i j from list of lists."
+  (awg (a)
+    (if j `(mapcar (lambda (,a) (subseq (the list ,a) (the veq:pn ,i) (the veq:pn ,j))) ,l)
+          `(mapcar (lambda (,a) (nth ,i (the list ,a))) ,l))))
+(defmacro vector-rearrange (a &rest rest)
+  "get new vector with elements from a. ex:
+(let ((i 3) (v #(0 1 2 3 4 5)))
+  (vector-rearrange v 0 1 (0 1) ((print i)) i)) ; #(0 1 0 3 3)"
+  (awg (a*)
+    `(let ((,a* ,a))
+       (concatenate 'vector
+         ,@(loop for ind in rest
+                 collect (etypecase ind
+                           (number `(list (aref ,a* ,ind)))
+                           (symbol `(list (aref ,a* ,ind)))
+                           (cons (ecase (length ind) (1 `(list (aref ,a* ,@ind)))
+                                                     (2 `(subseq ,a* ,@ind))))))))))
 (defmacro mutate! (vars &body body)
   "ex: (mutate! (a b) (values 1 2))
 is equivalent to (mvb (a* b*) (values 1 2) (setf a a* b b*))
@@ -105,4 +119,16 @@ where a* and b* are gensyms"
                      collect `(,v ,(gensym (string-upcase (mkstr v)))))))
     `(mvb (,@(mapcar #'second vars*)) (progn ,@body)
           (setf ,@(awf vars*)))))
+
+(defun with-symbs (ss body)
+  (declare (list ss body))
+  "bind these symbols outside body and replace inside body. eg:
+  (with-symbs `(g ,g ...) (qry g :select ... )) ; equals:
+  (let ((gg ,g)) (qry gg :select ...))          ; gg is a gensym"
+  (labels ()
+    (let ((s* (loop for (var expr) in (group ss 2) ; gs expr var
+                    collect (list (gensym (mkstr var)) expr var))))
+      `(let (,@(loop for s in s* collect (subseq s 0 2)))
+         (progn ,(replace-pairs body
+                   (loop for s in s* collect (list (first s) (third s)))))))))
 

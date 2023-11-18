@@ -18,11 +18,10 @@
                         `(declare (ignorable ,arg) (,type ,arg)))
                     ,@body)))
 
-   (let ((body (if (and #+:veq-strict t
+   (let ((body (if (and #+:veq-strict t ; TODO: rewrite this
                         #-:veq-strict nil
                         (eq (car expr) 'veq:~) (= (length expr) (1+ dim)))
-                 (-mvb-strict) (-mvb))
-          ))
+                 (-mvb-strict) (-mvb))))
     (if repvarg (replace-varg body) body))))
 (defun -vmvb* (type dim arg expr body)
   ; this is used in eg vv where it is convenient to be able to refer to the
@@ -108,14 +107,12 @@ ex: (~a (fx)) corresponds to (let ((v (fx))) (values v ...))." dim mname)))
                                      `(let ((,',',e ,expr))
                                         (declare (,',',type ,',',e))
                                         ,',',vals)))))))
-
 (defmacro define-creators ()
  `(progn
     ,@(loop for (d ty) in (group '(1 ff 2 ff 3 ff 4 ff 1 df 2 df 3 df 4 df
                                    1 in 2 in 3 in 4 in 1 pn 2 pn 3 pn 4 pn) 2)
             append `((define-td ,d ,ty) (define-td~ ,d ,ty)
                      (define-rep ,d ,ty) (define-val ,d ,ty)
-                     ; flet conflicts with cl:flet
                      ,(when (> d 1) `(define-vlet ,d ,ty))))))
 (define-creators)
 
@@ -123,14 +120,15 @@ ex: (~a (fx)) corresponds to (let ((v (fx))) (values v ...))." dim mname)))
 
 (defun xlet-proc (all-vars &rest body)
   (labels ((ensure-values (ty dim v)
-             (typecase v (list v)
-                         (number `(values ,@(loop with ty = (type-from-short ty)
-                                                  repeat dim collect (if (eq ty :nil) v (coerce v ty)))))
-                         (atom `(values ,@(loop with ty = (type-from-short ty)
-                                                repeat dim collect (if (eq ty :nil) v `(the ,ty ,v)))))
-                         (otherwise `(values ,v)))
-
-             )
+             (typecase v
+               (list v)
+               (number `(values ,@(loop with ty = (type-from-short ty)
+                                        repeat dim
+                                        collect (if (eq ty :nil) v (coerce v ty)))))
+               (atom `(values ,@(loop with ty = (type-from-short ty)
+                                      repeat dim
+                                      collect (if (eq ty :nil) v `(the ,ty ,v)))))
+               (otherwise `(values ,v))))
            (select-type (decl var ty &aux (d (cdr (assoc var decl))))
              (if d d (type-from-short ty t)))
            (inverse-decl (&aux (decl (list)))

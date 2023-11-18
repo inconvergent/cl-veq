@@ -3680,7 +3680,8 @@ assuming c is a structname, and a,b are FVEC of dim 2
  ;
  ; F2$SQUARE* names a compiled function:
  ;   Lambda-list: (S)
- ;   Derived type: (FUNCTION (SINGLE-FLOAT) *)
+ ;   Derived type: (FUNCTION (SINGLE-FLOAT)
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (8)) &OPTIONAL))
  ;   Source file: src/shapes.lisp
 ```
 
@@ -6277,6 +6278,34 @@ wraps body in mvc so that (f3~ 1 (f2~ 2f0 3))
 returns (values 1f0 2f0 3f0)
 ```
 
+#### GET-ARG-KEY
+
+```
+ ; VEQ:GET-ARG-KEY
+ ;   [symbol]
+ ;
+ ; GET-ARG-KEY names a compiled function:
+ ;   Lambda-list: (LL K &OPTIONAL D)
+ ;   Derived type: (FUNCTION (T T &OPTIONAL T) (VALUES T &OPTIONAL))
+ ;   Documentation:
+ ;     get the value of keyword k in ll where ll is a list of kw function args.
+ ;   Source file: src/generic-utils.lisp
+```
+
+#### GROUP
+
+```
+ ; VEQ:GROUP
+ ;   [symbol]
+ ;
+ ; GROUP names a compiled function:
+ ;   Lambda-list: (L N)
+ ;   Derived type: (FUNCTION (LIST FIXNUM) (VALUES LIST &OPTIONAL))
+ ;   Documentation:
+ ;     group l into lists of n elements. see ungroup.
+ ;   Source file: src/generic-utils.lisp
+```
+
 #### :fvprogn: I
 
 ```
@@ -7090,6 +7119,19 @@ returns (values 1f0 2f0 3f0)
  ; LL* names a macro:
  ;   Lambda-list: (&BODY BODY)
  ;   Source file: src/types.lisp
+```
+
+#### LPOS
+
+```
+ ; VEQ:LPOS
+ ;   [symbol]
+ ;
+ ; LPOS names a macro:
+ ;   Lambda-list: (L &OPTIONAL (I 0) J)
+ ;   Documentation:
+ ;     get list of index i or subseq i j from list of lists.
+ ;   Source file: src/utils.lisp
 ```
 
 #### LST
@@ -8045,6 +8087,20 @@ returns (values 1f0 2f0 3f0)
  ;   Source file: src/macros-helpers.lisp
 ```
 
+#### STRIP-ARG-KEYS
+
+```
+ ; VEQ:STRIP-ARG-KEYS
+ ;   [symbol]
+ ;
+ ; STRIP-ARG-KEYS names a compiled function:
+ ;   Lambda-list: (LL KK &AUX (LL (GROUP LL 2)))
+ ;   Derived type: (FUNCTION (T T) *)
+ ;   Documentation:
+ ;     strip keywords in kk from ll where ll is a list of kw function args.
+ ;   Source file: src/generic-utils.lisp
+```
+
 #### SVEC
 
 ```
@@ -8119,6 +8175,20 @@ returns (values 1f0 2f0 3f0)
  ;   Source file: src/types.lisp
 ```
 
+#### UNGROUP
+
+```
+ ; VEQ:UNGROUP
+ ;   [symbol]
+ ;
+ ; UNGROUP names a compiled function:
+ ;   Lambda-list: (L &AUX (RES (LIST)))
+ ;   Derived type: (FUNCTION (LIST) (VALUES LIST &OPTIONAL))
+ ;   Documentation:
+ ;     inverse of group.
+ ;   Source file: src/generic-utils.lisp
+```
+
 #### UNPACK-VVSYM
 
 ```
@@ -8167,9 +8237,8 @@ implementation details.
  ; VCHAIN names a macro:
  ;   Lambda-list: (FXS &REST REST)
  ;   Documentation:
- ;      chain functions, on all values.
- ;     eg: (vchain #'a #'b (values 1 2))
- ;     corresponds to: (mvc #'a (mvc #'b (values 1 2)))
+ ;     chain functions, on all values.
+ ;     eg: (vchain #'a #'b (values 1 2)) equals: (mvc #'a (mvc #'b (values 1 2)))
  ;   Source file: src/utils.lisp
 ```
 
@@ -8204,6 +8273,21 @@ implementation details.
  ;   Source file: src/macrolets.lisp
 ```
 
+#### VECTOR-REARRANGE
+
+```
+ ; VEQ:VECTOR-REARRANGE
+ ;   [symbol]
+ ;
+ ; VECTOR-REARRANGE names a macro:
+ ;   Lambda-list: (A &REST REST)
+ ;   Documentation:
+ ;     get new vector with elements from a. ex:
+ ;     (let ((i 3) (v #(0 1 2 3 4 5)))
+ ;       (vector-rearrange v 0 1 (0 1) ((print i)) i)) ; #(0 1 0 3 3)
+ ;   Source file: src/utils.lisp
+```
+
 #### VLABELS
 
 ```
@@ -8228,7 +8312,7 @@ implementation details.
  ; VNREP names a macro:
  ;   Lambda-list: (N &REST REST)
  ;   Documentation:
- ;     corresponds to (~ r1 ... rn)
+ ;     corresponds to (values [rest n times]). see vnval.
  ;   Source file: src/utils.lisp
 ```
 
@@ -8241,7 +8325,7 @@ implementation details.
  ; VNVAL names a macro:
  ;   Lambda-list: (N &REST REST)
  ;   Documentation:
- ;     returns (values v ...), where v is (progn ,@rest) evaluated once.
+ ;     returns (values v ...), where v is (progn ,@rest) evaluated once. see vnrep.
  ;   Source file: src/utils.lisp
 ```
 
@@ -8604,6 +8688,22 @@ all the modes:
  ;   Source file: src/types.lisp
 ```
 
+#### WITH-SYMBS
+
+```
+ ; VEQ:WITH-SYMBS
+ ;   [symbol]
+ ;
+ ; WITH-SYMBS names a compiled function:
+ ;   Lambda-list: (SS BODY)
+ ;   Derived type: (FUNCTION (LIST LIST) (VALUES CONS &OPTIONAL))
+ ;   Documentation:
+ ;     bind these symbols outside body and replace inside body. eg:
+ ;       (with-symbs `(g ,g ...) (qry g :select ... )) ; equals:
+ ;       (let ((gg ,g)) (qry gg :select ...))          ; gg is a gensym
+ ;   Source file: src/utils.lisp
+```
+
 #### XLET
 
 ```
@@ -8630,7 +8730,7 @@ immediately.
  ; ~ names a macro:
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
- ;     wraps arguments in (mvc #'values ...).
+ ;     wraps rest in (mvc #'values ...).
  ;   Source file: src/utils.lisp
 ```
 
