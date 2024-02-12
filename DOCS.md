@@ -429,9 +429,9 @@ strict make 1d vector in veq context.
  ;   [symbol]
  ;
  ; D$COPY names a compiled function:
- ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT))
- ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
+ ;   Lambda-list: (A0 &OPTIONAL (NA (LENGTH A0)))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL T)
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     copy DVEC vector array.
  ;   Source file: src/array-utils.lisp
@@ -2444,7 +2444,7 @@ body (1): (* DPI (/ D 180.0d0)).
  ; DEASE-IN-CIRC names a compiled function:
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT -0.0d0 1.0d0) &OPTIONAL))
+ ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -2553,7 +2553,7 @@ body (1): (* DPI (/ D 180.0d0)).
  ; DEASE-IN-OUT-CIRC names a compiled function:
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT -0.0d0 1.0d0) &OPTIONAL))
+ ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -3254,9 +3254,9 @@ strict make 1d vector in veq context.
  ;   [symbol]
  ;
  ; F$COPY names a compiled function:
- ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT))
- ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
+ ;   Lambda-list: (A0 &OPTIONAL (NA (LENGTH A0)))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL T)
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     copy FVEC vector array.
  ;   Source file: src/array-utils.lisp
@@ -5454,8 +5454,7 @@ body (1): (* FPI (/ D 180.0)).
  ;
  ; FEASE-IN-CIRC names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (SINGLE-FLOAT -0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -5489,9 +5488,8 @@ body (1): (* FPI (/ D 180.0)).
  ;   Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
  ;   Derived type: (FUNCTION (T &OPTIONAL T T)
  ;                  (VALUES
- ;                   (OR (SINGLE-FLOAT -1.0 1.0)
- ;                       (DOUBLE-FLOAT -1.0d0 1.0d0)
- ;                       (COMPLEX SINGLE-FLOAT) (COMPLEX DOUBLE-FLOAT))
+ ;                   (OR (FLOAT -1.0 1.0) (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
  ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in:
@@ -5564,8 +5562,7 @@ body (1): (* FPI (/ D 180.0)).
  ;
  ; FEASE-IN-OUT-CIRC names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (SINGLE-FLOAT -0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -5599,9 +5596,8 @@ body (1): (* FPI (/ D 180.0)).
  ;   Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
  ;   Derived type: (FUNCTION (T &OPTIONAL T T)
  ;                  (VALUES
- ;                   (OR (SINGLE-FLOAT -512.0 513.0)
- ;                       (DOUBLE-FLOAT -512.0d0 513.0d0)
- ;                       (COMPLEX SINGLE-FLOAT) (COMPLEX DOUBLE-FLOAT))
+ ;                   (OR (FLOAT -512.0 513.0) (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
  ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
@@ -5806,9 +5802,8 @@ body (1): (* FPI (/ D 180.0)).
  ;   Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
  ;   Derived type: (FUNCTION (T &OPTIONAL T T)
  ;                  (VALUES
- ;                   (OR (COMPLEX DOUBLE-FLOAT) (COMPLEX SINGLE-FLOAT)
- ;                       (DOUBLE-FLOAT 0.0d0 2.0d0)
- ;                       (SINGLE-FLOAT 0.0 2.0))
+ ;                   (OR (FLOAT 0.0 2.0) (COMPLEX DOUBLE-FLOAT)
+ ;                       (COMPLEX SINGLE-FLOAT))
  ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease out:
@@ -6351,9 +6346,9 @@ strict make 1d vector in veq context.
  ;   [symbol]
  ;
  ; I$COPY names a compiled function:
- ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (SIGNED-BYTE 32)))
- ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
+ ;   Lambda-list: (A0 &OPTIONAL (NA (LENGTH A0)))
+ ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (SIGNED-BYTE 32)) &OPTIONAL T)
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32)) &OPTIONAL))
  ;   Documentation:
  ;     copy IVEC vector array.
  ;   Source file: src/array-utils.lisp
@@ -7328,10 +7323,10 @@ strict make 1d vector in veq context.
  ;   [symbol]
  ;
  ; P$COPY names a compiled function:
- ;   Lambda-list: (A0)
- ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (UNSIGNED-BYTE 32)))
- ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
- ;                          &OPTIONAL))
+ ;   Lambda-list: (A0 &OPTIONAL (NA (LENGTH A0)))
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY (UNSIGNED-BYTE 32)) &OPTIONAL T)
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32)) &OPTIONAL))
  ;   Documentation:
  ;     copy PVEC vector array.
  ;   Source file: src/array-utils.lisp
@@ -8200,7 +8195,7 @@ returns (values 1f0 2f0 3f0)
  ;   Derived type: (FUNCTION
  ;                  (SYMBOL &KEY (:S (OR STRING KEYWORD CHARACTER))
  ;                   (:NILTYPE T) (:SYMOUT T))
- ;                  (VALUES KEYWORD T (MOD 36) (MOD 36) &OPTIONAL))
+ ;                  (VALUES KEYWORD T (MOD 10) (MOD 10) &OPTIONAL))
  ;   Documentation:
  ;     split names of type f34!var into (values :f var 3 4)
  ;   Source file: src/types.lisp
@@ -8700,7 +8695,7 @@ all the modes:
  ;   Documentation:
  ;     bind these symbols outside body and replace inside body. eg:
  ;       (with-symbs `(g ,g ...) (qry g :select ... )) ; equals:
- ;       (let ((gg ,g)) (qry gg :select ...))          ; gg is a gensym
+ ;       (let ((gg ,g) ...) (qry gg :select ...))      ; gg is a gensym
  ;   Source file: src/utils.lisp
 ```
 

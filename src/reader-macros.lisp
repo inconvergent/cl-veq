@@ -4,7 +4,7 @@
 ; these reader macros are here for convenience
 ; it is safe to remove this file completely from this library.
 ; neither veq nor weird depend on this file.
-; use #+:veq-reader-macros to enable when loading veq/weird
+; use #+:veq-reader-macros to enable when loading veq/auxin
 
 ; ignore shebang lines
 (set-dispatch-macro-character #\# #\!

@@ -2,7 +2,7 @@
 (asdf:defsystem #:veq
   :description "DSL and other utilities for vector mathematics."
   :author "anders hoff / @inconvergent / inconvergent@gmail.com"
-  :version "5.0.0" :licence "MIT"
+  :version "5.0.2" :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))
   :pathname "src/" :serial nil
   :depends-on (#+SBCL #:sb-cltl2 #+:veq-simd #:sb-simd)
@@ -37,7 +37,7 @@
 
 (asdf:defsystem #:veq/tests
   :depends-on (#:veq #:prove #:asdf #:uiop)
-  :version "5.0.0"
+  :version "5.0.2"
   :perform (asdf:test-op (o s) (uiop:symbol-call ':veq-tests '#:run-tests))
   :pathname "test/" :serial t
   :components ((:file "run")))

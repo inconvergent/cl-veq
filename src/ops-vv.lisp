@@ -268,7 +268,9 @@
 
      (nxt (b) (cons (rec (car b)) (rec (cdr b))))
      (rec (b) ; this messy, but much faster to define s as late as possible,
-       (cond ((or (null b) (atom b)) (return-from rec b))
+       (cond ((and (not (stringp b)) (vectorp b))
+                (return-from rec (map 'vector #'rec b)))
+             ((or (null b) (atom b)) (return-from rec b))
              ((not (and (listp b) (symbolp (car b)))) (return-from rec (nxt b))))
        (let ((s (mkstr (car b))))
          (declare (string s))

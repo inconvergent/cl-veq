@@ -67,7 +67,8 @@
   (values (intern (apply #'mkstr args))))
 (defun psymb (pkg &rest args) ; https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
   (declare (optimize speed (safety 1)))
-  (values (intern (apply #'mkstr args) pkg)))
+  ; TODO: what should the default pkg be? where should the vv default pkg be?
+  (values (intern (apply #'mkstr args) (if pkg pkg :veq))))
 (defmacro with-struct ((name . fields) struct &body body)
   (let ((gs (gensym (string-upcase (mkstr name)))))
     `(let ((,gs ,struct))

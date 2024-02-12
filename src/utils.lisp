@@ -124,7 +124,7 @@ where a* and b* are gensyms"
   (declare (list ss body))
   "bind these symbols outside body and replace inside body. eg:
   (with-symbs `(g ,g ...) (qry g :select ... )) ; equals:
-  (let ((gg ,g)) (qry gg :select ...))          ; gg is a gensym"
+  (let ((gg ,g) ...) (qry gg :select ...))      ; gg is a gensym"
   (labels ()
     (let ((s* (loop for (var expr) in (group ss 2) ; gs expr var
                     collect (list (gensym (mkstr var)) expr var))))
