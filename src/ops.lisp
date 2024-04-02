@@ -69,7 +69,7 @@
       (values (- (* ax cosa) (* ay sina))
               (+ (* ax sina) (* ay cosa))))
   (:2 @2rots (2!a angle 2!s)) (mvb (rx ry) (mvc #'-@2rot (- ax sx) (- ay sy) angle)
-                                   (+ sx rx) (+ sy ry)))
+                                   (values (+ sx rx) (+ sy ry))))
 
 (ops
   (:3 @3id (3!a)) (values ax ay az)

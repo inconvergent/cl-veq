@@ -38,6 +38,5 @@
     #:vp #:vpr #:$print #:2$print #:3$print #:4$print
 
     #:f2in-triangle #:f2in-bbox #:f2in-concave
-    #:f2segdst #:f2lsegx #:f2segx #:f3planex))
-
+    #:f2lsegx #:f2segx #:f2ssegx #:f2segdst #:f3planex))
 

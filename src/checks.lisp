@@ -1,6 +1,5 @@
 (in-package :veq)
 
-
 (fvdef* f2segdst ((varg 2 va vb v))
   "find distance between line, (va vb), and v.
 returns (values distance s) where is is the interpolation value that will
@@ -41,77 +40,6 @@ intersection point"
               (values (and (> 1eps p *eps*)
                            (> 1eps q *eps*))
                       q p)))))))
-
-
-(deftype array-fvec () `(simple-array fvec))
-
-(declaim (inline -sweep-line))
-(defun -sweep-line (lines line-points)
-  (declare #.*opt* (array-fvec lines) (list line-points))
-  "perform sweep line search for intersections along x"
-  ; add first line index to sweep line state,
-  ; and set sweep line position
-  ; TODO: special cases: equal x pos, vertical line
-  ; TODO: some related notes on improvements:
-  ;       https://en.wikipedia.org/wiki/Bentley%E2%80%93Ottmann_algorithm
-  (let ((res (make-array (length lines)
-               :element-type 'list :initial-element nil :adjustable nil))
-        (state (list (cdar line-points))))
-    (declare (type (simple-array list) res) (list state))
-
-    (labels
-      ((-append (i c p)
-         (declare #.*opt* (pn i c) (ff p))
-         (if (aref res i) (push `(,c . ,p) (aref res i))
-                          (setf (aref res i) `((,c . ,p)))))
-       (-isects (i cands)
-         (declare #.*opt* (pn i) (list cands))
-         (loop with line of-type fvec = (aref lines i)
-               for c of-type pn in cands
-               do (fvprogn (mvb (x p q) (f2segx (f2$ line 0 1)
-                                                (f2$ (aref lines c) 0 1))
-                             (declare (boolean x) (ff p q))
-                             (when x (-append i c p) (-append c i q))))))
-       (-remove (i)
-         (declare #.*opt* (pn i))
-         (setf state (remove-if #'(lambda (e)
-                                    (declare (optimize speed) (pn e))
-                                    (eql e i))
-                                state))))
-
-      (loop for (_ . i) of-type (ff . pn) in (cdr line-points)
-            ; if i in state, kick i out of state,
-            if (member i state) do (-remove i)
-            ; else check i against all state, add i to state
-            else do (-isects i state) (setf state (cons i state))))
-    res))
-
-(declaim (inline -sorted-point-pairs))
-(defun -sorted-point-pairs (lines &aux (res (list)))
-  (declare #.*opt* (list res) (array-fvec lines))
-  (loop for line of-type fvec across lines
-        for i of-type pn from 0
-        do (push `(,(aref line 0) . ,i) res)
-           (push `(,(aref line 2) . ,i) res))
-  (sort res #'< :key #'car))
-
-
-(fvdef* f2lsegx (lines*)
-  (declare #.*opt* (sequence lines*))
-  "lines = #( #(ax ay bx by) ... )
-
-not entirely slow line-line intersection for all lines. this is faster than
-comparing all lines when lines are short relative to the area that the lines
-cover. it can be improved further by using binary search tree to store
-current state."
-  (let ((lines (typecase lines*
-                 (list (make-array (length lines*) :initial-contents lines*
-                                                   :adjustable nil
-                                                   :element-type 'fvec))
-                 (vector lines*)
-                 (t (error "f2lsegx error: incorrect type: ~a~%" lines*)))))
-    (declare (array-fvec lines))
-    (-sweep-line lines (-sorted-point-pairs lines))))
 
 ;;;;;;;;;; CONCAVE SHAPE RAY CAST TEST
 

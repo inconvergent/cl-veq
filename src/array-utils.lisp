@@ -35,12 +35,11 @@
             (arrtype type))
           `($make :dim ,dim :n ,n :v ,v :type ,',type))
 
-        (export ',(nm "$copy")) ; TODO: optional to
+        (export ',(nm "$copy"))
         (defun ,(nm "$copy") (,a &optional (na (length ,a)))
           (declare #.*opt* (,(arrtype type) ,a))
           ,(format nil "copy ~a vector array." (arrtype type))
-          (make-array na :initial-contents ,a
-                         :element-type ',type :adjustable nil))
+          (make-array na :initial-contents ,a :element-type ',type :adjustable nil))
 
         (export ',(nm "_"))
         (defmacro ,(nm "_") (&body body)

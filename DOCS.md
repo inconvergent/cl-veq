@@ -1234,8 +1234,8 @@ body (2): (LET ((COSA (COS ANGLE)) (SINA (SIN ANGLE)))
 veq context op: D2ROTS
 fxname: -D2ROTS
 args: (AX AY ANGLE SX SY)
-body (2): (MVB (RX RY) (MVC #'-D2ROT (- AX SX) (- AY SY) ANGLE) (+ SX RX)
-               (+ SY RY)).
+body (2): (MVB (RX RY) (MVC #'-D2ROT (- AX SX) (- AY SY) ANGLE)
+               (VALUES (+ SX RX) (+ SY RY))).
 ```
 
 #### :fvprogn: D2SCALE
@@ -3905,19 +3905,13 @@ note that this behaves like native lisp let*.
  ; VEQ:F2LSEGX
  ;   [symbol]
  ;
- ; F2LSEGX names a macro:
- ;   Lambda-list: (&REST REST)
+ ; F2LSEGX names a compiled function:
+ ;   Lambda-list: (LINES)
+ ;   Derived type: (FUNCTION ((VECTOR (SIMPLE-ARRAY SINGLE-FLOAT)))
+ ;                  (VALUES (SIMPLE-ARRAY LIST (*)) &OPTIONAL))
  ;   Documentation:
- ;     WRAPS: %F2LSEGX
- ;     ARGS: (LINES*)
- ;     DOCSTRING: lines = #( #(ax ay bx by) ... )
- ;
- ;     not entirely slow line-line intersection for all lines. this is faster than
- ;     comparing all lines when lines are short relative to the area that the lines
- ;     cover. it can be improved further by using binary search tree to store
- ;     current state.
- ;     defined via veq:FVDEF*
- ;   Source file: src/checks.lisp
+ ;     find all line-line intersections in lines
+ ;   Source file: src/checks-sweep.lisp
 ```
 
 #### :fvprogn: F2MAX
@@ -4205,8 +4199,8 @@ body (2): (LET ((COSA (COS ANGLE)) (SINA (SIN ANGLE)))
 veq context op: F2ROTS
 fxname: -F2ROTS
 args: (AX AY ANGLE SX SY)
-body (2): (MVB (RX RY) (MVC #'-F2ROT (- AX SX) (- AY SY) ANGLE) (+ SX RX)
-               (+ SY RY)).
+body (2): (MVB (RX RY) (MVC #'-F2ROT (- AX SX) (- AY SY) ANGLE)
+               (VALUES (+ SX RX) (+ SY RY))).
 ```
 
 #### :fvprogn: F2SCALE
@@ -4261,6 +4255,23 @@ veq context op: F2SQUARE
 fxname: -F2SQUARE
 args: (AX AY)
 body (2): (VALUES (* AX AX) (* AY AY)).
+```
+
+#### F2SSEGX
+
+```
+ ; VEQ:F2SSEGX
+ ;   [symbol]
+ ;
+ ; F2SSEGX names a compiled function:
+ ;   Lambda-list: (LINES K &OPTIONAL (N (LENGTH LINES)))
+ ;   Derived type: (FUNCTION
+ ;                  ((VECTOR (SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                   (UNSIGNED-BYTE 32) &OPTIONAL (UNSIGNED-BYTE 32))
+ ;                  (VALUES (SIMPLE-ARRAY LIST (*)) &OPTIONAL))
+ ;   Documentation:
+ ;     find all line-line intersections between the first k lines, with the remaining n-k lines
+ ;   Source file: src/checks-sweep.lisp
 ```
 
 #### :fvprogn: F2VAL

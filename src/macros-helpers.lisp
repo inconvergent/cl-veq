@@ -91,9 +91,9 @@ ex:
                     (cddr root)) ; inds
             (list root))) ; do nothing
      (rec (root rmap)
-       (cond ((and (not (stringp root)) (vectorp root))
+       (cond ((atom root) root)
+             ((and (not (stringp root)) (vectorp root))
                 (map 'vector (lambda (r) (rec r rmap)) root))
-             ((atom root) root)
              ((is-vref root) `(,@(do-vref (car root) rmap)
                                ,@(rec (cdr root) rmap)))
              ((and (listp root) (gk (car root) rmap))

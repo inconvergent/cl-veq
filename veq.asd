@@ -2,7 +2,7 @@
 (asdf:defsystem #:veq
   :description "DSL and other utilities for vector mathematics."
   :author "anders hoff / @inconvergent / inconvergent@gmail.com"
-  :version "5.0.2" :licence "MIT"
+  :version "5.1.1" :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))
   :pathname "src/" :serial nil
   :depends-on (#+SBCL #:sb-cltl2 #+:veq-simd #:sb-simd)
@@ -32,12 +32,13 @@
                (:file "mat-cam" :depends-on ("macrolets"))
                (:file "array-extra" :depends-on ("macrolets"))
                (:file "checks" :depends-on ("array-extra"))
+               (:file "checks-sweep" :depends-on ("checks"))
                (:file "shapes" :depends-on ("array-extra"))
                (:file "easing" :depends-on ("macrolets"))))
 
 (asdf:defsystem #:veq/tests
   :depends-on (#:veq #:prove #:asdf #:uiop)
-  :version "5.0.2"
+  :version "5.1.1"
   :perform (asdf:test-op (o s) (uiop:symbol-call ':veq-tests '#:run-tests))
   :pathname "test/" :serial t
   :components ((:file "run")))
