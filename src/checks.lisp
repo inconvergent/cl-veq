@@ -15,13 +15,25 @@ yield the closest point on line."
                                           (- (vref vb 1) (vref va 1))))
                                     l2)))))
         (values (f2dst v (f2lerp va vb s)) s)))))
+ 0f0
 
+; (declaim (inline 1x))
+; (defun 1x (a b c d)
+;   (declare #.*opt* (veq:ff a b c d))
+;   (when (> a b) (rotatef a b))
+;   (when (> c d) (rotatef c d))
+;   (<= (max a c) (+ (min b d) veq:*eps*)))
 
 (fvdef* f2segx ((varg 2 a1 a2 b1 b2))
   (declare #.*opt* (ff a1 a2 b1 b2))
   "find intersection between lines (a1 a2), (b1 b2).
 returns isect? p q where p and q is the distance along each line to the
 intersection point"
+
+    ; (when (or (not (1x (:vr a1 0) (:vr a2 0) (:vr b1 0) (:vr b2 0)))
+    ;           (not (1x (:vr a1 1) (:vr a2 1) (:vr b1 1) (:vr b2 1))))
+    ;   (return-from f2segx (values nil 0f0 0f0)))
+
   (f2let ((sa (f2!@- a2 a1))
           (sb (f2!@- b2 b1)))
     (let ((u (f2cross sa sb))

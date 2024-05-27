@@ -107,3 +107,4 @@ eg: (vvsym ff 2 :lerp) yields f2lerp."
                 (the fixnum (find-dim pref-digits)) ; dim
                 (the fixnum (find-dim (reverse pref-digits)))))))) ; dimout
 
+

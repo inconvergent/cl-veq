@@ -11,6 +11,7 @@
     #:group #:ungroup #:strip-arg-keys #:get-arg-key
 
     #:df #:df* #:ff #:ff* #:pos-df #:pos-ff
+    #:falpha #:dalpha #:feps= #:deps=
     #:ffl #:dfl
     #:in #:in* #:kv #:kv*
     #:ll #:ll* #:pn #:pn*
@@ -28,7 +29,7 @@
 
     #:vdef #:vdef* #:def* #:fvdef* #:fvdef #:vlabels
     #:vprogn #:fvprogn #:varg #:vref
-    #:vv #:proc-vv #:replace-varg
+    #:vv #:vvdb #:proc-vv #:replace-varg
 
     #:new-stride #:$make #:$copy
 

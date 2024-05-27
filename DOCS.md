@@ -9,7 +9,7 @@ context can be initiated using `vprogn`, `fvprogn`, `vdef`, `fvdef`,
 `vdef*` or `fvdef*`. See further documentation under the respective symbols
 below.
 
-See [examples](/examples/ex.lisp) for working examples of some use.
+See [examples](/examples/ex.lisp) som examples.
 
 #### Names and Types
 
@@ -27,12 +27,9 @@ argument.
 
 #### Abbreviations
 
-`dsb` is short for `destructuring-bind`.
-
-`mvb` is short for `multiple-value-bind`.
-
-`mvc` is short for `multiple-value-call`.
-
+ - `dsb` is short for `destructuring-bind`.
+ - `mvb` is short for `multiple-value-bind`.
+ - `mvc` is short for `multiple-value-call`.
 
 ### Symbols
 
@@ -818,127 +815,127 @@ assuming c is a structname, and a,b are DVEC of dim 2
 #### :fvprogn: D2ANGLE
 
 ```
-veq context op: D2ANGLE
-fxname: -D2ANGLE
-args: (AX AY)
-body (1): (MVC #'ATAN (-D2NORM AY AX)).
+veq context op: d2angle
+fxname: -d2angle
+args: (ax ay)
+body (1): (atan ay ax).
 ```
 
 #### :fvprogn: D2CROSS
 
 ```
-veq context op: D2CROSS
-fxname: -D2CROSS
-args: (AX AY BX BY)
-body (2): (- (* AX BY) (* AY BX)).
+veq context op: d2cross
+fxname: -d2cross
+args: (ax ay bx by)
+body (2): (- (* ax by) (* ay bx)).
 ```
 
 #### :fvprogn: D2DOT
 
 ```
-veq context op: D2DOT
-fxname: -D2DOT
-args: (AX AY BX BY)
-body (1): (+ (* AX BX) (* AY BY)).
+veq context op: d2dot
+fxname: -d2dot
+args: (ax ay bx by)
+body (1): (+ (* ax bx) (* ay by)).
 ```
 
 #### :fvprogn: D2DST
 
 ```
-veq context op: D2DST
-fxname: -D2DST
-args: (AX AY BX BY)
-body (1): (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))))).
+veq context op: d2dst
+fxname: -d2dst
+args: (ax ay bx by)
+body (1): (sqrt (the pos-df (mvc #'+ (-d2square (- bx ax) (- by ay))))).
 ```
 
 #### :fvprogn: D2DST2
 
 ```
-veq context op: D2DST2
-fxname: -D2DST2
-args: (AX AY BX BY)
-body (1): (MVC #'+ (-D2SQUARE (- BX AX) (- BY AY))).
+veq context op: d2dst2
+fxname: -d2dst2
+args: (ax ay bx by)
+body (1): (mvc #'+ (-d2square (- bx ax) (- by ay))).
 ```
 
 #### :fvprogn: D2FLIP
 
 ```
-veq context op: D2FLIP
-fxname: -D2FLIP
-args: (AX AY)
-body (2): (VALUES AY AX).
+veq context op: d2flip
+fxname: -d2flip
+args: (ax ay)
+body (2): (values ay ax).
 ```
 
 #### :fvprogn: D2FROM
 
 ```
-veq context op: D2FROM
-fxname: -D2FROM
-args: (AX AY BX BY S)
-body (2): (VALUES (+ AX (* BX S)) (+ AY (* BY S))).
+veq context op: d2from
+fxname: -d2from
+args: (ax ay bx by s)
+body (2): (values (+ ax (* bx s)) (+ ay (* by s))).
 ```
 
 #### :fvprogn: D2I-
 
 ```
-veq context op: D2I-
-fxname: -D2I-
-args: (AX AY BX BY)
-body (2): (VALUES (- BX AX) (- BY AY)).
+veq context op: d2i-
+fxname: -d2i-
+args: (ax ay bx by)
+body (2): (values (- bx ax) (- by ay)).
 ```
 
 #### :fvprogn: D2I/
 
 ```
-veq context op: D2I/
-fxname: -D2I/
-args: (AX AY BX BY)
-body (2): (VALUES (/ BX AX) (/ BY AY)).
+veq context op: d2i/
+fxname: -d2i/
+args: (ax ay bx by)
+body (2): (values (/ bx ax) (/ by ay)).
 ```
 
 #### :fvprogn: D2ID
 
 ```
-veq context op: D2ID
-fxname: -D2ID
-args: (AX AY)
-body (2): (VALUES AX AY).
+veq context op: d2id
+fxname: -d2id
+args: (ax ay)
+body (2): (values ax ay).
 ```
 
 #### :fvprogn: D2ISCALE
 
 ```
-veq context op: D2ISCALE
-fxname: -D2ISCALE
-args: (AX AY S)
-body (2): (VALUES (/ AX S) (/ AY S)).
+veq context op: d2iscale
+fxname: -d2iscale
+args: (ax ay s)
+body (2): (values (/ ax s) (/ ay s)).
 ```
 
 #### :fvprogn: D2LEN
 
 ```
-veq context op: D2LEN
-fxname: -D2LEN
-args: (AX AY)
-body (1): (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D2SQUARE AX AY))))).
+veq context op: d2len
+fxname: -d2len
+args: (ax ay)
+body (1): (the pos-df (sqrt (the pos-df (mvc #'+ (-d2square ax ay))))).
 ```
 
 #### :fvprogn: D2LEN2
 
 ```
-veq context op: D2LEN2
-fxname: -D2LEN2
-args: (AX AY)
-body (1): (THE POS-DF (MVC #'+ (-D2SQUARE AX AY))).
+veq context op: d2len2
+fxname: -d2len2
+args: (ax ay)
+body (1): (the pos-df (mvc #'+ (-d2square ax ay))).
 ```
 
 #### :fvprogn: D2LERP
 
 ```
-veq context op: D2LERP
-fxname: -D2LERP
-args: (AX AY BX BY S)
-body (2): (VALUES (+ AX (* (- BX AX) S)) (+ AY (* (- BY AY) S))).
+veq context op: d2lerp
+fxname: -d2lerp
+args: (ax ay bx by s)
+body (2): (values (+ ax (* (- bx ax) s)) (+ ay (* (- by ay) s))).
 ```
 
 #### :fvprogn: D2LET
@@ -952,10 +949,10 @@ note that this behaves like native lisp let*.
 #### :fvprogn: D2MAX
 
 ```
-veq context op: D2MAX
-fxname: -D2MAX
-args: (AX AY)
-body (1): (MAX AX AY).
+veq context op: d2max
+fxname: -d2max
+args: (ax ay)
+body (1): (max ax ay).
 ```
 
 #### D2MEYE
@@ -976,19 +973,19 @@ body (1): (MAX AX AY).
 #### :fvprogn: D2MID
 
 ```
-veq context op: D2MID
-fxname: -D2MID
-args: (AX AY BX BY)
-body (2): (VALUES (* (+ AX BX) 0.5d0) (* (+ AY BY) 0.5d0)).
+veq context op: d2mid
+fxname: -d2mid
+args: (ax ay bx by)
+body (2): (values (* (+ ax bx) 0.5d0) (* (+ ay by) 0.5d0)).
 ```
 
 #### :fvprogn: D2MIN
 
 ```
-veq context op: D2MIN
-fxname: -D2MIN
-args: (AX AY)
-body (1): (MIN AX AY).
+veq context op: d2min
+fxname: -d2min
+args: (ax ay)
+body (1): (min ax ay).
 ```
 
 #### D2MINV
@@ -1168,46 +1165,46 @@ body (1): (MIN AX AY).
 #### :fvprogn: D2NORM
 
 ```
-veq context op: D2NORM
-fxname: -D2NORM
-args: (AX AY)
-body (2): (MVC #'-D2ISCALE AX AY (MVC #'-D2LEN AX AY)).
+veq context op: d2norm
+fxname: -d2norm
+args: (ax ay)
+body (2): (mvc #'-d2iscale ax ay (mvc #'-d2len ax ay)).
 ```
 
 #### :fvprogn: D2ON-CIRC
 
 ```
-veq context op: D2ON-CIRC
-fxname: -D2ON-CIRC
-args: (AX RAD)
-body (2): (MVC #'-D2SCALE (-DCOS-SIN (* AX DPII)) RAD).
+veq context op: d2on-circ
+fxname: -d2on-circ
+args: (ax rad)
+body (2): (mvc #'-d2scale (-dcos-sin (* ax dpii)) rad).
 ```
 
 #### :fvprogn: D2ON-CIRC\*
 
 ```
-veq context op: D2ON-CIRC*
-fxname: -D2ON-CIRC*
-args: (AX RAD)
-body (2): (MVC #'-D2SCALE (-DCOS-SIN AX) RAD).
+veq context op: d2on-circ*
+fxname: -d2on-circ*
+args: (ax rad)
+body (2): (mvc #'-d2scale (-dcos-sin ax) rad).
 ```
 
 #### :fvprogn: D2PERP
 
 ```
-veq context op: D2PERP
-fxname: -D2PERP
-args: (AX AY)
-body (2): (VALUES AY (- AX)).
+veq context op: d2perp
+fxname: -d2perp
+args: (ax ay)
+body (2): (values ay (- ax)).
 ```
 
 #### :fvprogn: D2PERP\*
 
 ```
-veq context op: D2PERP*
-fxname: -D2PERP*
-args: (AX AY)
-body (2): (VALUES (- AY) AX).
+veq context op: d2perp*
+fxname: -d2perp*
+args: (ax ay)
+body (2): (values (- ay) ax).
 ```
 
 #### :fvprogn: D2REP
@@ -1220,40 +1217,40 @@ ex: (D2REP (fx)) corresponds to (values (fx) ...).
 #### :fvprogn: D2ROT
 
 ```
-veq context op: D2ROT
-fxname: -D2ROT
-args: (AX AY ANGLE)
-body (2): (LET ((COSA (COS ANGLE)) (SINA (SIN ANGLE)))
-            (DECLARE (DF COSA SINA))
-            (VALUES (- (* AX COSA) (* AY SINA)) (+ (* AX SINA) (* AY COSA)))).
+veq context op: d2rot
+fxname: -d2rot
+args: (ax ay angle)
+body (2): (let ((cosa (cos angle)) (sina (sin angle)))
+            (declare (df cosa sina))
+            (values (- (* ax cosa) (* ay sina)) (+ (* ax sina) (* ay cosa)))).
 ```
 
 #### :fvprogn: D2ROTS
 
 ```
-veq context op: D2ROTS
-fxname: -D2ROTS
-args: (AX AY ANGLE SX SY)
-body (2): (MVB (RX RY) (MVC #'-D2ROT (- AX SX) (- AY SY) ANGLE)
-               (VALUES (+ SX RX) (+ SY RY))).
+veq context op: d2rots
+fxname: -d2rots
+args: (ax ay angle sx sy)
+body (2): (mvb (rx ry) (mvc #'-d2rot (- ax sx) (- ay sy) angle)
+               (values (+ sx rx) (+ sy ry))).
 ```
 
 #### :fvprogn: D2SCALE
 
 ```
-veq context op: D2SCALE
-fxname: -D2SCALE
-args: (AX AY S)
-body (2): (VALUES (* AX S) (* AY S)).
+veq context op: d2scale
+fxname: -d2scale
+args: (ax ay s)
+body (2): (values (* ax s) (* ay s)).
 ```
 
 #### :fvprogn: D2SQUARE
 
 ```
-veq context op: D2SQUARE
-fxname: -D2SQUARE
-args: (AX AY)
-body (2): (VALUES (* AX AX) (* AY AY)).
+veq context op: d2square
+fxname: -d2square
+args: (ax ay)
+body (2): (values (* ax ax) (* ay ay)).
 ```
 
 #### :fvprogn: D2VAL
@@ -1463,112 +1460,112 @@ assuming c is a structname, and a,b are DVEC of dim 3
 #### :fvprogn: D3CROSS
 
 ```
-veq context op: D3CROSS
-fxname: -D3CROSS
-args: (AX AY AZ BX BY BZ)
-body (3): (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
-                  (- (* AX BY) (* AY BX))).
+veq context op: d3cross
+fxname: -d3cross
+args: (ax ay az bx by bz)
+body (3): (values (- (* ay bz) (* az by)) (- (* az bx) (* ax bz))
+                  (- (* ax by) (* ay bx))).
 ```
 
 #### :fvprogn: D3DOT
 
 ```
-veq context op: D3DOT
-fxname: -D3DOT
-args: (AX AY AZ BX BY BZ)
-body (1): (+ (* AX BX) (* AY BY) (* AZ BZ)).
+veq context op: d3dot
+fxname: -d3dot
+args: (ax ay az bx by bz)
+body (1): (+ (* ax bx) (* ay by) (* az bz)).
 ```
 
 #### :fvprogn: D3DST
 
 ```
-veq context op: D3DST
-fxname: -D3DST
-args: (AX AY AZ BX BY BZ)
-body (1): (SQRT
-           (THE POS-DF (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))))).
+veq context op: d3dst
+fxname: -d3dst
+args: (ax ay az bx by bz)
+body (1): (sqrt
+           (the pos-df (mvc #'+ (-d3square (- bx ax) (- by ay) (- bz az))))).
 ```
 
 #### :fvprogn: D3DST2
 
 ```
-veq context op: D3DST2
-fxname: -D3DST2
-args: (AX AY AZ BX BY BZ)
-body (1): (MVC #'+ (-D3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
+veq context op: d3dst2
+fxname: -d3dst2
+args: (ax ay az bx by bz)
+body (1): (mvc #'+ (-d3square (- bx ax) (- by ay) (- bz az))).
 ```
 
 #### :fvprogn: D3FROM
 
 ```
-veq context op: D3FROM
-fxname: -D3FROM
-args: (AX AY AZ BX BY BZ S)
-body (3): (VALUES (+ AX (* BX S)) (+ AY (* BY S)) (+ AZ (* BZ S))).
+veq context op: d3from
+fxname: -d3from
+args: (ax ay az bx by bz s)
+body (3): (values (+ ax (* bx s)) (+ ay (* by s)) (+ az (* bz s))).
 ```
 
 #### :fvprogn: D3I-
 
 ```
-veq context op: D3I-
-fxname: -D3I-
-args: (AX AY AZ BX BY BZ)
-body (3): (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
+veq context op: d3i-
+fxname: -d3i-
+args: (ax ay az bx by bz)
+body (3): (values (- bx ax) (- by ay) (- bz az)).
 ```
 
 #### :fvprogn: D3I/
 
 ```
-veq context op: D3I/
-fxname: -D3I/
-args: (AX AY AZ BX BY BZ)
-body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
+veq context op: d3i/
+fxname: -d3i/
+args: (ax ay az bx by bz)
+body (3): (values (/ bx ax) (/ by ay) (/ bz az)).
 ```
 
 #### :fvprogn: D3ID
 
 ```
-veq context op: D3ID
-fxname: -D3ID
-args: (AX AY AZ)
-body (3): (VALUES AX AY AZ).
+veq context op: d3id
+fxname: -d3id
+args: (ax ay az)
+body (3): (values ax ay az).
 ```
 
 #### :fvprogn: D3ISCALE
 
 ```
-veq context op: D3ISCALE
-fxname: -D3ISCALE
-args: (AX AY AZ S)
-body (3): (VALUES (/ AX S) (/ AY S) (/ AZ S)).
+veq context op: d3iscale
+fxname: -d3iscale
+args: (ax ay az s)
+body (3): (values (/ ax s) (/ ay s) (/ az s)).
 ```
 
 #### :fvprogn: D3LEN
 
 ```
-veq context op: D3LEN
-fxname: -D3LEN
-args: (AX AY AZ)
-body (1): (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D3SQUARE AX AY AZ))))).
+veq context op: d3len
+fxname: -d3len
+args: (ax ay az)
+body (1): (the pos-df (sqrt (the pos-df (mvc #'+ (-d3square ax ay az))))).
 ```
 
 #### :fvprogn: D3LEN2
 
 ```
-veq context op: D3LEN2
-fxname: -D3LEN2
-args: (AX AY AZ)
-body (1): (THE POS-DF (MVC #'+ (-D3SQUARE AX AY AZ))).
+veq context op: d3len2
+fxname: -d3len2
+args: (ax ay az)
+body (1): (the pos-df (mvc #'+ (-d3square ax ay az))).
 ```
 
 #### :fvprogn: D3LERP
 
 ```
-veq context op: D3LERP
-fxname: -D3LERP
-args: (AX AY AZ BX BY BZ S)
-body (3): (VALUES (+ AX (* (- BX AX) S)) (+ AY (* (- BY AY) S))
-                  (+ AZ (* (- BZ AZ) S))).
+veq context op: d3lerp
+fxname: -d3lerp
+args: (ax ay az bx by bz s)
+body (3): (values (+ ax (* (- bx ax) s)) (+ ay (* (- by ay) s))
+                  (+ az (* (- bz az) s))).
 ```
 
 #### :fvprogn: D3LET
@@ -1582,10 +1579,10 @@ note that this behaves like native lisp let*.
 #### :fvprogn: D3MAX
 
 ```
-veq context op: D3MAX
-fxname: -D3MAX
-args: (AX AY AZ)
-body (1): (MAX AX AY AZ).
+veq context op: d3max
+fxname: -d3max
+args: (ax ay az)
+body (1): (max ax ay az).
 ```
 
 #### D3MEYE
@@ -1606,19 +1603,19 @@ body (1): (MAX AX AY AZ).
 #### :fvprogn: D3MID
 
 ```
-veq context op: D3MID
-fxname: -D3MID
-args: (AX AY AZ BX BY BZ)
-body (3): (VALUES (* (+ AX BX) 0.5d0) (* (+ AY BY) 0.5d0) (* (+ AZ BZ) 0.5d0)).
+veq context op: d3mid
+fxname: -d3mid
+args: (ax ay az bx by bz)
+body (3): (values (* (+ ax bx) 0.5d0) (* (+ ay by) 0.5d0) (* (+ az bz) 0.5d0)).
 ```
 
 #### :fvprogn: D3MIN
 
 ```
-veq context op: D3MIN
-fxname: -D3MIN
-args: (AX AY AZ)
-body (1): (MIN AX AY AZ).
+veq context op: d3min
+fxname: -d3min
+args: (ax ay az)
+body (1): (min ax ay az).
 ```
 
 #### D3MINV
@@ -1798,10 +1795,10 @@ body (1): (MIN AX AY AZ).
 #### :fvprogn: D3NORM
 
 ```
-veq context op: D3NORM
-fxname: -D3NORM
-args: (AX AY AZ)
-body (3): (MVC #'-D3ISCALE AX AY AZ (THE POS-DF (MVC #'-D3LEN AX AY AZ))).
+veq context op: d3norm
+fxname: -d3norm
+args: (ax ay az)
+body (3): (mvc #'-d3iscale ax ay az (the pos-df (mvc #'-d3len ax ay az))).
 ```
 
 #### :fvprogn: D3REP
@@ -1814,46 +1811,46 @@ ex: (D3REP (fx)) corresponds to (values (fx) ...).
 #### :fvprogn: D3ROT
 
 ```
-veq context op: D3ROT
-fxname: -D3ROT
-args: (AX AY AZ NX NY NZ A)
-body (3): (LET ((COSA (COS A)))
-            (DECLARE (DF COSA))
-            (MVC #'-D3FROM
-                 (MVC #'-D3FROM (-D3SCALE AX AY AZ COSA)
-                      (-D3CROSS NX NY NZ AX AY AZ) (SIN A))
-                 NX NY NZ (* (-D3DOT NX NY NZ AX AY AZ) (- 1.0d0 COSA)))).
+veq context op: d3rot
+fxname: -d3rot
+args: (ax ay az nx ny nz a)
+body (3): (let ((cosa (cos a)))
+            (declare (df cosa))
+            (mvc #'-d3from
+                 (mvc #'-d3from (-d3scale ax ay az cosa)
+                      (-d3cross nx ny nz ax ay az) (sin a))
+                 nx ny nz (* (-d3dot nx ny nz ax ay az) (- 1.0d0 cosa)))).
 ```
 
 #### :fvprogn: D3ROTS
 
 ```
-veq context op: D3ROTS
-fxname: -D3ROTS
-args: (AX AY AZ NX NY NZ A SX SY SZ)
-body (3): (MVB (RX RY RZ)
-               (MVC #'-D3ROT (- AX SX) (- AY SY) (- AZ SZ) NX NY NZ A)
-               (VALUES (+ (THE DF RX) SX) (+ (THE DF RY) SY)
-                       (+ (THE DF RZ) SZ))).
+veq context op: d3rots
+fxname: -d3rots
+args: (ax ay az nx ny nz a sx sy sz)
+body (3): (mvb (rx ry rz)
+               (mvc #'-d3rot (- ax sx) (- ay sy) (- az sz) nx ny nz a)
+               (values (+ (the df rx) sx) (+ (the df ry) sy)
+                       (+ (the df rz) sz))).
 ```
 
 #### :fvprogn: D3SCALE
 
 ```
-veq context op: D3SCALE
-fxname: -D3SCALE
-args: (AX AY AZ S)
-body (3): (VALUES (* AX S) (* AY S) (* AZ S)).
+veq context op: d3scale
+fxname: -d3scale
+args: (ax ay az s)
+body (3): (values (* ax s) (* ay s) (* az s)).
 ```
 
 #### :fvprogn: D3SQUARE
 
 ```
-veq context op: D3SQUARE
-fxname: -D3SQUARE
-args: (AX AY AZ)
-body (3): (VALUES (THE POS-DF (* AX AX)) (THE POS-DF (* AY AY))
-                  (THE POS-DF (* AZ AZ))).
+veq context op: d3square
+fxname: -d3square
+args: (ax ay az)
+body (3): (values (the pos-df (* ax ax)) (the pos-df (* ay ay))
+                  (the pos-df (* az az))).
 ```
 
 #### :fvprogn: D3VAL
@@ -2043,104 +2040,104 @@ assuming c is a structname, and a,b are DVEC of dim 4
 #### :fvprogn: D4DOT
 
 ```
-veq context op: D4DOT
-fxname: -D4DOT
-args: (AX AY AZ AW BX BY BZ BW)
-body (1): (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
+veq context op: d4dot
+fxname: -d4dot
+args: (ax ay az aw bx by bz bw)
+body (1): (+ (* ax bx) (* ay by) (* az bz) (* aw bw)).
 ```
 
 #### :fvprogn: D4DST
 
 ```
-veq context op: D4DST
-fxname: -D4DST
-args: (AX AY AZ AW BX BY BZ BW)
-body (1): (SQRT
-           (THE POS-DF
-                (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))))).
+veq context op: d4dst
+fxname: -d4dst
+args: (ax ay az aw bx by bz bw)
+body (1): (sqrt
+           (the pos-df
+                (mvc #'+ (-d4square (- bx ax) (- by ay) (- bz az) (- bw aw))))).
 ```
 
 #### :fvprogn: D4DST2
 
 ```
-veq context op: D4DST2
-fxname: -D4DST2
-args: (AX AY AZ AW BX BY BZ BW)
-body (1): (MVC #'+ (-D4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
+veq context op: d4dst2
+fxname: -d4dst2
+args: (ax ay az aw bx by bz bw)
+body (1): (mvc #'+ (-d4square (- bx ax) (- by ay) (- bz az) (- bw aw))).
 ```
 
 #### :fvprogn: D4FROM
 
 ```
-veq context op: D4FROM
-fxname: -D4FROM
-args: (AX AY AZ AW BX BY BZ BW S)
-body (4): (VALUES (+ AX (* BX S)) (+ AY (* BY S)) (+ AZ (* BZ S))
-                  (+ AW (* BW S))).
+veq context op: d4from
+fxname: -d4from
+args: (ax ay az aw bx by bz bw s)
+body (4): (values (+ ax (* bx s)) (+ ay (* by s)) (+ az (* bz s))
+                  (+ aw (* bw s))).
 ```
 
 #### :fvprogn: D4I-
 
 ```
-veq context op: D4I-
-fxname: -D4I-
-args: (AX AY AZ AW BX BY BZ BW)
-body (4): (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
+veq context op: d4i-
+fxname: -d4i-
+args: (ax ay az aw bx by bz bw)
+body (4): (values (- bx ax) (- by ay) (- bz az) (- bw aw)).
 ```
 
 #### :fvprogn: D4I/
 
 ```
-veq context op: D4I/
-fxname: -D4I/
-args: (AX AY AZ AW BX BY BZ BW)
-body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
+veq context op: d4i/
+fxname: -d4i/
+args: (ax ay az aw bx by bz bw)
+body (4): (values (/ bx ax) (/ by ay) (/ bz az) (/ bw aw)).
 ```
 
 #### :fvprogn: D4ID
 
 ```
-veq context op: D4ID
-fxname: -D4ID
-args: (AX AY AZ AW)
-body (4): (VALUES AX AY AZ AW).
+veq context op: d4id
+fxname: -d4id
+args: (ax ay az aw)
+body (4): (values ax ay az aw).
 ```
 
 #### :fvprogn: D4ISCALE
 
 ```
-veq context op: D4ISCALE
-fxname: -D4ISCALE
-args: (AX AY AZ AW S)
-body (4): (VALUES (/ AX S) (/ AY S) (/ AZ S) (/ AW S)).
+veq context op: d4iscale
+fxname: -d4iscale
+args: (ax ay az aw s)
+body (4): (values (/ ax s) (/ ay s) (/ az s) (/ aw s)).
 ```
 
 #### :fvprogn: D4LEN
 
 ```
-veq context op: D4LEN
-fxname: -D4LEN
-args: (AX AY AZ AW)
-body (1): (THE POS-DF (SQRT (THE POS-DF (MVC #'+ (-D4SQUARE AX AY AZ AW))))).
+veq context op: d4len
+fxname: -d4len
+args: (ax ay az aw)
+body (1): (the pos-df (sqrt (the pos-df (mvc #'+ (-d4square ax ay az aw))))).
 ```
 
 #### :fvprogn: D4LEN2
 
 ```
-veq context op: D4LEN2
-fxname: -D4LEN2
-args: (AX AY AZ AW)
-body (1): (THE POS-DF (MVC #'+ (-D4SQUARE AX AY AZ AW))).
+veq context op: d4len2
+fxname: -d4len2
+args: (ax ay az aw)
+body (1): (the pos-df (mvc #'+ (-d4square ax ay az aw))).
 ```
 
 #### :fvprogn: D4LERP
 
 ```
-veq context op: D4LERP
-fxname: -D4LERP
-args: (AX AY AZ AW BX BY BZ BW S)
-body (4): (VALUES (+ AX (* (- BX AX) S)) (+ AY (* (- BY AY) S))
-                  (+ AZ (* (- BZ AZ) S)) (+ AW (* (- BW AW) S))).
+veq context op: d4lerp
+fxname: -d4lerp
+args: (ax ay az aw bx by bz bw s)
+body (4): (values (+ ax (* (- bx ax) s)) (+ ay (* (- by ay) s))
+                  (+ az (* (- bz az) s)) (+ aw (* (- bw aw) s))).
 ```
 
 #### :fvprogn: D4LET
@@ -2154,10 +2151,10 @@ note that this behaves like native lisp let*.
 #### :fvprogn: D4MAX
 
 ```
-veq context op: D4MAX
-fxname: -D4MAX
-args: (AX AY AZ AW)
-body (1): (MAX AX AY AZ AW).
+veq context op: d4max
+fxname: -d4max
+args: (ax ay az aw)
+body (1): (max ax ay az aw).
 ```
 
 #### D4MEYE
@@ -2178,20 +2175,20 @@ body (1): (MAX AX AY AZ AW).
 #### :fvprogn: D4MID
 
 ```
-veq context op: D4MID
-fxname: -D4MID
-args: (AX AY AZ AW BX BY BZ BW)
-body (4): (VALUES (* (+ AX BX) 0.5d0) (* (+ AY BY) 0.5d0) (* (+ AZ BZ) 0.5d0)
-                  (* (+ AW BW) 0.5d0)).
+veq context op: d4mid
+fxname: -d4mid
+args: (ax ay az aw bx by bz bw)
+body (4): (values (* (+ ax bx) 0.5d0) (* (+ ay by) 0.5d0) (* (+ az bz) 0.5d0)
+                  (* (+ aw bw) 0.5d0)).
 ```
 
 #### :fvprogn: D4MIN
 
 ```
-veq context op: D4MIN
-fxname: -D4MIN
-args: (AX AY AZ AW)
-body (1): (MIN AX AY AZ AW).
+veq context op: d4min
+fxname: -d4min
+args: (ax ay az aw)
+body (1): (min ax ay az aw).
 ```
 
 #### D4MINV
@@ -2307,10 +2304,10 @@ body (1): (MIN AX AY AZ AW).
 #### :fvprogn: D4NORM
 
 ```
-veq context op: D4NORM
-fxname: -D4NORM
-args: (AX AY AZ AW)
-body (4): (MVC #'-D4ISCALE AX AY AZ AW (THE POS-DF (MVC #'-D4LEN AX AY AZ AW))).
+veq context op: d4norm
+fxname: -d4norm
+args: (ax ay az aw)
+body (4): (mvc #'-d4iscale ax ay az aw (the pos-df (mvc #'-d4len ax ay az aw))).
 ```
 
 #### :fvprogn: D4REP
@@ -2323,20 +2320,20 @@ ex: (D4REP (fx)) corresponds to (values (fx) ...).
 #### :fvprogn: D4SCALE
 
 ```
-veq context op: D4SCALE
-fxname: -D4SCALE
-args: (AX AY AZ AW S)
-body (4): (VALUES (* AX S) (* AY S) (* AZ S) (* AW S)).
+veq context op: d4scale
+fxname: -d4scale
+args: (ax ay az aw s)
+body (4): (values (* ax s) (* ay s) (* az s) (* aw s)).
 ```
 
 #### :fvprogn: D4SQUARE
 
 ```
-veq context op: D4SQUARE
-fxname: -D4SQUARE
-args: (AX AY AZ AW)
-body (4): (VALUES (THE POS-DF (* AX AX)) (THE POS-DF (* AY AY))
-                  (THE POS-DF (* AZ AZ)) (THE POS-DF (* AW AW))).
+veq context op: d4square
+fxname: -d4square
+args: (ax ay az aw)
+body (4): (values (the pos-df (* ax ax)) (the pos-df (* ay ay))
+                  (the pos-df (* az az)) (the pos-df (* aw aw))).
 ```
 
 #### :fvprogn: D4VAL
@@ -2381,40 +2378,56 @@ returns (values 1f0 2f0 3f0)
  ;   Source file: src/array-utils.lisp
 ```
 
+#### DALPHA
+
+```
+ ; VEQ:DALPHA
+ ;   [symbol]
+ ;
+ ; DALPHA names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %DALPHA
+ ;     ARGS: (X Y &AUX (A (ATAN (- Y) X)))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
+ ;   Source file: src/extra.lisp
+```
+
 #### :fvprogn: DCLAMP
 
 ```
-veq context op: DCLAMP
-fxname: -DCLAMP
-args: (X)
-body (1): (MIN 1.0d0 (MAX 0.0d0 X)).
+veq context op: dclamp
+fxname: -dclamp
+args: (x)
+body (1): (min 1.0d0 (max 0.0d0 x)).
 ```
 
 #### :fvprogn: DCLAMP\*
 
 ```
-veq context op: DCLAMP*
-fxname: -DCLAMP*
-args: (X MI MA)
-body (1): (MIN MA (MAX MI X)).
+veq context op: dclamp*
+fxname: -dclamp*
+args: (x mi ma)
+body (1): (min ma (max mi x)).
 ```
 
 #### :fvprogn: DCOS-SIN
 
 ```
-veq context op: DCOS-SIN
-fxname: -DCOS-SIN
-args: (AX)
-body (2): (VALUES (COS AX) (SIN AX)).
+veq context op: dcos-sin
+fxname: -dcos-sin
+args: (ax)
+body (2): (values (cos ax) (sin ax)).
 ```
 
 #### :fvprogn: DDEG->RAD
 
 ```
-veq context op: DDEG->RAD
-fxname: -DDEG->RAD
-args: (D)
-body (1): (* DPI (/ D 180.0d0)).
+veq context op: ddeg->rad
+fxname: -ddeg->rad
+args: (d)
+body (1): (* dpi (/ d 180.0d0)).
 ```
 
 #### DEASE-IN-BACK
@@ -2916,6 +2929,15 @@ body (1): (* DPI (/ D 180.0d0)).
  ;   Source file: src/macrolets.lisp
 ```
 
+#### DEPS=
+
+```
+:none:
+
+ ; VEQ:DEPS=
+ ;   [symbol]
+```
+
 #### DF
 
 ```
@@ -2966,82 +2988,82 @@ body (1): (* DPI (/ D 180.0d0)).
 #### :fvprogn: DFROM
 
 ```
-veq context op: DFROM
-fxname: -DFROM
-args: (AX BX S)
-body (1): (+ AX (* BX S)).
+veq context op: dfrom
+fxname: -dfrom
+args: (ax bx s)
+body (1): (+ ax (* bx s)).
 ```
 
 #### :fvprogn: DI-
 
 ```
-veq context op: DI-
-fxname: -DI-
-args: (AX BX)
-body (1): (- BX AX).
+veq context op: di-
+fxname: -di-
+args: (ax bx)
+body (1): (- bx ax).
 ```
 
 #### :fvprogn: DI/
 
 ```
-veq context op: DI/
-fxname: -DI/
-args: (AX BX)
-body (1): (/ BX AX).
+veq context op: di/
+fxname: -di/
+args: (ax bx)
+body (1): (/ bx ax).
 ```
 
 #### :fvprogn: DID
 
 ```
-veq context op: DID
-fxname: -DID
-args: (AX)
-body (1): (VALUES AX).
+veq context op: did
+fxname: -did
+args: (ax)
+body (1): (values ax).
 ```
 
 #### :fvprogn: DISCALE
 
 ```
-veq context op: DISCALE
-fxname: -DISCALE
-args: (AX S)
-body (1): (/ AX S).
+veq context op: discale
+fxname: -discale
+args: (ax s)
+body (1): (/ ax s).
 ```
 
 #### :fvprogn: DLEN
 
 ```
-veq context op: DLEN
-fxname: -DLEN
-args: (AX)
-body (1): (THE POS-DF AX).
+veq context op: dlen
+fxname: -dlen
+args: (ax)
+body (1): (the pos-df ax).
 ```
 
 #### :fvprogn: DLEN2
 
 ```
-veq context op: DLEN2
-fxname: -DLEN2
-args: (AX)
-body (1): (THE POS-DF (MVC #'+ (-DSQUARE AX))).
+veq context op: dlen2
+fxname: -dlen2
+args: (ax)
+body (1): (the pos-df (mvc #'+ (-dsquare ax))).
 ```
 
 #### :fvprogn: DLERP
 
 ```
-veq context op: DLERP
-fxname: -DLERP
-args: (AX BX S)
-body (1): (+ AX (* (- BX AX) S)).
+veq context op: dlerp
+fxname: -dlerp
+args: (ax bx s)
+body (1): (+ ax (* (- bx ax) s)).
 ```
 
 #### :fvprogn: DMID
 
 ```
-veq context op: DMID
-fxname: -DMID
-args: (AX BX)
-body (1): (* (+ AX BX) 0.5d0).
+veq context op: dmid
+fxname: -dmid
+args: (ax bx)
+body (1): (* (+ ax bx) 0.5d0).
 ```
 
 #### DPI
@@ -3119,10 +3141,10 @@ ex: (DREP (fx)) corresponds to (values (fx) ...).
 #### :fvprogn: DSCALE
 
 ```
-veq context op: DSCALE
-fxname: -DSCALE
-args: (AX S)
-body (1): (* AX S).
+veq context op: dscale
+fxname: -dscale
+args: (ax s)
+body (1): (* ax s).
 ```
 
 #### DSEL
@@ -3143,19 +3165,19 @@ body (1): (* AX S).
 #### :fvprogn: DSIN-COS
 
 ```
-veq context op: DSIN-COS
-fxname: -DSIN-COS
-args: (AX)
-body (2): (VALUES (SIN AX) (COS AX)).
+veq context op: dsin-cos
+fxname: -dsin-cos
+args: (ax)
+body (2): (values (sin ax) (cos ax)).
 ```
 
 #### :fvprogn: DSQUARE
 
 ```
-veq context op: DSQUARE
-fxname: -DSQUARE
-args: (AX)
-body (1): (* AX AX).
+veq context op: dsquare
+fxname: -dsquare
+args: (ax)
+body (1): (* ax ax).
 ```
 
 #### :fvprogn: DVAL
@@ -3720,91 +3742,91 @@ assuming c is a structname, and a,b are FVEC of dim 2
 #### :fvprogn: F2ANGLE
 
 ```
-veq context op: F2ANGLE
-fxname: -F2ANGLE
-args: (AX AY)
-body (1): (MVC #'ATAN (-F2NORM AY AX)).
+veq context op: f2angle
+fxname: -f2angle
+args: (ax ay)
+body (1): (atan ay ax).
 ```
 
 #### :fvprogn: F2CROSS
 
 ```
-veq context op: F2CROSS
-fxname: -F2CROSS
-args: (AX AY BX BY)
-body (2): (- (* AX BY) (* AY BX)).
+veq context op: f2cross
+fxname: -f2cross
+args: (ax ay bx by)
+body (2): (- (* ax by) (* ay bx)).
 ```
 
 #### :fvprogn: F2DOT
 
 ```
-veq context op: F2DOT
-fxname: -F2DOT
-args: (AX AY BX BY)
-body (1): (+ (* AX BX) (* AY BY)).
+veq context op: f2dot
+fxname: -f2dot
+args: (ax ay bx by)
+body (1): (+ (* ax bx) (* ay by)).
 ```
 
 #### :fvprogn: F2DST
 
 ```
-veq context op: F2DST
-fxname: -F2DST
-args: (AX AY BX BY)
-body (1): (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))))).
+veq context op: f2dst
+fxname: -f2dst
+args: (ax ay bx by)
+body (1): (sqrt (the pos-ff (mvc #'+ (-f2square (- bx ax) (- by ay))))).
 ```
 
 #### :fvprogn: F2DST2
 
 ```
-veq context op: F2DST2
-fxname: -F2DST2
-args: (AX AY BX BY)
-body (1): (MVC #'+ (-F2SQUARE (- BX AX) (- BY AY))).
+veq context op: f2dst2
+fxname: -f2dst2
+args: (ax ay bx by)
+body (1): (mvc #'+ (-f2square (- bx ax) (- by ay))).
 ```
 
 #### :fvprogn: F2FLIP
 
 ```
-veq context op: F2FLIP
-fxname: -F2FLIP
-args: (AX AY)
-body (2): (VALUES AY AX).
+veq context op: f2flip
+fxname: -f2flip
+args: (ax ay)
+body (2): (values ay ax).
 ```
 
 #### :fvprogn: F2FROM
 
 ```
-veq context op: F2FROM
-fxname: -F2FROM
-args: (AX AY BX BY S)
-body (2): (VALUES (+ AX (* BX S)) (+ AY (* BY S))).
+veq context op: f2from
+fxname: -f2from
+args: (ax ay bx by s)
+body (2): (values (+ ax (* bx s)) (+ ay (* by s))).
 ```
 
 #### :fvprogn: F2I-
 
 ```
-veq context op: F2I-
-fxname: -F2I-
-args: (AX AY BX BY)
-body (2): (VALUES (- BX AX) (- BY AY)).
+veq context op: f2i-
+fxname: -f2i-
+args: (ax ay bx by)
+body (2): (values (- bx ax) (- by ay)).
 ```
 
 #### :fvprogn: F2I/
 
 ```
-veq context op: F2I/
-fxname: -F2I/
-args: (AX AY BX BY)
-body (2): (VALUES (/ BX AX) (/ BY AY)).
+veq context op: f2i/
+fxname: -f2i/
+args: (ax ay bx by)
+body (2): (values (/ bx ax) (/ by ay)).
 ```
 
 #### :fvprogn: F2ID
 
 ```
-veq context op: F2ID
-fxname: -F2ID
-args: (AX AY)
-body (2): (VALUES AX AY).
+veq context op: f2id
+fxname: -f2id
+args: (ax ay)
+body (2): (values ax ay).
 ```
 
 #### F2IN-BBOX
@@ -3858,37 +3880,37 @@ body (2): (VALUES AX AY).
 #### :fvprogn: F2ISCALE
 
 ```
-veq context op: F2ISCALE
-fxname: -F2ISCALE
-args: (AX AY S)
-body (2): (VALUES (/ AX S) (/ AY S)).
+veq context op: f2iscale
+fxname: -f2iscale
+args: (ax ay s)
+body (2): (values (/ ax s) (/ ay s)).
 ```
 
 #### :fvprogn: F2LEN
 
 ```
-veq context op: F2LEN
-fxname: -F2LEN
-args: (AX AY)
-body (1): (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F2SQUARE AX AY))))).
+veq context op: f2len
+fxname: -f2len
+args: (ax ay)
+body (1): (the pos-ff (sqrt (the pos-ff (mvc #'+ (-f2square ax ay))))).
 ```
 
 #### :fvprogn: F2LEN2
 
 ```
-veq context op: F2LEN2
-fxname: -F2LEN2
-args: (AX AY)
-body (1): (THE POS-FF (MVC #'+ (-F2SQUARE AX AY))).
+veq context op: f2len2
+fxname: -f2len2
+args: (ax ay)
+body (1): (the pos-ff (mvc #'+ (-f2square ax ay))).
 ```
 
 #### :fvprogn: F2LERP
 
 ```
-veq context op: F2LERP
-fxname: -F2LERP
-args: (AX AY BX BY S)
-body (2): (VALUES (+ AX (* (- BX AX) S)) (+ AY (* (- BY AY) S))).
+veq context op: f2lerp
+fxname: -f2lerp
+args: (ax ay bx by s)
+body (2): (values (+ ax (* (- bx ax) s)) (+ ay (* (- by ay) s))).
 ```
 
 #### :fvprogn: F2LET
@@ -3917,10 +3939,10 @@ note that this behaves like native lisp let*.
 #### :fvprogn: F2MAX
 
 ```
-veq context op: F2MAX
-fxname: -F2MAX
-args: (AX AY)
-body (1): (MAX AX AY).
+veq context op: f2max
+fxname: -f2max
+args: (ax ay)
+body (1): (max ax ay).
 ```
 
 #### F2MEYE
@@ -3941,19 +3963,19 @@ body (1): (MAX AX AY).
 #### :fvprogn: F2MID
 
 ```
-veq context op: F2MID
-fxname: -F2MID
-args: (AX AY BX BY)
-body (2): (VALUES (* (+ AX BX) 0.5) (* (+ AY BY) 0.5)).
+veq context op: f2mid
+fxname: -f2mid
+args: (ax ay bx by)
+body (2): (values (* (+ ax bx) 0.5) (* (+ ay by) 0.5)).
 ```
 
 #### :fvprogn: F2MIN
 
 ```
-veq context op: F2MIN
-fxname: -F2MIN
-args: (AX AY)
-body (1): (MIN AX AY).
+veq context op: f2min
+fxname: -f2min
+args: (ax ay)
+body (1): (min ax ay).
 ```
 
 #### F2MINV
@@ -4133,46 +4155,46 @@ body (1): (MIN AX AY).
 #### :fvprogn: F2NORM
 
 ```
-veq context op: F2NORM
-fxname: -F2NORM
-args: (AX AY)
-body (2): (MVC #'-F2ISCALE AX AY (MVC #'-F2LEN AX AY)).
+veq context op: f2norm
+fxname: -f2norm
+args: (ax ay)
+body (2): (mvc #'-f2iscale ax ay (mvc #'-f2len ax ay)).
 ```
 
 #### :fvprogn: F2ON-CIRC
 
 ```
-veq context op: F2ON-CIRC
-fxname: -F2ON-CIRC
-args: (AX RAD)
-body (2): (MVC #'-F2SCALE (-FCOS-SIN (* AX FPII)) RAD).
+veq context op: f2on-circ
+fxname: -f2on-circ
+args: (ax rad)
+body (2): (mvc #'-f2scale (-fcos-sin (* ax fpii)) rad).
 ```
 
 #### :fvprogn: F2ON-CIRC\*
 
 ```
-veq context op: F2ON-CIRC*
-fxname: -F2ON-CIRC*
-args: (AX RAD)
-body (2): (MVC #'-F2SCALE (-FCOS-SIN AX) RAD).
+veq context op: f2on-circ*
+fxname: -f2on-circ*
+args: (ax rad)
+body (2): (mvc #'-f2scale (-fcos-sin ax) rad).
 ```
 
 #### :fvprogn: F2PERP
 
 ```
-veq context op: F2PERP
-fxname: -F2PERP
-args: (AX AY)
-body (2): (VALUES AY (- AX)).
+veq context op: f2perp
+fxname: -f2perp
+args: (ax ay)
+body (2): (values ay (- ax)).
 ```
 
 #### :fvprogn: F2PERP\*
 
 ```
-veq context op: F2PERP*
-fxname: -F2PERP*
-args: (AX AY)
-body (2): (VALUES (- AY) AX).
+veq context op: f2perp*
+fxname: -f2perp*
+args: (ax ay)
+body (2): (values (- ay) ax).
 ```
 
 #### :fvprogn: F2REP
@@ -4185,31 +4207,31 @@ ex: (F2REP (fx)) corresponds to (values (fx) ...).
 #### :fvprogn: F2ROT
 
 ```
-veq context op: F2ROT
-fxname: -F2ROT
-args: (AX AY ANGLE)
-body (2): (LET ((COSA (COS ANGLE)) (SINA (SIN ANGLE)))
-            (DECLARE (FF COSA SINA))
-            (VALUES (- (* AX COSA) (* AY SINA)) (+ (* AX SINA) (* AY COSA)))).
+veq context op: f2rot
+fxname: -f2rot
+args: (ax ay angle)
+body (2): (let ((cosa (cos angle)) (sina (sin angle)))
+            (declare (ff cosa sina))
+            (values (- (* ax cosa) (* ay sina)) (+ (* ax sina) (* ay cosa)))).
 ```
 
 #### :fvprogn: F2ROTS
 
 ```
-veq context op: F2ROTS
-fxname: -F2ROTS
-args: (AX AY ANGLE SX SY)
-body (2): (MVB (RX RY) (MVC #'-F2ROT (- AX SX) (- AY SY) ANGLE)
-               (VALUES (+ SX RX) (+ SY RY))).
+veq context op: f2rots
+fxname: -f2rots
+args: (ax ay angle sx sy)
+body (2): (mvb (rx ry) (mvc #'-f2rot (- ax sx) (- ay sy) angle)
+               (values (+ sx rx) (+ sy ry))).
 ```
 
 #### :fvprogn: F2SCALE
 
 ```
-veq context op: F2SCALE
-fxname: -F2SCALE
-args: (AX AY S)
-body (2): (VALUES (* AX S) (* AY S)).
+veq context op: f2scale
+fxname: -f2scale
+args: (ax ay s)
+body (2): (values (* ax s) (* ay s)).
 ```
 
 #### F2SEGDST
@@ -4251,10 +4273,10 @@ body (2): (VALUES (* AX S) (* AY S)).
 #### :fvprogn: F2SQUARE
 
 ```
-veq context op: F2SQUARE
-fxname: -F2SQUARE
-args: (AX AY)
-body (2): (VALUES (* AX AX) (* AY AY)).
+veq context op: f2square
+fxname: -f2square
+args: (ax ay)
+body (2): (values (* ax ax) (* ay ay)).
 ```
 
 #### F2SSEGX
@@ -4481,112 +4503,112 @@ assuming c is a structname, and a,b are FVEC of dim 3
 #### :fvprogn: F3CROSS
 
 ```
-veq context op: F3CROSS
-fxname: -F3CROSS
-args: (AX AY AZ BX BY BZ)
-body (3): (VALUES (- (* AY BZ) (* AZ BY)) (- (* AZ BX) (* AX BZ))
-                  (- (* AX BY) (* AY BX))).
+veq context op: f3cross
+fxname: -f3cross
+args: (ax ay az bx by bz)
+body (3): (values (- (* ay bz) (* az by)) (- (* az bx) (* ax bz))
+                  (- (* ax by) (* ay bx))).
 ```
 
 #### :fvprogn: F3DOT
 
 ```
-veq context op: F3DOT
-fxname: -F3DOT
-args: (AX AY AZ BX BY BZ)
-body (1): (+ (* AX BX) (* AY BY) (* AZ BZ)).
+veq context op: f3dot
+fxname: -f3dot
+args: (ax ay az bx by bz)
+body (1): (+ (* ax bx) (* ay by) (* az bz)).
 ```
 
 #### :fvprogn: F3DST
 
 ```
-veq context op: F3DST
-fxname: -F3DST
-args: (AX AY AZ BX BY BZ)
-body (1): (SQRT
-           (THE POS-FF (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))))).
+veq context op: f3dst
+fxname: -f3dst
+args: (ax ay az bx by bz)
+body (1): (sqrt
+           (the pos-ff (mvc #'+ (-f3square (- bx ax) (- by ay) (- bz az))))).
 ```
 
 #### :fvprogn: F3DST2
 
 ```
-veq context op: F3DST2
-fxname: -F3DST2
-args: (AX AY AZ BX BY BZ)
-body (1): (MVC #'+ (-F3SQUARE (- BX AX) (- BY AY) (- BZ AZ))).
+veq context op: f3dst2
+fxname: -f3dst2
+args: (ax ay az bx by bz)
+body (1): (mvc #'+ (-f3square (- bx ax) (- by ay) (- bz az))).
 ```
 
 #### :fvprogn: F3FROM
 
 ```
-veq context op: F3FROM
-fxname: -F3FROM
-args: (AX AY AZ BX BY BZ S)
-body (3): (VALUES (+ AX (* BX S)) (+ AY (* BY S)) (+ AZ (* BZ S))).
+veq context op: f3from
+fxname: -f3from
+args: (ax ay az bx by bz s)
+body (3): (values (+ ax (* bx s)) (+ ay (* by s)) (+ az (* bz s))).
 ```
 
 #### :fvprogn: F3I-
 
 ```
-veq context op: F3I-
-fxname: -F3I-
-args: (AX AY AZ BX BY BZ)
-body (3): (VALUES (- BX AX) (- BY AY) (- BZ AZ)).
+veq context op: f3i-
+fxname: -f3i-
+args: (ax ay az bx by bz)
+body (3): (values (- bx ax) (- by ay) (- bz az)).
 ```
 
 #### :fvprogn: F3I/
 
 ```
-veq context op: F3I/
-fxname: -F3I/
-args: (AX AY AZ BX BY BZ)
-body (3): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ)).
+veq context op: f3i/
+fxname: -f3i/
+args: (ax ay az bx by bz)
+body (3): (values (/ bx ax) (/ by ay) (/ bz az)).
 ```
 
 #### :fvprogn: F3ID
 
 ```
-veq context op: F3ID
-fxname: -F3ID
-args: (AX AY AZ)
-body (3): (VALUES AX AY AZ).
+veq context op: f3id
+fxname: -f3id
+args: (ax ay az)
+body (3): (values ax ay az).
 ```
 
 #### :fvprogn: F3ISCALE
 
 ```
-veq context op: F3ISCALE
-fxname: -F3ISCALE
-args: (AX AY AZ S)
-body (3): (VALUES (/ AX S) (/ AY S) (/ AZ S)).
+veq context op: f3iscale
+fxname: -f3iscale
+args: (ax ay az s)
+body (3): (values (/ ax s) (/ ay s) (/ az s)).
 ```
 
 #### :fvprogn: F3LEN
 
 ```
-veq context op: F3LEN
-fxname: -F3LEN
-args: (AX AY AZ)
-body (1): (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F3SQUARE AX AY AZ))))).
+veq context op: f3len
+fxname: -f3len
+args: (ax ay az)
+body (1): (the pos-ff (sqrt (the pos-ff (mvc #'+ (-f3square ax ay az))))).
 ```
 
 #### :fvprogn: F3LEN2
 
 ```
-veq context op: F3LEN2
-fxname: -F3LEN2
-args: (AX AY AZ)
-body (1): (THE POS-FF (MVC #'+ (-F3SQUARE AX AY AZ))).
+veq context op: f3len2
+fxname: -f3len2
+args: (ax ay az)
+body (1): (the pos-ff (mvc #'+ (-f3square ax ay az))).
 ```
 
 #### :fvprogn: F3LERP
 
 ```
-veq context op: F3LERP
-fxname: -F3LERP
-args: (AX AY AZ BX BY BZ S)
-body (3): (VALUES (+ AX (* (- BX AX) S)) (+ AY (* (- BY AY) S))
-                  (+ AZ (* (- BZ AZ) S))).
+veq context op: f3lerp
+fxname: -f3lerp
+args: (ax ay az bx by bz s)
+body (3): (values (+ ax (* (- bx ax) s)) (+ ay (* (- by ay) s))
+                  (+ az (* (- bz az) s))).
 ```
 
 #### :fvprogn: F3LET
@@ -4600,10 +4622,10 @@ note that this behaves like native lisp let*.
 #### :fvprogn: F3MAX
 
 ```
-veq context op: F3MAX
-fxname: -F3MAX
-args: (AX AY AZ)
-body (1): (MAX AX AY AZ).
+veq context op: f3max
+fxname: -f3max
+args: (ax ay az)
+body (1): (max ax ay az).
 ```
 
 #### F3MEYE
@@ -4624,19 +4646,19 @@ body (1): (MAX AX AY AZ).
 #### :fvprogn: F3MID
 
 ```
-veq context op: F3MID
-fxname: -F3MID
-args: (AX AY AZ BX BY BZ)
-body (3): (VALUES (* (+ AX BX) 0.5) (* (+ AY BY) 0.5) (* (+ AZ BZ) 0.5)).
+veq context op: f3mid
+fxname: -f3mid
+args: (ax ay az bx by bz)
+body (3): (values (* (+ ax bx) 0.5) (* (+ ay by) 0.5) (* (+ az bz) 0.5)).
 ```
 
 #### :fvprogn: F3MIN
 
 ```
-veq context op: F3MIN
-fxname: -F3MIN
-args: (AX AY AZ)
-body (1): (MIN AX AY AZ).
+veq context op: f3min
+fxname: -f3min
+args: (ax ay az)
+body (1): (min ax ay az).
 ```
 
 #### F3MINV
@@ -4816,10 +4838,10 @@ body (1): (MIN AX AY AZ).
 #### :fvprogn: F3NORM
 
 ```
-veq context op: F3NORM
-fxname: -F3NORM
-args: (AX AY AZ)
-body (3): (MVC #'-F3ISCALE AX AY AZ (THE POS-FF (MVC #'-F3LEN AX AY AZ))).
+veq context op: f3norm
+fxname: -f3norm
+args: (ax ay az)
+body (3): (mvc #'-f3iscale ax ay az (the pos-ff (mvc #'-f3len ax ay az))).
 ```
 
 #### F3PLANEX
@@ -4848,46 +4870,46 @@ ex: (F3REP (fx)) corresponds to (values (fx) ...).
 #### :fvprogn: F3ROT
 
 ```
-veq context op: F3ROT
-fxname: -F3ROT
-args: (AX AY AZ NX NY NZ A)
-body (3): (LET ((COSA (COS A)))
-            (DECLARE (FF COSA))
-            (MVC #'-F3FROM
-                 (MVC #'-F3FROM (-F3SCALE AX AY AZ COSA)
-                      (-F3CROSS NX NY NZ AX AY AZ) (SIN A))
-                 NX NY NZ (* (-F3DOT NX NY NZ AX AY AZ) (- 1.0 COSA)))).
+veq context op: f3rot
+fxname: -f3rot
+args: (ax ay az nx ny nz a)
+body (3): (let ((cosa (cos a)))
+            (declare (ff cosa))
+            (mvc #'-f3from
+                 (mvc #'-f3from (-f3scale ax ay az cosa)
+                      (-f3cross nx ny nz ax ay az) (sin a))
+                 nx ny nz (* (-f3dot nx ny nz ax ay az) (- 1.0 cosa)))).
 ```
 
 #### :fvprogn: F3ROTS
 
 ```
-veq context op: F3ROTS
-fxname: -F3ROTS
-args: (AX AY AZ NX NY NZ A SX SY SZ)
-body (3): (MVB (RX RY RZ)
-               (MVC #'-F3ROT (- AX SX) (- AY SY) (- AZ SZ) NX NY NZ A)
-               (VALUES (+ (THE FF RX) SX) (+ (THE FF RY) SY)
-                       (+ (THE FF RZ) SZ))).
+veq context op: f3rots
+fxname: -f3rots
+args: (ax ay az nx ny nz a sx sy sz)
+body (3): (mvb (rx ry rz)
+               (mvc #'-f3rot (- ax sx) (- ay sy) (- az sz) nx ny nz a)
+               (values (+ (the ff rx) sx) (+ (the ff ry) sy)
+                       (+ (the ff rz) sz))).
 ```
 
 #### :fvprogn: F3SCALE
 
 ```
-veq context op: F3SCALE
-fxname: -F3SCALE
-args: (AX AY AZ S)
-body (3): (VALUES (* AX S) (* AY S) (* AZ S)).
+veq context op: f3scale
+fxname: -f3scale
+args: (ax ay az s)
+body (3): (values (* ax s) (* ay s) (* az s)).
 ```
 
 #### :fvprogn: F3SQUARE
 
 ```
-veq context op: F3SQUARE
-fxname: -F3SQUARE
-args: (AX AY AZ)
-body (3): (VALUES (THE POS-FF (* AX AX)) (THE POS-FF (* AY AY))
-                  (THE POS-FF (* AZ AZ))).
+veq context op: f3square
+fxname: -f3square
+args: (ax ay az)
+body (3): (values (the pos-ff (* ax ax)) (the pos-ff (* ay ay))
+                  (the pos-ff (* az az))).
 ```
 
 #### :fvprogn: F3VAL
@@ -5077,104 +5099,104 @@ assuming c is a structname, and a,b are FVEC of dim 4
 #### :fvprogn: F4DOT
 
 ```
-veq context op: F4DOT
-fxname: -F4DOT
-args: (AX AY AZ AW BX BY BZ BW)
-body (1): (+ (* AX BX) (* AY BY) (* AZ BZ) (* AW BW)).
+veq context op: f4dot
+fxname: -f4dot
+args: (ax ay az aw bx by bz bw)
+body (1): (+ (* ax bx) (* ay by) (* az bz) (* aw bw)).
 ```
 
 #### :fvprogn: F4DST
 
 ```
-veq context op: F4DST
-fxname: -F4DST
-args: (AX AY AZ AW BX BY BZ BW)
-body (1): (SQRT
-           (THE POS-FF
-                (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))))).
+veq context op: f4dst
+fxname: -f4dst
+args: (ax ay az aw bx by bz bw)
+body (1): (sqrt
+           (the pos-ff
+                (mvc #'+ (-f4square (- bx ax) (- by ay) (- bz az) (- bw aw))))).
 ```
 
 #### :fvprogn: F4DST2
 
 ```
-veq context op: F4DST2
-fxname: -F4DST2
-args: (AX AY AZ AW BX BY BZ BW)
-body (1): (MVC #'+ (-F4SQUARE (- BX AX) (- BY AY) (- BZ AZ) (- BW AW))).
+veq context op: f4dst2
+fxname: -f4dst2
+args: (ax ay az aw bx by bz bw)
+body (1): (mvc #'+ (-f4square (- bx ax) (- by ay) (- bz az) (- bw aw))).
 ```
 
 #### :fvprogn: F4FROM
 
 ```
-veq context op: F4FROM
-fxname: -F4FROM
-args: (AX AY AZ AW BX BY BZ BW S)
-body (4): (VALUES (+ AX (* BX S)) (+ AY (* BY S)) (+ AZ (* BZ S))
-                  (+ AW (* BW S))).
+veq context op: f4from
+fxname: -f4from
+args: (ax ay az aw bx by bz bw s)
+body (4): (values (+ ax (* bx s)) (+ ay (* by s)) (+ az (* bz s))
+                  (+ aw (* bw s))).
 ```
 
 #### :fvprogn: F4I-
 
 ```
-veq context op: F4I-
-fxname: -F4I-
-args: (AX AY AZ AW BX BY BZ BW)
-body (4): (VALUES (- BX AX) (- BY AY) (- BZ AZ) (- BW AW)).
+veq context op: f4i-
+fxname: -f4i-
+args: (ax ay az aw bx by bz bw)
+body (4): (values (- bx ax) (- by ay) (- bz az) (- bw aw)).
 ```
 
 #### :fvprogn: F4I/
 
 ```
-veq context op: F4I/
-fxname: -F4I/
-args: (AX AY AZ AW BX BY BZ BW)
-body (4): (VALUES (/ BX AX) (/ BY AY) (/ BZ AZ) (/ BW AW)).
+veq context op: f4i/
+fxname: -f4i/
+args: (ax ay az aw bx by bz bw)
+body (4): (values (/ bx ax) (/ by ay) (/ bz az) (/ bw aw)).
 ```
 
 #### :fvprogn: F4ID
 
 ```
-veq context op: F4ID
-fxname: -F4ID
-args: (AX AY AZ AW)
-body (4): (VALUES AX AY AZ AW).
+veq context op: f4id
+fxname: -f4id
+args: (ax ay az aw)
+body (4): (values ax ay az aw).
 ```
 
 #### :fvprogn: F4ISCALE
 
 ```
-veq context op: F4ISCALE
-fxname: -F4ISCALE
-args: (AX AY AZ AW S)
-body (4): (VALUES (/ AX S) (/ AY S) (/ AZ S) (/ AW S)).
+veq context op: f4iscale
+fxname: -f4iscale
+args: (ax ay az aw s)
+body (4): (values (/ ax s) (/ ay s) (/ az s) (/ aw s)).
 ```
 
 #### :fvprogn: F4LEN
 
 ```
-veq context op: F4LEN
-fxname: -F4LEN
-args: (AX AY AZ AW)
-body (1): (THE POS-FF (SQRT (THE POS-FF (MVC #'+ (-F4SQUARE AX AY AZ AW))))).
+veq context op: f4len
+fxname: -f4len
+args: (ax ay az aw)
+body (1): (the pos-ff (sqrt (the pos-ff (mvc #'+ (-f4square ax ay az aw))))).
 ```
 
 #### :fvprogn: F4LEN2
 
 ```
-veq context op: F4LEN2
-fxname: -F4LEN2
-args: (AX AY AZ AW)
-body (1): (THE POS-FF (MVC #'+ (-F4SQUARE AX AY AZ AW))).
+veq context op: f4len2
+fxname: -f4len2
+args: (ax ay az aw)
+body (1): (the pos-ff (mvc #'+ (-f4square ax ay az aw))).
 ```
 
 #### :fvprogn: F4LERP
 
 ```
-veq context op: F4LERP
-fxname: -F4LERP
-args: (AX AY AZ AW BX BY BZ BW S)
-body (4): (VALUES (+ AX (* (- BX AX) S)) (+ AY (* (- BY AY) S))
-                  (+ AZ (* (- BZ AZ) S)) (+ AW (* (- BW AW) S))).
+veq context op: f4lerp
+fxname: -f4lerp
+args: (ax ay az aw bx by bz bw s)
+body (4): (values (+ ax (* (- bx ax) s)) (+ ay (* (- by ay) s))
+                  (+ az (* (- bz az) s)) (+ aw (* (- bw aw) s))).
 ```
 
 #### :fvprogn: F4LET
@@ -5188,10 +5210,10 @@ note that this behaves like native lisp let*.
 #### :fvprogn: F4MAX
 
 ```
-veq context op: F4MAX
-fxname: -F4MAX
-args: (AX AY AZ AW)
-body (1): (MAX AX AY AZ AW).
+veq context op: f4max
+fxname: -f4max
+args: (ax ay az aw)
+body (1): (max ax ay az aw).
 ```
 
 #### F4MEYE
@@ -5212,20 +5234,20 @@ body (1): (MAX AX AY AZ AW).
 #### :fvprogn: F4MID
 
 ```
-veq context op: F4MID
-fxname: -F4MID
-args: (AX AY AZ AW BX BY BZ BW)
-body (4): (VALUES (* (+ AX BX) 0.5) (* (+ AY BY) 0.5) (* (+ AZ BZ) 0.5)
-                  (* (+ AW BW) 0.5)).
+veq context op: f4mid
+fxname: -f4mid
+args: (ax ay az aw bx by bz bw)
+body (4): (values (* (+ ax bx) 0.5) (* (+ ay by) 0.5) (* (+ az bz) 0.5)
+                  (* (+ aw bw) 0.5)).
 ```
 
 #### :fvprogn: F4MIN
 
 ```
-veq context op: F4MIN
-fxname: -F4MIN
-args: (AX AY AZ AW)
-body (1): (MIN AX AY AZ AW).
+veq context op: f4min
+fxname: -f4min
+args: (ax ay az aw)
+body (1): (min ax ay az aw).
 ```
 
 #### F4MINV
@@ -5341,10 +5363,10 @@ body (1): (MIN AX AY AZ AW).
 #### :fvprogn: F4NORM
 
 ```
-veq context op: F4NORM
-fxname: -F4NORM
-args: (AX AY AZ AW)
-body (4): (MVC #'-F4ISCALE AX AY AZ AW (THE POS-FF (MVC #'-F4LEN AX AY AZ AW))).
+veq context op: f4norm
+fxname: -f4norm
+args: (ax ay az aw)
+body (4): (mvc #'-f4iscale ax ay az aw (the pos-ff (mvc #'-f4len ax ay az aw))).
 ```
 
 #### :fvprogn: F4REP
@@ -5357,20 +5379,20 @@ ex: (F4REP (fx)) corresponds to (values (fx) ...).
 #### :fvprogn: F4SCALE
 
 ```
-veq context op: F4SCALE
-fxname: -F4SCALE
-args: (AX AY AZ AW S)
-body (4): (VALUES (* AX S) (* AY S) (* AZ S) (* AW S)).
+veq context op: f4scale
+fxname: -f4scale
+args: (ax ay az aw s)
+body (4): (values (* ax s) (* ay s) (* az s) (* aw s)).
 ```
 
 #### :fvprogn: F4SQUARE
 
 ```
-veq context op: F4SQUARE
-fxname: -F4SQUARE
-args: (AX AY AZ AW)
-body (4): (VALUES (THE POS-FF (* AX AX)) (THE POS-FF (* AY AY))
-                  (THE POS-FF (* AZ AZ)) (THE POS-FF (* AW AW))).
+veq context op: f4square
+fxname: -f4square
+args: (ax ay az aw)
+body (4): (values (the pos-ff (* ax ax)) (the pos-ff (* ay ay))
+                  (the pos-ff (* az az)) (the pos-ff (* aw aw))).
 ```
 
 #### :fvprogn: F4VAL
@@ -5401,40 +5423,56 @@ returns (values 1f0 2f0 3f0)
  ;   Source file: src/array-utils.lisp
 ```
 
+#### FALPHA
+
+```
+ ; VEQ:FALPHA
+ ;   [symbol]
+ ;
+ ; FALPHA names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %FALPHA
+ ;     ARGS: (X Y &AUX (A (ATAN (- Y) X)))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
+ ;   Source file: src/extra.lisp
+```
+
 #### :fvprogn: FCLAMP
 
 ```
-veq context op: FCLAMP
-fxname: -FCLAMP
-args: (X)
-body (1): (MIN 1.0 (MAX 0.0 X)).
+veq context op: fclamp
+fxname: -fclamp
+args: (x)
+body (1): (min 1.0 (max 0.0 x)).
 ```
 
 #### :fvprogn: FCLAMP\*
 
 ```
-veq context op: FCLAMP*
-fxname: -FCLAMP*
-args: (X MI MA)
-body (1): (MIN MA (MAX MI X)).
+veq context op: fclamp*
+fxname: -fclamp*
+args: (x mi ma)
+body (1): (min ma (max mi x)).
 ```
 
 #### :fvprogn: FCOS-SIN
 
 ```
-veq context op: FCOS-SIN
-fxname: -FCOS-SIN
-args: (AX)
-body (2): (VALUES (COS AX) (SIN AX)).
+veq context op: fcos-sin
+fxname: -fcos-sin
+args: (ax)
+body (2): (values (cos ax) (sin ax)).
 ```
 
 #### :fvprogn: FDEG->RAD
 
 ```
-veq context op: FDEG->RAD
-fxname: -FDEG->RAD
-args: (D)
-body (1): (* FPI (/ D 180.0)).
+veq context op: fdeg->rad
+fxname: -fdeg->rad
+args: (d)
+body (1): (* fpi (/ d 180.0)).
 ```
 
 #### FEASE-IN-BACK
@@ -5907,6 +5945,22 @@ body (1): (* FPI (/ D 180.0)).
  ;   Source file: src/easing.lisp
 ```
 
+#### FEPS=
+
+```
+ ; VEQ:FEPS=
+ ;   [symbol]
+ ;
+ ; FEPS= names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %FEPS=
+ ;     ARGS: (A B &OPTIONAL (E (* 10.0 *EPS*)))
+ ;     DOCSTRING: [none]
+ ;     defined via veq:FVDEF*
+ ;   Source file: src/extra.lisp
+```
+
 #### FF
 
 ```
@@ -5957,73 +6011,73 @@ body (1): (* FPI (/ D 180.0)).
 #### :fvprogn: FFROM
 
 ```
-veq context op: FFROM
-fxname: -FFROM
-args: (AX BX S)
-body (1): (+ AX (* BX S)).
+veq context op: ffrom
+fxname: -ffrom
+args: (ax bx s)
+body (1): (+ ax (* bx s)).
 ```
 
 #### :fvprogn: FI-
 
 ```
-veq context op: FI-
-fxname: -FI-
-args: (AX BX)
-body (1): (- BX AX).
+veq context op: fi-
+fxname: -fi-
+args: (ax bx)
+body (1): (- bx ax).
 ```
 
 #### :fvprogn: FI/
 
 ```
-veq context op: FI/
-fxname: -FI/
-args: (AX BX)
-body (1): (/ BX AX).
+veq context op: fi/
+fxname: -fi/
+args: (ax bx)
+body (1): (/ bx ax).
 ```
 
 #### :fvprogn: FID
 
 ```
-veq context op: FID
-fxname: -FID
-args: (AX)
-body (1): (VALUES AX).
+veq context op: fid
+fxname: -fid
+args: (ax)
+body (1): (values ax).
 ```
 
 #### :fvprogn: FISCALE
 
 ```
-veq context op: FISCALE
-fxname: -FISCALE
-args: (AX S)
-body (1): (/ AX S).
+veq context op: fiscale
+fxname: -fiscale
+args: (ax s)
+body (1): (/ ax s).
 ```
 
 #### :fvprogn: FLEN
 
 ```
-veq context op: FLEN
-fxname: -FLEN
-args: (AX)
-body (1): (THE POS-FF AX).
+veq context op: flen
+fxname: -flen
+args: (ax)
+body (1): (the pos-ff ax).
 ```
 
 #### :fvprogn: FLEN2
 
 ```
-veq context op: FLEN2
-fxname: -FLEN2
-args: (AX)
-body (1): (THE POS-FF (MVC #'+ (-FSQUARE AX))).
+veq context op: flen2
+fxname: -flen2
+args: (ax)
+body (1): (the pos-ff (mvc #'+ (-fsquare ax))).
 ```
 
 #### :fvprogn: FLERP
 
 ```
-veq context op: FLERP
-fxname: -FLERP
-args: (AX BX S)
-body (1): (+ AX (* (- BX AX) S)).
+veq context op: flerp
+fxname: -flerp
+args: (ax bx s)
+body (1): (+ ax (* (- bx ax) s)).
 ```
 
 #### FMAKE-ORTHO-PROJ-MATRIX
@@ -6077,10 +6131,10 @@ body (1): (+ AX (* (- BX AX) S)).
 #### :fvprogn: FMID
 
 ```
-veq context op: FMID
-fxname: -FMID
-args: (AX BX)
-body (1): (* (+ AX BX) 0.5).
+veq context op: fmid
+fxname: -fmid
+args: (ax bx)
+body (1): (* (+ ax bx) 0.5).
 ```
 
 #### FPI
@@ -6158,10 +6212,10 @@ ex: (FREP (fx)) corresponds to (values (fx) ...).
 #### :fvprogn: FSCALE
 
 ```
-veq context op: FSCALE
-fxname: -FSCALE
-args: (AX S)
-body (1): (* AX S).
+veq context op: fscale
+fxname: -fscale
+args: (ax s)
+body (1): (* ax s).
 ```
 
 #### FSEL
@@ -6182,19 +6236,19 @@ body (1): (* AX S).
 #### :fvprogn: FSIN-COS
 
 ```
-veq context op: FSIN-COS
-fxname: -FSIN-COS
-args: (AX)
-body (2): (VALUES (SIN AX) (COS AX)).
+veq context op: fsin-cos
+fxname: -fsin-cos
+args: (ax)
+body (2): (values (sin ax) (cos ax)).
 ```
 
 #### :fvprogn: FSQUARE
 
 ```
-veq context op: FSQUARE
-fxname: -FSQUARE
-args: (AX)
-body (1): (* AX AX).
+veq context op: fsquare
+fxname: -fsquare
+args: (ax)
+body (1): (* ax ax).
 ```
 
 #### :fvprogn: FVAL
@@ -8403,7 +8457,7 @@ fvprogn, fvdef*, vdef*, def*. see replace-varg for implementation details.
 #### VV
 
 ```
-## INTRODUCTION
+# INTRODUCTION
 
   ; the vv macro implements a DSL for manipulating packs of values (point
   ; vectors) and arrays of point vectors (vecs). it is a core part of veq, and as
@@ -8421,7 +8475,7 @@ fvprogn, fvdef*, vdef*, def*. see replace-varg for implementation details.
   ; types [see TYPES] below. but it might be easier to get a sense of how to use
   ; the DSL with som examples.
 
-## EXAMPLES OF USE
+# EXAMPLES OF USE
 
   ; the best way to get an idea of how the DSL works might be to see some
   ; examples n the following examples we use ; -> to indicate output. it is not a
@@ -8606,7 +8660,6 @@ all the modes:
    - m@fx : translates to (mvc #'fx ...)
    - f@fx : translates to (mvc fx ...)
 
-
 # SUMMARY OF MODIFIERS
 
   ; ?@ is a modifier used to alter the behaviour of a specific mode. modes that
@@ -8636,7 +8689,6 @@ all the modes:
     ; by the lhs index:
     (2!@$+$! (?@ #(1 2 3 4) 1) (?@ #(10 20 30 40) 0 1))) ; -> #(1 2 13 24)
 
-
 # SUMMARY OF TYPES
 
   ; all vv expressions [except f@ and m@, where it does not make sense] can be
@@ -8657,8 +8709,7 @@ all the modes:
   ; forgiving, but less efficeint. in which case the corresponding array type is
   ; 'vector.
 
-
-## INSPECT GENERATED CODE
+# INSPECT GENERATED CODE
 
   ; the code that is actually generated is usually a little more involved than
   ; what these examples imply. in order to see the expanded code use:
@@ -8671,6 +8722,19 @@ all the modes:
   ; it can also be helful to use (veq:vp ...) or (veq:vpr ...) [see docs.]
   ; vp will print all values, and return all values; while vpr will print
   ; the expression, the resulting values, and then return the values.
+```
+
+#### VVDB
+
+```
+:none:
+
+ ; VEQ:VVDB
+ ;   [symbol]
+ ;
+ ; VVDB names a macro:
+ ;   Lambda-list: ((&KEY (EXEC T) (S T)) &BODY BODY)
+ ;   Source file: src/ops-vv.lisp
 ```
 
 #### VVSYM

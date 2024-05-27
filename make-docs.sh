@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 sbcl --quit \
      --eval '(ql:quickload :veq :silent t)'\
      --eval '(handler-case (veq:ext-symbols? :pretty)
@@ -18,7 +20,7 @@ context can be initiated using \`vprogn\`, \`fvprogn\`, \`vdef\`, \`fvdef\`,
 \`vdef*\` or \`fvdef*\`. See further documentation under the respective symbols
 below.
 
-See [examples](/examples/ex.lisp) for working examples of some use.
+See [examples](/examples/ex.lisp) som examples.
 
 #### Names and Types
 
@@ -36,12 +38,9 @@ argument.
 
 #### Abbreviations
 
-\`dsb\` is short for \`destructuring-bind\`.
-
-\`mvb\` is short for \`multiple-value-bind\`.
-
-\`mvc\` is short for \`multiple-value-call\`.
-
+ - \`dsb\` is short for \`destructuring-bind\`.
+ - \`mvb\` is short for \`multiple-value-bind\`.
+ - \`mvc\` is short for \`multiple-value-call\`.
 
 ### Symbols
 
@@ -50,4 +49,4 @@ EOF
 tail -n +8 DOCS.md.tmp >> DOCS.md
 sed -i 's/[[:space:]]*$//g' DOCS.md
 sed -i 's:/data/x/veq/::g' DOCS.md
-rm  DOCS.md.tmp
+rm  -f DOCS.md.tmp

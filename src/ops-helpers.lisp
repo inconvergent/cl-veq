@@ -42,12 +42,10 @@
   (let* ((exp-args (-expand-and-flatten-!symbols args))
          (declares `(,(optype mname) ,@exp-args))
          (fname (symb #\- mname))
-         (mdocs (format nil "veq context op: ~a
-fxname: ~a
-args: ~a~%body (~a): ~a." mname fname exp-args out-dim (car body))))
-    `(progn
-       (export ',mname)
-       (map-docstring ',mname ,mdocs :nodesc :context)
+         (*print-gensym* nil) (*print-case* :downcase)
+         (mdocs (format nil "veq context op: ~a~%fxname: ~a~%args: ~s~%body (~a): ~s."
+                        mname fname exp-args out-dim (car body))))
+    `(progn (export ',mname) (map-docstring ',mname ,mdocs :nodesc :context)
        (map-symbol `(,',mname (&body mbody)
                        `(,@(if (body-len ,,(length exp-args) mbody)
                              `(,',',fname)

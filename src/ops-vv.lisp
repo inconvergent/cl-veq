@@ -289,7 +289,7 @@
 (defmacro define-vv-macro ()
   (let ((mname 'vv)
         (docs
-"## INTRODUCTION
+"# INTRODUCTION
 
   ; the vv macro implements a DSL for manipulating packs of values (point
   ; vectors) and arrays of point vectors (vecs). it is a core part of veq, and as
@@ -307,7 +307,7 @@
   ; types [see TYPES] below. but it might be easier to get a sense of how to use
   ; the DSL with som examples.
 
-## EXAMPLES OF USE
+# EXAMPLES OF USE
 
   ; the best way to get an idea of how the DSL works might be to see some
   ; examples n the following examples we use ; -> to indicate output. it is not a
@@ -492,7 +492,6 @@ all the modes:
    - m@fx : translates to (mvc #'fx ...)
    - f@fx : translates to (mvc fx ...)
 
-
 # SUMMARY OF MODIFIERS
 
   ; ?@ is a modifier used to alter the behaviour of a specific mode. modes that
@@ -522,7 +521,6 @@ all the modes:
     ; by the lhs index:
     (2!@$+$! (?@ #(1 2 3 4) 1) (?@ #(10 20 30 40) 0 1))) ; -> #(1 2 13 24)
 
-
 # SUMMARY OF TYPES
 
   ; all vv expressions [except f@ and m@, where it does not make sense] can be
@@ -543,8 +541,7 @@ all the modes:
   ; forgiving, but less efficeint. in which case the corresponding array type is
   ; 'vector.
 
-
-## INSPECT GENERATED CODE
+# INSPECT GENERATED CODE
 
   ; the code that is actually generated is usually a little more involved than
   ; what these examples imply. in order to see the expanded code use:
@@ -557,15 +554,15 @@ all the modes:
   ; it can also be helful to use (veq:vp ...) or (veq:vpr ...) [see docs.]
   ; vp will print all values, and return all values; while vpr will print
   ; the expression, the resulting values, and then return the values."))
-    `(progn (export ',mname)
-            (map-docstring ',mname ,docs :nodesc)
-            (defmacro ,mname (&body body) ,docs
-              `(progn ,@(replace-varg (proc-vv body))))
-            (defmacro ,(symb mname :db) ((&key (exec t) (s t)) &body body)
-              (let ((body* `(progn ,@(replace-varg (proc-vv body)))))
-                (format t "~&; ----~%; expr: ~a~%; compiled:~%~&" body)
-                (format s "~a" body*)
-                (format s "~&; ----~&")
-                (when exec body*))))))
+    `(progn (export ',mname) (map-docstring ',mname ,docs :nodesc)
+       (defmacro ,mname (&body body) ,docs
+         `(progn ,@(replace-varg (proc-vv body))))
+       (defmacro ,(symb mname :db) ((&key (exec t) (s t)) &body body)
+         (let ((*print-case* :downcase) (*print-gensym* nil)
+               (body* `(progn ,@(replace-varg (proc-vv body)))))
+           (format s "~&██████████████████ COMPILED VV EXPR (~a) █████████████████~%~%~{~a~&~}
+~s~&██████████████████ END ██████████████████████████████████████~%"
+                   (v?) body body*)
+           (when exec body*))))))
 (define-vv-macro)
 

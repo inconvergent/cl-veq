@@ -79,10 +79,6 @@
 (defun reread (&rest args)
   (values (read-from-string (apply #'mkstr args))))
 
-(defun lpos (l &optional (i 0) j)
-  (if j (mapcar (lambda (a) (subseq a i j)) l)
-        (mapcar (lambda (a) (nth i a)) l)))
-
 (defun mapqt (l) (mapcar (lambda (s) `(quote ,s)) l))
 
 (defun undup (e &optional (flatten t))

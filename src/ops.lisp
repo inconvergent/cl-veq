@@ -1,6 +1,7 @@
 
 (in-package :veq)
 
+
 (ops
   (:1 @id (ax)) (values ax)
   (:1 @i- (ax bx)) (- bx ax) (:1 @i/ (ax bx)) (/ bx ax)
@@ -45,7 +46,7 @@
 
   (:2 @2norm (2!a)) (mvc #'-@2iscale ax ay (mvc #'-@2len ax ay))
 
-  (:1 @2angle (2!a)) (mvc #'atan (-@2norm ay ax))
+  (:1 @2angle (2!a)) (atan ay ax)
 
   (:1 @2dot (2!a 2!b)) (+ (* ax bx) (* ay by))
   (:2 @2cross (2!a 2!b)) (- (* ax by) (* ay bx))
