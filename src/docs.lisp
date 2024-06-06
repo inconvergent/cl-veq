@@ -1,4 +1,3 @@
-
 (in-package :veq)
 
 (declaim (list *docstring-map*))
@@ -13,10 +12,9 @@ fvdef defined contexts/functions) and corresponding macro body in veq
 context."
   (awg (s) `(-strsrt (mapcar (lambda (,s) ,s) *symbols-map*))))
 
-(defun desc (sym) (declare (symbol sym))
-  (apply #'mkstr (mapcar (lambda (s) (mkstr " ; " s #\Newline))
+(defun desc (sym) (declare #.*opt* (symbol sym))
+  (apply #'mkstr (mapcar (lambda (s) (format nil " ; ~a~%" s))
                          (butlast (split-string #\Newline (-outstr (describe sym)))))))
-
 (defun docstrings (sym)
   (apply #'mkstr (mapcar (lambda (o) (mkstr o #\Newline))
                    (remove-if-not #'identity (list (documentation sym 'function)
@@ -32,14 +30,12 @@ context."
       (cond (docs (format nil "~&~a~@[~&~%~a~&~]~&" (cadr docs) desc))
             ((and idocs (> (length idocs) 0))
                   (format nil "~&~a~@[~&~%~a~&~]~&" desc nil)) ; nil
-            (t (format nil "~&:none:~%~@[~&~%~a~&~]~&`" desc)))
+            (t (format nil "~&:missing:~%~@[~&~%~a~&~]~&`" desc)))
       skip context)))
 
 (defmacro pckgs (pkg)
   (awg (sym) `(-strsrt (loop for ,sym being the external-symbols of (find-package ,pkg)
                              collect (list (mkstr ,sym) ,sym)))))
-
-(defun -md-sanitize (d) (repl d "*" "\*"))
 
 (defmacro ext-symbols? (pkg &optional mode (fltfx 'and))
   "list all external symbols in pkg. use :verbose to inlcude docstring.
@@ -51,10 +47,7 @@ use :pretty to print verbose output to stdout in a readable form."
                for (,doc ,skip ,context) = (lst (select-docs ,sym))
                if (and (not ,skip) (,fltfx ,sym ,context))
                do (mvb (,doc ,skip) (select-docs ,sym)
-                    (unless ,skip
-                      (format t "## `~a`~&```~&~a~&```~&~%"
-                                (string-downcase (-md-sanitize ,str))
-                                (-md-sanitize ,doc))))))
+                    (unless ,skip (format t "## `~(~a~)`~&```~&~a~&```~&~%" ,str ,doc)))))
       (:pairs `(loop for (,str ,sym) in (pckgs ,pkg)
                      collect (list ,str (select-docs ,sym))))
       (otherwise `(loop for (,str ,sym) in (pckgs ,pkg) collect ,str)))))

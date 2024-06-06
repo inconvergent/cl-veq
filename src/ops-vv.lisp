@@ -4,11 +4,8 @@
 
 ; (m@fx ...) -> (mvc #'fx (mvc #'values ...))
 (defun procm@fx (b p) `(mvc #',(assert-fx-sym b p) (~ ,@(cdr b))))
-
 ; almost the same: (f@fx ...) -> (mvc fx (mvc #'values ...))
 (defun procf@fx (b p) `(mvc (the function ,(assert-fx-sym b p)) (~ ,@(cdr b))))
-
-
 (defun proca@fx (b p) `(apply #',(assert-fx-sym b p) ,@(cdr b)))
 
 ; -- 1ARY -----------------------------------------------------------------------
@@ -44,8 +41,7 @@
         ((gk0 p :!) `(values ,@body))
         (t (vverr b "unexpected use of !"))))
 
-; row wise element pair wise
-(defun proc!@fx (b p &aux (dim (gk p :dim)))
+(defun proc!@fx (b p &aux (dim (gk p :dim))) ; row wise element pair wise
   (declare #.*opt* (pn dim))
   (-vmvb* (gk p :ty) (the pn (* 2 dim)) 'arg `(~ ,@(cdr b))
    `(,(values! p (cdr b)

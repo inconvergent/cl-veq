@@ -29,7 +29,6 @@ are as follows:
 | `s`      | `symbol`             | `sy`         | `svec`
 | `k`      | `keyword`            | `kv`         | `kvec`
 
-
 Symbols with `$` in the name pertain to vec arrays. Vec arrays are
 `(simple-array [type])`.
 

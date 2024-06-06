@@ -1,8 +1,7 @@
 (in-package :veq)
 
 (deftype df () 'double-float) (deftype ff () 'single-float)
-; TODO: make smaller ints and uints?
-(deftype in (&optional (bits 32)) `(signed-byte ,bits))
+(deftype in (&optional (bits 32)) `(signed-byte ,bits)) ; TODO: make smaller ints and uints?
 (deftype pn (&optional (bits 32)) `(unsigned-byte ,bits))
 (deftype kv () 'keyword) (deftype sy () 'symbol) (deftype ll () 'list)
 (deftype pos-df () `(double-float 0d0 *)) (deftype pos-ff () `(single-float 0f0 *))
@@ -35,14 +34,13 @@
 (make-ty* kv) (make-ty* sy) (make-ty* ll)
 
 (defun type-from-short (ty &optional (missing :nil)) "select type fom type hint."
-  (case (kv ty) (:df (values 'df 'd)) (:d (values 'df 'd))
-                (:ff (values 'ff 'f)) (:f (values 'ff 'f))
-                (:in (values 'in 'i)) (:i (values 'in 'i))
-                (:pn (values 'pn 'p)) (:p (values 'pn 'p))
-                (:sy (values 'symbol 's)) (:s (values 'symbol 's))
-                (:kv (values 'keyword 's)) (:k (values 'keyword 'k))
-                (:ll (values 'list 'l)) (:l (values 'list 'l))
-                (:nil (values missing missing))))
+  (case (kv ty)
+    (:df (values 'df 'd)) (:d (values 'df 'd)) (:ff (values 'ff 'f)) (:f (values 'ff 'f))
+    (:in (values 'in 'i)) (:i (values 'in 'i)) (:pn (values 'pn 'p)) (:p (values 'pn 'p))
+    (:sy (values 'symbol 's)) (:s (values 'symbol 's))
+    (:kv (values 'keyword 's)) (:k (values 'keyword 'k))
+    (:ll (values 'list 'l)) (:l (values 'list 'l))
+    (:nil (values missing missing))))
 (defun type-default (ty &optional (missing :nil))
   "default value for array with elements of type (hint) ty. eg: 0 0f0 0d0 nil :val"
   (case (kv ty) (:df 0d0) (:d 0d0) (:ff 0f0) (:f 0f0)

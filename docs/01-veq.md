@@ -29,7 +29,7 @@
 
 ## `$copy`
 ```
-:none:
+:missing:
 
  ; VEQ:$COPY
  ;   [symbol]
@@ -124,7 +124,7 @@
 
 ## `*eps*`
 ```
-:none:
+:missing:
 
  ; VEQ:*EPS*
  ;   [symbol]
@@ -1973,7 +1973,7 @@
 
 ## `deps=`
 ```
-:none:
+:missing:
 
  ; VEQ:DEPS=
  ;   [symbol]
@@ -1982,7 +1982,7 @@
 
 ## `df`
 ```
-:none:
+:missing:
 
  ; VEQ:DF
  ;   [symbol]
@@ -2027,7 +2027,7 @@
 
 ## `dpi`
 ```
-:none:
+:missing:
 
  ; VEQ:DPI
  ;   [symbol]
@@ -2040,7 +2040,7 @@
 
 ## `dpi25`
 ```
-:none:
+:missing:
 
  ; VEQ:DPI25
  ;   [symbol]
@@ -2053,7 +2053,7 @@
 
 ## `dpi5`
 ```
-:none:
+:missing:
 
  ; VEQ:DPI5
  ;   [symbol]
@@ -2066,7 +2066,7 @@
 
 ## `dpii`
 ```
-:none:
+:missing:
 
  ; VEQ:DPII
  ;   [symbol]
@@ -2079,7 +2079,7 @@
 
 ## `dsb`
 ```
-:none:
+:missing:
 
  ; VEQ:DSB
  ;   [symbol]
@@ -2106,7 +2106,7 @@
 
 ## `dvec`
 ```
-:none:
+:missing:
 
  ; VEQ:DVEC
  ;   [symbol]
@@ -2119,7 +2119,7 @@
 
 ## `dvlet`
 ```
-:none:
+:missing:
 
  ; VEQ:DVLET
  ;   [symbol]
@@ -2538,7 +2538,7 @@
 
 ## `f2$square*`
 ```
-:none:
+:missing:
 
  ; VEQ:F2$SQUARE*
  ;   [symbol]
@@ -3947,7 +3947,7 @@
 
 ## `ff`
 ```
-:none:
+:missing:
 
  ; VEQ:FF
  ;   [symbol]
@@ -4037,7 +4037,7 @@
 
 ## `fpi`
 ```
-:none:
+:missing:
 
  ; VEQ:FPI
  ;   [symbol]
@@ -4050,7 +4050,7 @@
 
 ## `fpi25`
 ```
-:none:
+:missing:
 
  ; VEQ:FPI25
  ;   [symbol]
@@ -4063,7 +4063,7 @@
 
 ## `fpi5`
 ```
-:none:
+:missing:
 
  ; VEQ:FPI5
  ;   [symbol]
@@ -4076,7 +4076,7 @@
 
 ## `fpii`
 ```
-:none:
+:missing:
 
  ; VEQ:FPII
  ;   [symbol]
@@ -4144,7 +4144,7 @@
 
 ## `fvec`
 ```
-:none:
+:missing:
 
  ; VEQ:FVEC
  ;   [symbol]
@@ -4157,7 +4157,7 @@
 
 ## `fvlet`
 ```
-:none:
+:missing:
 
  ; VEQ:FVLET
  ;   [symbol]
@@ -4723,7 +4723,7 @@
 
 ## `in`
 ```
-:none:
+:missing:
 
  ; VEQ:IN
  ;   [symbol]
@@ -4782,7 +4782,7 @@
 
 ## `ivec`
 ```
-:none:
+:missing:
 
  ; VEQ:IVEC
  ;   [symbol]
@@ -4795,7 +4795,7 @@
 
 ## `ivlet`
 ```
-:none:
+:missing:
 
  ; VEQ:IVLET
  ;   [symbol]
@@ -4804,7 +4804,7 @@
 
 ## `kv`
 ```
-:none:
+:missing:
 
  ; VEQ:KV
  ;   [symbol]
@@ -4835,7 +4835,7 @@
 
 ## `kvec`
 ```
-:none:
+:missing:
 
  ; VEQ:KVEC
  ;   [symbol]
@@ -4862,7 +4862,7 @@
 
 ## `ll`
 ```
-:none:
+:missing:
 
  ; VEQ:LL
  ;   [symbol]
@@ -4932,7 +4932,7 @@
 
 ## `lvec`
 ```
-:none:
+:missing:
 
  ; VEQ:LVEC
  ;   [symbol]
@@ -4983,7 +4983,7 @@
 
 ## `mvb`
 ```
-:none:
+:missing:
 
  ; VEQ:MVB
  ;   [symbol]
@@ -4996,7 +4996,7 @@
 
 ## `mvc`
 ```
-:none:
+:missing:
 
  ; VEQ:MVC
  ;   [symbol]
@@ -5039,7 +5039,7 @@
 
 ## `mvcwrap`
 ```
-:none:
+:missing:
 
  ; VEQ:MVCWRAP
  ;   [symbol]
@@ -5575,7 +5575,7 @@
 
 ## `pn`
 ```
-:none:
+:missing:
 
  ; VEQ:PN
  ;   [symbol]
@@ -5620,7 +5620,7 @@
 
 ## `pos-df`
 ```
-:none:
+:missing:
 
  ; VEQ:POS-DF
  ;   [symbol]
@@ -5633,7 +5633,7 @@
 
 ## `pos-ff`
 ```
-:none:
+:missing:
 
  ; VEQ:POS-FF
  ;   [symbol]
@@ -5646,7 +5646,7 @@
 
 ## `proc-vv`
 ```
-:none:
+:missing:
 
  ; VEQ:PROC-VV
  ;   [symbol]
@@ -5674,7 +5674,7 @@
 
 ## `pvec`
 ```
-:none:
+:missing:
 
  ; VEQ:PVEC
  ;   [symbol]
@@ -5687,7 +5687,7 @@
 
 ## `pvlet`
 ```
-:none:
+:missing:
 
  ; VEQ:PVLET
  ;   [symbol]
@@ -5735,7 +5735,7 @@
 
 ## `svec`
 ```
-:none:
+:missing:
 
  ; VEQ:SVEC
  ;   [symbol]
@@ -5748,7 +5748,7 @@
 
 ## `sy`
 ```
-:none:
+:missing:
 
  ; VEQ:SY
  ;   [symbol]
@@ -6009,7 +6009,7 @@
 
 ## `vvdb`
 ```
-:none:
+:missing:
 
  ; VEQ:VVDB
  ;   [symbol]

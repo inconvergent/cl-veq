@@ -102,28 +102,23 @@
            (cons (car lst) (dupes (cdr lst))))
         (t (dupes (cdr lst)))))
 
-(defun split-string (x s &key prune)
+(defun split-string (x s &key prune) ; TODO: collapse split-string, split-substr
   (declare (character x) (string s) (boolean prune))
-  (labels
-    ((splt (s)
-       (loop for c across s for i from 0
-             if (equal c x)
-             do (return-from splt
-                  (cons (subseq s 0 i) (splt (subseq s (1+ i))))))))
+  (labels ((splt (s) (loop for c across s for i from 0
+                           if (equal c x)
+                           do (return-from splt
+                                (cons (subseq s 0 i) (splt (subseq s (1+ i))))))))
     (let ((res (splt (concatenate 'string s (string x)))))
       (if prune (remove-if (lambda (s) (zerop (length s))) res)
                 res))))
 
-; this can probably be improved
-(defun split-substr (x s &key prune &aux (lx (length x)))
+(defun split-substr (x s &key prune &aux (lx (length x))) ; TODO: this can probably be improved
   (declare (optimize speed) (string x s) (boolean prune))
-  (labels
-    ((lst (s) (typecase s (list s) (t (list s))))
-     (splt (s &aux (i (match-substr x s)))
-       (if i (cons (subseq s 0 i) (lst (splt (subseq s (+ lx i))))) s)))
+  (labels ((lst (s) (typecase s (list s) (t (list s))))
+           (splt (s &aux (i (match-substr x s)))
+             (if i (cons (subseq s 0 i) (lst (splt (subseq s (+ lx i))))) s)))
     (let ((res (lst (splt s))))
-      (if prune (remove-if (lambda (s) (zerop (length s))) res)
-                res))))
+      (if prune (remove-if (lambda (s) (zerop (length s))) res) res))))
 
 (defun fx-split-str (fx s) (declare (function fx) (string s))
   "split s into list of chars according to fx"
@@ -140,7 +135,7 @@
 (defun repl (s from to) (declare (string s to from)) "replace from with to in s"
   (let ((s (veq::strcat (mapcar (lambda (s) (mkstr s to))
                                 (split-substr from s)))))
-    (subseq s 0 (1- (length s)))))
+    (subseq s 0 (- (length s) (length to)))))
 
 (defun filter-by-predicate (l fx &key (key #'identity))
   (declare (optimize speed (safety 2)) (list l) (function fx key))
@@ -165,22 +160,17 @@
   "compares tree to from (with comparefx); replaces matches with to."
   (cond ((funcall comparefx tree from) to)
         ((null tree) nil) ((atom tree) tree)
-        (t (mapcar (lambda (x) (tree-replace x from to))
-                   tree))))
+        (t (mapcar (lambda (x) (tree-replace x from to)) tree))))
 
-(defun tree-replace-fx (tree fxmatch fxtransform)
+(defun tree-replace-fx (tree fxmatch fxtx)
   "compares elements with (comparefx); repaces matches with (fxmatch hit)."
-  (cond ((funcall fxmatch tree)
-           (tree-replace-fx (funcall fxtransform tree) fxmatch fxtransform))
-        ((null tree) nil)
-        ((atom tree) tree)
-        (t (mapcar (lambda (x) (tree-replace-fx x fxmatch fxtransform))
-                   tree))))
+  (cond ((funcall fxmatch tree) (tree-replace-fx (funcall fxtx tree) fxmatch fxtx))
+        ((null tree) nil) ((atom tree) tree)
+        (t (mapcar (lambda (x) (tree-replace-fx x fxmatch fxtx)) tree))))
 
 (defun replace-pairs (body pairs)
   (declare (list body pairs)) "replace ((ato afrom) (bto bfrom) ...) in body."
-             (loop for (to from) in pairs do (setf body (tree-replace body from to)))
-             body)
+  (loop for (to from) in pairs do (setf body (tree-replace body from to))) body)
 
 (defun strip-symbols (name symbs)
   (declare (optimize speed) (string name) (list symbs))
