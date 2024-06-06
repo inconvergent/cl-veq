@@ -2,14 +2,10 @@
 
 (defmacro define-constants ()
   `(progn (declaim (df dpi dpii dpi25 dpi5) (ff fpi fpii fpi25 fpi5))
-          (defconstant dpi (df pi))
-          (defconstant dpi5 (df (* pi 0.5d0)))
-          (defconstant dpi25 (df (* pi 0.25d0)))
-          (defconstant dpii (df (* pi 2d0)))
-          (defconstant fpi (ff pi))
-          (defconstant fpi5 (ff (* pi 0.5f0)))
-          (defconstant fpi25 (ff (* pi 0.25f0)))
-          (defconstant fpii (ff (* pi 2f0)))))
+      (defconstant dpi (df pi))            (defconstant dpii (df (* pi 2d0)))
+      (defconstant dpi5 (df (* pi 0.5d0))) (defconstant dpi25 (df (* pi 0.25d0)))
+      (defconstant fpi (ff pi))            (defconstant fpii (ff (* pi 2f0)))
+      (defconstant fpi5 (ff (* pi 0.5f0))) (defconstant fpi25 (ff (* pi 0.25f0)))))
 (define-constants)
 
 (defmacro mvcgrp ((dim fx) &body body)
@@ -27,38 +23,18 @@ returns: (values 1f0 3f0 4f0 6f0)"
                                         collect (lst (mvc ,fx ,x)))))))
                 (mvc #',gsfx ,@body)))))
 
-(defmacro mvcmap ((dim fx) &body body)
-  "returns (values (fx i) (fx j) ...) for dim values from body."
+(defmacro mvcmap ((dim fx) &body body) "returns (values (fx i) (fx j) ...) for dim values from body."
   (let ((symbs (-gensyms 'mvcmap dim)))
-    `(mvb (,@symbs) (~ ,@body)
-      (values ,@(mapcar (lambda (s) `(,fx ,s)) symbs)))))
+    `(mvb (,@symbs) (~ ,@body) (values ,@(mapcar (lambda (s) `(,fx ,s)) symbs)))))
 
-(defmacro vpr (&rest rest)
-  "print input code with resulting values, return values."
+(defmacro vpr (&rest rest) "print input code with resulting values, return values."
   (awg (res) `(let ((,res (lst ,@rest)))
-                (silent? :rt
-                  (format t "~&;; ~{~a~^ | ~}~&>> ~{~a~^ | ~}~&" ',rest ,res))
+                (silent? :rt (format t "~&;; ~{~a~^ | ~}~&>> ~{~a~^ | ~}~&" ',rest ,res))
                 (apply #'values ,res))))
-(defmacro vp (&rest rest)
-  "print values and return values, return values."
+(defmacro vp (&rest rest) "print values and return values, return values."
   (awg (res) `(let ((,res (lst ,@rest)))
                 (silent? :rt (format t "~&>> ~{~a~^ | ~}~&" ,res))
                 (apply #'values ,res))))
-
-; (defmacro vpr1 (v &optional (prefix ">> ")) ; TODO: finish this
-;   (awg (vpr1) `(let ((,vpr1 ,v))
-;                  (silent? :rt (format t "~a ~a" ,prefix ,vpr1))
-;                  ,vpr1)))
-; (defmacro vp (&rest rest &aux (prefix ">> "))
-;   "print values and return values, return values."
-;   `(progn (silent? :rt (format t "~&"))
-;     (values ,@(loop for v in rest
-;                    if (keywordp v)
-;                    collect (progn (setf prefix (format nil "~a >> " (string-downcase (mkstr v))))
-;                                    `(format t "~&"))
-;                    ; collect `(format t "~&~a >>: " ,(string-downcase (mkstr v)))
-;                    else collect `(vpr1 ,v ,prefix)
-;     ))))
 
 ; NOTE: using (lst ...) makes things slower in some cases.  because of the
 ; consing or because the number of values is unknown?. avoid when possible.
@@ -66,23 +42,20 @@ returns: (values 1f0 3f0 4f0 6f0)"
   "get all (values ... ) in body as a list.
 almost like multiple-value-list, except it handles multiple arguments."
   `(mvc #'list (~ ,@body)))
-(defmacro from-lst (l)
-  "return list as values. equivalent to (values-list ...)."
+(defmacro from-lst (l) "return list as values. equivalent to (values-list ...)."
   `(values-list ,l))
-
-(defmacro ~ (&rest rest)
-  "wraps rest in (mvc #'values ...)."
+(defmacro ~ (&rest rest) "wraps rest in (mvc #'values ...)."
   `(mvc #'values ,@rest))
 
-(defmacro n~ (n &rest rest) ; make flag to disable this in strict mode?
-  (cond ((= (length rest) n) `(values ,@rest))
+(defmacro n~ (n &rest rest) "use (~ ...) unless there is exactly n arguments; then just use (values ...)."
+  (cond ((= (length rest) n) `(values ,@rest)) ; make flag to disable this in strict mode?
         (t `(~ ,@rest)))) ; possibly remove other uses of ~?
 
-(defmacro vnrep (n &rest rest)
-  (declare (pn n)) "corresponds to (values [rest n times]). see vnval."
+(defmacro vnrep (n &rest rest) (declare (pn n))
+  "corresponds to (values [rest n times]). see vnval."
   `(values ,@(loop repeat n collect `(progn ,@rest))))
-(defmacro vnval (n &rest rest)
-  (declare (pn n)) "returns (values v ...), where v is (progn ,@rest) evaluated once. see vnrep."
+(defmacro vnval (n &rest rest) (declare (pn n))
+  "returns (values v ...), where v is (progn ,@rest) evaluated once. see vnrep."
   (awg (v) `(let ((,v (progn ,@rest)))
               (values ,@(loop repeat n collect v)))))
 
@@ -120,15 +93,13 @@ where a* and b* are gensyms"
     `(mvb (,@(mapcar #'second vars*)) (progn ,@body)
           (setf ,@(awf vars*)))))
 
-(defun with-symbs (ss body)
-  (declare (list ss body))
+(defun with-symbs (ss body) (declare (list ss body))
   "bind these symbols outside body and replace inside body. eg:
   (with-symbs `(g ,g ...) (qry g :select ... )) ; equals:
   (let ((gg ,g) ...) (qry gg :select ...))      ; gg is a gensym"
-  (labels ()
-    (let ((s* (loop for (var expr) in (group ss 2) ; gs expr var
-                    collect (list (gensym (mkstr var)) expr var))))
-      `(let (,@(loop for s in s* collect (subseq s 0 2)))
-         (progn ,(replace-pairs body
-                   (loop for s in s* collect (list (first s) (third s)))))))))
+  (let ((s* (loop for (var expr) in (group ss 2) ; gs expr var
+                  collect (list (gensym (mkstr var)) expr var))))
+    `(let (,@(loop for s in s* collect (subseq s 0 2)))
+       (progn ,(replace-pairs body
+                 (loop for s in s* collect (list (first s) (third s))))))))
 

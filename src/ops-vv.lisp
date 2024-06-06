@@ -303,9 +303,8 @@
   ; the DSL uses triggers to broadcast a function [symbol name] or code across
   ; packs of 1-9 values and/or rows of 1-9 item vectors.
 
-  ; there is a complete list of triggers, modes [see MODES], modifiers and
-  ; types [see TYPES] below. but it might be easier to get a sense of how to use
-  ; the DSL with som examples.
+  ; there is a complete list of triggers, MODS, MODIFIERS  and TYPES below. but
+  ; it might be easier to get a sense of how to use the DSL with som examples.
 
 # EXAMPLES OF USE
 
@@ -529,8 +528,8 @@ all the modes:
 
   -- f: veq:ff, single-float; veq:fvec
   -- d: veq:df, double-float; veq:dvec
-  -- i: veq:in, fixnum, veq:ivec
-  -- p: veq:pn, (unsigned-byte 31); veq:pvec
+  -- i: veq:in, (signed-byte 32), veq:ivec
+  -- p: veq:pn, (unsigned-byte 32); veq:pvec
   -- s: veq:sy, symbol; veq:svec
   -- k: veq:kv, keyword; veq:kvec
   -- l: veq:ll, list; veq:lvec

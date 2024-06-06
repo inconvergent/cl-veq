@@ -4,39 +4,37 @@
 ; TODO: make smaller ints and uints?
 (deftype in (&optional (bits 32)) `(signed-byte ,bits))
 (deftype pn (&optional (bits 32)) `(unsigned-byte ,bits))
-(deftype kv () 'keyword) (deftype sy () 'symbol)
-(deftype ll () 'list)
-(deftype pos-df () `(double-float 0d0 *))
-(deftype pos-ff () `(single-float 0f0 *))
+(deftype kv () 'keyword) (deftype sy () 'symbol) (deftype ll () 'list)
+(deftype pos-df () `(double-float 0d0 *)) (deftype pos-ff () `(single-float 0f0 *))
 
-(deftype dvec (&optional n) `(simple-array df ,n))
-(deftype fvec (&optional n) `(simple-array ff ,n))
-(deftype ivec (&optional n) `(simple-array in ,n))
-(deftype pvec (&optional n) `(simple-array pn ,n))
-(deftype kvec (&optional n) `(simple-array kv ,n))
-(deftype svec (&optional n) `(simple-array sy ,n))
+(deftype dvec (&optional n) `(simple-array df ,n)) (deftype fvec (&optional n) `(simple-array ff ,n))
+(deftype ivec (&optional n) `(simple-array in ,n)) (deftype pvec (&optional n) `(simple-array pn ,n))
+(deftype kvec (&optional n) `(simple-array kv ,n)) (deftype svec (&optional n) `(simple-array sy ,n))
 (deftype lvec (&optional n) `(simple-array ll ,n))
 
-(declaim (inline df ff in pn ll kv sy))
-(defun df (v) (coerce v 'df))
-(defun ff (v) (coerce v 'ff))
-(defun in (v) (coerce v 'in))
-(defun pn (v) (coerce v 'pn))
+(declaim (inline df ff in pn ll kv sy dfl ffl inl pnl lll kvl syl))
+(defun df (v) (coerce v 'df)) (defun ff (v) (coerce v 'ff))
+(defun in (v) (coerce v 'in)) (defun pn (v) (coerce v 'pn))
 (defun ll (v) (coerce v 'll))
 (defun kv (v) (values (intern (string-upcase (mkstr v)) :keyword)))
+(defun sy (v &optional (pkg 'cl-user)) (values (intern (string-upcase (mkstr v)) pkg)))
 (defun keyw (&rest args) (values (intern (string-upcase (apply #'mkstr args)) :keyword)))
-(defun sy (v) (values (intern (string-upcase (mkstr v)) :keyword)))
 
-(defmacro df* (&body body) `(values ,@(mapcar (lambda (v) `(df ,v)) body)))
-(defmacro ff* (&body body) `(values ,@(mapcar (lambda (v) `(ff ,v)) body)))
-(defmacro in* (&body body) `(values ,@(mapcar (lambda (v) `(in ,v)) body)))
-(defmacro kv* (&body body) `(values ,@(mapcar (lambda (v) `(kv ,v)) body)))
-(defmacro ll* (&body body) `(values ,@(mapcar (lambda (v) `(ll ,v)) body)))
-(defmacro pn* (&body body) `(values ,@(mapcar (lambda (v) `(pn ,v)) body)))
-(defmacro sy* (&body body) `(values ,@(mapcar (lambda (v) `(sy ,v)) body)))
+(defmacro make-ty* (ty &aux (*print-case* :downcase))
+  (labels ((nm* (ty) (symb ty "*"))
+           (nml (ty ) (symb ty "L"))
+           (sl (ty) (format nil "return (values (~a a) (~a b) ...) from list." ty ty))
+           (s* (ty) (format nil "coerce these values to ~a." ty)))
+    `(progn (export ',(nm* ty))
+            (defmacro ,(nm* ty) (&body body) ,(s* ty)
+              `(values ,@(mapcar (lambda (v) `(,',ty ,v)) body)))
+            (export ',(nml ty))
+            (defun ,(nml ty) (l) (declare #.*opt* (list l)) ,(sl ty)
+              (apply #'values (mapcar (lambda (v) (,ty v)) l))))))
+(make-ty* ff) (make-ty* df) (make-ty* in) (make-ty* pn)
+(make-ty* kv) (make-ty* sy) (make-ty* ll)
 
-(defun type-from-short (ty &optional (missing :nil))
-  "select type fom type hint."
+(defun type-from-short (ty &optional (missing :nil)) "select type fom type hint."
   (case (kv ty) (:df (values 'df 'd)) (:d (values 'df 'd))
                 (:ff (values 'ff 'f)) (:f (values 'ff 'f))
                 (:in (values 'in 'i)) (:i (values 'in 'i))
@@ -45,39 +43,23 @@
                 (:kv (values 'keyword 's)) (:k (values 'keyword 'k))
                 (:ll (values 'list 'l)) (:l (values 'list 'l))
                 (:nil (values missing missing))))
-
 (defun type-default (ty &optional (missing :nil))
-  "default value for array with elements of type (hint) ty.
-eg: 0 0f0 0d0 nil :val"
+  "default value for array with elements of type (hint) ty. eg: 0 0f0 0d0 nil :val"
   (case (kv ty) (:df 0d0) (:d 0d0) (:ff 0f0) (:f 0f0)
                 (:in 0) (:i 0) (:pn 0) (:p 0)
                 (:ll (list)) (:l (list))
                 (:sy 'nil) (:s 'nil) (:kv :nil) (:k :nil)
                 (:nil missing) (t missing)))
-
 (defun arrtype (ty &optional (missing :nil))
-  "select array type from type hint.
-eg: :ff :df 'f 'i"
+  "select array type from type hint. eg: :ff :df 'f 'i"
   (case (kv ty) (:df 'dvec) (:d 'dvec) (:ff 'fvec) (:f 'fvec)
                 (:in 'ivec) (:i 'ivec) (:pn 'pvec) (:p 'pvec)
                 (:sy 'svec) (:s 'svec) (:kv 'kvec) (:k 'kvec)
                 (:ll 'lvec) (:l 'lvec)
                 (:nil missing) (t missing)))
 
-(declaim (inline ffl dfl))
-(defun ffl (l)
-  (declare (list l))
-  "return (values (ff a) (ff b) ..) from (list a b ..)."
-  (apply #'values (mapcar (lambda (v) (ff v)) l)))
-(defun dfl (l)
-  (declare (list l))
-  "return (values (df a) (df b ..) from (list a b ..)."
-  (apply #'values (mapcar (lambda (v) (df v)) l)))
-
-
-(defun vvsym (type dim symb
-              &key pref (sep "")
-                   (pkg (etypecase symb (keyword "VEQ")
+(defun vvsym (type dim symb &key pref (sep "")
+                                 (pkg (etypecase symb (keyword "VEQ")
                                         (symbol (symbol-package symb))
                                         (string "VEQ"))))
   (declare #.*opt* (symbol type))
@@ -106,5 +88,4 @@ eg: (vvsym ff 2 :lerp) yields f2lerp."
                            (string-upcase vname))
                 (the fixnum (find-dim pref-digits)) ; dim
                 (the fixnum (find-dim (reverse pref-digits)))))))) ; dimout
-
 

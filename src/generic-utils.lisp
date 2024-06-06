@@ -1,23 +1,23 @@
 (in-package :veq)
 
-(defmacro mac (expr)
-  "expand macro."
+(defun ensure-filename (fn &optional (postfix "") (silent nil))
+  (let ((fn* (mkstr (if fn fn "tmp") postfix)))
+    (format (not silent) "~&file: ~a~&" fn*)
+    fn*))
+
+(defmacro mac (expr) "expand macro."
   `(silent? :ct (pprint (macroexpand-1 ',expr))))
-#+sbcl (defmacro mac* (expr)
-         "expand macro all. only in SBCL."
+#+sbcl (defmacro mac* (expr) "expand macro all. only in SBCL."
          `(silent? :ct (pprint (sb-cltl2:macroexpand-all ',expr))))
 
+(defmacro abbrev (short long) `(defmacro ,short (&rest args) `(,',long ,@args)))
 (defmacro aif (test-form then-form &optional else-form)
   `(let ((it ,test-form)) (if it ,then-form ,else-form)))
 
-(defmacro abbrev (short long)
-  `(defmacro ,short (&rest args) `(,',long ,@args)))
-
 (defun flatten (x)
-  (labels ((rec (x acc)
-             (cond ((null x) acc)
-                   ((atom x) (cons x acc))
-                   (t (rec (car x) (rec (cdr x) acc))))))
+  (labels ((rec (x acc) (cond ((null x) acc)
+                              ((atom x) (cons x acc))
+                              (t (rec (car x) (rec (cdr x) acc))))))
     (rec x nil)))
 
 (defmacro with-gensyms (syms &body body)
@@ -25,29 +25,23 @@
                  syms)
      ,@body))
 
-(defun group (l n)
-  (declare (list l) (fixnum n))
+(defun group (l n) (declare (list l) (fixnum n))
   "group l into lists of n elements. see ungroup."
   (if (< n 1) (error "group error: group size is smaller than 1"))
-  (labels ((rec (l acc)
-             (let ((rest (nthcdr n l)))
-               (if (consp rest)
-                   (rec rest (cons (subseq l 0 n) acc))
-                   (nreverse (cons l acc))))))
+  (labels ((rec (l acc &aux (rest (nthcdr n l)))
+             (if (consp rest)
+                 (rec rest (cons (subseq l 0 n) acc))
+                 (nreverse (cons l acc)))))
     (if l (rec l nil) nil)))
-(defun ungroup (l &aux (res (list)))
-  (declare (list l res)) "inverse of group."
+(defun ungroup (l &aux (res (list))) (declare (list l res)) "inverse of group."
   (loop for s in l do (loop for k in s do (push k res)))
   (reverse res))
 
 (declaim (inline mkstr))
-(defun mkstr (&rest args)
-  (declare (optimize speed (safety 2)))
-  (with-output-to-string (s)
-    (dolist (a args) (princ a s))))
+(defun mkstr (&rest args) (declare (optimize speed (safety 2)))
+  (with-output-to-string (s) (dolist (a args) (princ a s))))
 
-(defun match-substr (sub s)
-  (declare (optimize speed (safety 2)) (string sub s))
+(defun match-substr (sub s) (declare (optimize speed (safety 2)) (string sub s))
   "returns index where substring matches s from left to right. otherwise nil."
   (loop with sub0 of-type character = (char sub 0)
         with lc = (length sub)
@@ -57,71 +51,52 @@
         do (return-from match-substr i)))
 
 (declaim (inline last*))
-(defun nth* (l i &optional d &aux (v (nth i l)))
-  (declare (list l) (fixnum i))
+(defun nth* (l i &optional d &aux (v (nth i l))) (declare (list l) (fixnum i))
   (if v v d))
 (defun last* (l) (declare (list l)) (first (last l)))
 
-(defun symb (&rest args)
-  (declare (optimize speed (safety 1)))
-  (values (intern (apply #'mkstr args))))
+(defun symb (&rest args) (declare (optimize speed (safety 1)))
+  (let ((*print-case* :upcase))
+    (values (intern (apply #'mkstr args)))))
 (defun psymb (pkg &rest args) ; https://gist.github.com/lispm/6ed292af4118077b140df5d1012ca646
   (declare (optimize speed (safety 1)))
-  (values (intern (apply #'mkstr args) (if pkg pkg :veq))))
+  (let ((*print-case* :upcase))
+    (values (intern (apply #'mkstr args) (if pkg pkg :veq)))))
 (defmacro with-struct ((name . fields) struct &body body)
   (let ((gs (gensym (string-upcase (mkstr name)))))
-    `(let ((,gs ,struct))
-       (let ,(mapcar #'(lambda (f)
-                         `(,f (,(psymb (symbol-package name) name f) ,gs)))
-                     fields)
-         ,@body))))
+    `(let ((,gs ,struct)) (let ,(mapcar #'(lambda (f)
+                                            `(,f (,(psymb (symbol-package name) name f) ,gs)))
+                                        fields)
+                            ,@body))))
 
-(defun reread (&rest args)
-  (values (read-from-string (apply #'mkstr args))))
-
+(defun reread (&rest args) (values (read-from-string (apply #'mkstr args))))
 (defun mapqt (l) (mapcar (lambda (s) `(quote ,s)) l))
-
-(defun undup (e &optional (flatten t))
-  (declare (optimize speed))
+(defun undup (e &optional (flatten t)) (declare (optimize speed))
   (remove-duplicates (if flatten (flatten e) e)))
 
-(defun at-most (n &rest rest)
-  (declare (fixnum n))
+(defun at-most (n &rest rest) (declare (fixnum n))
   (<= (length (remove-if-not #'identity rest)) n))
 
-(abbrev mvc multiple-value-call)
-(abbrev mvb multiple-value-bind)
-(abbrev dsb destructuring-bind)
-(abbrev awg with-gensyms)
+(abbrev mvc multiple-value-call) (abbrev mvb multiple-value-bind)
+(abbrev dsb destructuring-bind) (abbrev awg with-gensyms)
 (abbrev awf flatten)
 
 (defun dotted-listp (l) ; TODO: rewrite with rec to require first call to be cons
-  (cond ((null l) nil)
-        ((atom l) t)
-        (t (dotted-listp (cdr l)))))
+  (cond ((null l) nil) ((atom l) t) (t (dotted-listp (cdr l)))))
 
-(defmacro push* (v l)
-  (declare (symbol l))
-  "push v to list l, and return v."
+(defmacro push* (v l) (declare (symbol l)) "push v to list l, and return v."
   (awg (vv) `(let ((,vv ,v)) (push ,vv ,l) ,vv)))
 
-
-(defun -gensyms (name n)
-  (declare (optimize speed) (symbol name) (fixnum n))
+(defun -gensyms (name n) (declare (optimize speed) (symbol name) (fixnum n))
   (loop with name = (string-upcase (string name))
         for x across "XYZWUVPQRSTUVABCDEFGHIJKLMNO" repeat n
         collect (gensym (format nil "~a/~a-" name x))))
 
-
 (declaim (inline lst>n))
-(defun lst>n (l n)
-  (declare (list l) (fixnum n))
-  "is list longer than n?"
+(defun lst>n (l n) (declare (list l) (fixnum n)) "is list longer than n?"
   (consp (nthcdr n l)))
 
-(defun dupes (lst)
-  (declare (list lst))
-  "finds duplicates in list."
+(defun dupes (lst) (declare (list lst)) "finds duplicates in list."
   (cond ((null lst) (list))
         ((member (car lst) (cdr lst) :test #'equal)
            (cons (car lst) (dupes (cdr lst))))
@@ -150,24 +125,19 @@
       (if prune (remove-if (lambda (s) (zerop (length s))) res)
                 res))))
 
-(defun fx-split-str (fx s)
-  (declare (function fx) (string s))
+(defun fx-split-str (fx s) (declare (function fx) (string s))
   "split s into list of chars according to fx"
   (loop for c across s if (funcall fx c) collect c into yes
         else collect c into no finally (return (values yes no))))
 
 (defun nilpad (n l &optional (v nil) &aux (n* (length l)))
-  (declare (fixnum n n*) (list l))
-  "cons v to l intil (length l) >= n"
+  (declare (fixnum n n*) (list l)) "cons v to l intil (length l) >= n"
   (loop repeat (- n n*) do (setf l (cons v l)) finally (return l)))
 
-(defun strcat (s)
-  (declare (optimize speed) (list s))
+(defun strcat (s) (declare (optimize speed) (list s))
   (apply #'concatenate 'string s))
 
-(defun repl (s from to)
-  (declare (string s to from))
-  "replace from with to in s"
+(defun repl (s from to) (declare (string s to from)) "replace from with to in s"
   (let ((s (veq::strcat (mapcar (lambda (s) (mkstr s to))
                                 (split-substr from s)))))
     (subseq s 0 (1- (length s)))))

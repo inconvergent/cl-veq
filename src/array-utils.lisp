@@ -24,15 +24,26 @@
                          ,@(loop repeat (- to from) collect 'v*))))
         (,(vvsym type 1 (mkstr from to :_@$fx)) ,arr)))))
 
+(export '$coerce)
+(defmacro $coerce (type a) ; TODO: this could be more efficient
+  (declare (symbol type))
+  "coerce sequence a to vec of type (eg: veq:ff, veq:df)"
+  (awg (res a*)
+  `(let* ((,a* ,a) (,res ($make :dim 1 :n (length ,a*) :v 0 :type ,type)))
+     (declare (,(arrtype type) ,res) (sequence ,a*))
+     (typecase ,a* (vector (loop for v across ,a* for i from 0
+                                 do #1=(setf (aref ,res i) (,type v))))
+                   (list   (loop for v in ,a* for i from 0 do #1#)))
+     ,res)))
+
 (defmacro define-constr (type)
   (labels ((nm (n) (vvsym type 1 n)))
     (awg (a l)
       `(progn
         (export ',(nm "$make"))
         (defmacro ,(nm "$make") (&key (dim 1) (n 1) (v ,(coerce 0 type)))
-          ,(format nil
-            "create ~a vector array with size n * dim, and initial value v."
-            (arrtype type))
+          ,(format nil "create ~a vector array with size n * dim, and initial value v."
+                       (arrtype type))
           `($make :dim ,dim :n ,n :v ,v :type ,',type))
 
         (export ',(nm "$copy"))
@@ -41,10 +52,15 @@
           ,(format nil "copy ~a vector array." (arrtype type))
           (make-array na :initial-contents ,a :element-type ',type :adjustable nil))
 
+        (export ',(nm "$coerce"))
+        (defun ,(nm "$coerce") (,a) (declare #.*opt* (sequence ,a))
+          ,(format nil "coerce sequence to ~a." (arrtype type))
+          ($coerce ,type ,a))
+
         (export ',(nm "_"))
         (defmacro ,(nm "_") (&body body)
           ,(format nil "create ~a vector array from body: (~a '(a b c ...))."
-                  (arrtype type) (nm "_"))
+                       (arrtype type) (nm "_"))
           `(let ((,',l (progn ,@body)))
             (declare (list ,',l))
             (make-array (length ,',l) :initial-contents ,',l

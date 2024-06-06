@@ -5,10 +5,8 @@
 (ops
   (:1 @id (ax)) (values ax)
   (:1 @i- (ax bx)) (- bx ax) (:1 @i/ (ax bx)) (/ bx ax)
-
-  (:1 @scale (ax s)) (* ax s) (:1 @iscale (ax s)) (/ ax s)
-
   (:1 @square (ax)) (* ax ax)
+  (:1 @scale (ax s)) (* ax s) (:1 @iscale (ax s)) (/ ax s)
 
   (:1 @len2 (ax)) (the pos-@f (mvc #'+ (-@square ax)))
   (:1 @len (ax)) (the pos-@f ax)
@@ -26,10 +24,8 @@
 
 (ops
   (:2 @2id (2!a)) (values ax ay)
-
   (:2 @2i- (2!a 2!b)) (values (- bx ax) (- by ay))
   (:2 @2i/ (2!a 2!b)) (values (/ bx ax) (/ by ay))
-
   (:2 @2square (2!a)) (values (* ax ax) (* ay ay))
 
   (:1 @2len2 (2!a)) (the pos-@f (mvc #'+ (-@2square ax ay)))
@@ -74,6 +70,8 @@
 
 (ops
   (:3 @3id (3!a)) (values ax ay az)
+  (:3 @3i- (3!a 3!b)) (values (- bx ax) (- by ay) (- bz az))
+  (:3 @3i/ (3!a 3!b)) (values (/ bx ax) (/ by ay) (/ bz az))
   (:3 @3square (3!a)) (values (the pos-@f (* ax ax))
                               (the pos-@f (* ay ay))
                               (the pos-@f (* az az)))
@@ -82,9 +80,6 @@
   (:1 @3len (3!a)) (the pos-@f (sqrt (the pos-@f (mvc #'+ (-@3square ax ay az)))))
 
   (:1 @3max (3!a)) (max ax ay az) (:1 @3min (3!a)) (min ax ay az)
-
-  (:3 @3i- (3!a 3!b)) (values (- bx ax) (- by ay) (- bz az))
-  (:3 @3i/ (3!a 3!b)) (values (/ bx ax) (/ by ay) (/ bz az))
 
   (:3 @3cross (3!a 3!b)) (values (- (* ay bz) (* az by))
                                  (- (* az bx) (* ax bz))
@@ -122,6 +117,8 @@
 
 (ops
   (:4 @4id (4!a)) (values ax ay az aw)
+  (:4 @4i- (4!a 4!b)) (values (- bx ax) (- by ay) (- bz az) (- bw aw))
+  (:4 @4i/ (4!a 4!b)) (values (/ bx ax) (/ by ay) (/ bz az) (/ bw aw))
   (:4 @4square (4!a)) (values (the pos-@f (* ax ax)) (the pos-@f (* ay ay))
                               (the pos-@f (* az az)) (the pos-@f (* aw aw)))
 
@@ -130,9 +127,6 @@
 
   (:1 @4max (4!a)) (max ax ay az aw)
   (:1 @4min (4!a)) (min ax ay az aw)
-
-  (:4 @4i- (4!a 4!b)) (values (- bx ax) (- by ay) (- bz az) (- bw aw))
-  (:4 @4i/ (4!a 4!b)) (values (/ bx ax) (/ by ay) (/ bz az) (/ bw aw))
 
   (:1 @4dot (4!a 4!b)) (+ (* ax bx) (* ay by) (* az bz) (* aw bw))
 

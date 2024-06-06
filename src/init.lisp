@@ -1,4 +1,3 @@
-
 (in-package :veq)
 
 ; from: http://cl-cookbook.sourceforge.net/os.html

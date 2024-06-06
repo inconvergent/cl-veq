@@ -1,17 +1,20 @@
 # VEQ
 
 VEQ is a DSL and a set of utilities for doing dealing with (primarily)
-1d/2d/3d/nd point vectors and  arrays of point vectors. It includes some
-geometry utilities like intersection tests, and other things related to
-graphics programming.
+1d/2d/3d/nd point vectors and arrays of point vectors. It includes some
+geometry and graphics programming utilities like intersection tests and matrix
+transforms.
 
-VEQ was written to be the vector library used in my generative art library
-[auxin](https://github.com/inconvergent/auxin), and in
-[cl-grph](https://github.com/inconvergent/cl-grph).
+VEQ was written to be the vector library used in my graph data structure,
+[cl-grph](https://github.com/inconvergent/cl-grph), and utilities for
+generative art: [auxin](https://github.com/inconvergent/auxin).
 
-## Examples and Documentation
 
-Here are some examples of use:
+## Symbol Docs & Example
+
+See [docs](/docs/00-intro.md) for documentation and symbols.
+
+For more examples go to [examples](examples/ex.lisp).
 
 ```lisp
 (in-package :veq)
@@ -20,10 +23,6 @@ Here are some examples of use:
 ; many of the vector tools. among other things it handles the !@ triggers for
 ; common nd point vector operations such as f2!@+ for 2d single float point
 ; vector addition, and so on
-
-; see [docs](DOCS.md) for vv macro for more info about !@, _@, .@ compiler
-; and other triggers. the documentations also contains an automatically
-; generated symbol documentation.
 
 ; here are some examples:
 
@@ -69,10 +68,6 @@ Here are some examples of use:
 
     (vp (f21_@$+ vb))
 
-   ; TODO, improve example for new features
-    ))
+    ; TODO, improve example for new features
+    )))
 ```
-
-For more examples go to [examples](examples/ex.lisp).
-
-You can also see some usagee in the [tests](test/veq.lisp).

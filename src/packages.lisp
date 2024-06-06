@@ -3,37 +3,27 @@
 
 (defpackage #:veq
   (:use #:common-lisp)
-  (:export
-    #:*eps*
-    #:dpi #:dpi5 #:dpii #:dpi25
-    #:fpi #:fpi5 #:fpii #:fpi25
+  (:export #:*eps*
+           #:dpi #:dpi5 #:dpii #:dpi25
+           #:fpi #:fpi5 #:fpii #:fpi25
+    #:unpack-vvsym #:vvsym
     #:mac #:mac* #:v? #:d? #:i? #:context? #:ext-symbols?
     #:group #:ungroup #:strip-arg-keys #:get-arg-key
-
-    #:df #:df* #:ff #:ff* #:pos-df #:pos-ff
-    #:falpha #:dalpha #:feps= #:deps=
-    #:ffl #:dfl
-    #:in #:in* #:kv #:kv*
-    #:ll #:ll* #:pn #:pn*
-    #:sy #:sy*
-    #:dvec #:fvec #:ivec #:kvec #:lvec #:pvec #:svec
-    #:vsel
-
     #:type-from-short #:arrtype #:type-default
-    #:unpack-vvsym #:vvsym
 
-    #:from-lst #:lst
-    #:mvb #:dsb #:xlet
+    #:df #:ff #:in #:pn #:kv #:sy #:ll #:pos-df #:pos-ff
+    #:dvec #:fvec #:ivec #:kvec #:lvec #:pvec #:svec
+    #:falpha #:dalpha #:feps= #:deps=
+
+    #:~ #:mvb #:dsb #:xlet #:from-lst #:lst
     #:vnrep #:vnval #:vchain #:mutate! #:with-symbs #:vector-rearrange #:lpos
-    #:mvc #:mvcwrap #:mvcgrp #:mvcmap #:~
+    #:mvc #:mvcwrap #:mvcgrp #:mvcmap  #:vsel
 
     #:vdef #:vdef* #:def* #:fvdef* #:fvdef #:vlabels
-    #:vprogn #:fvprogn #:varg #:vref
     #:vv #:vvdb #:proc-vv #:replace-varg
+    #:vprogn #:fvprogn #:varg #:vref
 
-    #:new-stride #:$make #:$copy
-
-    #:$nvset #:$rowset
+    #:new-stride #:$make #:$copy #:$nvset #:$rowset
     #:f2$center #:f2$circ #:f2$polygon #:f2$rect #:f2$square*
     #:$to-list #:2$to-list #:3$to-list #:4$to-list
     #:vp #:vpr #:$print #:2$print #:3$print #:4$print
