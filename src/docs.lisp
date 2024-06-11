@@ -30,7 +30,7 @@ context."
       (cond (docs (format nil "~&~a~@[~&~%~a~&~]~&" (cadr docs) desc))
             ((and idocs (> (length idocs) 0))
                   (format nil "~&~a~@[~&~%~a~&~]~&" desc nil)) ; nil
-            (t (format nil "~&:missing:~%~@[~&~%~a~&~]~&`" desc)))
+            (t (format nil "~&:missing:~%~@[~&~%~a~&~]~&" desc)))
       skip context)))
 
 (defmacro pckgs (pkg)

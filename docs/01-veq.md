@@ -33,7 +33,6 @@
 
  ; VEQ:$COPY
  ;   [symbol]
-`
 ```
 
 ## `$make`
@@ -132,7 +131,6 @@
  ; *EPS* names a special variable:
  ;   Declared type: SINGLE-FLOAT
  ;   Value: 5.960465e-8
-`
 ```
 
 ## `2$`
@@ -1977,7 +1975,6 @@
 
  ; VEQ:DEPS=
  ;   [symbol]
-`
 ```
 
 ## `df`
@@ -1996,7 +1993,6 @@
  ; DF names a type-specifier:
  ;   Lambda-list: ()
  ;   Expansion: DOUBLE-FLOAT
-`
 ```
 
 ## `df*`
@@ -2035,7 +2031,6 @@
  ; DPI names a constant variable:
  ;   Declared type: DOUBLE-FLOAT
  ;   Value: 3.141592653589793d0
-`
 ```
 
 ## `dpi25`
@@ -2048,7 +2043,6 @@
  ; DPI25 names a constant variable:
  ;   Declared type: DOUBLE-FLOAT
  ;   Value: 0.7853981633974483d0
-`
 ```
 
 ## `dpi5`
@@ -2061,7 +2055,6 @@
  ; DPI5 names a constant variable:
  ;   Declared type: DOUBLE-FLOAT
  ;   Value: 1.5707963267948966d0
-`
 ```
 
 ## `dpii`
@@ -2074,7 +2067,6 @@
  ; DPII names a constant variable:
  ;   Declared type: DOUBLE-FLOAT
  ;   Value: 6.283185307179586d0
-`
 ```
 
 ## `dsb`
@@ -2087,7 +2079,6 @@
  ; DSB names a macro:
  ;   Lambda-list: (&REST ARGS)
  ;   Source file: /data/x/veq/src/generic-utils.lisp
-`
 ```
 
 ## `dsel`
@@ -2114,7 +2105,6 @@
  ; DVEC names a type-specifier:
  ;   Lambda-list: (&OPTIONAL N)
  ;   Expansion: (SIMPLE-ARRAY DF *)
-`
 ```
 
 ## `dvlet`
@@ -2123,7 +2113,6 @@
 
  ; VEQ:DVLET
  ;   [symbol]
-`
 ```
 
 ## `ext-symbols?`
@@ -2548,7 +2537,6 @@
  ;   Derived type: (FUNCTION (SINGLE-FLOAT)
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (8)) &OPTIONAL))
  ;   Source file: /data/x/veq/src/shapes.lisp
-`
 ```
 
 ## `f2$val`
@@ -3961,7 +3949,6 @@
  ; FF names a type-specifier:
  ;   Lambda-list: ()
  ;   Expansion: SINGLE-FLOAT
-`
 ```
 
 ## `ff*`
@@ -4045,7 +4032,6 @@
  ; FPI names a constant variable:
  ;   Declared type: SINGLE-FLOAT
  ;   Value: 3.1415927
-`
 ```
 
 ## `fpi25`
@@ -4058,7 +4044,6 @@
  ; FPI25 names a constant variable:
  ;   Declared type: SINGLE-FLOAT
  ;   Value: 0.7853982
-`
 ```
 
 ## `fpi5`
@@ -4071,7 +4056,6 @@
  ; FPI5 names a constant variable:
  ;   Declared type: SINGLE-FLOAT
  ;   Value: 1.5707964
-`
 ```
 
 ## `fpii`
@@ -4084,7 +4068,6 @@
  ; FPII names a constant variable:
  ;   Declared type: SINGLE-FLOAT
  ;   Value: 6.2831855
-`
 ```
 
 ## `from-lst`
@@ -4152,7 +4135,6 @@
  ; FVEC names a type-specifier:
  ;   Lambda-list: (&OPTIONAL N)
  ;   Expansion: (SIMPLE-ARRAY FF *)
-`
 ```
 
 ## `fvlet`
@@ -4161,7 +4143,6 @@
 
  ; VEQ:FVLET
  ;   [symbol]
-`
 ```
 
 ## `fvprogn`
@@ -4737,7 +4718,6 @@
  ; IN names a type-specifier:
  ;   Lambda-list: (&OPTIONAL (BITS 32))
  ;   Expansion: (SIGNED-BYTE 32)
-`
 ```
 
 ## `in*`
@@ -4790,7 +4770,6 @@
  ; IVEC names a type-specifier:
  ;   Lambda-list: (&OPTIONAL N)
  ;   Expansion: (SIMPLE-ARRAY IN *)
-`
 ```
 
 ## `ivlet`
@@ -4799,7 +4778,6 @@
 
  ; VEQ:IVLET
  ;   [symbol]
-`
 ```
 
 ## `kv`
@@ -4818,7 +4796,6 @@
  ; KV names a type-specifier:
  ;   Lambda-list: ()
  ;   Expansion: KEYWORD
-`
 ```
 
 ## `kv*`
@@ -4843,7 +4820,6 @@
  ; KVEC names a type-specifier:
  ;   Lambda-list: (&OPTIONAL N)
  ;   Expansion: (SIMPLE-ARRAY KV *)
-`
 ```
 
 ## `kvl`
@@ -4876,7 +4852,6 @@
  ; LL names a type-specifier:
  ;   Lambda-list: ()
  ;   Expansion: LIST
-`
 ```
 
 ## `ll*`
@@ -4940,7 +4915,6 @@
  ; LVEC names a type-specifier:
  ;   Lambda-list: (&OPTIONAL N)
  ;   Expansion: (SIMPLE-ARRAY LL *)
-`
 ```
 
 ## `mac`
@@ -4991,7 +4965,6 @@
  ; MVB names a macro:
  ;   Lambda-list: (&REST ARGS)
  ;   Source file: /data/x/veq/src/generic-utils.lisp
-`
 ```
 
 ## `mvc`
@@ -5004,7 +4977,6 @@
  ; MVC names a macro:
  ;   Lambda-list: (&REST ARGS)
  ;   Source file: /data/x/veq/src/generic-utils.lisp
-`
 ```
 
 ## `mvcgrp`
@@ -5043,7 +5015,6 @@
 
  ; VEQ:MVCWRAP
  ;   [symbol]
-`
 ```
 
 ## `new-stride`
@@ -5589,7 +5560,6 @@
  ; PN names a type-specifier:
  ;   Lambda-list: (&OPTIONAL (BITS 32))
  ;   Expansion: (UNSIGNED-BYTE 32)
-`
 ```
 
 ## `pn*`
@@ -5628,7 +5598,6 @@
  ; POS-DF names a type-specifier:
  ;   Lambda-list: ()
  ;   Expansion: (DOUBLE-FLOAT 0.0d0 *)
-`
 ```
 
 ## `pos-ff`
@@ -5641,7 +5610,6 @@
  ; POS-FF names a type-specifier:
  ;   Lambda-list: ()
  ;   Expansion: (SINGLE-FLOAT 0.0 *)
-`
 ```
 
 ## `proc-vv`
@@ -5655,7 +5623,6 @@
  ;   Lambda-list: (BODY)
  ;   Derived type: (FUNCTION (T) (VALUES T &OPTIONAL))
  ;   Source file: /data/x/veq/src/ops-vv.lisp
-`
 ```
 
 ## `psel`
@@ -5682,7 +5649,6 @@
  ; PVEC names a type-specifier:
  ;   Lambda-list: (&OPTIONAL N)
  ;   Expansion: (SIMPLE-ARRAY PN *)
-`
 ```
 
 ## `pvlet`
@@ -5691,7 +5657,6 @@
 
  ; VEQ:PVLET
  ;   [symbol]
-`
 ```
 
 ## `replace-varg`
@@ -5743,7 +5708,6 @@
  ; SVEC names a type-specifier:
  ;   Lambda-list: (&OPTIONAL N)
  ;   Expansion: (SIMPLE-ARRAY SY *)
-`
 ```
 
 ## `sy`
@@ -5762,7 +5726,6 @@
  ; SY names a type-specifier:
  ;   Lambda-list: ()
  ;   Expansion: SYMBOL
-`
 ```
 
 ## `sy*`
@@ -6017,7 +5980,6 @@
  ; VVDB names a macro:
  ;   Lambda-list: ((&KEY (EXEC T) (S T)) &BODY BODY)
  ;   Source file: /data/x/veq/src/ops-vv.lisp
-`
 ```
 
 ## `vvsym`
