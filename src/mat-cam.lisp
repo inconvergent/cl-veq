@@ -3,9 +3,11 @@
 
 ; http://www.songho.ca/opengl/gl_projectionmatrix.html
 
+(declaim (inline %fmake-proj-matrix %fmake-ortho-proj-matrix %fmake-view-matrix))
+
 (export 'fmake-proj-matrix)
 (fvdef* fmake-proj-matrix (&optional (w 1f0) (h w) (n 0.1) (f 100f0))
-  (declare (ff w h n f))
+  (declare #.*opt* (ff w h n f))
   "make projection matrix for width, height, near, far "
   (xlet ((f!right (* -0.5 w))
          (f!top (* -0.5 h))
@@ -17,7 +19,7 @@
 
 (export 'fmake-ortho-proj-matrix)
 (fvdef* fmake-ortho-proj-matrix (&optional (w 1f0) (h w) (n 0.1) (f 100f0))
-  (declare (ff w h n f))
+  (declare #.*opt* (ff w h n f))
   "make orthogonal projection matrix"
   (xlet ((f!right (* -0.5 w))
          (f!top (* -0.5 h)))
@@ -28,7 +30,7 @@
 
 (export 'fmake-view-matrix)
 (fvdef* fmake-view-matrix ((:va 3 cam target up))
-  (declare (ff cam target up))
+  (declare #.*opt* (ff cam target up))
   "make view matrix for cam (w/up) looking at target"
   (f3let ((za (f3norm (f3!@- cam target)))
           (xa (f3norm (f3cross up za)))
