@@ -5,8 +5,8 @@
 (defparameter *eps* #.(* 1f0 single-float-epsilon))
 (defvar *silent* nil) (defvar *silent-rt* nil) (defvar *silent-ct* nil)
 
-(init-config (optimize safety (speed 1) debug (space 2))
-             (optimize (safety 1) (speed 3) (debug 1) (space 2)))
+(init-config (optimize safety (speed 1) debug (space 3))
+             (optimize (safety 1) (speed 3) (debug 1) (space 3)))
 
 (defun v? (&optional (silent t))
   "get version. use silent to surpress stdout"
