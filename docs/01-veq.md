@@ -3982,13 +3982,15 @@
  ; VEQ:FMAKE-ORTHO-PROJ-MATRIX
  ;   [symbol]
  ; 
- ; FMAKE-ORTHO-PROJ-MATRIX names a macro:
- ;   Lambda-list: (&REST REST)
+ ; FMAKE-ORTHO-PROJ-MATRIX names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (W 1.0) (H W) (N 0.1) (F 100.0))
+ ;   Derived type: (FUNCTION
+ ;                  (&OPTIONAL SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                   SINGLE-FLOAT)
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (16)) &OPTIONAL))
  ;   Documentation:
- ;     WRAPS: %FMAKE-ORTHO-PROJ-MATRIX
- ;     ARGS: (&OPTIONAL (W 1.0) (H W) (N 0.1) (F 100.0))
- ;     DOCSTRING: make orthogonal projection matrix
- ;     defined via veq:FVDEF*
+ ;     make orthogonal projection matrix
+ ;   Inline proclamation: INLINE (inline expansion available)
  ;   Source file: /data/x/veq/src/mat-cam.lisp
 ```
 
@@ -3997,13 +3999,15 @@
  ; VEQ:FMAKE-PROJ-MATRIX
  ;   [symbol]
  ; 
- ; FMAKE-PROJ-MATRIX names a macro:
- ;   Lambda-list: (&REST REST)
+ ; FMAKE-PROJ-MATRIX names a compiled function:
+ ;   Lambda-list: (&OPTIONAL (W 1.0) (H W) (N 0.1) (F 100.0))
+ ;   Derived type: (FUNCTION
+ ;                  (&OPTIONAL SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                   SINGLE-FLOAT)
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (16)) &OPTIONAL))
  ;   Documentation:
- ;     WRAPS: %FMAKE-PROJ-MATRIX
- ;     ARGS: (&OPTIONAL (W 1.0) (H W) (N 0.1) (F 100.0))
- ;     DOCSTRING: make projection matrix for width, height, near, far 
- ;     defined via veq:FVDEF*
+ ;     make projection matrix for width, height, near, far
+ ;   Inline proclamation: INLINE (inline expansion available)
  ;   Source file: /data/x/veq/src/mat-cam.lisp
 ```
 
@@ -4012,13 +4016,17 @@
  ; VEQ:FMAKE-VIEW-MATRIX
  ;   [symbol]
  ; 
- ; FMAKE-VIEW-MATRIX names a macro:
- ;   Lambda-list: (&REST REST)
+ ; FMAKE-VIEW-MATRIX names a compiled function:
+ ;   Lambda-list: (POS/X-7 POS/Y-8 POS/Z-9 LOOK/X-10 LOOK/Y-11 LOOK/Z-12
+ ;                 UP/X-13 UP/Y-14 UP/Z-15)
+ ;   Derived type: (FUNCTION
+ ;                  (SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                   SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
+ ;                   SINGLE-FLOAT)
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (16)) &OPTIONAL))
  ;   Documentation:
- ;     WRAPS: %FMAKE-VIEW-MATRIX
- ;     ARGS: ((VA 3 CAM TARGET UP))
- ;     DOCSTRING: make view matrix for cam (w/up) looking at target
- ;     defined via veq:FVDEF*
+ ;     make view matrix for pos, up looking at look
+ ;   Inline proclamation: INLINE (inline expansion available)
  ;   Source file: /data/x/veq/src/mat-cam.lisp
 ```
 
