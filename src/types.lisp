@@ -6,9 +6,17 @@
 (deftype kv () 'keyword) (deftype sy () 'symbol) (deftype ll () 'list)
 (deftype pos-df () `(double-float 0d0 *)) (deftype pos-ff () `(single-float 0f0 *))
 
-(deftype dvec (&optional n) `(simple-array df ,n)) (deftype fvec (&optional n) `(simple-array ff ,n))
-(deftype ivec (&optional n) `(simple-array in ,n)) (deftype pvec (&optional n) `(simple-array pn ,n))
-(deftype kvec (&optional n) `(simple-array kv ,n)) (deftype svec (&optional n) `(simple-array sy ,n))
+(deftype dvec (&optional n) `(simple-array df ,n))
+(deftype fvec (&optional n) `(simple-array ff ,n))
+
+(deftype 2dvec () `(dvec (2))) (deftype 2fvec () `(fvec (2)))
+(deftype 3dvec () `(dvec (3))) (deftype 3fvec () `(fvec (3)))
+(deftype 4dvec () `(dvec (4))) (deftype 4fvec () `(fvec (4)))
+
+(deftype ivec (&optional n) `(simple-array in ,n))
+(deftype pvec (&optional n) `(simple-array pn ,n))
+(deftype kvec (&optional n) `(simple-array kv ,n))
+(deftype svec (&optional n) `(simple-array sy ,n))
 (deftype lvec (&optional n) `(simple-array ll ,n))
 
 (declaim (inline df ff in pn ll kv sy dfl ffl inl pnl lll kvl syl))

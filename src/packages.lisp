@@ -13,6 +13,8 @@
 
     #:df #:ff #:in #:pn #:kv #:sy #:ll #:pos-df #:pos-ff
     #:dvec #:fvec #:ivec #:kvec #:lvec #:pvec #:svec
+    #:2dvec #:2fvec #:3dvec #:3fvec #:4dvec #:4fvec
+
     #:falpha #:dalpha #:feps= #:deps=
 
     #:~ #:mvb #:dsb #:xlet #:from-lst #:lst

@@ -191,6 +191,30 @@
  ;   Source file: /data/x/veq/src/array-extra.lisp
 ```
 
+## `2dvec`
+```
+:missing:
+
+ ; VEQ:2DVEC
+ ;   [symbol]
+ ; 
+ ; 2DVEC names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (DVEC (2))
+```
+
+## `2fvec`
+```
+:missing:
+
+ ; VEQ:2FVEC
+ ;   [symbol]
+ ; 
+ ; 2FVEC names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (FVEC (2))
+```
+
 ## `3$`
 ```
  ; VEQ:3$
@@ -249,6 +273,30 @@
  ;   Source file: /data/x/veq/src/array-extra.lisp
 ```
 
+## `3dvec`
+```
+:missing:
+
+ ; VEQ:3DVEC
+ ;   [symbol]
+ ; 
+ ; 3DVEC names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (DVEC (3))
+```
+
+## `3fvec`
+```
+:missing:
+
+ ; VEQ:3FVEC
+ ;   [symbol]
+ ; 
+ ; 3FVEC names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (FVEC (3))
+```
+
 ## `4$`
 ```
  ; VEQ:4$
@@ -305,6 +353,30 @@
  ;   Documentation:
  ;     return array as a list of lists of length 4.
  ;   Source file: /data/x/veq/src/array-extra.lisp
+```
+
+## `4dvec`
+```
+:missing:
+
+ ; VEQ:4DVEC
+ ;   [symbol]
+ ; 
+ ; 4DVEC names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (DVEC (4))
+```
+
+## `4fvec`
+```
+:missing:
+
+ ; VEQ:4FVEC
+ ;   [symbol]
+ ; 
+ ; 4FVEC names a type-specifier:
+ ;   Lambda-list: ()
+ ;   Expansion: (FVEC (4))
 ```
 
 ## `arrtype`
