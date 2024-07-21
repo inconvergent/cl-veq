@@ -41,6 +41,7 @@
                   (declare #.*opt* (,ty* x))
                   ,(format nil "init ~a array with ~d elements." (arrtype ty*) e)
                   (,(vvsym ty* 1 :$~) (,e) x))))))
-(define-arr-shape 1 :$point) (define-arr-shape 2 :$line)
+(define-arr-shape 1 :$point) (define-arr-shape 1 :$pt) ; synonyms
+(define-arr-shape 2 :$line)  (define-arr-shape 2 :$ln)
 ; (define-arr-shape 3 :$tri) (define-arr-shape 4 :$rect)
 

@@ -493,6 +493,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `d$ln`
+```
+ ; VEQ:D$LN
+ ;   [symbol]
+ ; 
+ ; D$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %D$LN
+ ;     ARGS: ((VA 2 X))
+ ;     DOCSTRING: init DVEC array with 2 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `d$lspace`
 ```
  ; VEQ:D$LSPACE
@@ -576,6 +591,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %D$POINT
+ ;     ARGS: ((VA 1 X))
+ ;     DOCSTRING: init DVEC array with 1 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `d$pt`
+```
+ ; VEQ:D$PT
+ ;   [symbol]
+ ; 
+ ; D$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %D$PT
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init DVEC array with 1 elements.
  ;     defined via veq:FVDEF*
@@ -667,6 +697,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `d2$ln`
+```
+ ; VEQ:D2$LN
+ ;   [symbol]
+ ; 
+ ; D2$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %D2$LN
+ ;     ARGS: ((VA 4 X))
+ ;     DOCSTRING: init DVEC array with 4 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `d2$lspace`
 ```
  ; VEQ:D2$LSPACE
@@ -739,6 +784,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %D2$POINT
+ ;     ARGS: ((VA 2 X))
+ ;     DOCSTRING: init DVEC array with 2 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `d2$pt`
+```
+ ; VEQ:D2$PT
+ ;   [symbol]
+ ; 
+ ; D2$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %D2$PT
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init DVEC array with 2 elements.
  ;     defined via veq:FVDEF*
@@ -995,6 +1055,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `d3$ln`
+```
+ ; VEQ:D3$LN
+ ;   [symbol]
+ ; 
+ ; D3$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %D3$LN
+ ;     ARGS: ((VA 6 X))
+ ;     DOCSTRING: init DVEC array with 6 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `d3$lspace`
 ```
  ; VEQ:D3$LSPACE
@@ -1068,6 +1143,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %D3$POINT
+ ;     ARGS: ((VA 3 X))
+ ;     DOCSTRING: init DVEC array with 3 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `d3$pt`
+```
+ ; VEQ:D3$PT
+ ;   [symbol]
+ ; 
+ ; D3$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %D3$PT
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init DVEC array with 3 elements.
  ;     defined via veq:FVDEF*
@@ -1324,6 +1414,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `d4$ln`
+```
+ ; VEQ:D4$LN
+ ;   [symbol]
+ ; 
+ ; D4$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %D4$LN
+ ;     ARGS: ((VA 8 X))
+ ;     DOCSTRING: init DVEC array with 8 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `d4$lspace`
 ```
  ; VEQ:D4$LSPACE
@@ -1378,6 +1483,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %D4$POINT
+ ;     ARGS: ((VA 4 X))
+ ;     DOCSTRING: init DVEC array with 4 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `d4$pt`
+```
+ ; VEQ:D4$PT
+ ;   [symbol]
+ ; 
+ ; D4$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %D4$PT
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init DVEC array with 4 elements.
  ;     defined via veq:FVDEF*
@@ -2287,6 +2407,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `f$ln`
+```
+ ; VEQ:F$LN
+ ;   [symbol]
+ ; 
+ ; F$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %F$LN
+ ;     ARGS: ((VA 2 X))
+ ;     DOCSTRING: init FVEC array with 2 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `f$lspace`
 ```
  ; VEQ:F$LSPACE
@@ -2370,6 +2505,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %F$POINT
+ ;     ARGS: ((VA 1 X))
+ ;     DOCSTRING: init FVEC array with 1 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `f$pt`
+```
+ ; VEQ:F$PT
+ ;   [symbol]
+ ; 
+ ; F$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %F$PT
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init FVEC array with 1 elements.
  ;     defined via veq:FVDEF*
@@ -2488,6 +2638,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `f2$ln`
+```
+ ; VEQ:F2$LN
+ ;   [symbol]
+ ; 
+ ; F2$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %F2$LN
+ ;     ARGS: ((VA 4 X))
+ ;     DOCSTRING: init FVEC array with 4 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `f2$lspace`
 ```
  ; VEQ:F2$LSPACE
@@ -2579,6 +2744,21 @@
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     return n-polygon of size rad. rotate by (rot 0)
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `f2$pt`
+```
+ ; VEQ:F2$PT
+ ;   [symbol]
+ ; 
+ ; F2$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %F2$PT
+ ;     ARGS: ((VA 2 X))
+ ;     DOCSTRING: init FVEC array with 2 elements.
+ ;     defined via veq:FVDEF*
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
@@ -2970,6 +3150,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `f3$ln`
+```
+ ; VEQ:F3$LN
+ ;   [symbol]
+ ; 
+ ; F3$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %F3$LN
+ ;     ARGS: ((VA 6 X))
+ ;     DOCSTRING: init FVEC array with 6 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `f3$lspace`
 ```
  ; VEQ:F3$LSPACE
@@ -3043,6 +3238,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %F3$POINT
+ ;     ARGS: ((VA 3 X))
+ ;     DOCSTRING: init FVEC array with 3 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `f3$pt`
+```
+ ; VEQ:F3$PT
+ ;   [symbol]
+ ; 
+ ; F3$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %F3$PT
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init FVEC array with 3 elements.
  ;     defined via veq:FVDEF*
@@ -3314,6 +3524,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `f4$ln`
+```
+ ; VEQ:F4$LN
+ ;   [symbol]
+ ; 
+ ; F4$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %F4$LN
+ ;     ARGS: ((VA 8 X))
+ ;     DOCSTRING: init FVEC array with 8 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `f4$lspace`
 ```
  ; VEQ:F4$LSPACE
@@ -3368,6 +3593,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %F4$POINT
+ ;     ARGS: ((VA 4 X))
+ ;     DOCSTRING: init FVEC array with 4 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `f4$pt`
+```
+ ; VEQ:F4$PT
+ ;   [symbol]
+ ; 
+ ; F4$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %F4$PT
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init FVEC array with 4 elements.
  ;     defined via veq:FVDEF*
@@ -4342,6 +4582,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `i$ln`
+```
+ ; VEQ:I$LN
+ ;   [symbol]
+ ; 
+ ; I$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %I$LN
+ ;     ARGS: ((VA 2 X))
+ ;     DOCSTRING: init IVEC array with 2 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `i$make`
 ```
  ; VEQ:I$MAKE
@@ -4393,6 +4648,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %I$POINT
+ ;     ARGS: ((VA 1 X))
+ ;     DOCSTRING: init IVEC array with 1 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `i$pt`
+```
+ ; VEQ:I$PT
+ ;   [symbol]
+ ; 
+ ; I$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %I$PT
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init IVEC array with 1 elements.
  ;     defined via veq:FVDEF*
@@ -4471,6 +4741,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `i2$ln`
+```
+ ; VEQ:I2$LN
+ ;   [symbol]
+ ; 
+ ; I2$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %I2$LN
+ ;     ARGS: ((VA 4 X))
+ ;     DOCSTRING: init IVEC array with 4 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `i2$num`
 ```
  ; VEQ:I2$NUM
@@ -4510,6 +4795,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %I2$POINT
+ ;     ARGS: ((VA 2 X))
+ ;     DOCSTRING: init IVEC array with 2 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `i2$pt`
+```
+ ; VEQ:I2$PT
+ ;   [symbol]
+ ; 
+ ; I2$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %I2$PT
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init IVEC array with 2 elements.
  ;     defined via veq:FVDEF*
@@ -4576,6 +4876,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `i3$ln`
+```
+ ; VEQ:I3$LN
+ ;   [symbol]
+ ; 
+ ; I3$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %I3$LN
+ ;     ARGS: ((VA 6 X))
+ ;     DOCSTRING: init IVEC array with 6 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `i3$num`
 ```
  ; VEQ:I3$NUM
@@ -4615,6 +4930,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %I3$POINT
+ ;     ARGS: ((VA 3 X))
+ ;     DOCSTRING: init IVEC array with 3 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `i3$pt`
+```
+ ; VEQ:I3$PT
+ ;   [symbol]
+ ; 
+ ; I3$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %I3$PT
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init IVEC array with 3 elements.
  ;     defined via veq:FVDEF*
@@ -4681,6 +5011,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `i4$ln`
+```
+ ; VEQ:I4$LN
+ ;   [symbol]
+ ; 
+ ; I4$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %I4$LN
+ ;     ARGS: ((VA 8 X))
+ ;     DOCSTRING: init IVEC array with 8 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `i4$num`
 ```
  ; VEQ:I4$NUM
@@ -4720,6 +5065,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %I4$POINT
+ ;     ARGS: ((VA 4 X))
+ ;     DOCSTRING: init IVEC array with 4 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `i4$pt`
+```
+ ; VEQ:I4$PT
+ ;   [symbol]
+ ; 
+ ; I4$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %I4$PT
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init IVEC array with 4 elements.
  ;     defined via veq:FVDEF*
@@ -5185,6 +5545,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `p$ln`
+```
+ ; VEQ:P$LN
+ ;   [symbol]
+ ; 
+ ; P$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %P$LN
+ ;     ARGS: ((VA 2 X))
+ ;     DOCSTRING: init PVEC array with 2 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `p$make`
 ```
  ; VEQ:P$MAKE
@@ -5237,6 +5612,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %P$POINT
+ ;     ARGS: ((VA 1 X))
+ ;     DOCSTRING: init PVEC array with 1 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `p$pt`
+```
+ ; VEQ:P$PT
+ ;   [symbol]
+ ; 
+ ; P$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %P$PT
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init PVEC array with 1 elements.
  ;     defined via veq:FVDEF*
@@ -5317,6 +5707,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `p2$ln`
+```
+ ; VEQ:P2$LN
+ ;   [symbol]
+ ; 
+ ; P2$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %P2$LN
+ ;     ARGS: ((VA 4 X))
+ ;     DOCSTRING: init PVEC array with 4 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `p2$num`
 ```
  ; VEQ:P2$NUM
@@ -5357,6 +5762,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %P2$POINT
+ ;     ARGS: ((VA 2 X))
+ ;     DOCSTRING: init PVEC array with 2 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `p2$pt`
+```
+ ; VEQ:P2$PT
+ ;   [symbol]
+ ; 
+ ; P2$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %P2$PT
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init PVEC array with 2 elements.
  ;     defined via veq:FVDEF*
@@ -5425,6 +5845,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `p3$ln`
+```
+ ; VEQ:P3$LN
+ ;   [symbol]
+ ; 
+ ; P3$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %P3$LN
+ ;     ARGS: ((VA 6 X))
+ ;     DOCSTRING: init PVEC array with 6 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `p3$num`
 ```
  ; VEQ:P3$NUM
@@ -5465,6 +5900,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %P3$POINT
+ ;     ARGS: ((VA 3 X))
+ ;     DOCSTRING: init PVEC array with 3 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `p3$pt`
+```
+ ; VEQ:P3$PT
+ ;   [symbol]
+ ; 
+ ; P3$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %P3$PT
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init PVEC array with 3 elements.
  ;     defined via veq:FVDEF*
@@ -5533,6 +5983,21 @@
  ;   Source file: /data/x/veq/src/shapes.lisp
 ```
 
+## `p4$ln`
+```
+ ; VEQ:P4$LN
+ ;   [symbol]
+ ; 
+ ; P4$LN names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %P4$LN
+ ;     ARGS: ((VA 8 X))
+ ;     DOCSTRING: init PVEC array with 8 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
 ## `p4$num`
 ```
  ; VEQ:P4$NUM
@@ -5573,6 +6038,21 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     WRAPS: %P4$POINT
+ ;     ARGS: ((VA 4 X))
+ ;     DOCSTRING: init PVEC array with 4 elements.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /data/x/veq/src/shapes.lisp
+```
+
+## `p4$pt`
+```
+ ; VEQ:P4$PT
+ ;   [symbol]
+ ; 
+ ; P4$PT names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %P4$PT
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init PVEC array with 4 elements.
  ;     defined via veq:FVDEF*
