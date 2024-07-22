@@ -5381,6 +5381,30 @@
  ;   Source file: /data/x/veq/src/generic-utils.lisp
 ```
 
+## `make-struct-vec-getters`
+```
+:missing:
+
+ ; VEQ:MAKE-STRUCT-VEC-GETTERS
+ ;   [symbol]
+ ; 
+ ; MAKE-STRUCT-VEC-GETTERS names a macro:
+ ;   Lambda-list: (CLS DIM TYPE NAMES)
+ ;   Source file: /data/x/veq/src/vset.lisp
+```
+
+## `make-struct-vec-setters`
+```
+:missing:
+
+ ; VEQ:MAKE-STRUCT-VEC-SETTERS
+ ;   [symbol]
+ ; 
+ ; MAKE-STRUCT-VEC-SETTERS names a macro:
+ ;   Lambda-list: (CLS DIM TYPE NAMES)
+ ;   Source file: /data/x/veq/src/vset.lisp
+```
+
 ## `mutate!`
 ```
  ; VEQ:MUTATE!

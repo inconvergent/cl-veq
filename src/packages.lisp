@@ -10,6 +10,7 @@
     #:mac #:mac* #:v? #:d? #:i? #:context? #:ext-symbols?
     #:group #:ungroup #:strip-arg-keys #:get-arg-key
     #:type-from-short #:arrtype #:type-default
+    #:make-struct-vec-getters #:make-struct-vec-setters
 
     #:df #:ff #:in #:pn #:kv #:sy #:ll #:pos-df #:pos-ff
     #:dvec #:fvec #:ivec #:kvec #:lvec #:pvec #:svec

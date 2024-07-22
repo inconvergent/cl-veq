@@ -38,3 +38,29 @@ n must be less than or equal to (length row)"
 
 (make-$defsetf 1) (make-$defsetf 2) (make-$defsetf 3) (make-$defsetf 4)
 
+(defmacro make-struct-vec-getters (cls dim type names)
+  (declare (symbol cls) (cons names))
+  `(veq:fvprogn
+     ,@(loop for name of-type symbol in names
+             collect `(defun ,(symb :@ name) (c &optional (i 0))
+                        (declare (veq:pn i))
+                        ,(format nil "~(get ~a. as ~a values.~)" name dim)
+                        (let ((arr (,(symb cls name) c))
+                              (i* (* i ,dim)))
+                          (declare (,(arrtype type) arr))
+                          (values ,@(loop for i from 0 repeat dim
+                                          collect `(aref arr (+ i* ,i)))))))))
+
+
+(defun proc-struct-vec-setter (cls dim type name)
+  (awg (arr c i)
+    (let* ((field (symb cls name))
+           (docstr (format nil "set ~a values in struct field ~a." dim field))
+           (gs (loop repeat dim collect (gensym))))
+      `(defsetf ,(symb :@ name) (,c &optional (,i 0)) (,@gs) ,docstr
+         `(let ((,',arr (,',field ,,c))) (declare (,',(arrtype type) ,',arr))
+            ($nvset (,',arr ,,dim (* ,,i ,,dim)) (values ,,@gs)))))))
+(defmacro make-struct-vec-setters (cls dim type names)
+  `(progn ,@(loop for name in names
+                  collect (proc-struct-vec-setter cls dim type name))))
+
