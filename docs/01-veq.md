@@ -2263,13 +2263,14 @@
 
 ## `dsb`
 ```
-:missing:
-
  ; VEQ:DSB
  ;   [symbol]
  ; 
  ; DSB names a macro:
  ;   Lambda-list: (&REST ARGS)
+ ;   Documentation:
+ ;     alias: DESTRUCTURING-BIND
+ ; 
  ;   Source file: /data/x/veq/src/generic-utils.lisp
 ```
 
@@ -5421,25 +5422,27 @@
 
 ## `mvb`
 ```
-:missing:
-
  ; VEQ:MVB
  ;   [symbol]
  ; 
  ; MVB names a macro:
  ;   Lambda-list: (&REST ARGS)
+ ;   Documentation:
+ ;     alias: MULTIPLE-VALUE-BIND
+ ; 
  ;   Source file: /data/x/veq/src/generic-utils.lisp
 ```
 
 ## `mvc`
 ```
-:missing:
-
  ; VEQ:MVC
  ;   [symbol]
  ; 
  ; MVC names a macro:
  ;   Lambda-list: (&REST ARGS)
+ ;   Documentation:
+ ;     alias: MULTIPLE-VALUE-CALL
+ ; 
  ;   Source file: /data/x/veq/src/generic-utils.lisp
 ```
 

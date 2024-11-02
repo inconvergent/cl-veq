@@ -10,7 +10,8 @@
 #+sbcl (defmacro mac* (expr) "expand macro all. only in SBCL."
          `(silent? :ct (pprint (sb-cltl2:macroexpand-all ',expr))))
 
-(defmacro abbrev (short long) `(defmacro ,short (&rest args) `(,',long ,@args)))
+(defmacro abbrev (short long)
+  `(defmacro ,short (&rest args) ,(format nil "alias: ~s~&" long) `(,',long ,@args)))
 (defmacro aif (test-form then-form &optional else-form)
   `(let ((it ,test-form)) (if it ,then-form ,else-form)))
 
