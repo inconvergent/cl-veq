@@ -38,6 +38,22 @@
   (loop for s in l do (loop for k in s do (push k res)))
   (reverse res))
 
+(defun to-vector (init &key (type t))
+  (declare (list init))
+  (make-array (length init)
+    :initial-contents init :adjustable nil :element-type type))
+
+(defun ensure-vector (o &key (type t))
+  (declare (sequence o))
+  (etypecase o (cons (to-vector o :type type)) (vector o)))
+
+(defun make-adjustable-vector (&key init (type t) (size 128))
+  (if init (make-array (length init)
+             :fill-pointer t :initial-contents init
+             :element-type type :adjustable t)
+           (make-array size
+             :fill-pointer 0 :element-type type :adjustable t)))
+
 (declaim (inline mkstr))
 (defun mkstr (&rest args) (declare (optimize speed (safety 2)))
   (with-output-to-string (s) (dolist (a args) (princ a s))))
@@ -80,7 +96,7 @@
 
 (abbrev mvc multiple-value-call) (abbrev mvb multiple-value-bind)
 (abbrev dsb destructuring-bind) (abbrev awg with-gensyms)
-(abbrev awf flatten)
+(abbrev awf flatten) (abbrev vextend vector-push-extend)
 
 (defun dotted-listp (l) ; TODO: rewrite with rec to require first call to be cons
   (cond ((null l) nil) ((atom l) t) (t (dotted-listp (cdr l)))))
@@ -178,6 +194,17 @@
   (loop for c of-type string in symbs
         do (setf name (the string (strcat (split-substr c name)))))
   name)
+
+(defun group-into-alist (l &aux (res (list)))
+  (declare (list l res))
+  "group (:a 1 2 3 :b 12 ...) into ((:a . (1 2 3)) (:b . (1 2)) ...)
+discards any non keyword before the first keyword."
+  (loop with o = (list) with prev = (car l)
+        for v in (cdr l)
+        do (typecase v (keyword  #2=(when o (push `(,prev . ,(reverse o)) res))
+                                    (setf o (list) prev v))
+                       (otherwise (push v o)))
+        finally #2# (return-from group-into-alist (reverse res)) ))
 
 (defun strip-arg-keys (ll kk &aux (ll (group ll 2)))
   "strip keywords in kk from ll where ll is a list of kw function args."

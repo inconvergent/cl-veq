@@ -5,14 +5,14 @@
  ; 
  ; $ names a macro:
  ;   Lambda-list: (A &REST REST)
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
  ; 
  ; (SETF $) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
  ;   Documentation:
  ;     get: ($ a i) yields (values ...)
  ;     set: (setf ($ a i) (values ...))
- ;   Source file: /data/x/veq/src/vset.lisp
+ ;   Source file: /home/anders/x/veq/src/vset.lisp
 ```
 
 ## `$coerce`
@@ -24,7 +24,7 @@
  ;   Lambda-list: (TYPE A)
  ;   Documentation:
  ;     coerce sequence a to vec of type (eg: veq:ff, veq:df)
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `$copy`
@@ -44,7 +44,19 @@
  ;   Lambda-list: (&KEY (DIM 1) (N 1) V (TYPE T))
  ;   Documentation:
  ;     create vector array with size (n dim), and initial value v.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
+```
+
+## `$new-stride`
+```
+ ; VEQ:$NEW-STRIDE
+ ;   [symbol]
+ ; 
+ ; $NEW-STRIDE names a macro:
+ ;   Lambda-list: ((FROM TO TYPE &OPTIONAL (V 0)) ARR)
+ ;   Documentation:
+ ;     shift arr from stride to stride.
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `$num`
@@ -59,7 +71,7 @@
  ;   Documentation:
  ;     number of elements in 1d array.
  ;     untyped.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `$nvset`
@@ -71,7 +83,7 @@
  ;   Lambda-list: ((A N &OPTIONAL (I 0)) &BODY BODY)
  ;   Documentation:
  ;     set n indices in a, from a[i] with n values. body must yield n values
- ;   Source file: /data/x/veq/src/vset.lisp
+ ;   Source file: /home/anders/x/veq/src/vset.lisp
 ```
 
 ## `$print`
@@ -91,7 +103,19 @@
  ;     start at row (start 0).
  ;     negative start counts backwards from the last row
  ;     use s to overrid output stream.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
+```
+
+## `$reverse!`
+```
+ ; VEQ:$REVERSE!
+ ;   [symbol]
+ ; 
+ ; $REVERSE! names a macro:
+ ;   Lambda-list: (A &KEY (DIM 1))
+ ;   Documentation:
+ ;     reverse typed array in-place.
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `$rowset`
@@ -104,7 +128,7 @@
  ;   Documentation:
  ;     performs (setf (aref a i) row0 (aref a (1+ i) r1 ...))
  ;     n must be less than or equal to (length row)
- ;   Source file: /data/x/veq/src/vset.lisp
+ ;   Source file: /home/anders/x/veq/src/vset.lisp
 ```
 
 ## `$to-list`
@@ -118,7 +142,7 @@
  ;                  (VALUES LIST &OPTIONAL))
  ;   Documentation:
  ;     return array as a list of lists of length dim.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `*eps*`
@@ -133,6 +157,29 @@
  ;   Value: 5.960465e-8
 ```
 
+## `*opt*`
+```
+:missing:
+
+ ; VEQ:*OPT*
+ ;   [symbol]
+ ; 
+ ; *OPT* names a special variable:
+ ;   Declared type: CONS
+ ;   Value: (OPTIMIZE (SAFETY 1) (SPEED 3) (DEBUG 1) (SPACE 3))
+```
+
+## `*srndopt*`
+```
+:missing:
+
+ ; VEQ:*SRNDOPT*
+ ;   [symbol]
+ ; 
+ ; *SRNDOPT* names a special variable:
+ ;   Value: (OPTIMIZE SPEED (SAFETY 0) (DEBUG 1) (SPACE 3))
+```
+
 ## `2$`
 ```
  ; VEQ:2$
@@ -140,14 +187,14 @@
  ; 
  ; 2$ names a macro:
  ;   Lambda-list: (A &REST REST)
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
  ; 
  ; (SETF 2$) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
  ;   Documentation:
  ;     get: (2$ a i) yields (values ...)
  ;     set: (setf (2$ a i) (values ...))
- ;   Source file: /data/x/veq/src/vset.lisp
+ ;   Source file: /home/anders/x/veq/src/vset.lisp
 ```
 
 ## `2$num`
@@ -162,7 +209,7 @@
  ;   Documentation:
  ;     number of elements in 2d array.
  ;     untyped.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `2$print`
@@ -175,7 +222,7 @@
  ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 2d array. returns array.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `2$to-list`
@@ -188,7 +235,7 @@
  ;   Derived type: (FUNCTION (T) *)
  ;   Documentation:
  ;     return array as a list of lists of length 2.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `2dvec`
@@ -222,14 +269,14 @@
  ; 
  ; 3$ names a macro:
  ;   Lambda-list: (A &REST REST)
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
  ; 
  ; (SETF 3$) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
  ;   Documentation:
  ;     get: (3$ a i) yields (values ...)
  ;     set: (setf (3$ a i) (values ...))
- ;   Source file: /data/x/veq/src/vset.lisp
+ ;   Source file: /home/anders/x/veq/src/vset.lisp
 ```
 
 ## `3$num`
@@ -244,7 +291,7 @@
  ;   Documentation:
  ;     number of elements in 3d array.
  ;     untyped.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `3$print`
@@ -257,7 +304,7 @@
  ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 3d array. returns array.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `3$to-list`
@@ -270,7 +317,7 @@
  ;   Derived type: (FUNCTION (T) *)
  ;   Documentation:
  ;     return array as a list of lists of length 3.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `3dvec`
@@ -304,14 +351,14 @@
  ; 
  ; 4$ names a macro:
  ;   Lambda-list: (A &REST REST)
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
  ; 
  ; (SETF 4$) has a complex setf-expansion:
  ;   Lambda-list: (A0 &OPTIONAL (I1 0))
  ;   Documentation:
  ;     get: (4$ a i) yields (values ...)
  ;     set: (setf (4$ a i) (values ...))
- ;   Source file: /data/x/veq/src/vset.lisp
+ ;   Source file: /home/anders/x/veq/src/vset.lisp
 ```
 
 ## `4$num`
@@ -326,7 +373,7 @@
  ;   Documentation:
  ;     number of elements in 4d array.
  ;     untyped.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `4$print`
@@ -339,7 +386,7 @@
  ;   Derived type: (FUNCTION (T &KEY (:N T) (:S T)) *)
  ;   Documentation:
  ;     pretty print 4d array. returns array.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `4$to-list`
@@ -352,7 +399,7 @@
  ;   Derived type: (FUNCTION (T) *)
  ;   Documentation:
  ;     return array as a list of lists of length 4.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `4dvec`
@@ -389,7 +436,7 @@
  ;   Derived type: (FUNCTION (T &OPTIONAL T) (VALUES T &OPTIONAL))
  ;   Documentation:
  ;     select array type from type hint. eg: :ff :df 'f 'i
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `context?`
@@ -403,7 +450,7 @@
  ;     list all macrolet symbols (ie. ops available inside vprog, fvprogn, vdef,
  ;     fvdef defined contexts/functions) and corresponding macro body in veq
  ;     context.
- ;   Source file: /data/x/veq/src/docs.lisp
+ ;   Source file: /home/anders/x/veq/src/docs.lisp
 ```
 
 ## `d$`
@@ -417,7 +464,7 @@
  ;     returns indices [default: 0] from 1d vector array (DVEC) as values.
  ;     ex: (D$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d$_`
@@ -431,9 +478,9 @@
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     create DVEC vector array from body. where body is a list of lists.
- ;     ex: (D$_ (loop repeat 2 collect `(1f0 2f0)))
- ;     ex: (D$_ '((1f0 2f0) (1f0 2f0))).
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;     ex: (D$_ (loop repeat 2 collect `(a b)))
+ ;     ex: (D$_ '((a b) (c d))).
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d$coerce`
@@ -442,12 +489,12 @@
  ;   [symbol]
  ; 
  ; D$COERCE names a compiled function:
- ;   Lambda-list: (A0)
+ ;   Lambda-list: (A)
  ;   Derived type: (FUNCTION (SEQUENCE)
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     coerce sequence to DVEC.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d$copy`
@@ -456,12 +503,31 @@
  ;   [symbol]
  ; 
  ; D$COPY names a compiled function:
- ;   Lambda-list: (A0 &OPTIONAL (NA (LENGTH A0)))
+ ;   Lambda-list: (A &OPTIONAL (NA (LENGTH A)))
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL T)
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     copy DVEC vector array.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
+```
+
+## `d$join`
+```
+ ; VEQ:D$JOIN
+ ;   [symbol]
+ ; 
+ ; D$JOIN names a compiled function:
+ ;   Lambda-list: (A B &OPTIONAL (N (+ (LENGTH A) (LENGTH B)))
+ ;                 (RES
+ ;                  (MAKE-ARRAY N ELEMENT-TYPE (QUOTE DF) ADJUSTABLE NIL)))
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY DOUBLE-FLOAT)
+ ;                   (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL
+ ;                   (UNSIGNED-BYTE 32) (SIMPLE-ARRAY DOUBLE-FLOAT))
+ ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT) &OPTIONAL))
+ ;   Documentation:
+ ;     join a, b of type DVEC.
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d$last`
@@ -475,7 +541,7 @@
  ;                  (VALUES DOUBLE-FLOAT &OPTIONAL))
  ;   Documentation:
  ;     return values from last row of 1d vector array.
- ;   Source file: /data/x/veq/src/array-rows.lisp
+ ;   Source file: /home/anders/x/veq/src/array-rows.lisp
 ```
 
 ## `d$line`
@@ -490,7 +556,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init DVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d$ln`
@@ -505,7 +571,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init DVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d$lspace`
@@ -520,7 +586,7 @@
  ;     ARGS: (N (VARG 1 A B) &KEY (END T))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/fxlspace.lisp
+ ;   Source file: /home/anders/x/veq/src/fxlspace.lisp
 ```
 
 ## `d$make`
@@ -532,7 +598,7 @@
  ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0.0d0))
  ;   Documentation:
  ;     create DVEC vector array with size n * dim, and initial value v.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d$mima`
@@ -549,7 +615,7 @@
  ;     find min and max for all dimensions of 1 array.
  ;     ex: (D$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `d$num`
@@ -564,7 +630,7 @@
  ;   Documentation:
  ;     number of elements in 1d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d$one`
@@ -579,7 +645,7 @@
  ;   Documentation:
  ;     make 1d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d$point`
@@ -594,7 +660,7 @@
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init DVEC array with 1 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d$pt`
@@ -609,7 +675,7 @@
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init DVEC array with 1 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d$val`
@@ -624,7 +690,7 @@
  ;   Documentation:
  ;     make 1d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d$zero`
@@ -639,7 +705,7 @@
  ;   Documentation:
  ;     make 1d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d$~`
@@ -651,7 +717,7 @@
  ;   Lambda-list: ((&OPTIONAL (N 1)) &BODY BODY)
  ;   Documentation:
  ;     create DVEC vector array from n values in body.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d2$`
@@ -665,7 +731,7 @@
  ;     returns indices [default: 0] from 2d vector array (DVEC) as values.
  ;     ex: (D2$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d2$last`
@@ -679,7 +745,7 @@
  ;                  (VALUES DOUBLE-FLOAT DOUBLE-FLOAT &OPTIONAL))
  ;   Documentation:
  ;     return values from last row of 2d vector array.
- ;   Source file: /data/x/veq/src/array-rows.lisp
+ ;   Source file: /home/anders/x/veq/src/array-rows.lisp
 ```
 
 ## `d2$line`
@@ -694,7 +760,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init DVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d2$ln`
@@ -709,7 +775,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init DVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d2$lspace`
@@ -724,7 +790,7 @@
  ;     ARGS: (N (VARG 2 A B) &KEY (END T))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/fxlspace.lisp
+ ;   Source file: /home/anders/x/veq/src/fxlspace.lisp
 ```
 
 ## `d2$mima`
@@ -742,7 +808,7 @@
  ;     find min and max for all dimensions of 2 array.
  ;     ex: (D2$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `d2$num`
@@ -757,7 +823,7 @@
  ;   Documentation:
  ;     number of elements in 2d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d2$one`
@@ -772,7 +838,7 @@
  ;   Documentation:
  ;     make 2d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d2$point`
@@ -787,7 +853,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init DVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d2$pt`
@@ -802,7 +868,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init DVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d2$val`
@@ -817,7 +883,7 @@
  ;   Documentation:
  ;     make 2d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d2$zero`
@@ -832,7 +898,7 @@
  ;   Documentation:
  ;     make 2d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d2meye`
@@ -846,7 +912,7 @@
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (4)) &OPTIONAL))
  ;   Documentation:
  ;     return 2d eye matrix.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2minv`
@@ -860,7 +926,7 @@
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (4)) &OPTIONAL))
  ;   Documentation:
  ;     invert 2x2 matrix. non-destructive.
- ;   Source file: /data/x/veq/src/mat-inv.lisp
+ ;   Source file: /home/anders/x/veq/src/mat-inv.lisp
 ```
 
 ## `d2mm`
@@ -869,11 +935,11 @@
  ;   [symbol]
  ; 
  ; D2MM names a macro:
- ;   Lambda-list: (A*385 B*387)
+ ;   Lambda-list: (A*349 B*351)
  ;   Documentation:
  ;     multiply mat * mat
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2mmt`
@@ -882,11 +948,11 @@
  ;   [symbol]
  ; 
  ; D2MMT names a macro:
- ;   Lambda-list: (A*449 B*451)
+ ;   Lambda-list: (A*407 B*409)
  ;   Documentation:
  ;     multiply mat * (transpose mat)
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2mrot`
@@ -901,7 +967,7 @@
  ;     ARGS: (A)
  ;     DOCSTRING: make 2d rotation matrix for rotating a rads
  ;     defined via veq:DEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2mrot*`
@@ -916,7 +982,7 @@
  ;     ARGS: (A)
  ;     DOCSTRING: make 2d rotation matrix for rotating a rads
  ;     defined via veq:DEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2mscale`
@@ -931,7 +997,7 @@
  ;     ARGS: ((VARG 2 X))
  ;     DOCSTRING: make 2d matrix for scaling by x
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2mt!`
@@ -943,7 +1009,7 @@
  ;   Lambda-list: (A1)
  ;   Documentation:
  ;     transpose 2d matrix in-place.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2mtm`
@@ -952,11 +1018,11 @@
  ;   [symbol]
  ; 
  ; D2MTM names a macro:
- ;   Lambda-list: (A*481 B*483)
+ ;   Lambda-list: (A*436 B*438)
  ;   Documentation:
  ;     multiply (transpose mat) * mat
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2mtmt`
@@ -965,11 +1031,11 @@
  ;   [symbol]
  ; 
  ; D2MTMT names a macro:
- ;   Lambda-list: (A*417 B*419)
+ ;   Lambda-list: (A*378 B*380)
  ;   Documentation:
  ;     multiply (transpose mat) * (transpose mat)
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2mtrans`
@@ -984,7 +1050,7 @@
  ;     ARGS: ((VARG 2 X))
  ;     DOCSTRING: make 2d transpose matrix for moving by x
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2mtv`
@@ -996,7 +1062,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     transpose(mat) * v. for 2d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d2mv`
@@ -1008,7 +1074,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     mat * v. for 2d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3$`
@@ -1022,7 +1088,7 @@
  ;     returns indices [default: 0] from 3d vector array (DVEC) as values.
  ;     ex: (D3$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d3$last`
@@ -1037,7 +1103,7 @@
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     return values from last row of 3d vector array.
- ;   Source file: /data/x/veq/src/array-rows.lisp
+ ;   Source file: /home/anders/x/veq/src/array-rows.lisp
 ```
 
 ## `d3$line`
@@ -1052,7 +1118,7 @@
  ;     ARGS: ((VA 6 X))
  ;     DOCSTRING: init DVEC array with 6 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d3$ln`
@@ -1067,7 +1133,7 @@
  ;     ARGS: ((VA 6 X))
  ;     DOCSTRING: init DVEC array with 6 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d3$lspace`
@@ -1082,7 +1148,7 @@
  ;     ARGS: (N (VARG 3 A B) &KEY (END T))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/fxlspace.lisp
+ ;   Source file: /home/anders/x/veq/src/fxlspace.lisp
 ```
 
 ## `d3$mima`
@@ -1101,7 +1167,7 @@
  ;     find min and max for all dimensions of 3 array.
  ;     ex: (D3$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `d3$num`
@@ -1116,7 +1182,7 @@
  ;   Documentation:
  ;     number of elements in 3d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d3$one`
@@ -1131,7 +1197,7 @@
  ;   Documentation:
  ;     make 3d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d3$point`
@@ -1146,7 +1212,7 @@
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init DVEC array with 3 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d3$pt`
@@ -1161,7 +1227,7 @@
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init DVEC array with 3 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d3$val`
@@ -1176,7 +1242,7 @@
  ;   Documentation:
  ;     make 3d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d3$zero`
@@ -1191,7 +1257,7 @@
  ;   Documentation:
  ;     make 3d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d3meye`
@@ -1205,7 +1271,7 @@
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (9)) &OPTIONAL))
  ;   Documentation:
  ;     return 3d eye matrix.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3minv`
@@ -1219,7 +1285,7 @@
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (9)) &OPTIONAL))
  ;   Documentation:
  ;     invert 3x3 matrix. non-destructive.
- ;   Source file: /data/x/veq/src/mat-inv.lisp
+ ;   Source file: /home/anders/x/veq/src/mat-inv.lisp
 ```
 
 ## `d3mm`
@@ -1228,11 +1294,11 @@
  ;   [symbol]
  ; 
  ; D3MM names a macro:
- ;   Lambda-list: (A*513 B*515)
+ ;   Lambda-list: (A*465 B*467)
  ;   Documentation:
  ;     multiply mat * mat
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3mmt`
@@ -1241,11 +1307,11 @@
  ;   [symbol]
  ; 
  ; D3MMT names a macro:
- ;   Lambda-list: (A*577 B*579)
+ ;   Lambda-list: (A*523 B*525)
  ;   Documentation:
  ;     multiply mat * (transpose mat)
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3mrot`
@@ -1260,7 +1326,7 @@
  ;     ARGS: (A X Y Z)
  ;     DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ;     defined via veq:DEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3mrot*`
@@ -1275,7 +1341,7 @@
  ;     ARGS: (A X Y Z)
  ;     DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ;     defined via veq:DEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3mscale`
@@ -1290,7 +1356,7 @@
  ;     ARGS: ((VARG 3 X))
  ;     DOCSTRING: make 3d matrix for scaling by x
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3mt!`
@@ -1302,7 +1368,7 @@
  ;   Lambda-list: (A1)
  ;   Documentation:
  ;     transpose 3d matrix in-place.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3mtm`
@@ -1311,11 +1377,11 @@
  ;   [symbol]
  ; 
  ; D3MTM names a macro:
- ;   Lambda-list: (A*609 B*611)
+ ;   Lambda-list: (A*552 B*554)
  ;   Documentation:
  ;     multiply (transpose mat) * mat
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3mtmt`
@@ -1324,11 +1390,11 @@
  ;   [symbol]
  ; 
  ; D3MTMT names a macro:
- ;   Lambda-list: (A*545 B*547)
+ ;   Lambda-list: (A*494 B*496)
  ;   Documentation:
  ;     multiply (transpose mat) * (transpose mat)
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3mtrans`
@@ -1343,7 +1409,7 @@
  ;     ARGS: ((VARG 3 X))
  ;     DOCSTRING: make 3d transpose matrix for moving by x
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3mtv`
@@ -1355,7 +1421,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     transpose(mat) * v. for 3d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d3mv`
@@ -1367,7 +1433,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     mat * v. for 3d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d4$`
@@ -1381,7 +1447,7 @@
  ;     returns indices [default: 0] from 4d vector array (DVEC) as values.
  ;     ex: (D4$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d4$last`
@@ -1396,7 +1462,7 @@
  ;                          DOUBLE-FLOAT &OPTIONAL))
  ;   Documentation:
  ;     return values from last row of 4d vector array.
- ;   Source file: /data/x/veq/src/array-rows.lisp
+ ;   Source file: /home/anders/x/veq/src/array-rows.lisp
 ```
 
 ## `d4$line`
@@ -1411,7 +1477,7 @@
  ;     ARGS: ((VA 8 X))
  ;     DOCSTRING: init DVEC array with 8 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d4$ln`
@@ -1426,7 +1492,7 @@
  ;     ARGS: ((VA 8 X))
  ;     DOCSTRING: init DVEC array with 8 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d4$lspace`
@@ -1441,7 +1507,7 @@
  ;     ARGS: (N (VARG 4 A B) &KEY (END T))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/fxlspace.lisp
+ ;   Source file: /home/anders/x/veq/src/fxlspace.lisp
 ```
 
 ## `d4$num`
@@ -1456,7 +1522,7 @@
  ;   Documentation:
  ;     number of elements in 4d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d4$one`
@@ -1471,7 +1537,7 @@
  ;   Documentation:
  ;     make 4d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d4$point`
@@ -1486,7 +1552,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init DVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d4$pt`
@@ -1501,7 +1567,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init DVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `d4$val`
@@ -1516,7 +1582,7 @@
  ;   Documentation:
  ;     make 4d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d4$zero`
@@ -1531,7 +1597,7 @@
  ;   Documentation:
  ;     make 4d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `d4meye`
@@ -1545,7 +1611,7 @@
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (16)) &OPTIONAL))
  ;   Documentation:
  ;     return 4d eye matrix.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d4minv`
@@ -1559,7 +1625,7 @@
  ;                  (VALUES (SIMPLE-ARRAY DOUBLE-FLOAT (16)) &OPTIONAL))
  ;   Documentation:
  ;     invert 4x4 matrix. non-destructive.
- ;   Source file: /data/x/veq/src/mat-inv.lisp
+ ;   Source file: /home/anders/x/veq/src/mat-inv.lisp
 ```
 
 ## `d4mm`
@@ -1568,11 +1634,11 @@
  ;   [symbol]
  ; 
  ; D4MM names a macro:
- ;   Lambda-list: (A*641 B*643)
+ ;   Lambda-list: (A*581 B*583)
  ;   Documentation:
  ;     multiply mat * mat
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d4mmt`
@@ -1581,11 +1647,11 @@
  ;   [symbol]
  ; 
  ; D4MMT names a macro:
- ;   Lambda-list: (A*705 B*707)
+ ;   Lambda-list: (A*639 B*641)
  ;   Documentation:
  ;     multiply mat * (transpose mat)
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d4mt!`
@@ -1597,7 +1663,7 @@
  ;   Lambda-list: (A1)
  ;   Documentation:
  ;     transpose 4d matrix in-place.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d4mtm`
@@ -1606,11 +1672,11 @@
  ;   [symbol]
  ; 
  ; D4MTM names a macro:
- ;   Lambda-list: (A*737 B*739)
+ ;   Lambda-list: (A*668 B*670)
  ;   Documentation:
  ;     multiply (transpose mat) * mat
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d4mtmt`
@@ -1619,11 +1685,11 @@
  ;   [symbol]
  ; 
  ; D4MTMT names a macro:
- ;   Lambda-list: (A*673 B*675)
+ ;   Lambda-list: (A*610 B*612)
  ;   Documentation:
  ;     multiply (transpose mat) * (transpose mat)
  ;     of type: DVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d4mtv`
@@ -1635,7 +1701,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     transpose(mat) * v. for 4d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d4mv`
@@ -1647,7 +1713,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     mat * v. for 4d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `d?`
@@ -1660,7 +1726,7 @@
  ;   Derived type: (FUNCTION (T) (VALUES &OPTIONAL))
  ;   Documentation:
  ;     describe argument
- ;   Source file: /data/x/veq/src/config.lisp
+ ;   Source file: /home/anders/x/veq/src/config.lisp
 ```
 
 ## `d_`
@@ -1672,7 +1738,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     create DVEC vector array from body: (D_ '(a b c ...)).
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `dalpha`
@@ -1687,7 +1753,7 @@
  ;     ARGS: (X Y &AUX (A (ATAN (- Y) X)))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/extra.lisp
+ ;   Source file: /home/anders/x/veq/src/extra.lisp
 ```
 
 ## `dease-in-back`
@@ -1704,7 +1770,7 @@
  ;     ease in:
  ;     arg: (X &OPTIONAL (S 1.70158))
  ;     body: (* X X (- (* (+ 1.0d0 S) X) S))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-circ`
@@ -1720,7 +1786,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-cubic`
@@ -1736,7 +1802,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (* X X X)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-elastic`
@@ -1758,7 +1824,7 @@
  ;             (-
  ;              (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
  ;                 (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-exp`
@@ -1774,7 +1840,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-linear`
@@ -1790,7 +1856,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: X
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-out-back`
@@ -1807,7 +1873,7 @@
  ;     ease in-out:
  ;     arg: (X &OPTIONAL (S 1.70158))
  ;     body: (* X X (- (* (+ 1.0d0 S) X) S))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-out-circ`
@@ -1823,7 +1889,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-out-cubic`
@@ -1839,7 +1905,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (* X X X)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-out-elastic`
@@ -1861,7 +1927,7 @@
  ;             (-
  ;              (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
  ;                 (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-out-exp`
@@ -1877,7 +1943,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-out-linear`
@@ -1893,7 +1959,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: X
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-out-quart`
@@ -1909,7 +1975,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (EXPT X 4.0d0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-out-quint`
@@ -1925,7 +1991,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (EXPT X 5.0d0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-out-sin`
@@ -1941,7 +2007,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (- 1.0d0 (COS (* X DPI5)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-quart`
@@ -1957,7 +2023,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (EXPT X 4.0d0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-quint`
@@ -1973,7 +2039,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (EXPT X 5.0d0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-in-sin`
@@ -1990,7 +2056,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (- 1.0d0 (COS (* X DPI5)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-out-back`
@@ -2007,7 +2073,7 @@
  ;     ease out:
  ;     arg: (X &OPTIONAL (S 1.70158))
  ;     body: (* X X (- (* (+ 1.0d0 S) X) S))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-out-circ`
@@ -2023,7 +2089,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (- (- (SQRT (- 1.0d0 (* X X))) 1.0d0))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-out-cubic`
@@ -2039,7 +2105,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (* X X X)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-out-elastic`
@@ -2061,7 +2127,7 @@
  ;             (-
  ;              (* (EXPT 2.0d0 (* 10.0d0 (- X 1)))
  ;                 (SIN (/ (* (- (- X 1.0d0) S) DPII) P)))))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-out-exp`
@@ -2077,7 +2143,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (EXPT 2.0d0 (* 10.0d0 (- X 1)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-out-linear`
@@ -2093,7 +2159,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: X
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-out-quart`
@@ -2109,7 +2175,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (EXPT X 4.0d0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-out-quint`
@@ -2125,7 +2191,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (EXPT X 5.0d0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `dease-out-sin`
@@ -2142,7 +2208,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (- 1.0d0 (COS (* X DPI5)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `def*`
@@ -2158,7 +2224,7 @@
  ;     
  ;     the wrapper macro ensures every call to this function is done as
  ;     (mvc #'%mname ...).
- ;   Source file: /data/x/veq/src/macrolets.lisp
+ ;   Source file: /home/anders/x/veq/src/macrolets.lisp
 ```
 
 ## `deps=`
@@ -2180,7 +2246,7 @@
  ;   Lambda-list: (V)
  ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
  ; 
  ; DF names a type-specifier:
  ;   Lambda-list: ()
@@ -2196,7 +2262,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     coerce these values to df.
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `dfl`
@@ -2210,7 +2276,7 @@
  ;   Documentation:
  ;     return (values (df a) (df b) ...) from list.
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `dpi`
@@ -2271,7 +2337,7 @@
  ;   Documentation:
  ;     alias: DESTRUCTURING-BIND
  ; 
- ;   Source file: /data/x/veq/src/generic-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/generic-utils.lisp
 ```
 
 ## `dsel`
@@ -2285,7 +2351,7 @@
  ;     return values from body in order of dims.
  ;     use indices or :x :y :z :w
  ;     ex: (DSEL (:w :zx 0) (values a b c d)) returns: (values d c a a).
- ;   Source file: /data/x/veq/src/select-dim.lisp
+ ;   Source file: /home/anders/x/veq/src/select-dim.lisp
 ```
 
 ## `dvec`
@@ -2318,7 +2384,7 @@
  ;   Documentation:
  ;     list all external symbols in pkg. use :verbose to inlcude docstring.
  ;     use :pretty to print verbose output to stdout in a readable form.
- ;   Source file: /data/x/veq/src/docs.lisp
+ ;   Source file: /home/anders/x/veq/src/docs.lisp
 ```
 
 ## `f$`
@@ -2332,7 +2398,7 @@
  ;     returns indices [default: 0] from 1d vector array (FVEC) as values.
  ;     ex: (F$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f$_`
@@ -2346,9 +2412,9 @@
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     create FVEC vector array from body. where body is a list of lists.
- ;     ex: (F$_ (loop repeat 2 collect `(1f0 2f0)))
- ;     ex: (F$_ '((1f0 2f0) (1f0 2f0))).
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;     ex: (F$_ (loop repeat 2 collect `(a b)))
+ ;     ex: (F$_ '((a b) (c d))).
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f$coerce`
@@ -2357,12 +2423,12 @@
  ;   [symbol]
  ; 
  ; F$COERCE names a compiled function:
- ;   Lambda-list: (A0)
+ ;   Lambda-list: (A)
  ;   Derived type: (FUNCTION (SEQUENCE)
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     coerce sequence to FVEC.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f$copy`
@@ -2371,12 +2437,31 @@
  ;   [symbol]
  ; 
  ; F$COPY names a compiled function:
- ;   Lambda-list: (A0 &OPTIONAL (NA (LENGTH A0)))
+ ;   Lambda-list: (A &OPTIONAL (NA (LENGTH A)))
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL T)
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
  ;   Documentation:
  ;     copy FVEC vector array.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
+```
+
+## `f$join`
+```
+ ; VEQ:F$JOIN
+ ;   [symbol]
+ ; 
+ ; F$JOIN names a compiled function:
+ ;   Lambda-list: (A B &OPTIONAL (N (+ (LENGTH A) (LENGTH B)))
+ ;                 (RES
+ ;                  (MAKE-ARRAY N ELEMENT-TYPE (QUOTE FF) ADJUSTABLE NIL)))
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY SINGLE-FLOAT)
+ ;                   (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL
+ ;                   (UNSIGNED-BYTE 32) (SIMPLE-ARRAY SINGLE-FLOAT))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT) &OPTIONAL))
+ ;   Documentation:
+ ;     join a, b of type FVEC.
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f$last`
@@ -2390,7 +2475,7 @@
  ;                  (VALUES SINGLE-FLOAT &OPTIONAL))
  ;   Documentation:
  ;     return values from last row of 1d vector array.
- ;   Source file: /data/x/veq/src/array-rows.lisp
+ ;   Source file: /home/anders/x/veq/src/array-rows.lisp
 ```
 
 ## `f$line`
@@ -2405,7 +2490,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init FVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f$ln`
@@ -2420,7 +2505,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init FVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f$lspace`
@@ -2435,7 +2520,7 @@
  ;     ARGS: (N (VARG 1 A B) &KEY (END T))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/fxlspace.lisp
+ ;   Source file: /home/anders/x/veq/src/fxlspace.lisp
 ```
 
 ## `f$make`
@@ -2447,7 +2532,7 @@
  ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0.0))
  ;   Documentation:
  ;     create FVEC vector array with size n * dim, and initial value v.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f$mima`
@@ -2464,7 +2549,7 @@
  ;     find min and max for all dimensions of 1 array.
  ;     ex: (F$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `f$num`
@@ -2479,7 +2564,7 @@
  ;   Documentation:
  ;     number of elements in 1d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f$one`
@@ -2494,7 +2579,7 @@
  ;   Documentation:
  ;     make 1d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f$point`
@@ -2509,7 +2594,7 @@
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init FVEC array with 1 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f$pt`
@@ -2524,7 +2609,7 @@
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init FVEC array with 1 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f$val`
@@ -2539,7 +2624,7 @@
  ;   Documentation:
  ;     make 1d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f$zero`
@@ -2554,7 +2639,7 @@
  ;   Documentation:
  ;     make 1d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f$~`
@@ -2566,7 +2651,7 @@
  ;   Lambda-list: ((&OPTIONAL (N 1)) &BODY BODY)
  ;   Documentation:
  ;     create FVEC vector array from n values in body.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f2$`
@@ -2580,7 +2665,7 @@
  ;     returns indices [default: 0] from 2d vector array (FVEC) as values.
  ;     ex: (F2$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f2$center`
@@ -2594,7 +2679,7 @@
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     center 2d array according to n points in array. n is optional.
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f2$circ`
@@ -2607,7 +2692,7 @@
  ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (SINGLE-FLOAT 0.0)) *)
  ;   Documentation:
  ;     return circle of size rad. (rs 0.5) is vertex density.
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f2$last`
@@ -2621,7 +2706,7 @@
  ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT &OPTIONAL))
  ;   Documentation:
  ;     return values from last row of 2d vector array.
- ;   Source file: /data/x/veq/src/array-rows.lisp
+ ;   Source file: /home/anders/x/veq/src/array-rows.lisp
 ```
 
 ## `f2$line`
@@ -2636,7 +2721,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init FVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f2$ln`
@@ -2651,7 +2736,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init FVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f2$lspace`
@@ -2666,7 +2751,7 @@
  ;     ARGS: (N (VARG 2 A B) &KEY (END T))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/fxlspace.lisp
+ ;   Source file: /home/anders/x/veq/src/fxlspace.lisp
 ```
 
 ## `f2$mima`
@@ -2684,7 +2769,7 @@
  ;     find min and max for all dimensions of 2 array.
  ;     ex: (F2$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `f2$num`
@@ -2699,7 +2784,7 @@
  ;   Documentation:
  ;     number of elements in 2d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f2$one`
@@ -2714,7 +2799,7 @@
  ;   Documentation:
  ;     make 2d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f2$point`
@@ -2729,7 +2814,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init FVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f2$polygon`
@@ -2745,7 +2830,7 @@
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     return n-polygon of size rad. rotate by (rot 0)
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f2$pt`
@@ -2760,7 +2845,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init FVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f2$rect`
@@ -2775,7 +2860,7 @@
  ;     ARGS: (W H)
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f2$square*`
@@ -2789,7 +2874,7 @@
  ;   Lambda-list: (S)
  ;   Derived type: (FUNCTION (SINGLE-FLOAT)
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (8)) &OPTIONAL))
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f2$val`
@@ -2804,7 +2889,7 @@
  ;   Documentation:
  ;     make 2d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f2$zero`
@@ -2819,7 +2904,7 @@
  ;   Documentation:
  ;     make 2d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f2in-bbox`
@@ -2834,7 +2919,7 @@
  ;     ARGS: ((VARG 2 TOP-LEFT BOTTOM-RIGHT PT))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/checks.lisp
+ ;   Source file: /home/anders/x/veq/src/checks.lisp
 ```
 
 ## `f2in-concave`
@@ -2849,7 +2934,7 @@
  ;     ARGS: (SHAPE (VARG 2 PT))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/checks.lisp
+ ;   Source file: /home/anders/x/veq/src/checks.lisp
 ```
 
 ## `f2in-triangle`
@@ -2864,7 +2949,7 @@
  ;     ARGS: ((VARG 2 A B C P))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/checks.lisp
+ ;   Source file: /home/anders/x/veq/src/checks.lisp
 ```
 
 ## `f2lsegx`
@@ -2878,7 +2963,7 @@
  ;                  (VALUES (SIMPLE-ARRAY LIST (*)) &OPTIONAL))
  ;   Documentation:
  ;     find all line-line intersections in lines
- ;   Source file: /data/x/veq/src/checks-sweep.lisp
+ ;   Source file: /home/anders/x/veq/src/checks-sweep.lisp
 ```
 
 ## `f2meye`
@@ -2892,7 +2977,7 @@
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (4)) &OPTIONAL))
  ;   Documentation:
  ;     return 2d eye matrix.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2minv`
@@ -2906,7 +2991,7 @@
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (4)) &OPTIONAL))
  ;   Documentation:
  ;     invert 2x2 matrix. non-destructive.
- ;   Source file: /data/x/veq/src/mat-inv.lisp
+ ;   Source file: /home/anders/x/veq/src/mat-inv.lisp
 ```
 
 ## `f2mm`
@@ -2919,7 +3004,7 @@
  ;   Documentation:
  ;     multiply mat * mat
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2mmt`
@@ -2928,11 +3013,11 @@
  ;   [symbol]
  ; 
  ; F2MMT names a macro:
- ;   Lambda-list: (A*65 B*67)
+ ;   Lambda-list: (A*59 B*61)
  ;   Documentation:
  ;     multiply mat * (transpose mat)
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2mrot`
@@ -2947,7 +3032,7 @@
  ;     ARGS: (A)
  ;     DOCSTRING: make 2d rotation matrix for rotating a rads
  ;     defined via veq:DEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2mrot*`
@@ -2962,7 +3047,7 @@
  ;     ARGS: (A)
  ;     DOCSTRING: make 2d rotation matrix for rotating a rads
  ;     defined via veq:DEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2mscale`
@@ -2977,7 +3062,7 @@
  ;     ARGS: ((VARG 2 X))
  ;     DOCSTRING: make 2d matrix for scaling by x
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2mt!`
@@ -2989,7 +3074,7 @@
  ;   Lambda-list: (A1)
  ;   Documentation:
  ;     transpose 2d matrix in-place.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2mtm`
@@ -2998,11 +3083,11 @@
  ;   [symbol]
  ; 
  ; F2MTM names a macro:
- ;   Lambda-list: (A*97 B*99)
+ ;   Lambda-list: (A*88 B*90)
  ;   Documentation:
  ;     multiply (transpose mat) * mat
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2mtmt`
@@ -3011,11 +3096,11 @@
  ;   [symbol]
  ; 
  ; F2MTMT names a macro:
- ;   Lambda-list: (A*33 B*35)
+ ;   Lambda-list: (A*30 B*32)
  ;   Documentation:
  ;     multiply (transpose mat) * (transpose mat)
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2mtrans`
@@ -3030,7 +3115,7 @@
  ;     ARGS: ((VARG 2 X))
  ;     DOCSTRING: make 2d transpose matrix for moving by x
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2mtv`
@@ -3042,7 +3127,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     transpose(mat) * v. for 2d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2mv`
@@ -3054,7 +3139,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     mat * v. for 2d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f2segdst`
@@ -3071,7 +3156,7 @@
  ;     returns (values distance s) where is is the interpolation value that will
  ;     yield the closest point on line.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/checks.lisp
+ ;   Source file: /home/anders/x/veq/src/checks.lisp
 ```
 
 ## `f2segx`
@@ -3088,7 +3173,7 @@
  ;     returns isect? p q where p and q is the distance along each line to the
  ;     intersection point
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/checks.lisp
+ ;   Source file: /home/anders/x/veq/src/checks.lisp
 ```
 
 ## `f2ssegx`
@@ -3104,7 +3189,7 @@
  ;                  (VALUES (SIMPLE-ARRAY LIST (*)) &OPTIONAL))
  ;   Documentation:
  ;     find all line-line intersections between the first k lines, with the remaining n-k lines
- ;   Source file: /data/x/veq/src/checks-sweep.lisp
+ ;   Source file: /home/anders/x/veq/src/checks-sweep.lisp
 ```
 
 ## `f3$`
@@ -3118,7 +3203,7 @@
  ;     returns indices [default: 0] from 3d vector array (FVEC) as values.
  ;     ex: (F3$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f3$last`
@@ -3133,7 +3218,7 @@
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     return values from last row of 3d vector array.
- ;   Source file: /data/x/veq/src/array-rows.lisp
+ ;   Source file: /home/anders/x/veq/src/array-rows.lisp
 ```
 
 ## `f3$line`
@@ -3148,7 +3233,7 @@
  ;     ARGS: ((VA 6 X))
  ;     DOCSTRING: init FVEC array with 6 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f3$ln`
@@ -3163,7 +3248,7 @@
  ;     ARGS: ((VA 6 X))
  ;     DOCSTRING: init FVEC array with 6 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f3$lspace`
@@ -3178,7 +3263,7 @@
  ;     ARGS: (N (VARG 3 A B) &KEY (END T))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/fxlspace.lisp
+ ;   Source file: /home/anders/x/veq/src/fxlspace.lisp
 ```
 
 ## `f3$mima`
@@ -3197,7 +3282,7 @@
  ;     find min and max for all dimensions of 3 array.
  ;     ex: (F3$MIMA &key n) returns (values xmin xmax ...).
  ;     use n to limit to first n rows.
- ;   Source file: /data/x/veq/src/array-extra.lisp
+ ;   Source file: /home/anders/x/veq/src/array-extra.lisp
 ```
 
 ## `f3$num`
@@ -3212,7 +3297,7 @@
  ;   Documentation:
  ;     number of elements in 3d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f3$one`
@@ -3227,7 +3312,7 @@
  ;   Documentation:
  ;     make 3d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f3$point`
@@ -3242,7 +3327,7 @@
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init FVEC array with 3 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f3$pt`
@@ -3257,7 +3342,7 @@
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init FVEC array with 3 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f3$val`
@@ -3272,7 +3357,7 @@
  ;   Documentation:
  ;     make 3d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f3$zero`
@@ -3287,7 +3372,7 @@
  ;   Documentation:
  ;     make 3d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f3meye`
@@ -3301,7 +3386,7 @@
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (9)) &OPTIONAL))
  ;   Documentation:
  ;     return 3d eye matrix.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3minv`
@@ -3315,7 +3400,7 @@
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (9)) &OPTIONAL))
  ;   Documentation:
  ;     invert 3x3 matrix. non-destructive.
- ;   Source file: /data/x/veq/src/mat-inv.lisp
+ ;   Source file: /home/anders/x/veq/src/mat-inv.lisp
 ```
 
 ## `f3mm`
@@ -3324,11 +3409,11 @@
  ;   [symbol]
  ; 
  ; F3MM names a macro:
- ;   Lambda-list: (A*129 B*131)
+ ;   Lambda-list: (A*117 B*119)
  ;   Documentation:
  ;     multiply mat * mat
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3mmt`
@@ -3337,11 +3422,11 @@
  ;   [symbol]
  ; 
  ; F3MMT names a macro:
- ;   Lambda-list: (A*193 B*195)
+ ;   Lambda-list: (A*175 B*177)
  ;   Documentation:
  ;     multiply mat * (transpose mat)
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3mrot`
@@ -3356,7 +3441,7 @@
  ;     ARGS: (A X Y Z)
  ;     DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ;     defined via veq:DEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3mrot*`
@@ -3371,7 +3456,7 @@
  ;     ARGS: (A X Y Z)
  ;     DOCSTRING: make 3d rotation matrix for rotating a rad around unit vector (x y z)
  ;     defined via veq:DEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3mscale`
@@ -3386,7 +3471,7 @@
  ;     ARGS: ((VARG 3 X))
  ;     DOCSTRING: make 3d matrix for scaling by x
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3mt!`
@@ -3398,7 +3483,7 @@
  ;   Lambda-list: (A1)
  ;   Documentation:
  ;     transpose 3d matrix in-place.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3mtm`
@@ -3407,11 +3492,11 @@
  ;   [symbol]
  ; 
  ; F3MTM names a macro:
- ;   Lambda-list: (A*225 B*227)
+ ;   Lambda-list: (A*204 B*206)
  ;   Documentation:
  ;     multiply (transpose mat) * mat
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3mtmt`
@@ -3420,11 +3505,11 @@
  ;   [symbol]
  ; 
  ; F3MTMT names a macro:
- ;   Lambda-list: (A*161 B*163)
+ ;   Lambda-list: (A*146 B*148)
  ;   Documentation:
  ;     multiply (transpose mat) * (transpose mat)
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3mtrans`
@@ -3439,7 +3524,7 @@
  ;     ARGS: ((VARG 3 X))
  ;     DOCSTRING: make 3d transpose matrix for moving by x
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3mtv`
@@ -3451,7 +3536,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     transpose(mat) * v. for 3d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3mv`
@@ -3463,7 +3548,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     mat * v. for 3d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f3planex`
@@ -3478,7 +3563,7 @@
  ;     ARGS: ((VARG 3 N P A B))
  ;     DOCSTRING: intersection of plane (n:normal, p:point) and line (a b)
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/checks.lisp
+ ;   Source file: /home/anders/x/veq/src/checks.lisp
 ```
 
 ## `f4$`
@@ -3492,7 +3577,7 @@
  ;     returns indices [default: 0] from 4d vector array (FVEC) as values.
  ;     ex: (F4$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f4$last`
@@ -3507,7 +3592,7 @@
  ;                          SINGLE-FLOAT &OPTIONAL))
  ;   Documentation:
  ;     return values from last row of 4d vector array.
- ;   Source file: /data/x/veq/src/array-rows.lisp
+ ;   Source file: /home/anders/x/veq/src/array-rows.lisp
 ```
 
 ## `f4$line`
@@ -3522,7 +3607,7 @@
  ;     ARGS: ((VA 8 X))
  ;     DOCSTRING: init FVEC array with 8 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f4$ln`
@@ -3537,7 +3622,7 @@
  ;     ARGS: ((VA 8 X))
  ;     DOCSTRING: init FVEC array with 8 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f4$lspace`
@@ -3552,7 +3637,7 @@
  ;     ARGS: (N (VARG 4 A B) &KEY (END T))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/fxlspace.lisp
+ ;   Source file: /home/anders/x/veq/src/fxlspace.lisp
 ```
 
 ## `f4$num`
@@ -3567,7 +3652,7 @@
  ;   Documentation:
  ;     number of elements in 4d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f4$one`
@@ -3582,7 +3667,7 @@
  ;   Documentation:
  ;     make 4d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f4$point`
@@ -3597,7 +3682,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init FVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f4$pt`
@@ -3612,7 +3697,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init FVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `f4$val`
@@ -3627,7 +3712,7 @@
  ;   Documentation:
  ;     make 4d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f4$zero`
@@ -3642,7 +3727,7 @@
  ;   Documentation:
  ;     make 4d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `f4meye`
@@ -3656,7 +3741,7 @@
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (16)) &OPTIONAL))
  ;   Documentation:
  ;     return 4d eye matrix.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f4minv`
@@ -3670,7 +3755,7 @@
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (16)) &OPTIONAL))
  ;   Documentation:
  ;     invert 4x4 matrix. non-destructive.
- ;   Source file: /data/x/veq/src/mat-inv.lisp
+ ;   Source file: /home/anders/x/veq/src/mat-inv.lisp
 ```
 
 ## `f4mm`
@@ -3679,11 +3764,11 @@
  ;   [symbol]
  ; 
  ; F4MM names a macro:
- ;   Lambda-list: (A*257 B*259)
+ ;   Lambda-list: (A*233 B*235)
  ;   Documentation:
  ;     multiply mat * mat
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f4mmt`
@@ -3692,11 +3777,11 @@
  ;   [symbol]
  ; 
  ; F4MMT names a macro:
- ;   Lambda-list: (A*321 B*323)
+ ;   Lambda-list: (A*291 B*293)
  ;   Documentation:
  ;     multiply mat * (transpose mat)
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f4mt!`
@@ -3708,7 +3793,7 @@
  ;   Lambda-list: (A1)
  ;   Documentation:
  ;     transpose 4d matrix in-place.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f4mtm`
@@ -3717,11 +3802,11 @@
  ;   [symbol]
  ; 
  ; F4MTM names a macro:
- ;   Lambda-list: (A*353 B*355)
+ ;   Lambda-list: (A*320 B*322)
  ;   Documentation:
  ;     multiply (transpose mat) * mat
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f4mtmt`
@@ -3730,11 +3815,11 @@
  ;   [symbol]
  ; 
  ; F4MTMT names a macro:
- ;   Lambda-list: (A*289 B*291)
+ ;   Lambda-list: (A*262 B*264)
  ;   Documentation:
  ;     multiply (transpose mat) * (transpose mat)
  ;     of type: FVEC
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f4mtv`
@@ -3746,7 +3831,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     transpose(mat) * v. for 4d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f4mv`
@@ -3758,7 +3843,7 @@
  ;   Lambda-list: (M1 &REST V2)
  ;   Documentation:
  ;     mat * v. for 4d matrix and vector.
- ;   Source file: /data/x/veq/src/mat.lisp
+ ;   Source file: /home/anders/x/veq/src/mat.lisp
 ```
 
 ## `f_`
@@ -3770,7 +3855,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     create FVEC vector array from body: (F_ '(a b c ...)).
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `falpha`
@@ -3785,7 +3870,7 @@
  ;     ARGS: (X Y &AUX (A (ATAN (- Y) X)))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/extra.lisp
+ ;   Source file: /home/anders/x/veq/src/extra.lisp
 ```
 
 ## `fease-in-back`
@@ -3804,7 +3889,7 @@
  ;     ease in:
  ;     arg: (X &OPTIONAL (S 1.70158))
  ;     body: (* X X (- (* (+ 1.0 S) X) S))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-circ`
@@ -3819,7 +3904,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-cubic`
@@ -3834,7 +3919,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (* X X X)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-elastic`
@@ -3856,7 +3941,7 @@
  ;             (-
  ;              (* (EXPT 2.0 (* 10.0 (- X 1.0)))
  ;                 (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-exp`
@@ -3872,7 +3957,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (EXPT 2.0 (* 10.0 (- X 1.0)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-linear`
@@ -3887,7 +3972,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: X
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-out-back`
@@ -3906,7 +3991,7 @@
  ;     ease in-out:
  ;     arg: (X &OPTIONAL (S 1.70158))
  ;     body: (* X X (- (* (+ 1.0 S) X) S))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-out-circ`
@@ -3921,7 +4006,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-out-cubic`
@@ -3936,7 +4021,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (* X X X)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-out-elastic`
@@ -3958,7 +4043,7 @@
  ;             (-
  ;              (* (EXPT 2.0 (* 10.0 (- X 1.0)))
  ;                 (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-out-exp`
@@ -3974,7 +4059,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (EXPT 2.0 (* 10.0 (- X 1.0)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-out-linear`
@@ -3989,7 +4074,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: X
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-out-quart`
@@ -4005,7 +4090,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (EXPT X 4.0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-out-quint`
@@ -4021,7 +4106,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (EXPT X 5.0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-out-sin`
@@ -4036,7 +4121,7 @@
  ;     ease in-out:
  ;     arg: (X)
  ;     body: (- 1.0 (COS (* X FPI5)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-quart`
@@ -4051,7 +4136,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (EXPT X 4.0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-quint`
@@ -4066,7 +4151,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (EXPT X 5.0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-in-sin`
@@ -4081,7 +4166,7 @@
  ;     ease in:
  ;     arg: (X)
  ;     body: (- 1.0 (COS (* X FPI5)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-out-back`
@@ -4100,7 +4185,7 @@
  ;     ease out:
  ;     arg: (X &OPTIONAL (S 1.70158))
  ;     body: (* X X (- (* (+ 1.0 S) X) S))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-out-circ`
@@ -4115,7 +4200,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (- (- (SQRT (- 1.0 (* X X))) 1.0))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-out-cubic`
@@ -4130,7 +4215,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (* X X X)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-out-elastic`
@@ -4152,7 +4237,7 @@
  ;             (-
  ;              (* (EXPT 2.0 (* 10.0 (- X 1.0)))
  ;                 (SIN (/ (* (- (- X 1.0) S) FPII) P)))))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-out-exp`
@@ -4168,7 +4253,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (EXPT 2.0 (* 10.0 (- X 1.0)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-out-linear`
@@ -4183,7 +4268,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: X
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-out-quart`
@@ -4198,7 +4283,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (EXPT X 4.0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-out-quint`
@@ -4213,7 +4298,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (EXPT X 5.0)
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `fease-out-sin`
@@ -4228,7 +4313,7 @@
  ;     ease out:
  ;     arg: (X)
  ;     body: (- 1.0 (COS (* X FPI5)))
- ;   Source file: /data/x/veq/src/easing.lisp
+ ;   Source file: /home/anders/x/veq/src/easing.lisp
 ```
 
 ## `feps=`
@@ -4243,7 +4328,7 @@
  ;     ARGS: (A B &OPTIONAL (E (* 10.0 *EPS*)))
  ;     DOCSTRING: [none]
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/extra.lisp
+ ;   Source file: /home/anders/x/veq/src/extra.lisp
 ```
 
 ## `ff`
@@ -4257,7 +4342,7 @@
  ;   Lambda-list: (V)
  ;   Derived type: (FUNCTION (T) (VALUES SINGLE-FLOAT &OPTIONAL))
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
  ; 
  ; FF names a type-specifier:
  ;   Lambda-list: ()
@@ -4273,7 +4358,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     coerce these values to ff.
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `ffl`
@@ -4287,7 +4372,7 @@
  ;   Documentation:
  ;     return (values (ff a) (ff b) ...) from list.
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `fmake-ortho-proj-matrix`
@@ -4304,7 +4389,7 @@
  ;   Documentation:
  ;     make orthogonal projection matrix
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/mat-cam.lisp
+ ;   Source file: /home/anders/x/veq/src/mat-cam.lisp
 ```
 
 ## `fmake-proj-matrix`
@@ -4321,7 +4406,7 @@
  ;   Documentation:
  ;     make projection matrix for width, height, near, far
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/mat-cam.lisp
+ ;   Source file: /home/anders/x/veq/src/mat-cam.lisp
 ```
 
 ## `fmake-view-matrix`
@@ -4340,7 +4425,7 @@
  ;   Documentation:
  ;     make view matrix for pos, up looking at look
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/mat-cam.lisp
+ ;   Source file: /home/anders/x/veq/src/mat-cam.lisp
 ```
 
 ## `fpi`
@@ -4400,7 +4485,7 @@
  ;   Lambda-list: (L)
  ;   Documentation:
  ;     return list as values. equivalent to (values-list ...).
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `fsel`
@@ -4414,7 +4499,7 @@
  ;     return values from body in order of dims.
  ;     use indices or :x :y :z :w
  ;     ex: (FSEL (:w :zx 0) (values a b c d)) returns: (values d c a a).
- ;   Source file: /data/x/veq/src/select-dim.lisp
+ ;   Source file: /home/anders/x/veq/src/select-dim.lisp
 ```
 
 ## `fvdef`
@@ -4426,7 +4511,7 @@
  ;   Lambda-list: (FNAME &BODY BODY)
  ;   Documentation:
  ;     define function with veq context enabled. see fvprogn.
- ;   Source file: /data/x/veq/src/macrolets.lisp
+ ;   Source file: /home/anders/x/veq/src/macrolets.lisp
 ```
 
 ## `fvdef*`
@@ -4443,7 +4528,7 @@
  ;     
  ;     the wrapper macro ensures every call to this function is done as
  ;     (mvc #'%mname ...).
- ;   Source file: /data/x/veq/src/macrolets.lisp
+ ;   Source file: /home/anders/x/veq/src/macrolets.lisp
 ```
 
 ## `fvec`
@@ -4481,7 +4566,7 @@
  ;     works the same way as vprogn. but removes all macrolets that are not
  ;     directly referenced by a symbol in body. this is faster, but may fail in some
  ;     cases where body is complex. in the event of errors try vprogn instead.
- ;   Source file: /data/x/veq/src/macrolets.lisp
+ ;   Source file: /home/anders/x/veq/src/macrolets.lisp
 ```
 
 ## `get-arg-key`
@@ -4494,7 +4579,7 @@
  ;   Derived type: (FUNCTION (T T &OPTIONAL T) (VALUES T &OPTIONAL))
  ;   Documentation:
  ;     get the value of keyword k in ll where ll is a list of kw function args.
- ;   Source file: /data/x/veq/src/generic-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/generic-utils.lisp
 ```
 
 ## `group`
@@ -4507,7 +4592,21 @@
  ;   Derived type: (FUNCTION (LIST FIXNUM) (VALUES LIST &OPTIONAL))
  ;   Documentation:
  ;     group l into lists of n elements. see ungroup.
- ;   Source file: /data/x/veq/src/generic-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/generic-utils.lisp
+```
+
+## `group-into-alist`
+```
+ ; VEQ:GROUP-INTO-ALIST
+ ;   [symbol]
+ ; 
+ ; GROUP-INTO-ALIST names a compiled function:
+ ;   Lambda-list: (L &AUX (RES (LIST)))
+ ;   Derived type: (FUNCTION (LIST) (VALUES LIST &OPTIONAL))
+ ;   Documentation:
+ ;     group (:a 1 2 3 :b 12 ...) into ((:a . (1 2 3)) (:b . (1 2)) ...)
+ ;     discards any non keyword before the first keyword.
+ ;   Source file: /home/anders/x/veq/src/generic-utils.lisp
 ```
 
 ## `i$`
@@ -4521,7 +4620,7 @@
  ;     returns indices [default: 0] from 1d vector array (IVEC) as values.
  ;     ex: (I$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i$_`
@@ -4535,9 +4634,9 @@
  ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     create IVEC vector array from body. where body is a list of lists.
- ;     ex: (I$_ (loop repeat 2 collect `(1f0 2f0)))
- ;     ex: (I$_ '((1f0 2f0) (1f0 2f0))).
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;     ex: (I$_ (loop repeat 2 collect `(a b)))
+ ;     ex: (I$_ '((a b) (c d))).
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i$coerce`
@@ -4546,12 +4645,12 @@
  ;   [symbol]
  ; 
  ; I$COERCE names a compiled function:
- ;   Lambda-list: (A0)
+ ;   Lambda-list: (A)
  ;   Derived type: (FUNCTION (SEQUENCE)
  ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32) (*)) &OPTIONAL))
  ;   Documentation:
  ;     coerce sequence to IVEC.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i$copy`
@@ -4560,12 +4659,31 @@
  ;   [symbol]
  ; 
  ; I$COPY names a compiled function:
- ;   Lambda-list: (A0 &OPTIONAL (NA (LENGTH A0)))
+ ;   Lambda-list: (A &OPTIONAL (NA (LENGTH A)))
  ;   Derived type: (FUNCTION ((SIMPLE-ARRAY (SIGNED-BYTE 32)) &OPTIONAL T)
  ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32)) &OPTIONAL))
  ;   Documentation:
  ;     copy IVEC vector array.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
+```
+
+## `i$join`
+```
+ ; VEQ:I$JOIN
+ ;   [symbol]
+ ; 
+ ; I$JOIN names a compiled function:
+ ;   Lambda-list: (A B &OPTIONAL (N (+ (LENGTH A) (LENGTH B)))
+ ;                 (RES
+ ;                  (MAKE-ARRAY N ELEMENT-TYPE (QUOTE IN) ADJUSTABLE NIL)))
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY (SIGNED-BYTE 32))
+ ;                   (SIMPLE-ARRAY (SIGNED-BYTE 32)) &OPTIONAL
+ ;                   (UNSIGNED-BYTE 32) (SIMPLE-ARRAY (SIGNED-BYTE 32)))
+ ;                  (VALUES (SIMPLE-ARRAY (SIGNED-BYTE 32)) &OPTIONAL))
+ ;   Documentation:
+ ;     join a, b of type IVEC.
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i$line`
@@ -4580,7 +4698,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init IVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i$ln`
@@ -4595,7 +4713,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init IVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i$make`
@@ -4607,7 +4725,7 @@
  ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0))
  ;   Documentation:
  ;     create IVEC vector array with size n * dim, and initial value v.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i$num`
@@ -4622,7 +4740,7 @@
  ;   Documentation:
  ;     number of elements in 1d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i$one`
@@ -4637,7 +4755,7 @@
  ;   Documentation:
  ;     make 1d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i$point`
@@ -4652,7 +4770,7 @@
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init IVEC array with 1 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i$pt`
@@ -4667,7 +4785,7 @@
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init IVEC array with 1 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i$val`
@@ -4683,7 +4801,7 @@
  ;   Documentation:
  ;     make 1d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i$zero`
@@ -4698,7 +4816,7 @@
  ;   Documentation:
  ;     make 1d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i$~`
@@ -4710,7 +4828,7 @@
  ;   Lambda-list: ((&OPTIONAL (N 1)) &BODY BODY)
  ;   Documentation:
  ;     create IVEC vector array from n values in body.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i2$`
@@ -4724,7 +4842,7 @@
  ;     returns indices [default: 0] from 2d vector array (IVEC) as values.
  ;     ex: (I2$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i2$line`
@@ -4739,7 +4857,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init IVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i2$ln`
@@ -4754,7 +4872,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init IVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i2$num`
@@ -4769,7 +4887,7 @@
  ;   Documentation:
  ;     number of elements in 2d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i2$one`
@@ -4784,7 +4902,7 @@
  ;   Documentation:
  ;     make 2d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i2$point`
@@ -4799,7 +4917,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init IVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i2$pt`
@@ -4814,7 +4932,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init IVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i2$val`
@@ -4830,7 +4948,7 @@
  ;   Documentation:
  ;     make 2d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i2$zero`
@@ -4845,7 +4963,7 @@
  ;   Documentation:
  ;     make 2d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i3$`
@@ -4859,7 +4977,7 @@
  ;     returns indices [default: 0] from 3d vector array (IVEC) as values.
  ;     ex: (I3$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i3$line`
@@ -4874,7 +4992,7 @@
  ;     ARGS: ((VA 6 X))
  ;     DOCSTRING: init IVEC array with 6 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i3$ln`
@@ -4889,7 +5007,7 @@
  ;     ARGS: ((VA 6 X))
  ;     DOCSTRING: init IVEC array with 6 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i3$num`
@@ -4904,7 +5022,7 @@
  ;   Documentation:
  ;     number of elements in 3d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i3$one`
@@ -4919,7 +5037,7 @@
  ;   Documentation:
  ;     make 3d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i3$point`
@@ -4934,7 +5052,7 @@
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init IVEC array with 3 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i3$pt`
@@ -4949,7 +5067,7 @@
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init IVEC array with 3 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i3$val`
@@ -4965,7 +5083,7 @@
  ;   Documentation:
  ;     make 3d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i3$zero`
@@ -4980,7 +5098,7 @@
  ;   Documentation:
  ;     make 3d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i4$`
@@ -4994,7 +5112,7 @@
  ;     returns indices [default: 0] from 4d vector array (IVEC) as values.
  ;     ex: (I4$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i4$line`
@@ -5009,7 +5127,7 @@
  ;     ARGS: ((VA 8 X))
  ;     DOCSTRING: init IVEC array with 8 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i4$ln`
@@ -5024,7 +5142,7 @@
  ;     ARGS: ((VA 8 X))
  ;     DOCSTRING: init IVEC array with 8 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i4$num`
@@ -5039,7 +5157,7 @@
  ;   Documentation:
  ;     number of elements in 4d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i4$one`
@@ -5054,7 +5172,7 @@
  ;   Documentation:
  ;     make 4d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i4$point`
@@ -5069,7 +5187,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init IVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i4$pt`
@@ -5084,7 +5202,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init IVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `i4$val`
@@ -5100,7 +5218,7 @@
  ;   Documentation:
  ;     make 4d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i4$zero`
@@ -5115,7 +5233,7 @@
  ;   Documentation:
  ;     make 4d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `i?`
@@ -5128,7 +5246,7 @@
  ;   Derived type: (FUNCTION (T) (VALUES &OPTIONAL))
  ;   Documentation:
  ;     inspect argument
- ;   Source file: /data/x/veq/src/config.lisp
+ ;   Source file: /home/anders/x/veq/src/config.lisp
 ```
 
 ## `i_`
@@ -5140,7 +5258,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     create IVEC vector array from body: (I_ '(a b c ...)).
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `in`
@@ -5154,7 +5272,7 @@
  ;   Lambda-list: (V)
  ;   Derived type: (FUNCTION (T) (VALUES (SIGNED-BYTE 32) &OPTIONAL))
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
  ; 
  ; IN names a type-specifier:
  ;   Lambda-list: (&OPTIONAL (BITS 32))
@@ -5170,7 +5288,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     coerce these values to in.
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `inl`
@@ -5184,7 +5302,7 @@
  ;   Documentation:
  ;     return (values (in a) (in b) ...) from list.
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `isel`
@@ -5198,7 +5316,7 @@
  ;     return values from body in order of dims.
  ;     use indices or :x :y :z :w
  ;     ex: (ISEL (:w :zx 0) (values a b c d)) returns: (values d c a a).
- ;   Source file: /data/x/veq/src/select-dim.lisp
+ ;   Source file: /home/anders/x/veq/src/select-dim.lisp
 ```
 
 ## `ivec`
@@ -5232,7 +5350,7 @@
  ;   Lambda-list: (V)
  ;   Derived type: (FUNCTION (T) (VALUES SYMBOL &OPTIONAL))
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
  ; 
  ; KV names a type-specifier:
  ;   Lambda-list: ()
@@ -5248,7 +5366,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     coerce these values to kv.
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `kvec`
@@ -5274,7 +5392,7 @@
  ;   Documentation:
  ;     return (values (kv a) (kv b) ...) from list.
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `ll`
@@ -5288,7 +5406,7 @@
  ;   Lambda-list: (V)
  ;   Derived type: (FUNCTION (T) (VALUES LIST &OPTIONAL))
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
  ; 
  ; LL names a type-specifier:
  ;   Lambda-list: ()
@@ -5304,7 +5422,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     coerce these values to ll.
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `lll`
@@ -5318,7 +5436,7 @@
  ;   Documentation:
  ;     return (values (ll a) (ll b) ...) from list.
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `lpos`
@@ -5330,7 +5448,7 @@
  ;   Lambda-list: (L &OPTIONAL (I 0) J)
  ;   Documentation:
  ;     get list of index i or subseq i j from list of lists.
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `lst`
@@ -5343,7 +5461,7 @@
  ;   Documentation:
  ;     get all (values ... ) in body as a list.
  ;     almost like multiple-value-list, except it handles multiple arguments.
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `lvec`
@@ -5367,7 +5485,7 @@
  ;   Lambda-list: (EXPR)
  ;   Documentation:
  ;     expand macro.
- ;   Source file: /data/x/veq/src/generic-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/generic-utils.lisp
 ```
 
 ## `mac*`
@@ -5379,7 +5497,7 @@
  ;   Lambda-list: (EXPR)
  ;   Documentation:
  ;     expand macro all. only in SBCL.
- ;   Source file: /data/x/veq/src/generic-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/generic-utils.lisp
 ```
 
 ## `make-struct-vec-getters`
@@ -5391,7 +5509,7 @@
  ; 
  ; MAKE-STRUCT-VEC-GETTERS names a macro:
  ;   Lambda-list: (CLS DIM TYPE NAMES)
- ;   Source file: /data/x/veq/src/vset.lisp
+ ;   Source file: /home/anders/x/veq/src/vset.lisp
 ```
 
 ## `make-struct-vec-setters`
@@ -5403,7 +5521,7 @@
  ; 
  ; MAKE-STRUCT-VEC-SETTERS names a macro:
  ;   Lambda-list: (CLS DIM TYPE NAMES)
- ;   Source file: /data/x/veq/src/vset.lisp
+ ;   Source file: /home/anders/x/veq/src/vset.lisp
 ```
 
 ## `mutate!`
@@ -5417,7 +5535,7 @@
  ;     ex: (mutate! (a b) (values 1 2))
  ;     is equivalent to (mvb (a* b*) (values 1 2) (setf a a* b b*))
  ;     where a* and b* are gensyms
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `mvb`
@@ -5430,7 +5548,7 @@
  ;   Documentation:
  ;     alias: MULTIPLE-VALUE-BIND
  ; 
- ;   Source file: /data/x/veq/src/generic-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/generic-utils.lisp
 ```
 
 ## `mvc`
@@ -5443,7 +5561,7 @@
  ;   Documentation:
  ;     alias: MULTIPLE-VALUE-CALL
  ; 
- ;   Source file: /data/x/veq/src/generic-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/generic-utils.lisp
 ```
 
 ## `mvcgrp`
@@ -5461,7 +5579,7 @@
  ;     ex: (labels ((fx ((:va 3 x)) (fsel (:xz) x)))
  ;           (vpr (mvcgrp (3 #'fx) (values 1f0 2f0 3f0 4f0 5f0 6f0))))
  ;     returns: (values 1f0 3f0 4f0 6f0)
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `mvcmap`
@@ -5473,7 +5591,7 @@
  ;   Lambda-list: ((DIM FX) &BODY BODY)
  ;   Documentation:
  ;     returns (values (fx i) (fx j) ...) for dim values from body.
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `mvcwrap`
@@ -5482,18 +5600,6 @@
 
  ; VEQ:MVCWRAP
  ;   [symbol]
-```
-
-## `new-stride`
-```
- ; VEQ:NEW-STRIDE
- ;   [symbol]
- ; 
- ; NEW-STRIDE names a macro:
- ;   Lambda-list: ((FROM TO TYPE &OPTIONAL (V 0)) ARR)
- ;   Documentation:
- ;     shift arr from stride to stride.
- ;   Source file: /data/x/veq/src/array-utils.lisp
 ```
 
 ## `p$`
@@ -5507,7 +5613,7 @@
  ;     returns indices [default: 0] from 1d vector array (PVEC) as values.
  ;     ex: (P$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p$_`
@@ -5522,9 +5628,9 @@
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     create PVEC vector array from body. where body is a list of lists.
- ;     ex: (P$_ (loop repeat 2 collect `(1f0 2f0)))
- ;     ex: (P$_ '((1f0 2f0) (1f0 2f0))).
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;     ex: (P$_ (loop repeat 2 collect `(a b)))
+ ;     ex: (P$_ '((a b) (c d))).
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p$coerce`
@@ -5533,13 +5639,13 @@
  ;   [symbol]
  ; 
  ; P$COERCE names a compiled function:
- ;   Lambda-list: (A0)
+ ;   Lambda-list: (A)
  ;   Derived type: (FUNCTION (SEQUENCE)
  ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32) (*))
  ;                          &OPTIONAL))
  ;   Documentation:
  ;     coerce sequence to PVEC.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p$copy`
@@ -5548,13 +5654,32 @@
  ;   [symbol]
  ; 
  ; P$COPY names a compiled function:
- ;   Lambda-list: (A0 &OPTIONAL (NA (LENGTH A0)))
+ ;   Lambda-list: (A &OPTIONAL (NA (LENGTH A)))
  ;   Derived type: (FUNCTION
  ;                  ((SIMPLE-ARRAY (UNSIGNED-BYTE 32)) &OPTIONAL T)
  ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32)) &OPTIONAL))
  ;   Documentation:
  ;     copy PVEC vector array.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
+```
+
+## `p$join`
+```
+ ; VEQ:P$JOIN
+ ;   [symbol]
+ ; 
+ ; P$JOIN names a compiled function:
+ ;   Lambda-list: (A B &OPTIONAL (N (+ (LENGTH A) (LENGTH B)))
+ ;                 (RES
+ ;                  (MAKE-ARRAY N ELEMENT-TYPE (QUOTE PN) ADJUSTABLE NIL)))
+ ;   Derived type: (FUNCTION
+ ;                  ((SIMPLE-ARRAY (UNSIGNED-BYTE 32))
+ ;                   (SIMPLE-ARRAY (UNSIGNED-BYTE 32)) &OPTIONAL
+ ;                   (UNSIGNED-BYTE 32) (SIMPLE-ARRAY (UNSIGNED-BYTE 32)))
+ ;                  (VALUES (SIMPLE-ARRAY (UNSIGNED-BYTE 32)) &OPTIONAL))
+ ;   Documentation:
+ ;     join a, b of type PVEC.
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p$line`
@@ -5569,7 +5694,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init PVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p$ln`
@@ -5584,7 +5709,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init PVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p$make`
@@ -5596,7 +5721,7 @@
  ;   Lambda-list: (&KEY (DIM 1) (N 1) (V 0))
  ;   Documentation:
  ;     create PVEC vector array with size n * dim, and initial value v.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p$num`
@@ -5611,7 +5736,7 @@
  ;   Documentation:
  ;     number of elements in 1d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p$one`
@@ -5627,7 +5752,7 @@
  ;   Documentation:
  ;     make 1d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p$point`
@@ -5642,7 +5767,7 @@
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init PVEC array with 1 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p$pt`
@@ -5657,7 +5782,7 @@
  ;     ARGS: ((VA 1 X))
  ;     DOCSTRING: init PVEC array with 1 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p$val`
@@ -5674,7 +5799,7 @@
  ;   Documentation:
  ;     make 1d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p$zero`
@@ -5690,7 +5815,7 @@
  ;   Documentation:
  ;     make 1d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p$~`
@@ -5702,7 +5827,7 @@
  ;   Lambda-list: ((&OPTIONAL (N 1)) &BODY BODY)
  ;   Documentation:
  ;     create PVEC vector array from n values in body.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p2$`
@@ -5716,7 +5841,7 @@
  ;     returns indices [default: 0] from 2d vector array (PVEC) as values.
  ;     ex: (P2$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p2$line`
@@ -5731,7 +5856,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init PVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p2$ln`
@@ -5746,7 +5871,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init PVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p2$num`
@@ -5761,7 +5886,7 @@
  ;   Documentation:
  ;     number of elements in 2d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p2$one`
@@ -5777,7 +5902,7 @@
  ;   Documentation:
  ;     make 2d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p2$point`
@@ -5792,7 +5917,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init PVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p2$pt`
@@ -5807,7 +5932,7 @@
  ;     ARGS: ((VA 2 X))
  ;     DOCSTRING: init PVEC array with 2 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p2$val`
@@ -5824,7 +5949,7 @@
  ;   Documentation:
  ;     make 2d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p2$zero`
@@ -5840,7 +5965,7 @@
  ;   Documentation:
  ;     make 2d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p3$`
@@ -5854,7 +5979,7 @@
  ;     returns indices [default: 0] from 3d vector array (PVEC) as values.
  ;     ex: (P3$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p3$line`
@@ -5869,7 +5994,7 @@
  ;     ARGS: ((VA 6 X))
  ;     DOCSTRING: init PVEC array with 6 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p3$ln`
@@ -5884,7 +6009,7 @@
  ;     ARGS: ((VA 6 X))
  ;     DOCSTRING: init PVEC array with 6 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p3$num`
@@ -5899,7 +6024,7 @@
  ;   Documentation:
  ;     number of elements in 3d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p3$one`
@@ -5915,7 +6040,7 @@
  ;   Documentation:
  ;     make 3d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p3$point`
@@ -5930,7 +6055,7 @@
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init PVEC array with 3 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p3$pt`
@@ -5945,7 +6070,7 @@
  ;     ARGS: ((VA 3 X))
  ;     DOCSTRING: init PVEC array with 3 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p3$val`
@@ -5962,7 +6087,7 @@
  ;   Documentation:
  ;     make 3d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p3$zero`
@@ -5978,7 +6103,7 @@
  ;   Documentation:
  ;     make 3d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p4$`
@@ -5992,7 +6117,7 @@
  ;     returns indices [default: 0] from 4d vector array (PVEC) as values.
  ;     ex: (P4$ a i j ...) returns (values a[i] .. a[j] .. ...).
  ;     note that the number of values depends on the dimension.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p4$line`
@@ -6007,7 +6132,7 @@
  ;     ARGS: ((VA 8 X))
  ;     DOCSTRING: init PVEC array with 8 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p4$ln`
@@ -6022,7 +6147,7 @@
  ;     ARGS: ((VA 8 X))
  ;     DOCSTRING: init PVEC array with 8 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p4$num`
@@ -6037,7 +6162,7 @@
  ;   Documentation:
  ;     number of elements in 4d array.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p4$one`
@@ -6053,7 +6178,7 @@
  ;   Documentation:
  ;     make 4d array of ones.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p4$point`
@@ -6068,7 +6193,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init PVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p4$pt`
@@ -6083,7 +6208,7 @@
  ;     ARGS: ((VA 4 X))
  ;     DOCSTRING: init PVEC array with 4 elements.
  ;     defined via veq:FVDEF*
- ;   Source file: /data/x/veq/src/shapes.lisp
+ ;   Source file: /home/anders/x/veq/src/shapes.lisp
 ```
 
 ## `p4$val`
@@ -6100,7 +6225,7 @@
  ;   Documentation:
  ;     make 4d array of val.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p4$zero`
@@ -6116,7 +6241,7 @@
  ;   Documentation:
  ;     make 4d vector array of zeros.
  ;     typed.
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `p_`
@@ -6128,7 +6253,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     create PVEC vector array from body: (P_ '(a b c ...)).
- ;   Source file: /data/x/veq/src/array-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/array-utils.lisp
 ```
 
 ## `pn`
@@ -6142,7 +6267,7 @@
  ;   Lambda-list: (V)
  ;   Derived type: (FUNCTION (T) (VALUES (UNSIGNED-BYTE 32) &OPTIONAL))
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
  ; 
  ; PN names a type-specifier:
  ;   Lambda-list: (&OPTIONAL (BITS 32))
@@ -6158,7 +6283,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     coerce these values to pn.
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `pnl`
@@ -6172,7 +6297,7 @@
  ;   Documentation:
  ;     return (values (pn a) (pn b) ...) from list.
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `pos-df`
@@ -6209,7 +6334,7 @@
  ; PROC-VV names a compiled function:
  ;   Lambda-list: (BODY)
  ;   Derived type: (FUNCTION (T) (VALUES T &OPTIONAL))
- ;   Source file: /data/x/veq/src/ops-vv.lisp
+ ;   Source file: /home/anders/x/veq/src/ops-vv.lisp
 ```
 
 ## `psel`
@@ -6223,7 +6348,7 @@
  ;     return values from body in order of dims.
  ;     use indices or :x :y :z :w
  ;     ex: (PSEL (:w :zx 0) (values a b c d)) returns: (values d c a a).
- ;   Source file: /data/x/veq/src/select-dim.lisp
+ ;   Source file: /home/anders/x/veq/src/select-dim.lisp
 ```
 
 ## `pvec`
@@ -6269,7 +6394,7 @@
  ;       ; will return something like:
  ;       ; (MVB (#:X/X-158 #:X/Y-159) (VALUES 1 2)
  ;       ;      (LIST #:X/Y-159 #:X/X-158))
- ;   Source file: /data/x/veq/src/macros-helpers.lisp
+ ;   Source file: /home/anders/x/veq/src/macros-helpers.lisp
 ```
 
 ## `strip-arg-keys`
@@ -6282,7 +6407,7 @@
  ;   Derived type: (FUNCTION (T T) *)
  ;   Documentation:
  ;     strip keywords in kk from ll where ll is a list of kw function args.
- ;   Source file: /data/x/veq/src/generic-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/generic-utils.lisp
 ```
 
 ## `svec`
@@ -6308,7 +6433,7 @@
  ;   Lambda-list: (V &OPTIONAL (PKG (QUOTE CL-USER)))
  ;   Derived type: (FUNCTION (T &OPTIONAL T) (VALUES SYMBOL &OPTIONAL))
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
  ; 
  ; SY names a type-specifier:
  ;   Lambda-list: ()
@@ -6324,7 +6449,7 @@
  ;   Lambda-list: (&BODY BODY)
  ;   Documentation:
  ;     coerce these values to sy.
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `syl`
@@ -6338,7 +6463,7 @@
  ;   Documentation:
  ;     return (values (sy a) (sy b) ...) from list.
  ;   Inline proclamation: INLINE (inline expansion available)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `type-default`
@@ -6351,7 +6476,7 @@
  ;   Derived type: (FUNCTION (T &OPTIONAL T) (VALUES T &OPTIONAL))
  ;   Documentation:
  ;     default value for array with elements of type (hint) ty. eg: 0 0f0 0d0 nil :val
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `type-from-short`
@@ -6364,7 +6489,7 @@
  ;   Derived type: (FUNCTION (T &OPTIONAL T) (VALUES T &OPTIONAL T))
  ;   Documentation:
  ;     select type fom type hint.
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `ungroup`
@@ -6377,7 +6502,7 @@
  ;   Derived type: (FUNCTION (LIST) (VALUES LIST &OPTIONAL))
  ;   Documentation:
  ;     inverse of group.
- ;   Source file: /data/x/veq/src/generic-utils.lisp
+ ;   Source file: /home/anders/x/veq/src/generic-utils.lisp
 ```
 
 ## `unpack-vvsym`
@@ -6393,7 +6518,7 @@
  ;                  (VALUES KEYWORD T (MOD 10) (MOD 10) &OPTIONAL))
  ;   Documentation:
  ;     split names of type f34!var into (values :f var 3 4)
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `v?`
@@ -6406,7 +6531,7 @@
  ;   Derived type: (FUNCTION (&OPTIONAL T) (VALUES T &OPTIONAL))
  ;   Documentation:
  ;     get version. use silent to surpress stdout
- ;   Source file: /data/x/veq/src/config.lisp
+ ;   Source file: /home/anders/x/veq/src/config.lisp
 ```
 
 ## `vchain`
@@ -6419,7 +6544,7 @@
  ;   Documentation:
  ;     chain functions, on all values.
  ;     eg: (vchain #'a #'b (values 1 2)) equals: (mvc #'a (mvc #'b (values 1 2)))
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `vdef`
@@ -6431,7 +6556,7 @@
  ;   Lambda-list: (FNAME &BODY BODY)
  ;   Documentation:
  ;     define function with veq context enabled. see vprogn.
- ;   Source file: /data/x/veq/src/macrolets.lisp
+ ;   Source file: /home/anders/x/veq/src/macrolets.lisp
 ```
 
 ## `vdef*`
@@ -6448,7 +6573,7 @@
  ;     
  ;     the wrapper macro ensures every call to this function is done as
  ;     (mvc #'%mname ...).
- ;   Source file: /data/x/veq/src/macrolets.lisp
+ ;   Source file: /home/anders/x/veq/src/macrolets.lisp
 ```
 
 ## `vector-rearrange`
@@ -6462,7 +6587,7 @@
  ;     get new vector with elements from a. ex:
  ;     (let ((i 3) (v #(0 1 2 3 4 5)))
  ;       (vector-rearrange v 0 1 (0 1) ((print i)) i)) ; #(0 1 0 3 3)
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `vlabels`
@@ -6476,7 +6601,7 @@
  ;     wraps labels so that it can be used with implicit mvc. that is, all labels
  ;     are defined as if with def*.
  ;     use %labelname to call the function directly.
- ;   Source file: /data/x/veq/src/lets.lisp
+ ;   Source file: /home/anders/x/veq/src/lets.lisp
 ```
 
 ## `vnrep`
@@ -6488,7 +6613,7 @@
  ;   Lambda-list: (N &REST REST)
  ;   Documentation:
  ;     corresponds to (values [rest n times]). see vnval.
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `vnval`
@@ -6500,7 +6625,7 @@
  ;   Lambda-list: (N &REST REST)
  ;   Documentation:
  ;     returns (values v ...), where v is (progn ,@rest) evaluated once. see vnrep.
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `vp`
@@ -6512,7 +6637,7 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     print values and return values, return values.
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `vpr`
@@ -6524,7 +6649,7 @@
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     print input code with resulting values, return values.
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `vprogn`
@@ -6540,7 +6665,7 @@
  ;     also handles vv macro compiler triggers. see vv macro.
  ;     
  ;     fvprogn is faster, but has some limitations.
- ;   Source file: /data/x/veq/src/macrolets.lisp
+ ;   Source file: /home/anders/x/veq/src/macrolets.lisp
 ```
 
 ## `vsel`
@@ -6554,7 +6679,7 @@
  ;     return values from body in order of dims.
  ;     use indices or :x :y :z :w
  ;     ex: (VSEL (df :w :zx 0) (values a b c d)) returns: (values d c a a).
- ;   Source file: /data/x/veq/src/select-dim.lisp
+ ;   Source file: /home/anders/x/veq/src/select-dim.lisp
 ```
 
 ## `vvdb`
@@ -6566,7 +6691,7 @@
  ; 
  ; VVDB names a macro:
  ;   Lambda-list: ((&KEY (EXEC T) (S T)) &BODY BODY)
- ;   Source file: /data/x/veq/src/ops-vv.lisp
+ ;   Source file: /home/anders/x/veq/src/ops-vv.lisp
 ```
 
 ## `vvsym`
@@ -6586,7 +6711,7 @@
  ;   Documentation:
  ;     build a symbol with correct name convention.
  ;     eg: (vvsym ff 2 :lerp) yields f2lerp.
- ;   Source file: /data/x/veq/src/types.lisp
+ ;   Source file: /home/anders/x/veq/src/types.lisp
 ```
 
 ## `with-symbs`
@@ -6601,7 +6726,7 @@
  ;     bind these symbols outside body and replace inside body. eg:
  ;       (with-symbs `(g ,g ...) (qry g :select ... )) ; equals:
  ;       (let ((gg ,g) ...) (qry gg :select ...))      ; gg is a gensym
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 
 ## `xlet`
@@ -6629,6 +6754,6 @@ immediately.
  ;   Lambda-list: (&REST REST)
  ;   Documentation:
  ;     wraps rest in (mvc #'values ...).
- ;   Source file: /data/x/veq/src/utils.lisp
+ ;   Source file: /home/anders/x/veq/src/utils.lisp
 ```
 

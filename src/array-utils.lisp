@@ -12,10 +12,10 @@
           :element-type ',type
           :adjustable nil))))
 
-(defmacro new-stride ((from to type &optional (v 0)) arr)
+(defmacro $new-stride ((from to type &optional (v 0)) arr)
   (declare (veq:pn from to))
   "shift arr from stride to stride."
-  (unless (> to from 0) (error "NEW-STRIDE: must have (> to from 0)"))
+  (unless (> to from 0) (error "$NEW-STRIDE: must have (> to from 0)"))
   `(fvprogn ; TODO: to less than from
     (let ((v* (coerce ,v ',(psymb :veq type))))
       (declare (,(psymb :veq type) v*))
@@ -36,6 +36,22 @@
                    (list   (loop for v in ,a* for i from 0 do #1#)))
      ,res)))
 
+; tentative / incomplete
+; (let ((a (veq:f$~ (6) 1.0 2.0 3.0 4.0 5.0 6.0)))
+;  (veq:2$print (veq:$reverse! a :dim 2)))
+(export '$reverse!) ; todo alternative to not in-place
+(defmacro $reverse! (a &key (dim 1))
+  (declare (symbol a) (pn dim))
+  "reverse typed array in-place."
+  `(let ((n (length ,a)))
+    (declare (pn n))
+    (when (> n 1)
+      (loop for i from 0 by ,dim repeat (floor (floor n ,dim) 2)
+        do (progn ,@(loop for k from 0 repeat dim
+                      collect `(rotatef (aref ,a (+ i ,k))
+                                        (aref ,a (+ (- n i ,dim) ,k)))))))
+    ,a))
+
 (defmacro define-constr (type)
   (labels ((nm (n) (vvsym type 1 n)))
     (awg (a l)
@@ -47,15 +63,25 @@
           `($make :dim ,dim :n ,n :v ,v :type ,',type))
 
         (export ',(nm "$copy"))
-        (defun ,(nm "$copy") (,a &optional (na (length ,a)))
-          (declare #.*opt* (,(arrtype type) ,a))
+        (defun ,(nm "$copy") (a &optional (na (length a)))
+          (declare #.*opt* (,(arrtype type) a))
           ,(format nil "copy ~a vector array." (arrtype type))
-          (make-array na :initial-contents ,a :element-type ',type :adjustable nil))
+          (make-array na :initial-contents a :element-type ',type :adjustable nil))
 
         (export ',(nm "$coerce"))
-        (defun ,(nm "$coerce") (,a) (declare #.*opt* (sequence ,a))
+        (defun ,(nm "$coerce") (a) (declare #.*opt* (sequence a))
           ,(format nil "coerce sequence to ~a." (arrtype type))
-          ($coerce ,type ,a))
+          ($coerce ,type a))
+
+        (export ',(nm "$join"))
+        (defun ,(nm "$join") (a b &optional (n (+ (length a) (length b)))
+                                   (res (make-array n :element-type ',type :adjustable nil)))
+          (declare #.*opt* (pn n) (,(arrtype type) a b res))
+          ,(format nil "join a, b of type ~a." (arrtype type))
+               (loop for i from 0 below (length a) do (setf (aref res i) (aref a i)))
+               (loop for i from (length a) below n
+                     for j from 0 do (setf (aref res i) (aref b j)))
+               res)
 
         (export ',(nm "_"))
         (defmacro ,(nm "_") (&body body)
@@ -75,25 +101,21 @@
                (declare (,',(arrtype type) ,',a))
                (mvb (,@symbs) (~ ,@body)
                     (declare (,',type ,@symbs))
-                    (setf ,@(loop for i from 0 repeat n
-                                  for s in symbs
+                    (setf ,@(loop for i from 0 repeat n for s in symbs
                                   append `((aref ,',a ,i) ,s))))
                ,',a)))
 
         (export ',(nm "$_"))
         (defun ,(nm "$_") (body)
-          ,(format nil
-            "create ~a vector array from body. where body is a list of lists.
-ex: (~a (loop repeat 2 collect `(1f0 2f0)))
-ex: (~a '((1f0 2f0) (1f0 2f0)))." (arrtype type) (nm "$_") (nm "$_"))
+          ,(format nil "create ~a vector array from body. where body is a list of lists.
+ex: (~a (loop repeat 2 collect `(a b)))
+ex: (~a '((a b) (c d)))." (arrtype type) (nm "$_") (nm "$_"))
           (let* ((dim (length (the list (car body))))
-                 (arr (make-array (* (length body) dim)
-                        :element-type ',type :adjustable nil
-                        :initial-element ',(coerce 0 type))))
+                 (arr (make-array (* (length body) dim) :element-type ',type
+                                  :adjustable nil :initial-element ',(coerce 0 type))))
             (declare (pn dim) (,(arrtype type) arr))
             (loop for r in body for i from 0 by dim
-                  do (loop repeat dim
-                           for e in r for ii from i
+                  do (loop repeat dim for e in r for ii from i
                            do (setf (aref arr ii) e)))
             arr))))))
 

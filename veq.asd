@@ -2,7 +2,7 @@
 (asdf:defsystem #:veq
   :description "DSL and other utilities for vector mathematics."
   :author "anders hoff / @inconvergent / inconvergent@gmail.com"
-  :version "5.1.7" :licence "MIT"
+  :version "6.2.2" :licence "MIT"
   :in-order-to ((asdf:test-op (asdf:test-op #:veq/tests)))
   :pathname "src/" :serial nil
   :depends-on (#+SBCL #:sb-cltl2 #+:veq-simd #:sb-simd)
@@ -27,6 +27,7 @@
                (:file "array-rows" :depends-on ("utils"))
                (:file "select-dim" :depends-on ("utils"))
                (:file "fxlspace" :depends-on ("macrolets"))
+
                (:file "mat" :depends-on ("macrolets"))
                (:file "mat-inv" :depends-on ("macrolets"))
                (:file "mat-cam" :depends-on ("macrolets"))
@@ -35,11 +36,18 @@
                (:file "checks-sweep" :depends-on ("checks"))
                (:file "shapes" :depends-on ("array-extra"))
                (:file "easing" :depends-on ("macrolets"))
-               (:file "extra" :depends-on ("macrolets"))))
+               (:file "extra" :depends-on ("macrolets"))
+
+               (:file "rnd/srnd" :depends-on ("macrolets"))
+               (:file "rnd/macros" :depends-on ("macrolets"))
+               (:file "rnd/rnd" :depends-on ("rnd/macros"))
+               (:file "rnd/2rnd" :depends-on ("rnd/rnd"))
+               (:file "rnd/3rnd" :depends-on ("rnd/rnd"))
+               (:file "rnd/walkers" :depends-on ("rnd/2rnd" "rnd/3rnd"))))
 
 (asdf:defsystem #:veq/tests
   :depends-on (#:veq #:prove #:asdf #:uiop)
-  :version "5.1.7"
+  :version "6.2.2"
   :perform (asdf:test-op (o s) (uiop:symbol-call ':veq-tests '#:run-tests))
   :pathname "test/" :serial t
   :components ((:file "run")))

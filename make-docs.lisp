@@ -1,6 +1,8 @@
 #!/usr/local/bin/sbcl --script
 (load "~/quicklisp/setup.lisp")
-(ql:quickload :veq) (in-package :veq)
+; sorry, this requires auxin to build because im too lazy
+(ql:quickload :auxin)
+(in-package :veq)
 
 (defun make-docs (&optional (cnt 0) (*print-escape* nil))
   (labels ((fn (name) (internal-path-string
@@ -18,5 +20,13 @@
       (format fs "# VV DSL~%~%```~%~a~%```~%"
                  (documentation 'veq:vv 'function)))))
 
-(make-docs)
+(defun make-rnd-docs ()
+  (loop for (o . rest) in (dat:import-all-data (internal-path-string "src/packages") ".lisp")
+        for pkg = (print (mkstr (car rest)))
+        for fn = (internal-path-string (format nil "docs/~(~a~).md" (veq::repl pkg "/" "-")))
+        if (and (eq o 'defpackage) (not (equal pkg "VEQ")))
+        do (with-open-file (fs fn :direction :output :if-exists :supersede)
+             (princ (-outstr (print (ext-symbols? pkg :pretty or))) fs))))
 
+(make-docs)
+(make-rnd-docs)

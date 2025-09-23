@@ -71,3 +71,16 @@ For more examples go to [examples](examples/ex.lisp).
     ; TODO, improve example for new features
     )))
 ```
+
+## Since v3.0.0 (Nov 2024)
+
+`veq` now tentatively includes packages `rnd` and `srnd` for random number
+generation. `rnd` uses native random number generator and `srnd` is for very
+fast (low quality) random number generation with explicit state. Eg. for use in
+threads for 3d rendering.
+
+Both packages currently only support single floats. and they lack the `f` prefix
+used in `veq`. This might change in the future.
+
+See [rnd](/docs/rnd.md) and [srnd](/docs/srnd.md) in the documentation.
+
