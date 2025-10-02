@@ -20,6 +20,8 @@
   (veq:f3let ((a (veq:f3 1f0 2f0 3f0)))
     (is (veq:lst a) '(1f0 2f0 3f0))
     (is (:vr a 2) 3f0)
+    (is (:vr a 0) 1f0)
+    (is (:vr a) 1f0)
     (is (list (:vref a 0 1)) (list 1f0 2f0)))
 
   (veq:fvlet ((a 3 (veq:f3 1f0 2f0 3f0))

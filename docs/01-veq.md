@@ -166,7 +166,7 @@
  ; 
  ; *OPT* names a special variable:
  ;   Declared type: CONS
- ;   Value: (OPTIMIZE (SAFETY 1) (SPEED 3) (DEBUG 1) (SPACE 3))
+ ;   Value: (OPTIMIZE SAFETY (SPEED 1) DEBUG (SPACE 3))
 ```
 
 ## `*srndopt*`
@@ -1781,7 +1781,9 @@
  ; DEASE-IN-CIRC names a compiled function:
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
+ ;                  (VALUES
+ ;                   (OR (COMPLEX DOUBLE-FLOAT) (DOUBLE-FLOAT * 1.0d0))
+ ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -1796,8 +1798,7 @@
  ; 
  ; DEASE-IN-CUBIC names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES NUMBER &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -1813,10 +1814,8 @@
  ; DEASE-IN-ELASTIC names a compiled function:
  ;   Lambda-list: (X &OPTIONAL (P 0.30000001192092896d0) (S NIL))
  ;   Derived type: (FUNCTION (T &OPTIONAL T T)
- ;                  (VALUES
- ;                   (OR (COMPLEX DOUBLE-FLOAT)
- ;                       (DOUBLE-FLOAT -1.0d0 1.0d0))
- ;                   &OPTIONAL))
+ ;                  (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
+ ;                          &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X &OPTIONAL (P 0.3) (S NIL))
@@ -1835,7 +1834,9 @@
  ; DEASE-IN-EXP names a compiled function:
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT 9.765625d-4 1.0d0) &OPTIONAL))
+ ;                  (VALUES
+ ;                   (OR (COMPLEX DOUBLE-FLOAT) (DOUBLE-FLOAT 0.0d0))
+ ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -1850,8 +1851,7 @@
  ; 
  ; DEASE-IN-LINEAR names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES T &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -1884,7 +1884,10 @@
  ; DEASE-IN-OUT-CIRC names a compiled function:
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
+ ;                  (VALUES
+ ;                   (OR (COMPLEX DOUBLE-FLOAT)
+ ;                       (DOUBLE-FLOAT 0.0d0 1.0d0))
+ ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -1899,8 +1902,7 @@
  ; 
  ; DEASE-IN-OUT-CUBIC names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -1917,8 +1919,8 @@
  ;   Lambda-list: (X &OPTIONAL (P 0.30000001192092896d0) (S NIL))
  ;   Derived type: (FUNCTION (T &OPTIONAL T T)
  ;                  (VALUES
- ;                   (OR (COMPLEX DOUBLE-FLOAT)
- ;                       (DOUBLE-FLOAT -512.0d0 513.0d0))
+ ;                   (OR (DOUBLE-FLOAT -0.5d0 1.5d0)
+ ;                       (COMPLEX DOUBLE-FLOAT))
  ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
@@ -1938,7 +1940,7 @@
  ; DEASE-IN-OUT-EXP names a compiled function:
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT -511.0d0 512.0d0) &OPTIONAL))
+ ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -1953,8 +1955,7 @@
  ; 
  ; DEASE-IN-OUT-LINEAR names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -1969,8 +1970,7 @@
  ; 
  ; DEASE-IN-OUT-QUART names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT -7.0d0 8.0d0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -1985,8 +1985,7 @@
  ; 
  ; DEASE-IN-OUT-QUINT names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT -15.0d0 16.0d0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES DOUBLE-FLOAT &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -2018,7 +2017,8 @@
  ; DEASE-IN-QUART names a compiled function:
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
+ ;                  (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
+ ;                          &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -2034,7 +2034,8 @@
  ; DEASE-IN-QUINT names a compiled function:
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT 0.0d0 1.0d0) &OPTIONAL))
+ ;                  (VALUES (OR DOUBLE-FLOAT (COMPLEX DOUBLE-FLOAT))
+ ;                          &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -2050,8 +2051,10 @@
  ; DEASE-IN-SIN names a compiled function:
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (DOUBLE-FLOAT 0.0d0 0.9999999999999999d0)
- ;                          &OPTIONAL))
+ ;                  (VALUES
+ ;                   (OR (DOUBLE-FLOAT 0.0d0 2.0d0)
+ ;                       (COMPLEX DOUBLE-FLOAT))
+ ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -2689,7 +2692,8 @@
  ; 
  ; F2$CIRC names a compiled function:
  ;   Lambda-list: (RAD &OPTIONAL (RS 0.5))
- ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (SINGLE-FLOAT 0.0)) *)
+ ;   Derived type: (FUNCTION (SINGLE-FLOAT &OPTIONAL (SINGLE-FLOAT 0.0))
+ ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
  ;     return circle of size rad. (rs 0.5) is vertex density.
  ;   Source file: /home/anders/x/veq/src/shapes.lisp
@@ -3899,7 +3903,11 @@
  ; 
  ; FEASE-IN-CIRC names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR (FLOAT * 1.0) (COMPLEX DOUBLE-FLOAT)
+ ;                       (COMPLEX SINGLE-FLOAT))
+ ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -3914,7 +3922,7 @@
  ; 
  ; FEASE-IN-CUBIC names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES NUMBER &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -3931,7 +3939,7 @@
  ;   Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
  ;   Derived type: (FUNCTION (T &OPTIONAL T T)
  ;                  (VALUES
- ;                   (OR (FLOAT -1.0 1.0) (COMPLEX SINGLE-FLOAT)
+ ;                   (OR FLOAT (COMPLEX SINGLE-FLOAT)
  ;                       (COMPLEX DOUBLE-FLOAT))
  ;                   &OPTIONAL))
  ;   Documentation:
@@ -3952,7 +3960,10 @@
  ; FEASE-IN-EXP names a compiled function:
  ;   Lambda-list: (X)
  ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (SINGLE-FLOAT 9.765625e-4 1.0) &OPTIONAL))
+ ;                  (VALUES
+ ;                   (OR (FLOAT 0.0) (COMPLEX DOUBLE-FLOAT)
+ ;                       (COMPLEX SINGLE-FLOAT))
+ ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -3967,7 +3978,7 @@
  ; 
  ; FEASE-IN-LINEAR names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES T &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -4001,7 +4012,11 @@
  ; 
  ; FEASE-IN-OUT-CIRC names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR (FLOAT 0.0 1.0) (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
+ ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -4016,7 +4031,7 @@
  ; 
  ; FEASE-IN-OUT-CUBIC names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES FLOAT &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -4033,8 +4048,8 @@
  ;   Lambda-list: (X &OPTIONAL (P 0.3) (S NIL))
  ;   Derived type: (FUNCTION (T &OPTIONAL T T)
  ;                  (VALUES
- ;                   (OR (FLOAT -512.0 513.0) (COMPLEX SINGLE-FLOAT)
- ;                       (COMPLEX DOUBLE-FLOAT))
+ ;                   (OR (FLOAT -0.5 1.5) (COMPLEX DOUBLE-FLOAT)
+ ;                       (COMPLEX SINGLE-FLOAT))
  ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
@@ -4053,8 +4068,7 @@
  ; 
  ; FEASE-IN-OUT-EXP names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (SINGLE-FLOAT -511.0 512.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES (FLOAT 0.0 1.0) &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -4069,7 +4083,7 @@
  ; 
  ; FEASE-IN-OUT-LINEAR names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES FLOAT &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -4084,8 +4098,7 @@
  ; 
  ; FEASE-IN-OUT-QUART names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (SINGLE-FLOAT -7.0 8.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES FLOAT &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -4100,8 +4113,7 @@
  ; 
  ; FEASE-IN-OUT-QUINT names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T)
- ;                  (VALUES (SINGLE-FLOAT -15.0 16.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES FLOAT &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -4116,7 +4128,7 @@
  ; 
  ; FEASE-IN-OUT-SIN names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) (VALUES (FLOAT 0.0 1.0) &OPTIONAL))
  ;   Documentation:
  ;     ease in-out:
  ;     arg: (X)
@@ -4131,7 +4143,11 @@
  ; 
  ; FEASE-IN-QUART names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR FLOAT (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
+ ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -4146,7 +4162,11 @@
  ; 
  ; FEASE-IN-QUINT names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR FLOAT (COMPLEX SINGLE-FLOAT)
+ ;                       (COMPLEX DOUBLE-FLOAT))
+ ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -4161,7 +4181,11 @@
  ; 
  ; FEASE-IN-SIN names a compiled function:
  ;   Lambda-list: (X)
- ;   Derived type: (FUNCTION (T) (VALUES (SINGLE-FLOAT 0.0 1.0) &OPTIONAL))
+ ;   Derived type: (FUNCTION (T)
+ ;                  (VALUES
+ ;                   (OR (FLOAT 0.0 2.0) (COMPLEX DOUBLE-FLOAT)
+ ;                       (COMPLEX SINGLE-FLOAT))
+ ;                   &OPTIONAL))
  ;   Documentation:
  ;     ease in:
  ;     arg: (X)
@@ -6333,7 +6357,7 @@
  ; 
  ; PROC-VV names a compiled function:
  ;   Lambda-list: (BODY)
- ;   Derived type: (FUNCTION (T) (VALUES T &OPTIONAL))
+ ;   Derived type: (FUNCTION (T) *)
  ;   Source file: /home/anders/x/veq/src/ops-vv.lisp
 ```
 

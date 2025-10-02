@@ -88,7 +88,8 @@ ex:
        ; to replace-varg in -vlet)
        (aif (gk (cadr root) rmap) ; if ref in rmap
             (mapcar (lambda (i) (nth (the pn i) (cdr it))) ; (cdr it) == symbs
-                    (cddr root)) ; inds
+                    ; NOTE: added (or ... (list 0)) so :vr w/no inds defaults to 0
+                    (or (cddr root) (list 0))) ; inds
             (list root))) ; do nothing
      (rec (root rmap)
        (cond ((atom root) root)

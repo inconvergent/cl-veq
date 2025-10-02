@@ -95,7 +95,7 @@ ex: (rcond (0.1 (print :a)) (0.3 (print :b)) ...)"
   (declare #.*srndopt* (srnd rs) (veq:ff dir))
   "get random point in hemisphere where (dot dir res) is positive."
   (veq:xlet ((f3!res (3in-sphere rs 1.0)))
-    (if (< 0f0 (veq:f3dot dir res)) (veq:f3 res) (f3.@-  res))))
+    (f3!@*. res (float-sign (veq:f3dot dir res)))))
 
 (veq:fvdef 3on-sphere (rs r)
   (declare #.*srndopt* (srnd rs) (veq:ff r))
@@ -109,7 +109,7 @@ ex: (rcond (0.1 (print :a)) (0.3 (print :b)) ...)"
   (declare #.*srndopt* (srnd rs) (veq:ff dir))
   "get random point on hemisphere where (dot dir res) is positive."
   (veq:xlet ((f3!res (3on-sphere rs 1.0)))
-    (if (< 0f0 (veq:f3dot dir res)) (veq:f3 res) (f3.@-  res))))
+    (f3!@*. res (float-sign (veq:f3dot dir res)))))
 
 (veq:fvdef 2in-circ (rs r)
   (declare #.*srndopt* (srnd rs) (veq:ff r))
