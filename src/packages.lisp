@@ -48,6 +48,7 @@
     #:2walker #:2walker-acc
     #:3in-box #:3in-cube #:3in-sphere
     #:3nin-box #:3nin-cube #:3nin-sphere
+    #:3in-hemi #:3on-hemi #:3non-hemi #:3nin-hemi
     #:3non-line #:3non-line* #:3non-sphere
     #:3on-line #:3on-line* #:3on-sphere
     #:3walker #:3walker-acc
@@ -63,7 +64,7 @@
   (:nicknames #:veq/srnd)
   (:use #:common-lisp)
   (:import-from #:veq #:*srndopt*)
-  (:export #:2in-circ #:2on-circ
+  (:export #:2in-circ #:2on-circ #:@s
            #:2in-circ+ #:2on-circ+
            #:3in-sphere+ #:3on-sphere+
            #:3in-sphere #:3on-sphere #:3on-hemi #:3in-hemi #:3diffuse

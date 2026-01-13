@@ -64,7 +64,8 @@ generated using the box-muller transform."
   (declare #.*opt* (sequence l)) "get random item from sequence l."
   (typecase l (cons (nth (rndi (length (the list l))) l))
               (vector (aref l (rndi (length l))))
-              (t (error "incorrect type in rndget: ~a" l))))
+              (null (error "RNDGET: nothing to get.")) ; TODO: default?
+              (t (error "RNDGET: incorrect type: ~a" l))))
 
 
 (defun rndspace (n a b &key order &aux (d (- b a)))

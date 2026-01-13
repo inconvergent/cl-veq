@@ -31,10 +31,13 @@ ex: (rcond (0.1 (print :a)) (0.3 (print :b)) ...)"
   (s 0 :type veq:pn :read-only nil))
 #+SBCL(declaim (sb-ext:freeze-type srnd))
 
+
 (defun make (rs)
   (declare #.*srndopt* (fixnum rs)) "make stateful rnd generator"
   (-srnd (mod (abs rs) 2147483647)))
 (defun srnd (rs) "see make" (make rs))
+
+(defsetf @s (r) (new) `(setf (srnd-s ,r) (mod (abs ,new) 2147483647)))
 
 (defun do-rnd (rs)
   (declare #.*srndopt* (srnd rs))

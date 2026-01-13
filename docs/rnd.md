@@ -224,7 +224,7 @@
  ;   Documentation:
  ;     WRAPS: %3IN-BOX
  ;     ARGS: ((VA 3 S))
- ;     DOCSTRING: random point in box of size sx,sy,sz. centered at origin.
+ ;     DOCSTRING: random point in box of size sx,sy,sz.
  ;     defined via veq:FVDEF*
  ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
 ```
@@ -239,7 +239,22 @@
  ;   Documentation:
  ;     WRAPS: %3IN-CUBE
  ;     ARGS: (&OPTIONAL (S 1.0))
- ;     DOCSTRING: random point in cube of size s. centered at origin.
+ ;     DOCSTRING: random point in cube of size s.
+ ;     defined via veq:FVDEF*
+ ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
+```
+
+## `3in-hemi`
+```
+ ; RND:3IN-HEMI
+ ;   [symbol]
+ ; 
+ ; 3IN-HEMI names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %3IN-HEMI
+ ;     ARGS: ((VA 3 DIR) &OPTIONAL (R 1.0))
+ ;     DOCSTRING: random point in hemisphere where (dot dir res) is positive.
  ;     defined via veq:FVDEF*
  ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
 ```
@@ -255,7 +270,7 @@
  ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
  ;                          &OPTIONAL))
  ;   Documentation:
- ;     random point in sphere with rad r. centered at origin.
+ ;     random point in sphere with rad r.
  ;   Inline proclamation: INLINE (inline expansion available)
  ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
 ```
@@ -270,7 +285,7 @@
  ;   Documentation:
  ;     WRAPS: %3NIN-BOX
  ;     ARGS: (N (VA 3 S))
- ;     DOCSTRING: n random points in box of size sx,sy,sz. centered at origin.
+ ;     DOCSTRING: n random points in box of size sx,sy,sz.
  ;     defined via veq:FVDEF*
  ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
 ```
@@ -285,7 +300,22 @@
  ;   Derived type: (FUNCTION (T &OPTIONAL SINGLE-FLOAT)
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     n random points in cube of size sx. centered at origin.
+ ;     n random points in cube of size sx.
+ ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
+```
+
+## `3nin-hemi`
+```
+ ; RND:3NIN-HEMI
+ ;   [symbol]
+ ; 
+ ; 3NIN-HEMI names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %3NIN-HEMI
+ ;     ARGS: (N (VA 3 DIR) &OPTIONAL (R 1.0))
+ ;     DOCSTRING: n random points in hemisphere, rad r.
+ ;     defined via veq:FVDEF*
  ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
 ```
 
@@ -299,8 +329,23 @@
  ;   Derived type: (FUNCTION (T &OPTIONAL SINGLE-FLOAT)
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     n random points in sphere with rad r. centered at origin.
+ ;     n random points in sphere with rad r.
  ;   Inline proclamation: INLINE (inline expansion available)
+ ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
+```
+
+## `3non-hemi`
+```
+ ; RND:3NON-HEMI
+ ;   [symbol]
+ ; 
+ ; 3NON-HEMI names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %3NON-HEMI
+ ;     ARGS: (N (VA 3 DIR) &OPTIONAL (R 1.0))
+ ;     DOCSTRING: n random points on hemisphere, rad r.
+ ;     defined via veq:FVDEF*
  ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
 ```
 
@@ -337,8 +382,23 @@
  ;   Derived type: (FUNCTION (T &OPTIONAL SINGLE-FLOAT)
  ;                  (VALUES (SIMPLE-ARRAY SINGLE-FLOAT (*)) &OPTIONAL))
  ;   Documentation:
- ;     n random points on sphere with rad r. centered at origin.
+ ;     n random points on sphere with rad r.
  ;   Inline proclamation: INLINE (inline expansion available)
+ ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
+```
+
+## `3on-hemi`
+```
+ ; RND:3ON-HEMI
+ ;   [symbol]
+ ; 
+ ; 3ON-HEMI names a macro:
+ ;   Lambda-list: (&REST REST)
+ ;   Documentation:
+ ;     WRAPS: %3ON-HEMI
+ ;     ARGS: ((VA 3 DIR) &OPTIONAL (R 1.0))
+ ;     DOCSTRING: random point on hemisphere where (dot dir res) is positive.
+ ;     defined via veq:FVDEF*
  ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
 ```
 
@@ -376,7 +436,7 @@
  ;                  (VALUES SINGLE-FLOAT SINGLE-FLOAT SINGLE-FLOAT
  ;                          &OPTIONAL))
  ;   Documentation:
- ;     random point on sphere with rad r. centered at origin.
+ ;     random point on sphere with rad r.
  ;   Inline proclamation: INLINE (inline expansion available)
  ;   Source file: /home/anders/x/veq/src/rnd/3rnd.lisp
 ```

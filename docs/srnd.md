@@ -159,6 +159,19 @@
  ;   Source file: /home/anders/x/veq/src/rnd/srnd.lisp
 ```
 
+## `@s`
+```
+:missing:
+
+ ; SRND:@S
+ ;   [symbol]
+ ; 
+ ; (SETF @S) has a complex setf-expansion:
+ ;   Lambda-list: (R)
+ ;   (undocumented)
+ ;   Source file: /home/anders/x/veq/src/rnd/srnd.lisp
+```
+
 ## `make`
 ```
  ; SRND:MAKE
